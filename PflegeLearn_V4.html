@@ -353,7 +353,7 @@ document.querySelectorAll('.nav-btn').forEach(btn=>{
     btn.classList.add('active');
     document.querySelectorAll('.screen').forEach(s=>{s.style.display='none';s.classList.remove('active');});
     const t=document.getElementById('screen-'+btn.dataset.s);
-    if(t){t.style.display='block';t.classList.add('active');}
+    if(t){t.style.display='block';t.classList.add('active');t.style.opacity='1';}
   };
 });
 function goHome(){document.querySelector('[data-s="lernkarten"]').click();}
@@ -433,7 +433,7 @@ const CARDS=[
 });
 
 // ── Lernkarten State
-let lkFilter='all', lkPageNum=0, lkPerPage=24, lkSearchVal='';
+let lkFilter='all', lkCurPage=0, lkPerPage=24, lkSearchVal='';
 function getFilteredCards(){
   let c=CARDS;
   if(lkFilter!=='all') c=c.filter(x=>x.n===lkFilter);
@@ -443,8 +443,8 @@ function getFilteredCards(){
 function renderCards(){
   const cards=getFilteredCards();
   const total=Math.ceil(cards.length/lkPerPage);
-  if(lkPageNum>=total) lkPageNum=Math.max(0,total-1);
-  const slice=cards.slice(lkPageNum*lkPerPage,(lkPageNum+1)*lkPerPage);
+  if(lkCurPage>=total) lkCurPage=Math.max(0,total-1);
+  const slice=cards.slice(lkCurPage*lkPerPage,(lkCurPage+1)*lkPerPage);
   const grid=document.getElementById('lk-grid');
   grid.innerHTML=slice.map(c=>{
     const niv=c.n==='a'?'🌱 Anfänger':c.n==='f'?'🔥 Fortgeschritten':'💎 Experte';
@@ -467,22 +467,21 @@ function renderCards(){
       </div>
     </div>`;
   }).join('');
-  document.getElementById('lk-page-info').textContent=`Seite ${lkPageNum+1} / ${total||1} (${cards.length} Karten)`;
+  document.getElementById('lk-page-info').textContent=`Seite ${lkCurPage+1} / ${total||1} (${cards.length} Karten)`;
 }
 function setLKFilter(niv,btn){
-  lkFilter=niv; lkPageNum=0;
+  lkFilter=niv; lkCurPage=0;
   document.querySelectorAll('.lk-filt').forEach(b=>b.className='lk-filt');
   btn.classList.add('active-'+niv);
   renderCards();
 }
-function filterCards(){lkSearchVal=document.getElementById('lk-search').value.toLowerCase();lkPageNum=0;renderCards();}
+function filterCards(){lkSearchVal=document.getElementById('lk-search').value.toLowerCase();lkCurPage=0;renderCards();}
 function lkPage(d){
   const total=Math.ceil(getFilteredCards().length/lkPerPage);
-  lkPageNum=Math.max(0,Math.min(lkPageNum+d,total-1));
+  lkCurPage=Math.max(0,Math.min(lkCurPage+d,total-1));
   renderCards();
   window.scrollTo({top:0,behavior:'smooth'});
 }
-// lkPage function registered
 
 // ═══════════════════════════════════════════════════════════════════════════
 // ── 2. VIDEOS DATA (58 videos)
@@ -999,11 +998,17 @@ function restartExam(){
 // ═══════════════════════════════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════════════════════════════
-renderCards();
-buildVidGrid();
-buildInfoCats();
-buildInfoGrid();
-buildExamSetup();
+window.addEventListener('load', function() {
+  // Force screen visible
+  document.querySelectorAll('.screen').forEach(s => { s.style.display='none'; s.classList.remove('active'); });
+  const s = document.getElementById('screen-lernkarten');
+  if(s) { s.style.display='block'; s.classList.add('active'); }
+  renderCards();
+  buildVidGrid();
+  buildInfoCats();
+  buildInfoGrid();
+  buildExamSetup();
+});
 </script>
 </body>
 </html>
