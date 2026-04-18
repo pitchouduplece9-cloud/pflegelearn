@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "builds": [{ "src": "*.html", "use": "@vercel/static" }],
+  "routes": [
+    { "src": "/", "dest": "/index.html" },
+    { "src": "/app", "dest": "/PflegeLearn_V4.html" },
+    { "src": "/login", "dest": "/PflegeLearn_Auth.html" },
+    { "src": "/dashboard", "dest": "/PflegeLearn_StudentDashboard.html" },
+    { "src": "/admin", "dest": "/PflegeLearn_AdminDashboard.html" },
+    { "src": "/chatbot", "dest": "/PflegeLearn_Chatbot.html" },
+    { "src": "/datenschutz", "dest": "/PflegeLearn_DSGVO_Pack.html" },
+    { "src": "/(.*)", "dest": "/$1" }
+  ]
+}

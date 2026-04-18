@@ -433,7 +433,7 @@ const CARDS=[
 });
 
 // ── Lernkarten State
-let lkFilter='all', lkPage=0, lkPerPage=24, lkSearchVal='';
+let lkFilter='all', lkPageNum=0, lkPerPage=24, lkSearchVal='';
 function getFilteredCards(){
   let c=CARDS;
   if(lkFilter!=='all') c=c.filter(x=>x.n===lkFilter);
@@ -443,8 +443,8 @@ function getFilteredCards(){
 function renderCards(){
   const cards=getFilteredCards();
   const total=Math.ceil(cards.length/lkPerPage);
-  if(lkPage>=total) lkPage=Math.max(0,total-1);
-  const slice=cards.slice(lkPage*lkPerPage,(lkPage+1)*lkPerPage);
+  if(lkPageNum>=total) lkPageNum=Math.max(0,total-1);
+  const slice=cards.slice(lkPageNum*lkPerPage,(lkPageNum+1)*lkPerPage);
   const grid=document.getElementById('lk-grid');
   grid.innerHTML=slice.map(c=>{
     const niv=c.n==='a'?'🌱 Anfänger':c.n==='f'?'🔥 Fortgeschritten':'💎 Experte';
@@ -467,22 +467,22 @@ function renderCards(){
       </div>
     </div>`;
   }).join('');
-  document.getElementById('lk-page-info').textContent=`Seite ${lkPage+1} / ${total||1} (${cards.length} Karten)`;
+  document.getElementById('lk-page-info').textContent=`Seite ${lkPageNum+1} / ${total||1} (${cards.length} Karten)`;
 }
 function setLKFilter(niv,btn){
-  lkFilter=niv; lkPage=0;
+  lkFilter=niv; lkPageNum=0;
   document.querySelectorAll('.lk-filt').forEach(b=>b.className='lk-filt');
   btn.classList.add('active-'+niv);
   renderCards();
 }
-function filterCards(){lkSearchVal=document.getElementById('lk-search').value.toLowerCase();lkPage=0;renderCards();}
+function filterCards(){lkSearchVal=document.getElementById('lk-search').value.toLowerCase();lkPageNum=0;renderCards();}
 function lkPage(d){
   const total=Math.ceil(getFilteredCards().length/lkPerPage);
-  lkPage=Math.max(0,Math.min(lkPage+d,total-1));
+  lkPageNum=Math.max(0,Math.min(lkPageNum+d,total-1));
   renderCards();
   window.scrollTo({top:0,behavior:'smooth'});
 }
-window.lkPage=lkPage;
+// lkPage function registered
 
 // ═══════════════════════════════════════════════════════════════════════════
 // ── 2. VIDEOS DATA (58 videos)
