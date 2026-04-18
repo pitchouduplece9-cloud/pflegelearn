@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PflegeLearn V4</title>
+<title>PflegeLearn V4 – Vollständige Lernplattform</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--teal:#0d9488;--tealD:#0f766e;--tealM:#14b8a6;--tealL:#ccfbf1;--gold:#f59e0b;--ink:#1a1a2e;--green:#10b981;--red:#e11d48;--purple:#8b5cf6;}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'DM Sans',sans-serif;background:var(--ink);color:#fff;min-height:100vh;}
-.app{max-width:900px;margin:0 auto;padding:1rem 1.2rem 5rem;}
+.app{max-width:960px;margin:0 auto;padding:1rem 1.2rem 5rem;}
 header{display:flex;align-items:center;justify-content:space-between;padding:1rem 0;flex-wrap:wrap;gap:.5rem;}
 .logo{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;color:var(--tealM);}
 .logo span{color:var(--gold);}
@@ -22,6 +22,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:1re
 .screen.on{display:block;}
 .sec-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;margin:1.5rem 0 .25rem;}
 .sec-sub{font-size:.85rem;color:rgba(255,255,255,.45);margin-bottom:1rem;}
+/* LERNKARTEN */
 .controls{display:flex;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap;align-items:center;}
 .search{flex:1;min-width:150px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:.5rem .9rem;font-size:.88rem;color:#fff;outline:none;font-family:'DM Sans',sans-serif;}
 .search::placeholder{color:rgba(255,255,255,.3);}
@@ -33,7 +34,6 @@ header{display:flex;align-items:center;justify-content:space-between;padding:1re
 .card:hover{transform:translateY(-2px);}
 .card.flipped .front{display:none;}
 .card.flipped .back{display:block!important;}
-.front{}
 .back{display:none;}
 .ctop{display:flex;justify-content:space-between;margin-bottom:.6rem;}
 .nlabel{font-size:.6rem;font-weight:800;padding:.1rem .4rem;border-radius:999px;}
@@ -46,16 +46,51 @@ header{display:flex;align-items:center;justify-content:space-between;padding:1re
 .hint{font-size:.6rem;color:rgba(255,255,255,.2);margin-top:.5rem;text-align:right;}
 .anstag{font-size:.68rem;font-weight:700;color:var(--tealM);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.35rem;}
 .key{margin-top:.55rem;padding:.45rem .65rem;background:rgba(13,148,136,.12);border-radius:7px;font-size:.7rem;color:var(--tealM);}
+.src{font-size:.62rem;color:rgba(255,255,255,.25);margin-top:.35rem;font-style:italic;}
 .pages{display:flex;align-items:center;justify-content:center;gap:.65rem;margin-top:1.1rem;}
 .pbtn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;padding:.38rem .85rem;border-radius:8px;cursor:pointer;font-size:.78rem;font-weight:600;font-family:'DM Sans',sans-serif;}
 .pbtn:hover{background:rgba(13,148,136,.2);}
 .pinfo{font-size:.75rem;color:rgba(255,255,255,.38);}
-.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:.85rem;}
-.vc{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;overflow:hidden;}
-.vthumb{height:120px;display:flex;align-items:center;justify-content:center;font-size:2.8rem;}
+/* VIDEOS */
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.85rem;}
+.vc{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;overflow:hidden;cursor:pointer;transition:.2s;}
+.vc:hover{transform:translateY(-2px);border-color:var(--teal);}
+.vthumb{height:130px;display:flex;align-items:center;justify-content:center;font-size:3rem;position:relative;}
+.vplay{position:absolute;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;font-size:1rem;}
+.vc:hover .vplay{background:var(--teal);}
 .vinfo{padding:.85rem;}
 .vn{font-size:.6rem;font-weight:800;color:var(--tealM);margin-bottom:.2rem;}
-.vt{font-size:.86rem;font-weight:700;}
+.vt{font-size:.86rem;font-weight:700;margin-bottom:.2rem;}
+.vd{font-size:.72rem;color:rgba(255,255,255,.4);}
+/* VIDEO MODAL */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;align-items:center;justify-content:center;padding:1.5rem;}
+.modal.open{display:flex;}
+.mbox{background:#1a2235;border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:1.75rem;max-width:660px;width:100%;max-height:85vh;overflow-y:auto;}
+.mclose{float:right;background:rgba(255,255,255,.1);border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:.95rem;}
+.mclose:hover{background:var(--red);}
+.mtitle{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:900;margin-top:.5rem;margin-bottom:.25rem;}
+.mmeta{font-size:.78rem;color:rgba(255,255,255,.4);margin-bottom:1.25rem;}
+.stag{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);margin-bottom:.6rem;}
+.sboard{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.65rem;margin-bottom:1.1rem;}
+.scene{background:rgba(255,255,255,.05);border-radius:10px;padding:.75rem;}
+.snum{font-size:.6rem;font-weight:800;color:var(--tealM);margin-bottom:.25rem;}
+.svis{font-size:1.8rem;margin-bottom:.3rem;}
+.stxt{font-size:.75rem;color:rgba(255,255,255,.6);line-height:1.5;}
+.sdur{font-size:.6rem;color:rgba(255,255,255,.25);margin-top:.25rem;}
+.script{background:rgba(255,255,255,.04);border-radius:10px;padding:1rem;}
+.stitle{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--tealM);margin-bottom:.6rem;}
+.sline{font-size:.82rem;color:rgba(255,255,255,.7);line-height:1.7;margin-bottom:.4rem;padding-left:.75rem;border-left:2px solid rgba(255,255,255,.1);}
+.sline.spk{color:var(--tealM);font-weight:700;border-left-color:var(--tealM);}
+/* INFOGRAFIKEN */
+.igrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.85rem;}
+.icard{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:1.25rem;cursor:pointer;transition:.2s;}
+.icard:hover{transform:translateY(-2px);border-color:var(--teal);}
+.iicon{font-size:2rem;margin-bottom:.55rem;}
+.ititle{font-size:.88rem;font-weight:700;margin-bottom:.25rem;}
+.idesc{font-size:.72rem;color:rgba(255,255,255,.42);}
+/* INFO MODAL */
+.isvg{margin:1rem 0;}
+/* EXAM */
 .exambox{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:1.5rem;margin-top:1rem;}
 .eopts{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.75rem;margin:1rem 0;}
 .eopt{border:1.5px solid rgba(255,255,255,.12);border-radius:12px;padding:.9rem;cursor:pointer;background:rgba(255,255,255,.04);}
@@ -75,6 +110,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:1re
 .cl{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:.66rem;font-weight:800;flex-shrink:0;}
 .ch.ok .cl{background:var(--green);color:#fff;}
 .ch.no .cl{background:var(--red);color:#fff;}
+.expl{margin-top:.65rem;padding:.6rem .9rem;background:rgba(16,185,129,.1);border-left:3px solid var(--green);border-radius:0 8px 8px 0;font-size:.8rem;color:#6ee7b7;line-height:1.6;}
 .nxtbtn{width:100%;padding:.7rem;border-radius:10px;background:linear-gradient(135deg,var(--tealD),var(--tealM));color:#fff;font-size:.88rem;font-weight:700;border:none;cursor:pointer;margin-top:.4rem;font-family:'DM Sans',sans-serif;}
 .resbox{text-align:center;padding:1.5rem 0;}
 .respct{font-family:'Playfair Display',serif;font-size:4rem;font-weight:900;color:var(--tealM);}
@@ -82,7 +118,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:1re
 .resstat{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:.75rem;}
 .resval{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;}
 .reslbl{font-size:.68rem;color:rgba(255,255,255,.38);margin-top:.15rem;}
-@media(max-width:540px){.grid,.vgrid{grid-template-columns:1fr;}}
+@media(max-width:540px){.grid,.vgrid,.igrid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
@@ -94,7 +130,6 @@ header{display:flex;align-items:center;justify-content:space-between;padding:1re
     <div class="badge" style="background:rgba(245,158,11,.15);border-color:rgba(245,158,11,.3);color:var(--gold)">🏆 <span id="sc">0</span> pts</div>
   </div>
 </header>
-
 <div class="nav">
   <button class="nb on" data-t="lk">📄 Lernkarten</button>
   <button class="nb" data-t="vid">🎬 Videos</button>
@@ -102,9 +137,10 @@ header{display:flex;align-items:center;justify-content:space-between;padding:1re
   <button class="nb" data-t="exam">📝 Prüfung</button>
 </div>
 
+<!-- LERNKARTEN -->
 <div class="screen on" id="s-lk">
   <div class="sec-title">Lern<span style="color:var(--tealM)">karten</span></div>
-  <div class="sec-sub">1 100 Karten · 3 Niveaus · Klicken zum Umdrehen</div>
+  <div class="sec-sub">180 Karten · 3 Niveaus · Klicken zum Umdrehen · Quellen: Icare, Pflege heute, PflBG 2020</div>
   <div class="controls">
     <input class="search" id="srch" placeholder="🔍 Thema suchen...">
     <div class="filters">
@@ -122,24 +158,51 @@ header{display:flex;align-items:center;justify-content:space-between;padding:1re
   </div>
 </div>
 
+<!-- VIDEOS -->
 <div class="screen" id="s-vid">
   <div class="sec-title">Video<span style="color:var(--tealM)">bibliothek</span></div>
-  <div class="sec-sub">58 Lehrvideos · Scripts + Storyboards</div>
+  <div class="sec-sub">20 Lehrvideos · Storyboard + Script · Klicken für Details</div>
   <div class="vgrid" id="vg"></div>
 </div>
 
-<div class="screen" id="s-info">
-  <div class="sec-title">Info<span style="color:var(--tealM)">grafiken</span></div>
-  <div class="sec-sub">300 interaktive Infografiken</div>
-  <div class="filters" id="icats" style="margin:1rem 0;"></div>
-  <div class="grid" id="ig"></div>
+<!-- VIDEO MODAL -->
+<div class="modal" id="vmodal">
+  <div class="mbox">
+    <button class="mclose" onclick="closeModal('vmodal')">✕</button>
+    <div class="mtitle" id="vm-title"></div>
+    <div class="mmeta" id="vm-meta"></div>
+    <div class="stag">🎬 Storyboard</div>
+    <div class="sboard" id="vm-board"></div>
+    <div class="script">
+      <div class="stitle">📜 Script (Auszug)</div>
+      <div id="vm-script"></div>
+    </div>
+  </div>
 </div>
 
+<!-- INFOGRAFIKEN -->
+<div class="screen" id="s-info">
+  <div class="sec-title">Info<span style="color:var(--tealM)">grafiken</span></div>
+  <div class="sec-sub">12 interaktive Infografiken · Klicken für Vollansicht · Quellen: Icare, NPUAP, WHO, NYHA</div>
+  <div class="filters" id="icats" style="margin:1rem 0;gap:.45rem;display:flex;flex-wrap:wrap;"></div>
+  <div class="igrid" id="ig"></div>
+</div>
+
+<!-- INFO MODAL -->
+<div class="modal" id="imodal">
+  <div class="mbox" style="max-width:720px;">
+    <button class="mclose" onclick="closeModal('imodal')">✕</button>
+    <div class="mtitle" id="im-title" style="margin-bottom:.75rem;"></div>
+    <div class="isvg" id="im-content"></div>
+  </div>
+</div>
+
+<!-- EXAM -->
 <div class="screen" id="s-exam">
   <div id="esetup">
     <div class="exambox">
       <div class="sec-title" style="margin-top:0">📝 Prüfungssimulator</div>
-      <div class="sec-sub">Simuliere eine echte Abschlussprüfung nach PflBG</div>
+      <div class="sec-sub">Realistische Abschlussprüfung nach PflBG-Standard</div>
       <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.3);margin-bottom:.65rem">Format wählen</div>
       <div class="eopts" id="efmts"></div>
       <button class="startbtn" id="startbtn">🚀 Prüfung starten</button>
@@ -169,100 +232,244 @@ header{display:flex;align-items:center;justify-content:space-between;padding:1re
     </div>
   </div>
 </div>
-
 </div>
+
 <script>
-var MODS=[{id:1,n:'📋',name:'Grundlagen'},{id:2,n:'🫀',name:'Vitalzeichen'},{id:3,n:'💊',name:'Medikamente'},{id:4,n:'🍽',name:'Ernährung'},{id:5,n:'🦴',name:'Mobilisation'},{id:6,n:'🧠',name:'Psychiatrie'},{id:7,n:'👶',name:'Pflegebereiche'},{id:8,n:'⚖',name:'Recht'},{id:9,n:'🏥',name:'Krankheitsbilder'},{id:10,n:'🩹',name:'Wundversorgung'}];
+// ═══════════════ DATEN – Icare / Pflege heute / PflBG 2020 ═══════════════
+var MODS=[{id:1,n:'📋',name:'Grundlagen'},{id:2,n:'🫀',name:'Vitalzeichen'},{id:3,n:'💊',name:'Medikamente'},{id:4,n:'🍽',name:'Ernährung'},{id:5,n:'🦴',name:'Mobilisation'},{id:6,n:'🧠',name:'Psychiatrie'},{id:7,n:'👶',name:'Pädiatrie/Palliativ'},{id:8,n:'⚖',name:'Recht & Beruf'},{id:9,n:'🏥',name:'Krankheitsbilder'},{id:10,n:'🩹',name:'Wundversorgung'}];
 
 var CARDS=[
-{m:1,n:'a',t:'Der Pflegeprozess',q:'Was sind die 6 Schritte des Pflegeprozesses?',a:'1. Informationssammlung\n2. Pflegediagnose\n3. Ziele festlegen\n4. Maßnahmen planen\n5. Durchführen\n6. Evaluieren',k:'Info-Dia-Ziel-Plan-Tu-Eva'},
-{m:1,n:'a',t:'SMART-Ziele',q:'Was bedeutet SMART bei Pflegezielen?',a:'S – Spezifisch\nM – Messbar\nA – Akzeptiert\nR – Realistisch\nT – Terminiert',k:'Beispiel: Patient geht in 3 Tagen 10m mit Rollator'},
-{m:1,n:'a',t:'Händedesinfektion',q:'5 Indikationen zur Händedesinfektion?',a:'1. Vor Patientenkontakt\n2. Vor aseptischen Tätigkeiten\n3. Nach Kontakt mit Körperflüssigkeiten\n4. Nach Patientenkontakt\n5. Nach Kontakt mit Patientenumgebung',k:'WHO My 5 Moments'},
-{m:1,n:'f',t:'Pflegediagnose',q:'Unterschied Pflegediagnose vs. medizinische Diagnose?',a:'Medizinisch: Erkrankung (z.B. Herzinsuffizienz)\nPflege: Reaktion darauf (z.B. Aktivitätsintoleranz)\n\nPflegediagnose = menschliche Reaktion auf Gesundheitsproblem',k:'NANDA-Systematik'},
-{m:1,n:'e',t:'Ethisches Dilemma',q:'Autonomie vs. Fürsorge: Wie löst man ethische Konflikte?',a:'1. Ethische Fallbesprechung\n2. Alle Perspektiven einbeziehen\n3. Patientenverfügung prüfen\n4. Vier-Prinzipien-Modell anwenden\n5. Dokumentieren',k:'Autonomie > Benefizienz (außer Notfall)'},
-{m:2,n:'a',t:'Blutdruck Normalwerte',q:'Normalwert und Grenzwerte des Blutdrucks?',a:'Normal: 120/80 mmHg\nHypotonie: < 100/60 mmHg\nHypertonie Grad I: 140-159/90-99\nHypertonie Grad II: 160-179/100-109\nHypertonie Grad III: >= 180/110',k:'Messung nach Riva-Rocci'},
-{m:2,n:'a',t:'Herzfrequenz',q:'Bradykardie, Normokardie, Tachykardie Grenzwerte?',a:'Bradykardie: < 60/min\nNormokardie: 60-100/min\nTachykardie: > 100/min\n\nBei Arrhythmie: sofort Arzt!',k:'Neugeborene: 120-160/min (normal)'},
-{m:2,n:'a',t:'Körpertemperatur',q:'Temperaturmessmethoden mit Normalwerten?',a:'Rektal (Goldstandard): 36,5-37,5 Grad\nAxillär: 36,0-37,0 Grad\nOral: 36,0-37,3 Grad\nFieber: > 38,1 Grad',k:'Subfebrile: 37,5-38,0 Grad'},
-{m:2,n:'f',t:'Schockzeichen',q:'Vitalzeichen-Konstellation beim Schock?',a:'Classic Shock Triad:\n- HF > 100/min, fadenförmig\n- RR systolisch < 90 mmHg\n- SpO2 < 90%\n\nDazu: kalte blasse Haut, Bewusstseinsveränderung',k:'Sofort: Flachlagerung + Notarzt'},
-{m:2,n:'e',t:'COPD und O2',q:'Warum ist hochdosierte O2-Gabe bei COPD gefährlich?',a:'COPD-Patienten haben hypoxischen Atemantrieb.\n\nHohe O2-Gabe hemmt diesen Antrieb\n→ CO2-Narkose möglich!\n\nZiel-SpO2 bei COPD: 88-92%',k:'Kontrollierte O2-Gabe, Lippenbremse'},
-{m:3,n:'a',t:'5-R-Regel',q:'Die 5 Richtigkeiten bei Medikamentengabe?',a:'R1: Richtiger Patient\nR2: Richtiges Medikament\nR3: Richtige Dosis\nR4: Richtiger Weg\nR5: Richtige Zeit',k:'Immer alle 5 R prüfen!'},
-{m:3,n:'a',t:'Applikationswege',q:'6 Applikationswege mit Abkürzung?',a:'p.o. – oral – Tablette\ns.l. – sublingual – Nitro\ns.c. – subkutan – Insulin\ni.m. – intramuskulär – Impfung\ni.v. – intravenös – Antibiotika\ntransdermal – Pflaster',k:'p.o. vor i.v. wenn möglich'},
-{m:3,n:'f',t:'Infusion berechnen',q:'Tropfrate berechnen: 500ml über 4h, Tf 20?',a:'Formel: Tropfen/min = (Volumen x Tropffaktor) / Zeit (min)\n\n500ml x 20 / 240min = 41,7 ≈ 42 Tr/min',k:'Standard Tropffaktor: 20 Tr/ml'},
-{m:4,n:'a',t:'Ernährungsscreening',q:'Screening-Instrumente für Mangelernährung?',a:'MNA: Senioren >= 65 Jahre\nNRS 2002: Krankenhauspatienten\nMUST: allgemeine Bevölkerung\n\nBMI < 18,5 = Untergewicht',k:'Screening bei Aufnahme + wöchentlich'},
-{m:4,n:'f',t:'NGS vs PEG',q:'NGS vs. PEG: Indikation und Dauer?',a:'NGS (nasogastral):\n- Kurzzeit < 4 Wochen\n- Reversibel\n\nPEG (perkutan-endoskopisch):\n- Langzeit > 4 Wochen\n- Tumorpatienten, Demenz',k:'Lageprüfung vor jeder Gabe!'},
-{m:5,n:'a',t:'Bradenskala',q:'Bradenskala: 6 Bereiche und Risikostufen?',a:'6 Bereiche: Sinneswahrnehmung, Feuchtigkeit, Aktivität, Mobilität, Ernährung, Reibung\n\nRisiko: <=18\nHohes Risiko: <=12\nSehr hohes: <=9 (Max: 23)',k:'Niedriger Score = höheres Risiko!'},
-{m:5,n:'a',t:'6 Prophylaxen',q:'Die 6 Hauptprophylaxen in der Pflege?',a:'1. Dekubitusprophylaxe\n2. Thromboseprophylaxe\n3. Pneumonieprophylaxe\n4. Kontrakturprophylaxe\n5. Sturzprophylaxe\n6. Intertrigoprophylaxe',k:'+ Parotitisprophylaxe als 7.'},
-{m:5,n:'f',t:'Dekubitus-Versorgung',q:'Wundversorgung Dekubitus nach Grad?',a:'Grad 1: Druckentlastung, Hautpflege\nGrad 2: Hydrokolloid oder Schaumstoff\nGrad 3: Alginat, feuchte Versorgung\nGrad 4: Chirurgie prüfen',k:'Druckentlastung = wichtigste Maßnahme!'},
-{m:5,n:'e',t:'Virchow-Trias',q:'Was begünstigt Thromboseentstehung?',a:'1. Verlangsamter Blutfluss (Immobilität)\n2. Gefäßwandveränderung (OP-Trauma)\n3. Gerinnungsveränderung (Hyperkoagulabilität)\n\nJeder Faktor erhöht das Risiko',k:'Heparin wirkt auf Punkt 3'},
-{m:6,n:'a',t:'Demenzformen',q:'4 Hauptformen der Demenz mit Häufigkeit?',a:'Alzheimer: ~65% - Kurzzeitgedächtnis\nVaskulär: ~15% - nach Schlaganfall\nLewy-Body: ~10% - Halluzinationen\nFrontotemporale: ~5% - Persönlichkeit',k:'Alzheimer + vaskulär = 80%'},
-{m:6,n:'f',t:'TALK-Schema',q:'TALK-Schema bei Suizidgefahr?',a:'T - Tell: offen ansprechen\nA - Ask: direkt fragen (erhöht Risiko NICHT!)\nL - Listen: aktiv zuhören\nK - Keep safe: Sicherheit + Arzt',k:'Direktes Fragen erhöht das Risiko NICHT'},
-{m:7,n:'a',t:'Normalwerte Pädiatrie',q:'Herzfrequenz und Atemfrequenz nach Altersgruppe?',a:'Neugeborenes: HF 120-160, AF 40-60\nSäugling: HF 100-140, AF 30-40\nKleinkind: HF 80-120, AF 20-30\nSchulkind: HF 70-110, AF 18-26',k:'Je jünger = schneller'},
-{m:7,n:'f',t:'Total Pain',q:'Was ist Total Pain nach Cicely Saunders?',a:'4 Dimensionen:\nPhysisch: Schmerz, Atemnot\nPsychisch: Angst, Depression\nSozial: Isolation, Rollenverlust\nSpirituell: Sinnfragen, Sterbensangst',k:'Palliativpflege adressiert ALLE Dimensionen'},
-{m:8,n:'a',t:'PflBG 2020',q:'Was änderte das Pflegeberufegesetz 2020?',a:'Zusammenführung von 3 Ausbildungen:\n- Krankenpflege\n- Kinderkrankenpflege\n- Altenpflege\n→ Einheitlicher Abschluss: Pflegefachfrau/-mann\n3 Jahre, generalistisch',k:'5 Kompetenzbereiche'},
-{m:8,n:'f',t:'Haftungsarten',q:'3 Haftungsarten in der Pflege?',a:'Zivilrechtlich (BGB): Schadensersatz\nStrafrechtlich (StGB): Körperverletzung\nBerufsrechtlich: Berufsgerichtlich',k:'Durchführungsverantwortung = persönliche Haftung'},
-{m:9,n:'a',t:'Herzinfarkt Symptome',q:'Typische und atypische Herzinfarkt-Symptome?',a:'Typisch:\n- Vernichtungsschmerz Brust\n- Ausstrahlung links (Arm, Kiefer)\n- Kaltschweißigkeit\n\nAtypisch:\n- Rücken-/Bauchschmerzen\n- Erschöpfung allein',k:'Zeit ist Myokard - sofort 112!'},
-{m:9,n:'f',t:'Diabetischer Fuß',q:'Warum ist das diabetische Fußsyndrom gefährlich?',a:'Neuropathie → keine Schmerzwahrnehmung\nAngiopathie → schlechte Durchblutung\n→ Infektion → Osteomyelitis → Amputation\n\nPrävention: tägliche Fußinspektion',k:'#1 Ursache nicht-traumatischer Amputationen'},
-{m:10,n:'a',t:'Wundheilungsphasen',q:'Die 4 Phasen der Wundheilung?',a:'1. Hämostase: 0-10 Min\n2. Inflammation: 1-5 Tage\n3. Proliferation: 5-21 Tage\n4. Reparation: 21 Tage bis 2 Jahre\n\nMerksatz: Hämo-Inflam-Proli-Repara',k:'Feuchte Versorgung fördert alle Phasen'},
-{m:10,n:'a',t:'TIME-Prinzip',q:'Was bedeutet TIME in der Wundversorgung?',a:'T – Tissue: Wundgrund bereiten\nI – Infection: Infektion kontrollieren\nM – Moisture: Feuchtigkeitsbalance\nE – Edge: Wundrand aktivieren',k:'Gilt für chronische Wunden'},
-{m:10,n:'f',t:'Wundauflagen Auswahl',q:'Welche Wundauflage bei welchem Wundtyp?',a:'Trocken/nekrotisch → Hydrogel\nLeicht exsudierend → Hydrokolloid\nStark exsudierend → Alginat\nInfiziert → Silberhaltig\nGeruchsbelastet → Aktivkohle',k:'Feucht = Goldstandard'},
-{m:10,n:'e',t:'Biofilm',q:'Was ist Biofilm und warum ist er problematisch?',a:'Polymikrobieller Schutzfilm auf Wunden\n\n- Antibiotika bis 1000x weniger wirksam\n- Verhindert Granulationsgewebe\n- Unterhält Entzündung\n\nTherapie: Débridement + Antiseptika',k:'Biofilm = Hauptursache chronischer Wunden'},
+// ══ MODUL 1: GRUNDLAGEN ══
+{m:1,n:'a',t:'Der Pflegeprozess',q:'Wie viele Schritte hat der Pflegeprozess und wie lauten sie?',a:'Der Pflegeprozess hat 6 Schritte:\n1. Informationssammlung (Assessment)\n2. Pflegediagnose\n3. Pflegeziele festlegen\n4. Pflegemaßnahmen planen\n5. Pflegemaßnahmen durchführen\n6. Evaluierung (Wirksamkeitskontrolle)',k:'Merksatz: Info-Dia-Ziel-Plan-Tu-Eva',src:'Quelle: Icare Pflege, Band 1'},
+{m:1,n:'a',t:'SMART-Ziele',q:'Was bedeutet das Akronym SMART bei der Pflegezielformulierung?',a:'S – Spezifisch (klar und eindeutig formuliert)\nM – Messbar (Kriterien für Zielerreichung)\nA – Akzeptiert (vom Patienten mitgetragen)\nR – Realistisch (erreichbar und ressourcenorientiert)\nT – Terminiert (Datum der Evaluierung festgelegt)',k:'Beispiel: "Der Patient geht bis Freitag 10 m mit Rollator ohne Pause"',src:'Quelle: Icare Pflege, Pflegeprozess'},
+{m:1,n:'a',t:'Pflegemodell nach Krohwinkel',q:'Was sind die 13 ABEDL nach Krohwinkel?',a:'ABEDL = Aktivitäten, Beziehungen und existenzielle Erfahrungen des Lebens:\n1. Kommunizieren\n2. Sich bewegen\n3. Vitale Funktionen aufrechterhalten\n4. Sich pflegen\n5. Essen und trinken\n6. Ausscheiden\n7. Sich kleiden\n8. Ruhen und schlafen\n9. Sich beschäftigen\n10. Sich als Mann/Frau fühlen\n11. Für sichere Umgebung sorgen\n12. Soziale Bereiche sichern\n13. Mit existenziellen Erfahrungen umgehen',k:'Monika Krohwinkel – häufigstes Modell in DE',src:'Quelle: Pflege heute, Kapitel Pflegemodelle'},
+{m:1,n:'a',t:'Händehygiene WHO',q:'Wann muss laut WHO desinfiziert werden? (5 Indikationen)',a:'1. VOR dem Patientenkontakt\n2. VOR aseptischen Tätigkeiten (z.B. Katheterisierung, Injektionen)\n3. NACH Kontakt mit Blut/Körperflüssigkeiten\n4. NACH dem Patientenkontakt\n5. NACH Kontakt mit der Patientenumgebung',k:'WHO My 5 Moments for Hand Hygiene – obligatorisch!',src:'Quelle: WHO Guidelines Hand Hygiene, Icare Hygiene'},
+{m:1,n:'f',t:'Pflegedokumentation',q:'Was muss eine rechtssichere Pflegedokumentation enthalten?',a:'Pflichtinhalte laut § 113 SGB XI:\n- Datum und Uhrzeit der Maßnahmen\n- Art und Umfang der erbrachten Leistungen\n- Besonderheiten / Abweichungen vom Plan\n- Unterschrift der ausführenden Pflegeperson\n- Vitalzeichen und Beobachtungen\n- Reaktionen des Patienten\n\nGrundsatz: "Was nicht dokumentiert ist, ist nicht getan!"',k:'Pflegedokumentation = rechtliches Beweismittel',src:'Quelle: Pflege heute, SGB XI, Icare Recht'},
+{m:1,n:'e',t:'Pflegeethik – 4-Prinzipien',q:'Welche 4 bioethischen Prinzipien nach Beauchamp & Childress sind in der Pflege relevant?',a:'1. Autonomie: Selbstbestimmungsrecht des Patienten respektieren\n2. Benefizienz: Wohltun – aktiv zum Wohl des Patienten handeln\n3. Non-Malefizienz: Nicht schaden – Risiken minimieren\n4. Gerechtigkeit: Gleichbehandlung, gerechte Ressourcenverteilung\n\nBei Konflikten: Autonomie hat in der Regel Vorrang, außer bei Einwilligungsunfähigkeit!',k:'Beauchamp & Childress – Standardwerk Pflegeethik',src:'Quelle: Pflege heute, Kapitel Ethik'},
+// ══ MODUL 2: VITALZEICHEN ══
+{m:2,n:'a',t:'Blutdrucknormalwerte',q:'Wie lauten die Blutdrucknormalwerte und Grenzwerte nach WHO/ESH?',a:'OPTIMAL: < 120/80 mmHg\nNORMAL: 120–129 / 80–84 mmHg\nHOCHNORMAL: 130–139 / 85–89 mmHg\n\nHYPERTONIE:\nGrad I: 140–159 / 90–99 mmHg\nGrad II: 160–179 / 100–109 mmHg\nGrad III: ≥ 180 / ≥ 110 mmHg\n\nHYPOTONIE: systolisch < 100 mmHg (Frauen), < 110 mmHg (Männer)',k:'Messung nach Riva-Rocci: 5 Min Ruhe, Korotkoff-Töne',src:'Quelle: ESH/ESC Leitlinien, Icare Vitalzeichen'},
+{m:2,n:'a',t:'Herzfrequenz',q:'Herzfrequenz: Normalwerte, Bradykardie, Tachykardie?',a:'NORMOKARDIE: 60–100/min (Erwachsene)\nBRADYKARDIE: < 60/min\nTACHYKARDIE: > 100/min\n\nAltersspezifisch:\nNeugeborene: 120–160/min\nSäugling: 100–140/min\nKleinkind: 80–120/min\nSchulkind: 70–100/min',k:'Absolute Arrhythmie (vorhofflimmern): unregelmäßig + sofort Arzt!',src:'Quelle: Icare Vitalzeichen, Pflege heute'},
+{m:2,n:'a',t:'Körpertemperatur',q:'Temperaturmessung: Methoden, Normalwerte und Fiebergrade?',a:'MESSMETHODEN & NORMALWERTE:\nRektal (Goldstandard): 36,5–37,5 °C\nOral: 36,0–37,3 °C (ca. 0,3 °C niedriger)\nAxillär: 35,8–37,0 °C (ca. 0,5 °C niedriger)\nTympanal (Ohr): 36,5–37,5 °C\n\nFIEBERGRADE:\nSubfebril: 37,5–38,0 °C\nLeichtes Fieber: 38,1–38,5 °C\nMäßiges Fieber: 38,6–39,0 °C\nHohes Fieber: 39,1–40,0 °C\nHyperpyrexie: > 40,0 °C',k:'Rektal = genaueste Methode, vor allem bei Kindern',src:'Quelle: Icare, Pflege heute Kapitel Vitalzeichen'},
+{m:2,n:'a',t:'Atemfrequenz',q:'Atemfrequenz: Normalwerte und pathologische Veränderungen?',a:'ERWACHSENE: 12–18 Atemzüge/min\n(in Ruhephasen bis 20/min noch normal)\n\nKINDER:\nNeugeborene: 40–60/min\nSäuglinge: 30–40/min\nKleinkinder: 20–30/min\nSchulkinder: 18–25/min\n\nPATHOLOGISCH:\nBradypnoe: < 12/min\nTachypnoe: > 20/min\nApnoe: Atemstillstand',k:'Beobachtung: Rhythmus, Tiefe, Geräusche (Stridor, Rasselgeräusche)',src:'Quelle: Icare Pflege, Vitalzeichen'},
+{m:2,n:'f',t:'Schockzeichen erkennen',q:'Welche Vitalzeichen-Konstellation deutet auf einen Schock hin und was sind die Sofortmaßnahmen?',a:'SCHOCKZEICHEN (Classic Shock Triad):\n• Herzfrequenz ↑ > 100/min, fadenförmig, schwer tastbar\n• Blutdruck ↓ systolisch < 90 mmHg\n• SpO2 ↓ < 90%\n\nWEITERE ZEICHEN:\n• Blasse, kaltschweißige, marmorierte Haut\n• Bewusstseinstrübung, Unruhe\n• Oligurie (Urinausscheidung < 0,5 ml/kg/h)\n\nSOFORTMASSNAHMEN:\n1. Notarzt 112 rufen\n2. Flachlagerung, Beine erhöht (Schocklagerung)\n3. Wärmeerhalt (Decke)\n4. i.v.-Zugang legen (Arzt)\n5. O2-Gabe 4–6 L/min',k:'Schock = Notfall! Immer sofort Notarzt!',src:'Quelle: Pflege heute, Notfallpflege'},
+{m:2,n:'e',t:'O2-Therapie bei COPD',q:'Warum ist hochdosierte O2-Gabe bei COPD-Patienten gefährlich?',a:'PATHOPHYSIOLOGIE:\nCOPD-Patienten haben chronisch erhöhte CO2-Spiegel (Hyperkapnie).\n\nNormaler Atemantrieb: CO2-Anstieg → Atemstimulation\nBei COPD: CO2-Rezeptoren adaptiert → der HYPOXISCHE Atemantrieb (O2-Mangel) übernimmt die Atemregulation.\n\nFOLGE hoher O2-Gabe:\nO2-Sättigung steigt → hypoxischer Atemantrieb fällt weg → Atemantrieb sinkt → CO2 steigt → CO2-Narkose (Hyperkapnie-Koma)\n\nZIEL-SpO2 bei COPD: 88–92%\n(Nicht 95–99% wie bei anderen Patienten!)',k:'COPD: kontrollierte O2-Gabe, Lippenbremse, Kutschersitz',src:'Quelle: Icare Pneumologie, Pflege heute COPD'},
+// ══ MODUL 3: MEDIKAMENTE ══
+{m:3,n:'a',t:'10-R-Regel Medikamente',q:'Wie lautet die vollständige 10-R-Regel bei der Medikamentengabe?',a:'R1: Richtiger PATIENT (Name + Geburtsdatum prüfen)\nR2: Richtiges MEDIKAMENT (Bezeichnung genau lesen)\nR3: Richtige DOSIS (verordnete Dosis nachrechnen)\nR4: Richtiger APPLIKATIONSWEG (oral, i.v., s.c. etc.)\nR5: Richtige ZEIT (Zeitpunkt der Gabe beachten)\nR6: Richtige DOKUMENTATION (sofort nach Gabe)\nR7: Richtige AUFKLÄRUNG (Patient informiert?)\nR8: Richtiges VERFALLDATUM (abgelaufen?)\nR9: Richtige LAGERUNG (Lichtschutz, Kühlkette)\nR10: Richtige REAKTION (auf Unverträglichkeiten achten)',k:'Früher 5-R-Regel, heute Standard: 10 R!',src:'Quelle: Icare Medikamentenlehre, Pflege heute 2023'},
+{m:3,n:'a',t:'Applikationswege',q:'Nennen Sie die wichtigsten Applikationswege mit Beispielen',a:'p.o. (per os) = oral: Tabletten, Kapseln, Saft\ns.l. (sublingual): Nitroglyzerin bei Angina pectoris\nrektal: Suppositorien, Klysmen\ns.c. (subkutan): Insulin, Heparin, Morphin\ni.m. (intramuskulär): Impfungen, Diclofenac\ni.v. (intravenös): Antibiotika, Infusionen\ntransdermal: Fentanyl-Pflaster, Nitroglyzerin-Pflaster\ninhalativ: Bronchodilatatoren (COPD, Asthma)\nlokal/topisch: Salben, Augentropfen',k:'Bioverfügbarkeit i.v. = 100% (Goldstandard)',src:'Quelle: Icare Medikamentenlehre'},
+{m:3,n:'f',t:'Dosierungsberechnung',q:'Berechnen Sie: Patient soll 500 mg Amoxicillin erhalten, verfügbar sind Tabletten mit 250 mg. Wie viele Tabletten?',a:'FORMEL: Anzahl = Verschriebene Dosis / Dosis pro Einheit\n\nRECHNUNG: 500 mg / 250 mg = 2 Tabletten\n\nFÜR INFUSIONEN:\nFormel: Tropfen/min = (Volumen ml × Tropffaktor) / Zeit in Minuten\n\nBEISPIEL: 500 ml NaCl 0,9% über 4 Stunden, Tf = 20\n500 × 20 / 240 min = 41,7 ≈ 42 Tropfen/min\n\nStandard-Tropffaktoren:\n- Normaltropfer: 20 Tr/ml\n- Kindertropfer: 60 Tr/ml',k:'Immer doppelt nachrechnen und gegenlesen lassen!',src:'Quelle: Icare Medikamentenlehre, Pflege heute'},
+{m:3,n:'e',t:'Pharmakokinetik ADME',q:'Was bedeuten Absorption, Distribution, Metabolismus und Exkretion (ADME)?',a:'A = ABSORPTION: Aufnahme ins Blut\n- p.o.: Resorption im Dünndarm (first-pass-Effekt Leber!)\n- i.v.: 100% Bioverfügbarkeit, kein first-pass\n\nD = DISTRIBUTION: Verteilung im Körper\n- Lipophile Stoffe: ZNS-gängig\n- Plasmaproteinbindung beeinflusst Wirkung\n\nM = METABOLISMUS: Biotransformation\n- Leber (CYP450-Enzyme)\n- Wichtig: Wechselwirkungen!\n\nE = EXKRETION: Ausscheidung\n- Niere (renal) – Hauptweg\n- Galle (enterohepatischer Kreislauf)\n\nKLINISCH RELEVANT:\nNiereninsuffizienz → renale Medikamente kumulieren\nLeberinsuffizienz → hepatischer Abbau reduziert',k:'Halbwertszeit T1/2 = Zeit bis 50% des Wirkstoffs abgebaut',src:'Quelle: Icare Pharmakologie, Pflege heute'},
+// ══ MODUL 4: ERNÄHRUNG ══
+{m:4,n:'a',t:'Mangelernährung screening',q:'Welche Screening-Instrumente gibt es und wann werden sie eingesetzt?',a:'MNA (Mini Nutritional Assessment):\n→ Für Senioren ≥ 65 Jahre\n→ Ergebnis: 0–7 = Mangelernährung, 8–11 = Risiko, 12–14 = Normal\n\nNRS 2002 (Nutritional Risk Screening):\n→ Für Krankenhauspatienten\n→ Score ≥ 3 = Ernährungsrisiko → Diätassistenz!\n\nMUST (Malnutrition Universal Screening Tool):\n→ Allgemeinbevölkerung\n\nINDIKATOREN Mangelernährung:\n- BMI < 18,5 kg/m²\n- Unbeabsichtigter Gewichtsverlust > 5% in 3 Monaten\n- Verminderte Nahrungsaufnahme',k:'Screening bei Aufnahme + wöchentlich im Krankenhaus!',src:'Quelle: DGEM Leitlinien, Icare Ernährung'},
+{m:4,n:'f',t:'Enterale Ernährung',q:'Unterschied NGS vs. PEG: Indikationen, Vor- und Nachteile?',a:'NGS (Nasogastralsonde):\n+ Einfache Anlage, reversibel, kostengünstig\n+ Geeignet für Kurzzeit < 4 Wochen\n- Aspirationsrisiko\n- Diskomfort für Patient\nIndikation: postoperative Übergangslösung, Dysphagie\n\nPEG (Perkutane Endoskopische Gastrostomie):\n+ Komfortabler, Langzeit > 4 Wochen geeignet\n+ Geringeres Aspirationsrisiko\n- Operativer Eingriff, Komplikationen möglich\nIndikation: Tumor, Demenz, Schlaganfall, ALS\n\nPFLEGE BEIDER SONDEN:\n✓ Lageprüfung VOR jeder Gabe (pH-Wert < 5,5 = korrekte Lage)\n✓ Halbsitzende Position (30–45°) während + 30 Min nach Gabe\n✓ Spülen mit 20–30 ml Wasser vor und nach Gabe',k:'PH-Wert-Kontrolle = Goldstandard Lageprüfung!',src:'Quelle: Icare Ernährung, Pflege heute'},
+// ══ MODUL 5: MOBILISATION ══
+{m:5,n:'a',t:'Bradenskala',q:'Bradenskala: Bereiche, Punktwerte und Risikoeinteilung?',a:'6 BEWERTUNGSBEREICHE (je 1–4 Punkte, max. 23 Punkte):\n1. Sinneswahrnehmung\n2. Feuchtigkeit der Haut\n3. Aktivität\n4. Mobilität\n5. Ernährungszustand\n6. Reibung und Scherkräfte\n\nRISIKOSTUFEN:\n≥ 19 Punkte: Kein Risiko\n15–18 Punkte: Geringes Risiko\n13–14 Punkte: Mittleres Risiko\n10–12 Punkte: Hohes Risiko\n≤ 9 Punkte: Sehr hohes Risiko\n\nJe NIEDRIGER der Score, desto HÖHER das Risiko!',k:'Bradenskala = Pflichtassessment bei Aufnahme!',src:'Quelle: DNQP Expertenstandard Dekubitus, Icare'},
+{m:5,n:'a',t:'6 Pflege-Prophylaxen',q:'Welche 6 Hauptprophylaxen gibt es in der Pflege?',a:'1. DEKUBITUSPROPHYLAXE\n   Maßnahmen: Druckentlastung, Lagerungswechsel 2-stündlich, Hautpflege\n\n2. THROMBOSEPROPHYLAXE\n   Maßnahmen: Frühmobilisation, Kompressionsstrümpfe, NMH (Heparin s.c.)\n\n3. PNEUMONIEPROPHYLAXE\n   Maßnahmen: Atemübungen, Abhusten fördern, Oberkörperhochlagerung 30°\n\n4. KONTRAKTURPROPHYLAXE\n   Maßnahmen: Lagerung in Funktionsstellung, passive Bewegungsübungen\n\n5. STURZPROPHYLAXE\n   Maßnahmen: Morse Fall Scale, Hüftprotektor, sicheres Umfeld\n\n6. INTERTRIGOPROPHYLAXE\n   Maßnahmen: Hautfalten trocken halten, atmungsaktive Kleidung',k:'+ Parotitisprophylaxe (Mundpflege) als 7. Prophylaxe!',src:'Quelle: DNQP Expertenstandards, Icare Pflege'},
+{m:5,n:'e',t:'Virchow-Trias Thrombose',q:'Was ist die Virchow-Trias und wie beeinflusst sie die Thromboseprophylaxe?',a:'VIRCHOW-TRIAS (3 thrombosebegünstigende Faktoren):\n\n1. VERLANGSAMTER BLUTFLUSS (Hämodynamik)\n   → Ursachen: Immobilität, Herzinsuffizienz, Bettruhe\n   → Prophylaxe: Frühmobilisation, Beinübungen\n\n2. GEFÄßWANDVERÄNDERUNG (Gefäßendothel)\n   → Ursachen: Operationen, Traumata, Entzündungen\n   → Prophylaxe: Venentraining\n\n3. GERINNUNGSVERÄNDERUNG (Hyperkoagulabilität)\n   → Ursachen: Dehydratation, Tumoren, hormonelle Kontrazeptiva\n   → Prophylaxe: Niedermolekulares Heparin (NMH) s.c., Hydratation\n\nNMH (z.B. Enoxaparin/Clexane): hemmt Faktor Xa der Blutgerinnungskaskade',k:'Heparin wirkt auf Punkt 3 – Gerinnungshemmung!',src:'Quelle: Icare Chirurgie, Pflege heute Thrombose'},
+// ══ MODUL 6: PSYCHIATRIE ══
+{m:6,n:'a',t:'Demenzformen',q:'Welche 4 Hauptformen der Demenz gibt es mit Häufigkeit und Charakteristika?',a:'1. ALZHEIMER-DEMENZ: ~65%\n   Schleichender Beginn, zuerst Kurzzeitgedächtnis, später Sprache\n\n2. VASKULÄRE DEMENZ: ~15%\n   Stufenweiser Verlauf nach Schlaganfällen, fokale Ausfälle\n\n3. LEWY-KÖRPER-DEMENZ: ~10%\n   Visuelle Halluzinationen, Parkinson-Symptome, REM-Schlafstörung\n\n4. FRONTOTEMPORALE DEMENZ: ~5%\n   Persönlichkeitsveränderung, Enthemmung, früher Beginn (< 65 J.)\n\nDiagnostik: MMST (Mini-Mental-Status-Test), DemTect, Uhrentest\n\nMerke: Alzheimer + Vaskulär = 80% aller Demenzen!',k:'Wichtig: Delirium ≠ Demenz! Delirium ist akut und reversibel!',src:'Quelle: Icare Psychiatrie, Pflege heute Neurologie'},
+{m:6,n:'f',t:'Suizidalität – TALK',q:'Wie geht man bei Verdacht auf Suizidalität vor (TALK-Schema)?',a:'TALK-SCHEMA:\nT – TELL: Offen auf Suizidgedanken ansprechen\n   "Ich mache mir Sorgen um Sie. Denken Sie manchmal daran, sich das Leben zu nehmen?"\n\nA – ASK: Direkt und konkret fragen\n   "Haben Sie konkrete Pläne?"\n   WICHTIG: Direktes Fragen erhöht das Suizidrisiko NICHT!\n\nL – LISTEN: Aktiv zuhören, nicht bewerten\n   Keine Ratschläge, keine Bagatellisierung\n\nK – KEEP SAFE: Sicherheit herstellen\n   Sofort Arzt informieren, nicht allein lassen\n   Potenzielle Mittel entfernen (Medikamente, scharfe Gegenstände)\n\nMerke: Nie versprechen, nichts zu sagen!',k:'Direktes Fragen = kein erhöhtes Risiko – Mythos widerlegt!',src:'Quelle: Icare Psychiatrie, S3-Leitlinie Suizidalität'},
+// ══ MODUL 7: PÄDIATRIE / PALLIATIV ══
+{m:7,n:'a',t:'Pediatrische Normalwerte',q:'Wie lauten die altersabhängigen Normalwerte für HF und AF?',a:'HERZFREQUENZ (Schläge/min):\nFrühgeborene: 140–160\nNeugeborene (0–1 Monat): 120–160\nSäuglinge (1–12 Monate): 100–140\nKleinkinder (1–5 Jahre): 80–120\nSchulkinder (6–12 Jahre): 70–110\nJugendliche/Erwachsene: 60–100\n\nATEMFREQUENZ (Atemzüge/min):\nNeugeborene: 40–60\nSäuglinge: 30–40\nKleinkinder: 20–30\nSchulkinder: 18–25\nErwachsene: 12–18',k:'Merke: Je jünger das Kind, desto höher die Normalwerte!',src:'Quelle: Icare Pädiatrie, Pflege heute'},
+{m:7,n:'f',t:'Total Pain – Palliativ',q:'Was versteht man unter "Total Pain" nach Dame Cicely Saunders?',a:'Dame Cicely Saunders prägte den Begriff "Total Pain" (Totaler Schmerz):\nPalliativpflege adressiert 4 Dimensionen des Leidens:\n\n1. PHYSISCH: Schmerz, Atemnot, Übelkeit, Fatigue\n   → medikamentöse + pflegerische Maßnahmen\n\n2. PSYCHISCH: Angst, Depression, Würdeverlust, Hoffnungslosigkeit\n   → Psychosoziale Begleitung, Krisenintervention\n\n3. SOZIAL: Isolation, Rollenverlust, finanzielle Sorgen\n   → Sozialarbeit, Angehörigeneinbindung\n\n4. SPIRITUELL/EXISTENZIELL: Sinnfragen, Sterbensangst, religiöse Bedürfnisse\n   → Seelsorge, Biografiearbeit\n\nEchte Palliativpflege behandelt ALLE 4 Dimensionen!',k:'Cicely Saunders gründete 1967 das erste Hospiz (St. Christopher\'s, London)',src:'Quelle: Pflege heute Palliativ, Icare Palliativpflege'},
+// ══ MODUL 8: RECHT ══
+{m:8,n:'a',t:'PflBG 2020',q:'Was sind die wichtigsten Neuerungen des Pflegeberufegesetzes (PflBG) 2020?',a:'GENERALISTISCHE AUSBILDUNG:\nZusammenführung von 3 bisherigen Berufen:\n- Gesundheits- und Krankenpflege\n- Gesundheits- und Kinderkrankenpflege\n- Altenpflege\n→ Einheitlicher Abschluss: Pflegefachfrau / Pflegefachmann\n\nAUFBAU: 3 Jahre generalistische Ausbildung\n- 1. + 2. Jahr: gemeinsame Grundlagen\n- 3. Jahr: Vertiefung wählbar (Pädiatrie oder Langzeitpflege)\n\n5 KOMPETENZBEREICHE (PflBG Anlage 1):\nI. Pflegeprozesse gestalten\nII. Kommunikation und Beratung\nIII. Intra- und interprofessionelle Zusammenarbeit\nIV. Eigenverantwortung und Reflexion\nV. Qualitätssicherung und -entwicklung',k:'PflBG = Pflegeberufegesetz, in Kraft seit 01.01.2020',src:'Quelle: PflBG 2017, Pflege heute Berufsrecht'},
+{m:8,n:'f',t:'Haftungsrecht Pflege',q:'Welche drei Haftungsarten gelten in der Pflege?',a:'1. ZIVILRECHTLICHE HAFTUNG (BGB)\n   Grundlage: §§ 280, 823 BGB\n   → Schadensersatz bei Pflichtverletzung\n   Beispiel: Sturz durch mangelnde Prophylaxe\n\n2. STRAFRECHTLICHE HAFTUNG (StGB)\n   Grundlagen: §§ 222, 229, 323c StGB\n   → Fahrlässige Tötung, fahrlässige Körperverletzung\n   → Unterlassene Hilfeleistung\n\n3. BERUFSRECHTLICHE HAFTUNG\n   → Berufsgerichtliche Verfahren\n   → Aberkennung der Berufserlaubnis möglich\n\nDURCHFÜHRUNGSVERANTWORTUNG:\nJede Pflegeperson haftet persönlich für korrekte Durchführung, auch wenn ein Arzt angeordnet hat!',k:'Übernahmepflicht: Nur übernehmen, was man kompetent ausführen kann!',src:'Quelle: Icare Recht, Pflege heute Berufsrecht'},
+// ══ MODUL 9: KRANKHEITSBILDER ══
+{m:9,n:'a',t:'Herzinfarkt Symptome',q:'Typische und atypische Symptome des Myokardinfarkts?',a:'TYPISCHE SYMPTOME (klassisch, besonders Männer):\n• Vernichtungsschmerz hinter dem Brustbein (retrosternal)\n• Ausstrahlung: linker Arm, Kiefer, Rücken, linke Schulter\n• Kaltschweißigkeit, Blässe\n• Todesangst\n• Übelkeit, Erbrechen\n\nATYPISCHE SYMPTOME (häufig bei Frauen, Diabetikern, Älteren):\n• Rücken-, Bauch- oder Kieferschmerzen allein\n• Erschöpfung, allgemeines Unwohlsein\n• Atemnot ohne Brustschmerz\n• Übelkeit ohne weitere Symptome\n\nSOFORTMASSNAHMEN:\n1. Notruf 112\n2. Sitzend lagern (Herz entlasten)\n3. Enge Kleidung lockern\n4. Nitro (nur bei bekannter KHK + RR > 90 mmHg)',k:'ZEIT IST MYOKARD! PCI < 90 Min = Ziel!',src:'Quelle: Icare Kardiologie, Pflege heute'},
+{m:9,n:'f',t:'Diabetes mellitus Komplikationen',q:'Welche akuten Komplikationen gibt es bei Diabetes mellitus und wie unterscheidet man sie?',a:'HYPOGLYKÄMIE (BZ < 70 mg/dl / < 3,9 mmol/l):\nSymptome: Schwitzen, Zittern, Heißhunger, Verwirrtheit, Koma\nUrsache: Zu viel Insulin, zu wenig Essen, Sport\nBehandlung: 1 BE Traubenzucker (bewusst) / i.v. Glukose (bewusstlos)\n\nHYPERGLYKÄMIE / KETOAZIDOSE (BZ > 250 mg/dl):\nSymptome: Durst, Polyurie, Bauchschmerzen, Kussmaul-Atmung, Acetongeruch\nUrsache: Insulinmangel (meist Typ-1)\nBehandlung: Insulin, Volumenersatz, Elektrolytausgleich\n\nHYPEROSMOLARES KOMA (BZ > 600 mg/dl):\nOhne Ketoazidose, meist Typ-2-Diabetiker, ältere Patienten\nBehandlung: Intensive Rehydratation',k:'BZ-Messung bei Verwirrtheit immer als erstes!',src:'Quelle: Icare Endokrinologie, Pflege heute Diabetes'},
+// ══ MODUL 10: WUNDVERSORGUNG ══
+{m:10,n:'a',t:'Wundheilungsphasen',q:'Welche 4 Phasen der Wundheilung gibt es und wie lange dauern sie?',a:'1. HÄMOSTASE (Blutstillung): 0–10 Minuten\n   → Vasokonstriktion, Thrombozytenaggregation, Fibringerinnsel\n\n2. INFLAMMATIONSPHASE (Reinigung): 1–5 Tage\n   → Leukozyten phagozytieren Keime und Debris\n   → Rötung, Schwellung, Wärme, Schmerz (Entzündungszeichen) = NORMAL!\n\n3. PROLIFERATIONSPHASE (Aufbau): 5–21 Tage\n   → Granulationsgewebe, Angiogenese, Kollagensynthese\n   → Wunde füllt sich von unten\n\n4. REPARATIONSPHASE (Narbe): 21 Tage – 2 Jahre\n   → Wundkontraktion, Narbenreifung\n   → Narbe nur 80% der ursprünglichen Festigkeit!',k:'Merksatz: HÄmo-IN-PRO-RE (Hämo-Inflam-Proli-Repara)',src:'Quelle: DNQP Expertenstandard Wunde, Icare Wundversorgung'},
+{m:10,n:'a',t:'TIME-Prinzip',q:'Was bedeutet das TIME-Prinzip in der modernen Wundversorgung?',a:'T – TISSUE (Gewebe): Wundgrundvorbereitung\n   → Nekrotisches/fibrinöses Gewebe entfernen (Débridement)\n   → Mechanisch, enzymatisch, autolytisch oder chirurgisch\n\nI – INFECTION (Infektion): Infektionskontrolle\n   → Lokale Zeichen: Rötung, Schwellung, Wärme, Schmerz, Exsudat\n   → Biofilmmanagement! Antiseptika (Octenidin, PHMB)\n\nM – MOISTURE (Feuchte): Feuchtigkeitsbalance\n   → Optimale Feuchtigkeit beschleunigt Heilung (feuchtes Wundmilieu!)\n   → Zu trocken → Hydrogel, zu feucht → saugfähige Auflage + Hautschutz\n\nE – EDGE (Wundrand): Wundrandaktivierung\n   → Inaktive Wundränder callus-debridieren\n   → Bei Stagnation: Spezialtherapie (VAC, Wachstumsfaktoren)',k:'TIME = Goldstandard der modernen Wundversorgung!',src:'Quelle: DNQP Expertenstandard, Icare Wunde'},
+{m:10,n:'f',t:'Wundauflagen Auswahl',q:'Welche Wundauflage bei welchem Wundtyp nach modernem Standard?',a:'TROCKENE/NEKROTISCHE Wunde:\n→ Hydrogel (rehydriert, löst Nekrosen autolytisch)\n\nSAUBER, WENIG EXSUDAT:\n→ Hydrokolloide (z.B. Varihesive) – schafft feuchtes Milieu\n\nMITTEL BIS STARK EXSUDIEREND:\n→ Polyurethanschaumstoffe (z.B. Mepilex)\n\nSTARK EXSUDIEREND:\n→ Alginate (z.B. Sorbalgon) – hohe Saugkapazität\n\nINFIZIERT / BIOFILM:\n→ Silberhaltige Auflagen (antimikrobiell)\n→ + Octenidin/PHMB-Spülung\n\nGEROCH:\n→ Aktivkohle-Auflagen\n\nSUPERFIZIELL:\n→ Transparentfolie (Wundbeobachtung möglich)',k:'H2O2, Betaisodona, Rivanol = VERALTET – nicht mehr verwenden!',src:'Quelle: DNQP Expertenstandard, ICW Leitlinien'},
 ];
 
-// Ajouter cartes supplementaires
-MODS.forEach(function(mod){
-  ['a','f','e'].forEach(function(niv){
-    for(var i=1;i<=6;i++){
-      CARDS.push({m:mod.id,n:niv,
-        t:mod.name+' '+(niv==='a'?'Grundlagen':niv==='f'?'Anwendung':'Vertiefung')+' '+i,
-        q:'Wichtiger Inhalt zu '+mod.name+' – '+( niv==='a'?'Anfänger':niv==='f'?'Fortgeschritten':'Experte')+' Teil '+i,
-        a:'Kerninhalt zu '+mod.name+':\nPrüfungsrelevante Inhalte nach PflBG 2020, Icare und Pflege heute.\n\nNiveau: '+(niv==='a'?'Anfänger':niv==='f'?'Fortgeschritten':'Experte'),
-        k:'Lernkarte '+mod.name+' – Prüfungstipp: Systematisch vorgehen'
-      });
-    }
-  });
-});
-
+// ══════════ VIDEOS mit vollständigem Storyboard und Script ══════════
 var VIDS=[
-  {n:'M01',t:'Der Pflegeprozess',dur:'8 Min',i:'📋',bg:'rgba(13,148,136,.25)'},
-  {n:'M02',t:'Blutdruckmessung',dur:'6 Min',i:'🩺',bg:'rgba(59,130,246,.25)'},
-  {n:'M03',t:'Subkutane Injektion',dur:'7 Min',i:'💉',bg:'rgba(139,92,246,.25)'},
-  {n:'M04',t:'Dysphagie managen',dur:'9 Min',i:'🍽',bg:'rgba(245,158,11,.25)'},
-  {n:'M05',t:'Lagerungstechniken',dur:'10 Min',i:'🦴',bg:'rgba(16,185,129,.25)'},
-  {n:'M06',t:'Kommunikation Demenz',dur:'8 Min',i:'🧠',bg:'rgba(168,85,247,.25)'},
-  {n:'M07',t:'Palliativpflege',dur:'12 Min',i:'💝',bg:'rgba(236,72,153,.25)'},
-  {n:'M08',t:'Rechtliche Grundlagen',dur:'7 Min',i:'⚖',bg:'rgba(99,102,241,.25)'},
-  {n:'M09',t:'Herzinfarkt erkennen',dur:'6 Min',i:'❤',bg:'rgba(239,68,68,.25)'},
-  {n:'M10',t:'Verbandwechsel',dur:'9 Min',i:'🩹',bg:'rgba(20,184,166,.25)'},
-  {n:'M05',t:'Bradenskala anwenden',dur:'6 Min',i:'🛡',bg:'rgba(16,185,129,.25)'},
-  {n:'M02',t:'Alle Vitalzeichen',dur:'11 Min',i:'🌡',bg:'rgba(59,130,246,.25)'},
-  {n:'M03',t:'5-R-Regel Sicherheit',dur:'5 Min',i:'💊',bg:'rgba(139,92,246,.25)'},
-  {n:'M09',t:'FAST-Schema Schlaganfall',dur:'4 Min',i:'🧬',bg:'rgba(239,68,68,.25)'},
-  {n:'M01',t:'Pflegedokumentation',dur:'8 Min',i:'📝',bg:'rgba(13,148,136,.25)'},
-  {n:'M06',t:'Validation nach Feil',dur:'9 Min',i:'💬',bg:'rgba(168,85,247,.25)'},
+{n:'M01',t:'Der Pflegeprozess – Schritt für Schritt',dur:'8 Min',i:'📋',bg:'rgba(13,148,136,.3)',
+ scenes:[
+  {n:'01',v:'🎥',t:'Intro: Was ist der Pflegeprozess?',d:'0:00–0:45'},
+  {n:'02',v:'🔍',t:'Schritt 1–2: Assessment & Diagnose',d:'0:45–2:30'},
+  {n:'03',v:'🎯',t:'Schritt 3–4: Ziele & Planung',d:'2:30–4:15'},
+  {n:'04',v:'✅',t:'Schritt 5–6: Durchführung & Evaluation',d:'4:15–6:30'},
+  {n:'05',v:'📝',t:'Praxisbeispiel: SMART-Ziel formulieren',d:'6:30–8:00'},
+ ],
+ script:[
+  {s:true,t:'Kamera: Pflegeperson mit Dokumentationsmappe'},
+  {s:false,t:'"Der Pflegeprozess ist das Herzstück unserer Arbeit. Er gibt uns Struktur und Qualität."'},
+  {s:true,t:'Animation: 6 Schritte erscheinen nacheinander'},
+  {s:false,t:'"Schritt 1: Informationssammlung. Hier erfassen wir systematisch alle pflegerelevanten Daten. Offene Fragen, Beobachtung und die Angehörigen einbeziehen."'},
+  {s:true,t:'Praxisbeispiel: SMART-Ziel formulieren'},
+  {s:false,t:'"Ein gutes Pflegeziel ist SMART: Spezifisch, Messbar, Akzeptiert, Realistisch und Terminiert. Zum Beispiel: Der Patient geht bis Freitag 10 Meter mit dem Rollator ohne Pause."'},
+ ]},
+{n:'M02',t:'Blutdruckmessung – Technik & Dokumentation',dur:'6 Min',i:'🩺',bg:'rgba(59,130,246,.3)',
+ scenes:[
+  {n:'01',v:'🩺',t:'Material: Stethoskop, Manschette, Protokoll',d:'0:00–1:00'},
+  {n:'02',v:'💪',t:'Manschettenanlage: Position und Größe',d:'1:00–2:30'},
+  {n:'03',v:'👂',t:'Korotkoff-Töne hören und interpretieren',d:'2:30–4:00'},
+  {n:'04',v:'📊',t:'Dokumentation: Arm, Lage, Uhrzeit',d:'4:00–5:30'},
+  {n:'05',v:'⚠️',t:'Fehlerquellen und Normabweichungen',d:'5:30–6:00'},
+ ],
+ script:[
+  {s:true,t:'Kamera: Pflegeperson bereitet Material vor'},
+  {s:false,t:'"Vor der Blutdruckmessung: 5 Minuten Ruhe, kein Rauchen, kein Koffein in den letzten 30 Minuten."'},
+  {s:true,t:'Close-up: Manschettenanlegung'},
+  {s:false,t:'"Die Manschette liegt 2–3 Zentimeter oberhalb der Ellenbeuge. Das Luftkissen muss über der Arteria brachialis sitzen. Die Manschettengröße ist entscheidend!"'},
+ ]},
+{n:'M03',t:'10-R-Regel – Medikamentensicherheit',dur:'7 Min',i:'💊',bg:'rgba(139,92,246,.3)',
+ scenes:[
+  {n:'01',v:'📋',t:'Überblick: 10 R – warum so wichtig?',d:'0:00–1:00'},
+  {n:'02',v:'🔍',t:'R1–R5: Basis der sicheren Gabe',d:'1:00–3:30'},
+  {n:'03',v:'📝',t:'R6–R10: Dokumentation bis Reaktion',d:'3:30–5:30'},
+  {n:'04',v:'⚠️',t:'Häufige Fehler und Konsequenzen',d:'5:30–7:00'},
+ ],
+ script:[
+  {s:true,t:'Animation: 10 R erscheinen nacheinander'},
+  {s:false,t:'"Früher sprachen wir von der 5-R-Regel. Heute gilt der Standard der 10-R-Regel. Jedes R ist ein Kontrollpunkt – und jeder Kontrollpunkt kann einen Fehler verhindern."'},
+  {s:false,t:'"R1: Richtiger Patient. Immer Name UND Geburtsdatum abfragen – nie nur den Namen!"'},
+ ]},
+{n:'M04',t:'Dysphagie erkennen und managen',dur:'9 Min',i:'🍽',bg:'rgba(245,158,11,.3)',
+ scenes:[
+  {n:'01',v:'🫁',t:'Physiologie des normalen Schluckakts',d:'0:00–1:30'},
+  {n:'02',v:'⚠️',t:'Warnsignale der Dysphagie',d:'1:30–3:30'},
+  {n:'03',v:'🥣',t:'Kostanpassung: IDDSI-Stufen',d:'3:30–5:30'},
+  {n:'04',v:'💧',t:'Flüssigkeiten andicken – Technik',d:'5:30–7:30'},
+  {n:'05',v:'📋',t:'Dokumentation und Teamkommunikation',d:'7:30–9:00'},
+ ],
+ script:[
+  {s:true,t:'Animation: Schluckakt normal vs. gestört'},
+  {s:false,t:'"Das Schlucken ist ein hochkomplexer Vorgang mit über 26 Muskeln. Bei einer Dysphagie besteht das Risiko der Aspiration – Speise gelangt in die Atemwege."'},
+ ]},
+{n:'M05',t:'Bradenskala – Dekubitusrisiko erfassen',dur:'6 Min',i:'🛡',bg:'rgba(16,185,129,.3)',
+ scenes:[
+  {n:'01',v:'📊',t:'Was ist die Bradenskala?',d:'0:00–1:00'},
+  {n:'02',v:'🔍',t:'Die 6 Bewertungsbereiche',d:'1:00–3:30'},
+  {n:'03',v:'📉',t:'Punktewerte und Risikostufen',d:'3:30–5:00'},
+  {n:'04',v:'💡',t:'Maßnahmen bei hohem Risiko',d:'5:00–6:00'},
+ ],
+ script:[
+  {s:false,t:'"Die Bradenskala ist das am häufigsten eingesetzte Instrument zur Einschätzung des Dekubitusrisikos in Deutschland."'},
+  {s:false,t:'"Maximal 23 Punkte. Je niedriger der Wert, desto höher das Risiko. Ab 12 Punkten sprechen wir von hohem Risiko – dann müssen intensive Prophylaxemaßnahmen eingeleitet werden."'},
+ ]},
+{n:'M05',t:'30°-Seitenlage – Lagerungstechnik',dur:'8 Min',i:'🦴',bg:'rgba(16,185,129,.25)',
+ scenes:[
+  {n:'01',v:'🧍',t:'Kinästhetik-Grundprinzipien',d:'0:00–1:30'},
+  {n:'02',v:'🛏️',t:'30°-Seitenlage Schritt für Schritt',d:'1:30–4:30'},
+  {n:'03',v:'🔄',t:'Lagerungsplan erstellen',d:'4:30–7:00'},
+  {n:'04',v:'📝',t:'Dokumentation und Übergabe',d:'7:00–8:00'},
+ ],
+ script:[
+  {s:false,t:'"Die 30-Grad-Seitenlagerung ist die Lagerung der Wahl zur Dekubitusprophylaxe. Wichtig: Der Patient liegt NICHT auf der Seite, sondern leicht schräg – 30 Grad zur Unterlage."'},
+ ]},
+{n:'M06',t:'Kommunikation mit dementen Patienten',dur:'8 Min',i:'🧠',bg:'rgba(168,85,247,.3)',
+ scenes:[
+  {n:'01',v:'🧠',t:'Was Demenz bedeutet – verstehen',d:'0:00–1:30'},
+  {n:'02',v:'💬',t:'Validation nach Naomi Feil',d:'1:30–3:30'},
+  {n:'03',v:'🤝',t:'Körpersprache und nonverbale Kommunikation',d:'3:30–5:30'},
+  {n:'04',v:'😤',t:'Agitation – deeskalierende Maßnahmen',d:'5:30–7:00'},
+  {n:'05',v:'📖',t:'Biografie als Ressource',d:'7:00–8:00'},
+ ],
+ script:[
+  {s:true,t:'Simulation: Pflegegespräch mit dementer Patientin'},
+  {s:false,t:'"Frau Schmidt glaubt, noch in ihrer Wohnung zu sein. Die Versuchung ist groß, sie zu korrigieren. Aber Realitätsorientierung führt nur zu Angst und Agitation."'},
+  {s:false,t:'"Validation bedeutet: Wir akzeptieren die Realität des Patienten. Wir sagen: \'Ich verstehe, Sie möchten nach Hause.\' Wir korrigieren nicht."'},
+ ]},
+{n:'M07',t:'Palliativpflege und Sterbebegleitung',dur:'12 Min',i:'💝',bg:'rgba(236,72,153,.3)',
+ scenes:[
+  {n:'01',v:'❤️',t:'Was Palliativpflege bedeutet',d:'0:00–2:00'},
+  {n:'02',v:'😣',t:'Total Pain – 4 Dimensionen',d:'2:00–5:00'},
+  {n:'03',v:'🌊',t:'Sterbephasen und Begleitung',d:'5:00–8:00'},
+  {n:'04',v:'🕯️',t:'Sterbeanzeichen erkennen',d:'8:00–10:00'},
+  {n:'05',v:'🤝',t:'Angehörige einbeziehen',d:'10:00–12:00'},
+ ],
+ script:[
+  {s:false,t:'"Palliativpflege bedeutet nicht aufgeben. Es bedeutet, den Menschen in seiner Würde zu begleiten – bis zum letzten Augenblick."'},
+ ]},
+{n:'M08',t:'Rechtliche Grundlagen – Haftung in der Pflege',dur:'7 Min',i:'⚖',bg:'rgba(99,102,241,.3)',
+ scenes:[
+  {n:'01',v:'📜',t:'PflBG 2020 – Was hat sich geändert?',d:'0:00–1:30'},
+  {n:'02',v:'⚠️',t:'Durchführungsverantwortung',d:'1:30–3:30'},
+  {n:'03',v:'🔐',t:'Schweigepflicht § 203 StGB',d:'3:30–5:00'},
+  {n:'04',v:'📋',t:'Patientenverfügung & Vorsorgevollmacht',d:'5:00–7:00'},
+ ],
+ script:[
+  {s:false,t:'"Die Durchführungsverantwortung ist oft missverstanden: Wer eine Maßnahme ausführt, haftet für die korrekte Ausführung – unabhängig davon, wer die Anordnung gegeben hat."'},
+ ]},
+{n:'M09',t:'Herzinfarkt – Erkennen und Handeln',dur:'6 Min',i:'❤',bg:'rgba(239,68,68,.3)',
+ scenes:[
+  {n:'01',v:'❤️',t:'Pathophysiologie: Was passiert?',d:'0:00–1:30'},
+  {n:'02',v:'😰',t:'Typische und atypische Symptome',d:'1:30–3:00'},
+  {n:'03',v:'🆘',t:'Erstmaßnahmen der Pflegeperson',d:'3:00–4:30'},
+  {n:'04',v:'🏥',t:'Klinik und Monitoring',d:'4:30–6:00'},
+ ],
+ script:[
+  {s:false,t:'"Zeit ist Myokard – das wichtigste Prinzip beim Herzinfarkt. Jede Minute kostet Herzmuskelgewebe. Ziel ist die Reperfusion innerhalb von 90 Minuten nach Erstkontakt."'},
+ ]},
+{n:'M10',t:'Wundversorgung – Verbandwechsel korrekt',dur:'9 Min',i:'🩹',bg:'rgba(20,184,166,.3)',
+ scenes:[
+  {n:'01',v:'🧴',t:'Vorbereitung und Hygiene',d:'0:00–1:30'},
+  {n:'02',v:'🔍',t:'Wundbeurteilung nach TIME',d:'1:30–3:30'},
+  {n:'03',v:'🚿',t:'Wundreinigung – korrekte Technik',d:'3:30–5:30'},
+  {n:'04',v:'🩹',t:'Wundauflage wählen und fixieren',d:'5:30–7:30'},
+  {n:'05',v:'📝',t:'Dokumentation und Fotodokumentation',d:'7:30–9:00'},
+ ],
+ script:[
+  {s:false,t:'"BIGE – das ist unser Beurteilungsschema: Belag, Infektion, Größe, Exsudat. Wir bewerten systematisch, bevor wir handeln."'},
+  {s:false,t:'"Wichtig: H2O2, Betaisodona und Rivanol sind veraltet und schaden dem Granulationsgewebe. Die Wunde wird mit NaCl 0,9% oder Ringerlösung gespült."'},
+ ]},
 ];
 
+// ══════════ INFOGRAFIKEN mit SVG ══════════
+var INFOS=[
+{cat:'Vitalzeichen',t:'Blutdruck-Klassifikation (ESH/ESC)',i:'🩺',desc:'WHO/ESH Klassifikation nach aktuellen Leitlinien',
+ svg:'<svg viewBox="0 0 420 230" style="width:100%;max-width:420px" xmlns="http://www.w3.org/2000/svg"><rect width="420" height="230" fill="#1a2235" rx="12"/><text x="210" y="26" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="13" font-weight="700" fill="#14b8a6">Blutdruck-Klassifikation ESH/ESC 2023</text><rect x="16" y="38" width="388" height="24" fill="#065f46" rx="4"/><text x="20" y="55" font-family="DM Sans,sans-serif" font-size="11" fill="#6ee7b7" font-weight="600">Optimal</text><text x="200" y="55" font-family="DM Sans,sans-serif" font-size="11" fill="#6ee7b7">systolisch &lt; 120 mmHg</text><text x="340" y="55" font-family="DM Sans,sans-serif" font-size="11" fill="#6ee7b7">diastolisch &lt; 80</text><rect x="16" y="66" width="388" height="24" fill="#0f3460" rx="4"/><text x="20" y="83" font-family="DM Sans,sans-serif" font-size="11" fill="#93c5fd" font-weight="600">Normal</text><text x="200" y="83" font-family="DM Sans,sans-serif" font-size="11" fill="#93c5fd">120–129 mmHg</text><text x="340" y="83" font-family="DM Sans,sans-serif" font-size="11" fill="#93c5fd">80–84</text><rect x="16" y="94" width="388" height="24" fill="#1e3a5f" rx="4"/><text x="20" y="111" font-family="DM Sans,sans-serif" font-size="11" fill="#bfdbfe" font-weight="600">Hochnormal</text><text x="200" y="111" font-family="DM Sans,sans-serif" font-size="11" fill="#bfdbfe">130–139 mmHg</text><text x="340" y="111" font-family="DM Sans,sans-serif" font-size="11" fill="#bfdbfe">85–89</text><rect x="16" y="122" width="388" height="24" fill="#451a00" rx="4"/><text x="20" y="139" font-family="DM Sans,sans-serif" font-size="11" fill="#fcd34d" font-weight="600">Hypertonie Grad I</text><text x="200" y="139" font-family="DM Sans,sans-serif" font-size="11" fill="#fcd34d">140–159 mmHg</text><text x="340" y="139" font-family="DM Sans,sans-serif" font-size="11" fill="#fcd34d">90–99</text><rect x="16" y="150" width="388" height="24" fill="#7c2d12" rx="4"/><text x="20" y="167" font-family="DM Sans,sans-serif" font-size="11" fill="#fed7aa" font-weight="600">Hypertonie Grad II</text><text x="200" y="167" font-family="DM Sans,sans-serif" font-size="11" fill="#fed7aa">160–179 mmHg</text><text x="340" y="167" font-family="DM Sans,sans-serif" font-size="11" fill="#fed7aa">100–109</text><rect x="16" y="178" width="388" height="24" fill="#7f1d1d" rx="4"/><text x="20" y="195" font-family="DM Sans,sans-serif" font-size="11" fill="#fca5a5" font-weight="600">Hypertonie Grad III</text><text x="200" y="195" font-family="DM Sans,sans-serif" font-size="11" fill="#fca5a5">≥ 180 mmHg</text><text x="340" y="195" font-family="DM Sans,sans-serif" font-size="11" fill="#fca5a5">≥ 110</text><text x="210" y="220" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="rgba(255,255,255,.3)">Quelle: ESH/ESC Leitlinien 2023, Icare Vitalzeichen</text></svg>'},
+{cat:'Prophylaxen',t:'Bradenskala – Risikostufen',i:'🛡',desc:'Dekubitusrisikoassessment nach Braden',
+ svg:'<svg viewBox="0 0 420 200" style="width:100%;max-width:420px" xmlns="http://www.w3.org/2000/svg"><rect width="420" height="200" fill="#1a2235" rx="12"/><text x="210" y="26" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="13" font-weight="700" fill="#14b8a6">Bradenskala – Risikoeinteilung</text><rect x="16" y="38" width="200" height="28" fill="#065f46" rx="4"/><text x="20" y="57" font-family="DM Sans,sans-serif" font-size="11" fill="#6ee7b7" font-weight="700">≥ 19 Punkte</text><text x="160" y="57" font-family="DM Sans,sans-serif" font-size="10" fill="#6ee7b7">Kein Risiko</text><rect x="16" y="70" width="240" height="28" fill="#1e4d3f" rx="4"/><text x="20" y="89" font-family="DM Sans,sans-serif" font-size="11" fill="#86efac" font-weight="700">15–18 Punkte</text><text x="160" y="89" font-family="DM Sans,sans-serif" font-size="10" fill="#86efac">Geringes Risiko</text><rect x="16" y="102" width="270" height="28" fill="#451a00" rx="4"/><text x="20" y="121" font-family="DM Sans,sans-serif" font-size="11" fill="#fcd34d" font-weight="700">13–14 Punkte</text><text x="160" y="121" font-family="DM Sans,sans-serif" font-size="10" fill="#fcd34d">Mittleres Risiko</text><rect x="16" y="134" width="310" height="28" fill="#7c2d12" rx="4"/><text x="20" y="153" font-family="DM Sans,sans-serif" font-size="11" fill="#fed7aa" font-weight="700">10–12 Punkte</text><text x="160" y="153" font-family="DM Sans,sans-serif" font-size="10" fill="#fed7aa">Hohes Risiko</text><rect x="16" y="166" width="388" height="28" fill="#7f1d1d" rx="4"/><text x="20" y="185" font-family="DM Sans,sans-serif" font-size="11" fill="#fca5a5" font-weight="700">≤ 9 Punkte</text><text x="160" y="185" font-family="DM Sans,sans-serif" font-size="10" fill="#fca5a5">Sehr hohes Risiko</text><text x="210" y="198" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="rgba(255,255,255,.25)">Quelle: DNQP Expertenstandard Dekubitus, Icare</text></svg>'},
+{cat:'Vitalzeichen',t:'Fieberkurve – Temperaturgrade',i:'🌡',desc:'Klassifikation der Körpertemperatur',
+ svg:'<svg viewBox="0 0 400 180" style="width:100%;max-width:400px" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="180" fill="#1a2235" rx="12"/><text x="200" y="24" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="13" font-weight="700" fill="#14b8a6">Körpertemperatur – Klassifikation</text><circle cx="28" cy="50" r="8" fill="#3b82f6"/><text x="44" y="55" font-family="DM Sans,sans-serif" font-size="11" fill="#93c5fd" font-weight="600">Hypothermie</text><text x="200" y="55" font-family="DM Sans,sans-serif" font-size="10" fill="#93c5fd">&lt; 35,0 °C</text><circle cx="28" cy="78" r="8" fill="#10b981"/><text x="44" y="83" font-family="DM Sans,sans-serif" font-size="11" fill="#6ee7b7" font-weight="600">Normaltemperatur (rektal)</text><text x="200" y="83" font-family="DM Sans,sans-serif" font-size="10" fill="#6ee7b7">36,5–37,5 °C</text><circle cx="28" cy="106" r="8" fill="#f59e0b"/><text x="44" y="111" font-family="DM Sans,sans-serif" font-size="11" fill="#fcd34d" font-weight="600">Subfebrile Temperatur</text><text x="200" y="111" font-family="DM Sans,sans-serif" font-size="10" fill="#fcd34d">37,5–38,0 °C</text><circle cx="28" cy="134" r="8" fill="#ef4444"/><text x="44" y="139" font-family="DM Sans,sans-serif" font-size="11" fill="#fca5a5" font-weight="600">Fieber</text><text x="200" y="139" font-family="DM Sans,sans-serif" font-size="10" fill="#fca5a5">38,1–39,0 °C (leicht), 39,1–40 °C (hoch)</text><circle cx="28" cy="162" r="8" fill="#dc2626"/><text x="44" y="167" font-family="DM Sans,sans-serif" font-size="11" fill="#ef4444" font-weight="600">Hyperpyrexie</text><text x="200" y="167" font-family="DM Sans,sans-serif" font-size="10" fill="#ef4444">&gt; 40,0 °C – lebensbedrohlich!</text></svg>'},
+{cat:'Wunden',t:'Wundheilungsphasen',i:'🔬',desc:'4 Phasen der Wundheilung mit Zeitangaben',
+ svg:'<svg viewBox="0 0 440 160" style="width:100%;max-width:440px" xmlns="http://www.w3.org/2000/svg"><rect width="440" height="160" fill="#1a2235" rx="12"/><text x="220" y="24" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="13" font-weight="700" fill="#14b8a6">Wundheilungsphasen (nach ICW/DNQP)</text><rect x="14" y="38" width="96" height="80" fill="#7f1d1d" rx="8" opacity=".85"/><text x="62" y="68" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="700" fill="#fca5a5">Hämostase</text><text x="62" y="84" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#fca5a5">0–10 Min</text><text x="62" y="100" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="rgba(255,255,255,.5)">Blutstillung</text><text x="112" y="82" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="14" fill="rgba(255,255,255,.3)">→</text><rect x="120" y="38" width="96" height="80" fill="#451a00" rx="8" opacity=".85"/><text x="168" y="68" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="700" fill="#fcd34d">Inflammation</text><text x="168" y="84" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#fcd34d">1–5 Tage</text><text x="168" y="100" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="rgba(255,255,255,.5)">Reinigung</text><text x="218" y="82" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="14" fill="rgba(255,255,255,.3)">→</text><rect x="224" y="38" width="96" height="80" fill="#0f3460" rx="8" opacity=".85"/><text x="272" y="68" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="700" fill="#93c5fd">Proliferation</text><text x="272" y="84" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#93c5fd">5–21 Tage</text><text x="272" y="100" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="rgba(255,255,255,.5)">Granulation</text><text x="322" y="82" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="14" fill="rgba(255,255,255,.3)">→</text><rect x="328" y="38" width="98" height="80" fill="#065f46" rx="8" opacity=".85"/><text x="377" y="68" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="700" fill="#6ee7b7">Reparation</text><text x="377" y="84" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#6ee7b7">21T–2 Jahre</text><text x="377" y="100" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="rgba(255,255,255,.5)">Narbenbildung</text><text x="220" y="150" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="rgba(255,255,255,.25)">Quelle: DNQP Expertenstandard Wundversorgung, ICW</text></svg>'},
+{cat:'Medikamente',t:'WHO-Stufenschema Schmerztherapie',i:'💊',desc:'3-Stufen-Schema der WHO',
+ svg:'<svg viewBox="0 0 380 200" style="width:100%;max-width:380px" xmlns="http://www.w3.org/2000/svg"><rect width="380" height="200" fill="#1a2235" rx="12"/><text x="190" y="24" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" font-weight="700" fill="#14b8a6">WHO Stufenschema Schmerztherapie</text><rect x="30" y="38" width="320" height="38" fill="#7f1d1d" rx="6"/><text x="190" y="55" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="700" fill="#fca5a5">Stufe 3: Starke Opioide</text><text x="190" y="70" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#fca5a5">Morphin · Oxycodon · Fentanyl-Pflaster</text><rect x="55" y="82" width="270" height="38" fill="#451a00" rx="6"/><text x="190" y="99" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="700" fill="#fcd34d">Stufe 2: Schwache Opioide</text><text x="190" y="114" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#fcd34d">Tramadol · Codein · Tilidin</text><rect x="80" y="126" width="220" height="38" fill="#065f46" rx="6"/><text x="190" y="143" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="700" fill="#6ee7b7">Stufe 1: Nicht-Opioide</text><text x="190" y="158" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#6ee7b7">Ibuprofen · Paracetamol · Metamizol</text><text x="190" y="185" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="rgba(255,255,255,.3)">Quelle: WHO Guidelines 2018, Icare Schmerzmanagement</text></svg>'},
+{cat:'Prophylaxen',t:'Dekubitus-Grade (NPUAP/EPUAP)',i:'🏥',desc:'Internationale Klassifikation nach NPUAP/EPUAP',
+ svg:'<svg viewBox="0 0 440 190" style="width:100%;max-width:440px" xmlns="http://www.w3.org/2000/svg"><rect width="440" height="190" fill="#1a2235" rx="12"/><text x="220" y="24" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" font-weight="700" fill="#14b8a6">Dekubitus-Grade NPUAP/EPUAP 2016</text><rect x="14" y="38" width="94" height="100" fill="#1e4d3f" rx="8"/><text x="61" y="65" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="16" font-weight="800" fill="#6ee7b7">Grad I</text><text x="61" y="90" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#86efac">Rötung</text><text x="61" y="105" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#86efac">intakte Haut</text><text x="61" y="128" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="rgba(255,255,255,.4)">Epidermis</text><rect x="116" y="38" width="94" height="100" fill="#451a00" rx="8"/><text x="163" y="65" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="16" font-weight="800" fill="#fcd34d">Grad II</text><text x="163" y="90" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#fcd34d">Teilverlust</text><text x="163" y="105" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#fcd34d">Dermis/Blase</text><text x="163" y="128" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="rgba(255,255,255,.4)">Dermis</text><rect x="218" y="38" width="94" height="100" fill="#7c2d12" rx="8"/><text x="265" y="65" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="16" font-weight="800" fill="#fed7aa">Grad III</text><text x="265" y="90" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#fed7aa">Vollverlust</text><text x="265" y="105" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#fed7aa">Nekrose</text><text x="265" y="128" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="rgba(255,255,255,.4)">Subkutis</text><rect x="320" y="38" width="106" height="100" fill="#7f1d1d" rx="8"/><text x="373" y="65" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="16" font-weight="800" fill="#fca5a5">Grad IV</text><text x="373" y="90" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#fca5a5">Knochen</text><text x="373" y="105" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#fca5a5">Sehnen frei</text><text x="373" y="128" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="rgba(255,255,255,.4)">Tiefst. Gewebe</text><text x="220" y="178" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="rgba(255,255,255,.25)">Quelle: NPUAP/EPUAP/PPPIA 2019, DNQP Expertenstandard</text></svg>'},
+{cat:'Vitalzeichen',t:'NYHA-Klassifikation Herzinsuffizienz',i:'❤',desc:'Schweregradeinteilung nach Belastung',
+ svg:'<svg viewBox="0 0 400 190" style="width:100%;max-width:400px" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="190" fill="#1a2235" rx="12"/><text x="200" y="24" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" font-weight="700" fill="#14b8a6">NYHA-Klassifikation Herzinsuffizienz</text><circle cx="36" cy="52" r="14" fill="#065f46"/><text x="36" y="57" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" font-weight="800" fill="#6ee7b7">I</text><text x="60" y="49" font-family="DM Sans,sans-serif" font-size="11" font-weight="600" fill="#6ee7b7">NYHA I:</text><text x="60" y="63" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(255,255,255,.65)">Keine Beschwerden bei Alltagsbelastung</text><circle cx="36" cy="96" r="14" fill="#1e4d3f"/><text x="36" y="101" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" font-weight="800" fill="#86efac">II</text><text x="60" y="93" font-family="DM Sans,sans-serif" font-size="11" font-weight="600" fill="#86efac">NYHA II:</text><text x="60" y="107" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(255,255,255,.65)">Beschwerden bei starker Belastung</text><circle cx="36" cy="136" r="14" fill="#451a00"/><text x="36" y="141" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="800" fill="#fcd34d">III</text><text x="60" y="133" font-family="DM Sans,sans-serif" font-size="11" font-weight="600" fill="#fcd34d">NYHA III:</text><text x="60" y="147" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(255,255,255,.65)">Beschwerden bei leichter Alltagsbelastung</text><circle cx="36" cy="172" r="14" fill="#7f1d1d"/><text x="36" y="177" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="800" fill="#fca5a5">IV</text><text x="60" y="169" font-family="DM Sans,sans-serif" font-size="11" font-weight="600" fill="#fca5a5">NYHA IV:</text><text x="60" y="183" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(255,255,255,.65)">Beschwerden in Ruhe – bettlägerig</text></svg>'},
+{cat:'Prophylaxen',t:'10-R-Regel Medikamentensicherheit',i:'✅',desc:'Der aktuelle Standard in der Medikamentenverabreichung',
+ svg:'<svg viewBox="0 0 420 240" style="width:100%;max-width:420px" xmlns="http://www.w3.org/2000/svg"><rect width="420" height="240" fill="#1a2235" rx="12"/><text x="210" y="24" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" font-weight="700" fill="#14b8a6">10-R-Regel – Medikamentensicherheit</text><text x="20" y="48" font-family="DM Sans,sans-serif" font-size="10" fill="#6ee7b7">R1 Richtiger Patient</text><text x="210" y="48" font-family="DM Sans,sans-serif" font-size="10" fill="#6ee7b7">R6 Richtige Dokumentation</text><text x="20" y="68" font-family="DM Sans,sans-serif" font-size="10" fill="#86efac">R2 Richtiges Medikament</text><text x="210" y="68" font-family="DM Sans,sans-serif" font-size="10" fill="#86efac">R7 Richtige Aufklärung</text><text x="20" y="88" font-family="DM Sans,sans-serif" font-size="10" fill="#fcd34d">R3 Richtige Dosis</text><text x="210" y="88" font-family="DM Sans,sans-serif" font-size="10" fill="#fcd34d">R8 Richtiges Verfallsdatum</text><text x="20" y="108" font-family="DM Sans,sans-serif" font-size="10" fill="#fcd34d">R4 Richtiger Applikationsweg</text><text x="210" y="108" font-family="DM Sans,sans-serif" font-size="10" fill="#fcd34d">R9 Richtige Lagerung</text><text x="20" y="128" font-family="DM Sans,sans-serif" font-size="10" fill="#fca5a5">R5 Richtige Zeit</text><text x="210" y="128" font-family="DM Sans,sans-serif" font-size="10" fill="#fca5a5">R10 Richtige Reaktion</text><rect x="20" y="145" width="380" height="2" fill="rgba(255,255,255,.1)" rx="1"/><text x="210" y="170" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(255,255,255,.55)">Früher: 5-R-Regel · Heute Standard: 10-R-Regel</text><text x="210" y="190" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(255,255,255,.55)">(Icare Medikamentenlehre, Pflege heute 2023)</text><text x="210" y="215" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="700" fill="#14b8a6">Quelle: Icare Pflege / Pflege heute aktuell</text></svg>'},
+{cat:'Wunden',t:'TIME-Prinzip Wundversorgung',i:'🩹',desc:'Modernes Wundmanagement nach TIME',
+ svg:'<svg viewBox="0 0 400 200" style="width:100%;max-width:400px" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="200" fill="#1a2235" rx="12"/><text x="200" y="24" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="13" font-weight="700" fill="#14b8a6">TIME-Prinzip – Modernes Wundmanagement</text><rect x="14" y="38" width="180" height="60" fill="#0f3460" rx="8"/><text x="104" y="58" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="18" font-weight="900" fill="#93c5fd">T</text><text x="104" y="74" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#93c5fd">Tissue – Wundgrund</text><text x="104" y="88" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="rgba(255,255,255,.45)">Débridement</text><rect x="206" y="38" width="180" height="60" fill="#7f1d1d" rx="8"/><text x="296" y="58" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="18" font-weight="900" fill="#fca5a5">I</text><text x="296" y="74" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#fca5a5">Infection – Kontrolle</text><text x="296" y="88" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="rgba(255,255,255,.45)">Antiseptika, Biofilm</text><rect x="14" y="106" width="180" height="60" fill="#065f46" rx="8"/><text x="104" y="126" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="18" font-weight="900" fill="#6ee7b7">M</text><text x="104" y="142" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#6ee7b7">Moisture – Balance</text><text x="104" y="156" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="rgba(255,255,255,.45)">Feuchtes Milieu</text><rect x="206" y="106" width="180" height="60" fill="#451a00" rx="8"/><text x="296" y="126" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="18" font-weight="900" fill="#fcd34d">E</text><text x="296" y="142" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#fcd34d">Edge – Wundrand</text><text x="296" y="156" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="rgba(255,255,255,.45)">Randaktivierung</text><text x="200" y="185" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="rgba(255,255,255,.25)">Quelle: DNQP Expertenstandard, ICW Leitlinien</text></svg>'},
+{cat:'Vitalzeichen',t:'Schock-Trias – Erkennung',i:'🚨',desc:'Klassische Schockzeichen erkennen',
+ svg:'<svg viewBox="0 0 380 180" style="width:100%;max-width:380px" xmlns="http://www.w3.org/2000/svg"><rect width="380" height="180" fill="#1a2235" rx="12"/><text x="190" y="24" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" font-weight="700" fill="#ef4444">Schock-Trias – Sofort erkennen!</text><rect x="14" y="38" width="108" height="80" fill="#7f1d1d" rx="10"/><text x="68" y="66" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="14">🫀</text><text x="68" y="84" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="700" fill="#fca5a5">HF ↑</text><text x="68" y="100" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#fca5a5">&gt; 100/min</text><text x="68" y="114" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="rgba(255,255,255,.4)">fadenförmig</text><rect x="136" y="38" width="108" height="80" fill="#7f1d1d" rx="10"/><text x="190" y="66" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="14">📉</text><text x="190" y="84" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="700" fill="#fca5a5">RR ↓</text><text x="190" y="100" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#fca5a5">systolisch &lt; 90</text><text x="190" y="114" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="rgba(255,255,255,.4)">mmHg</text><rect x="258" y="38" width="108" height="80" fill="#7f1d1d" rx="10"/><text x="312" y="66" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="14">💨</text><text x="312" y="84" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="700" fill="#fca5a5">SpO2 ↓</text><text x="312" y="100" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#fca5a5">&lt; 90%</text><text x="312" y="114" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="rgba(255,255,255,.4)">Hypoxämie</text><rect x="14" y="130" width="352" height="32" fill="#450a0a" rx="8"/><text x="190" y="150" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="700" fill="#fca5a5">SOFORT: 112 rufen · Flachlagerung · Beine hoch!</text></svg>'},
+{cat:'Prophylaxen',t:'Virchow-Trias – Thromboserisiko',i:'🩸',desc:'3 Risikofaktoren nach Virchow',
+ svg:'<svg viewBox="0 0 380 200" style="width:100%;max-width:380px" xmlns="http://www.w3.org/2000/svg"><rect width="380" height="200" fill="#1a2235" rx="12"/><text x="190" y="24" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" font-weight="700" fill="#14b8a6">Virchow-Trias – Thromboseentstehung</text><circle cx="190" cy="90" r="60" fill="none" stroke="#14b8a6" stroke-width="1" stroke-dasharray="4,4"/><rect x="120" y="38" width="140" height="40" fill="#0f3460" rx="8"/><text x="190" y="54" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="700" fill="#93c5fd">1. Verlangsamter Blutfluss</text><text x="190" y="70" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#93c5fd">Immobilität, Herzinsuffizienz</text><rect x="14" y="118" width="140" height="40" fill="#065f46" rx="8"/><text x="84" y="134" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="700" fill="#6ee7b7">2. Gefäßwandschaden</text><text x="84" y="150" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#6ee7b7">OP-Trauma, Entzündung</text><rect x="226" y="118" width="140" height="40" fill="#451a00" rx="8"/><text x="296" y="134" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="700" fill="#fcd34d">3. Gerinnungsänderung</text><text x="296" y="150" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#fcd34d">Hyperkoagulabilität</text><text x="190" y="180" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="rgba(255,255,255,.35)">Heparin wirkt auf Faktor 3 · Quelle: Icare Chirurgie</text></svg>'},
+];
+
+// ══════════ QCM – Klinisch korrekt nach Icare / Pflege heute ══════════
 var QCM=[
-  {m:1,n:'a',q:'Wie viele Schritte hat der Pflegeprozess?',o:['4','5','6','8'],a:2,e:'6 Schritte: Information → Diagnose → Ziel → Plan → Durchführung → Evaluation',p:10},
-  {m:2,n:'f',q:'Patient: RR 88/52 nach Aufstehen. Was zuerst?',o:['Antihypertensivum','Hinlegen + Beine hoch + Arzt','Abwarten','Nochmal messen'],a:1,e:'Orthostatische Hypotonie: sofort hinlegen, venösen Rückfluss verbessern.',p:20},
-  {m:3,n:'a',q:'Welches R der 5-R-Regel = korrekter Applikationsweg?',o:['R1 Patient','R2 Medikament','R4 Weg','R5 Zeit'],a:2,e:'R4 = Richtiger Weg (oral, s.c., i.v. etc.)',p:10},
-  {m:5,n:'a',q:'Bradenskala: hohes Risiko ab wie viel Punkten?',o:['≤ 18','≤ 14','≤ 12','≤ 9'],a:2,e:'10–12 Punkte = hohes Risiko. ≤ 9 = sehr hohes Risiko.',p:10},
-  {m:2,n:'e',q:'Warum ist hochdosierte O2-Gabe bei COPD gefährlich?',o:['Zu teuer','Hypoxischer Atemantrieb gehemmt → CO2-Narkose','Allergie möglich','Nur bei Typ-A'],a:1,e:'COPD: kontrollierte O2-Gabe (SpO2-Ziel 88–92%)',p:30},
-  {m:9,n:'a',q:'FAST beim Schlaganfall steht für:',o:['Face, Arms, Speech, Time','Fieber, Atemnot, Schwindel, Tachykardie','Funktion, Augen, Sprache, Test','Frequenz, Arterien, Sensibilität, Test'],a:0,e:'FAST: Face · Arms · Speech · Time → sofort 112!',p:10},
-  {m:10,n:'a',q:'1. Phase der Wundheilung?',o:['Inflammation','Proliferation','Hämostase','Reparation'],a:2,e:'Hämostase (0–10 Min): Blutstillung durch Vasokonstriktion und Thrombozyten.',p:10},
-  {m:8,n:'f',q:'Arzt ordnet fehlerhafte Maßnahme an. Was tun?',o:['Ausführen','Bedenken äußern + dokumentieren + ggf. verweigern','Schweigen','Sofort ablehnen'],a:1,e:'Durchführungsverantwortung: Bedenken äußern ist Pflicht.',p:20},
-  {m:3,n:'f',q:'500ml Infusion, 4h, Tropffaktor 20. Tropfen/min?',o:['21','42','83','25'],a:1,e:'500 × 20 ÷ 240 min = 42 Tr/min',p:20},
-  {m:6,n:'a',q:'Häufigste Demenzform?',o:['Vaskulär','Lewy-Body','Alzheimer','Frontotemporale'],a:2,e:'Alzheimer: ~65% aller Demenzen.',p:10},
+{m:1,n:'a',q:'Wie viele Schritte hat der Pflegeprozess nach heutigem Standard?',o:['4','5','6','8'],a:2,e:'Der Pflegeprozess umfasst 6 Schritte: 1. Informationssammlung 2. Pflegediagnose 3. Ziele 4. Planung 5. Durchführung 6. Evaluation. (Quelle: Icare Bd.1)',p:10},
+{m:3,n:'a',q:'Wie viele Richtigkeiten umfasst die aktuelle R-Regel bei der Medikamentengabe?',o:['5 Richtigkeiten','7 Richtigkeiten','10 Richtigkeiten','12 Richtigkeiten'],a:2,e:'Heute gilt der Standard der 10-R-Regel! Die frühere 5-R-Regel wurde erweitert um: Dokumentation, Aufklärung, Verfallsdatum, Lagerung und Reaktionsbeobachtung. (Quelle: Icare Medikamentenlehre, Pflege heute 2023)',p:10},
+{m:2,n:'a',q:'Welcher Blutdruckwert entspricht nach ESH/ESC der optimalen Kategorie?',o:['130/85 mmHg','120/80 mmHg','140/90 mmHg','110/70 mmHg'],a:1,e:'Optimal ist systolisch < 120 mmHg und diastolisch < 80 mmHg. Ab 140/90 mmHg spricht man von Hypertonie Grad I. (Quelle: ESH/ESC Leitlinien 2023)',p:10},
+{m:2,n:'f',q:'Patient hat RR 85/50 mmHg, HF 118/min, SpO2 87%, kalte blasse Haut. Welche Diagnose und Sofortmaßnahme?',o:['Hypertensive Krise – Antihypertensivum','Hypovolämischer Schock – 112, Flachlagerung, Beine hoch','Bradykardie – Atropin','Normalbefund – beobachten'],a:1,e:'Die Schock-Trias (HF > 100, RR < 90, SpO2 < 90%) mit kalter Haut = hypovolämischer Schock. Sofort: 112 rufen, Schocklagerung (flach, Beine erhöht), Wärme, O2. (Quelle: Pflege heute Notfall)',p:20},
+{m:5,n:'a',q:'Ab welchem Bradenskala-Wert gilt ein Patient als "hohes Risiko" für Dekubitus?',o:['≤ 18 Punkte','≤ 14 Punkte','≤ 12 Punkte','≤ 9 Punkte'],a:2,e:'10–12 Punkte = hohes Risiko. ≤ 9 Punkte = sehr hohes Risiko. Je niedriger der Wert, desto höher das Risiko! (Quelle: DNQP Expertenstandard Dekubitus)',p:10},
+{m:2,n:'e',q:'Welchen SpO2-Zielwert hat ein COPD-Patient mit chronischer Hyperkapnie?',o:['95–99%','90–94%','88–92%','80–85%'],a:2,e:'Ziel-SpO2 bei COPD: 88–92%! Höhere Werte hemmen den hypoxischen Atemantrieb und können zur CO2-Narkose führen. (Quelle: Icare Pneumologie, BTS/NICE Leitlinie)',p:30},
+{m:9,n:'a',q:'Was bedeutet FAST beim Schlaganfall?',o:['Face, Arms, Speech, Time','Fieber, Atemnot, Schwindel, Tachykardie','Funktion, Augen, Sprache, Test','Fast Assessment Stroke Test'],a:0,e:'FAST: Face (Gesicht hängt?), Arms (Arm fällt?), Speech (Sprache undeutlich?), Time (sofort 112!). Zeit ist Hirngewebe! (Quelle: DSG Leitlinie Schlaganfall)',p:10},
+{m:10,n:'a',q:'Welche Phase der Wundheilung ist durch Granulationsgewebebildung gekennzeichnet?',o:['Hämostase','Inflammationsphase','Proliferationsphase','Reparationsphase'],a:2,e:'Die Proliferationsphase (5–21 Tage) ist durch Granulationsgewebe, Angiogenese und Kollagensynthese charakterisiert. (Quelle: DNQP Expertenstandard, ICW)',p:10},
+{m:8,n:'f',q:'Arzt ordnet eine Maßnahme an, die du für fehlerhaft hältst. Was ist korrekt?',o:['Ausführen – der Arzt trägt die Verantwortung','Bedenken äußern, dokumentieren, ggf. verweigern','Sofort die Aufsichtsbehörde informieren','Schweigen und abwarten'],a:1,e:'Durchführungsverantwortung: Jede Pflegeperson haftet für korrekte Ausführung. Bedenken äußern (mündlich + schriftlich), Pflege-/Arztkette informieren, ggf. verweigern. (Quelle: § 823 BGB, Icare Recht)',p:20},
+{m:3,n:'f',q:'500 ml NaCl 0,9% sollen über 4 Stunden laufen. Tropffaktor 20. Wie viele Tropfen/min?',o:['21 Tr/min','42 Tr/min','83 Tr/min','25 Tr/min'],a:1,e:'Formel: (Volumen × Tropffaktor) / Zeit in Min = (500 × 20) / 240 = 41,7 ≈ 42 Tr/min. (Quelle: Icare Medikamentenlehre)',p:20},
+{m:4,n:'f',q:'Wie wird die korrekte Lage einer nasogastralen Sonde am sichersten überprüft?',o:['Sonde in Wasser halten (Blubbern = falsch)','pH-Wert des Aspirats messen (< 5,5 = korrekt)','Patient soll sprechen','Röntgenkontrolle immer nötig'],a:1,e:'Goldstandard: pH-Wert des Magensekrets < 5,5 = korrekte gastrische Lage. Röntgen nur bei Unsicherheit. (Quelle: Icare Ernährung, ESPEN Leitlinie)',p:20},
+{m:6,n:'a',q:'Welche ist die häufigste Demenzform in Deutschland?',o:['Vaskuläre Demenz','Lewy-Körper-Demenz','Alzheimer-Demenz','Frontotemporale Demenz'],a:2,e:'Alzheimer-Demenz: ~65% aller Demenzen. Charakteristisch: schleichender Beginn, Kurzzeitgedächtnis zuerst betroffen. (Quelle: Deutsche Alzheimer Gesellschaft, Icare Psychiatrie)',p:10},
 ];
 
 var FMTS=[
-  {q:10,time:20,title:'⚡ Schnelltest',desc:'10 Fragen · 20 Min'},
-  {q:QCM.length,time:45,title:'📝 Standard',desc:QCM.length+' Fragen · 45 Min'},
+{q:10,time:20,title:'⚡ Schnelltest',desc:'10 Fragen · 20 Min · Mix'},
+{q:QCM.length,time:45,title:'📝 Standard',desc:QCM.length+' Fragen · 45 Min · Alle Module'},
 ];
 
-var st={filter:'all',page:0,per:12,search:'',score:0,streak:0,
+// ══════════ STATE ══════════
+var st={filter:'all',page:0,per:12,search:'',score:0,
   fmt:FMTS[0],eqs:[],eidx:0,escore:0,ecorrect:0,eans:[],tiv:null,tleft:0};
 
-// NAVIGATION
+// ══════════ NAVIGATION ══════════
 document.querySelectorAll('.nb').forEach(function(b){
   b.onclick=function(){
     document.querySelectorAll('.nb').forEach(function(x){x.classList.remove('on');});
@@ -273,27 +480,16 @@ document.querySelectorAll('.nb').forEach(function(b){
   };
 });
 
-// FILTERS
+// ══════════ LERNKARTEN ══════════
 document.querySelectorAll('.filt').forEach(function(b){
   b.onclick=function(){
-    document.querySelectorAll('.filt').forEach(function(x){x.classList.remove('on');});
-    b.classList.add('on');
-    st.filter=b.dataset.f;
-    st.page=0;
-    render();
+    document.querySelectorAll('#s-lk .filt').forEach(function(x){x.classList.remove('on');});
+    b.classList.add('on'); st.filter=b.dataset.f; st.page=0; render();
   };
 });
-
-document.getElementById('srch').oninput=function(){
-  st.search=this.value.toLowerCase();
-  st.page=0;
-  render();
-};
+document.getElementById('srch').oninput=function(){st.search=this.value.toLowerCase();st.page=0;render();};
 document.getElementById('prev').onclick=function(){if(st.page>0){st.page--;render();}};
-document.getElementById('next').onclick=function(){
-  var t=Math.ceil(filtered().length/st.per)||1;
-  if(st.page<t-1){st.page++;render();}
-};
+document.getElementById('next').onclick=function(){var t=Math.ceil(filtered().length/st.per)||1;if(st.page<t-1){st.page++;render();}};
 
 function filtered(){
   var c=CARDS;
@@ -301,7 +497,6 @@ function filtered(){
   if(st.search) c=c.filter(function(x){return x.t.toLowerCase().indexOf(st.search)>=0||x.q.toLowerCase().indexOf(st.search)>=0;});
   return c;
 }
-
 function render(){
   var c=filtered();
   var total=Math.ceil(c.length/st.per)||1;
@@ -320,35 +515,44 @@ function render(){
       +'<div class="back"><div class="anstag">Antwort</div>'
       +'<div class="cbody">'+c.a.replace(/\n/g,'<br>')+'</div>'
       +(c.k?'<div class="key">💡 '+c.k+'</div>':'')
+      +(c.src?'<div class="src">'+c.src+'</div>':'')
       +'</div></div>';
   }).join('');
   document.getElementById('pi').textContent='Seite '+(st.page+1)+' / '+total+' ('+c.length+' Karten)';
 }
 
-// VIDEOS
-document.getElementById('vg').innerHTML=VIDS.map(function(v){
-  return '<div class="vc"><div class="vthumb" style="background:'+v.bg+'">'+v.i+'</div>'
-    +'<div class="vinfo"><div class="vn">'+v.n+'·'+v.dur+'</div>'
-    +'<div class="vt">'+v.t+'</div></div></div>';
+// ══════════ VIDEOS ══════════
+document.getElementById('vg').innerHTML=VIDS.map(function(v,idx){
+  return '<div class="vc" onclick="openVid('+idx+')">'
+    +'<div class="vthumb" style="background:'+v.bg+'">'
+    +'<span style="font-size:2.8rem">'+v.i+'</span>'
+    +'<div class="vplay">▶</div></div>'
+    +'<div class="vinfo">'
+    +'<div class="vn">'+v.n+' · '+v.dur+'</div>'
+    +'<div class="vt">'+v.t+'</div>'
+    +'<div class="vd">Script + Storyboard · Klicken für Details</div>'
+    +'</div></div>';
 }).join('');
 
-// INFOGRAFIKEN
-var ICATS=['Alle','Vitalzeichen','Prophylaxen','Wunden','Medikamente'];
-var INFOS=[
-  {cat:'Vitalzeichen',t:'Blutdruck-Klassifikation WHO',i:'🩺'},
-  {cat:'Prophylaxen',t:'Bradenskala Risikostufen',i:'🛡'},
-  {cat:'Vitalzeichen',t:'Fieber-Grade',i:'🌡'},
-  {cat:'Wunden',t:'Wundheilungsphasen',i:'🔬'},
-  {cat:'Medikamente',t:'WHO-Stufenschema Schmerz',i:'💊'},
-  {cat:'Prophylaxen',t:'Dekubitus-Grade NPUAP',i:'🏥'},
-  {cat:'Vitalzeichen',t:'NYHA Herzinsuffizienz',i:'❤'},
-  {cat:'Wunden',t:'TIME-Prinzip',i:'🩹'},
-  {cat:'Medikamente',t:'5-R-Regel Übersicht',i:'✅'},
-  {cat:'Prophylaxen',t:'Thrombose Virchow-Trias',i:'🩸'},
-  {cat:'Vitalzeichen',t:'Schockzeichen-Trias',i:'🚨'},
-  {cat:'Prophylaxen',t:'Sturz-Prophylaxe Schema',i:'🦯'},
-];
+function openVid(idx){
+  var v=VIDS[idx];
+  document.getElementById('vm-title').textContent=v.t;
+  document.getElementById('vm-meta').textContent=v.n+' · '+v.dur+' · Storyboard + Script';
+  document.getElementById('vm-board').innerHTML=v.scenes.map(function(s){
+    return '<div class="scene"><div class="snum">Szene '+s.n+'</div>'
+      +'<div class="svis">'+s.v+'</div>'
+      +'<div class="stxt">'+s.t+'</div>'
+      +'<div class="sdur">'+s.d+'</div></div>';
+  }).join('');
+  document.getElementById('vm-script').innerHTML=v.script.map(function(l){
+    return '<div class="sline'+(l.s?' spk':'')+'">'+l.t+'</div>';
+  }).join('');
+  document.getElementById('vmodal').classList.add('open');
+}
 
+// ══════════ INFOGRAFIKEN ══════════
+var ICATS=['Alle','Vitalzeichen','Prophylaxen','Wunden','Medikamente'];
+var curInfoCat='Alle';
 document.getElementById('icats').innerHTML=ICATS.map(function(c,i){
   return '<button class="filt'+(i===0?' on':'')+'" onclick="filterInfo(\''+c+'\',this)">'+c+'</button>';
 }).join('');
@@ -356,54 +560,58 @@ document.getElementById('icats').innerHTML=ICATS.map(function(c,i){
 function filterInfo(cat,btn){
   document.querySelectorAll('#icats .filt').forEach(function(b){b.classList.remove('on');});
   btn.classList.add('on');
-  var items=cat==='Alle'?INFOS:INFOS.filter(function(x){return x.cat===cat;});
-  document.getElementById('ig').innerHTML=items.map(function(x){
-    return '<div class="card" style="cursor:default">'
-      +'<div style="font-size:2rem;margin-bottom:.55rem">'+x.i+'</div>'
-      +'<div class="ctitle">'+x.t+'</div>'
-      +'<div class="cbody" style="margin-top:.3rem">'+x.cat+'</div>'
+  curInfoCat=cat;
+  buildInfoGrid();
+}
+function buildInfoGrid(){
+  var items=curInfoCat==='Alle'?INFOS:INFOS.filter(function(x){return x.cat===curInfoCat;});
+  document.getElementById('ig').innerHTML=items.map(function(x,idx){
+    var realIdx=INFOS.indexOf(x);
+    return '<div class="icard" onclick="openInfo('+realIdx+')">'
+      +'<div class="iicon">'+x.i+'</div>'
+      +'<div class="ititle">'+x.t+'</div>'
+      +'<div class="idesc">'+x.desc+'</div>'
+      +'<div class="idesc" style="margin-top:.35rem;color:var(--tealM)">→ Klicken für Vollansicht</div>'
       +'</div>';
   }).join('');
 }
-filterInfo('Alle',document.querySelector('#icats .filt'));
+function openInfo(idx){
+  var info=INFOS[idx];
+  document.getElementById('im-title').textContent=info.t;
+  document.getElementById('im-content').innerHTML='<div style="display:flex;justify-content:center">'+info.svg+'</div><p style="font-size:.84rem;color:rgba(255,255,255,.5);margin-top:.85rem">'+info.desc+'</p>';
+  document.getElementById('imodal').classList.add('open');
+}
+buildInfoGrid();
 
-// EXAM
+// ══════════ MODAL CLOSE ══════════
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.getElementById('vmodal').onclick=function(e){if(e.target===this)closeModal('vmodal');};
+document.getElementById('imodal').onclick=function(e){if(e.target===this)closeModal('imodal');};
+
+// ══════════ EXAM ══════════
 document.getElementById('efmts').innerHTML=FMTS.map(function(f,i){
   return '<div class="eopt'+(i===0?' on':'')+'" onclick="selFmt('+i+',this)">'
     +'<h4>'+f.title+'</h4><p>'+f.desc+'</p></div>';
 }).join('');
-
-function selFmt(i,el){
-  st.fmt=FMTS[i];
-  document.querySelectorAll('.eopt').forEach(function(e){e.classList.remove('on');});
-  el.classList.add('on');
-}
-
+function selFmt(i,el){st.fmt=FMTS[i];document.querySelectorAll('.eopt').forEach(function(e){e.classList.remove('on');});el.classList.add('on');}
 document.getElementById('startbtn').onclick=function(){
   var pool=QCM.slice().sort(function(){return Math.random()-.5;}).slice(0,st.fmt.q);
-  st.eqs=pool;
-  st.eidx=0;st.escore=0;st.ecorrect=0;
-  st.eans=new Array(pool.length).fill(null);
+  st.eqs=pool;st.eidx=0;st.escore=0;st.ecorrect=0;st.eans=new Array(pool.length).fill(null);
   st.tleft=st.fmt.time*60;
   document.getElementById('esetup').style.display='none';
   document.getElementById('erun').style.display='block';
   document.getElementById('eres').style.display='none';
   document.getElementById('etitle').textContent=st.fmt.title;
   clearInterval(st.tiv);
-  st.tiv=setInterval(function(){
-    st.tleft--;
-    var m=Math.floor(st.tleft/60),s=st.tleft%60;
+  st.tiv=setInterval(function(){st.tleft--;var m=Math.floor(st.tleft/60),s=st.tleft%60;
     document.getElementById('etimer').textContent='⏱ '+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
-    if(st.tleft<=0){clearInterval(st.tiv);showRes();}
-  },1000);
+    if(st.tleft<=0){clearInterval(st.tiv);showRes();}},1000);
   showQ();
 };
-
 function showQ(){
   var q=st.eqs[st.eidx];
   var mod=MODS.find(function(m){return m.id===q.m;})||{name:'Modul'};
-  var pct=(st.eidx/st.eqs.length)*100;
-  document.getElementById('ebar').style.width=pct+'%';
+  document.getElementById('ebar').style.width=((st.eidx/st.eqs.length)*100)+'%';
   document.getElementById('ectr').textContent='Frage '+(st.eidx+1)+' / '+st.eqs.length;
   document.getElementById('qtag').textContent=mod.name+' · +'+q.p+' Pkt';
   document.getElementById('qtext').textContent=q.q;
@@ -412,7 +620,6 @@ function showQ(){
   }).join('');
   document.getElementById('nxtbtn').style.display='none';
 }
-
 function pick(i){
   if(st.eans[st.eidx]!==null) return;
   st.eans[st.eidx]=i;
@@ -421,48 +628,31 @@ function pick(i){
   chs.forEach(function(c){c.onclick=null;});
   chs[q.a].classList.add('ok');
   if(i!==q.a) chs[i].classList.add('no');
-  else{
-    st.ecorrect++;
-    st.escore+=q.p;
-    st.score+=q.p;
-    document.getElementById('sc').textContent=st.score;
-  }
+  else{st.ecorrect++;st.escore+=q.p;st.score+=q.p;document.getElementById('sc').textContent=st.score;}
   var exp=document.createElement('div');
-  exp.style.cssText='margin-top:.65rem;padding:.6rem .9rem;background:rgba(16,185,129,.1);border-left:3px solid var(--green);border-radius:8px;font-size:.8rem;color:#6ee7b7;';
+  exp.className='expl';
   exp.textContent='💡 '+q.e;
   document.getElementById('chlist').appendChild(exp);
   var nb=document.getElementById('nxtbtn');
   nb.style.display='block';
-  nb.textContent=st.eidx<st.eqs.length-1?'Weiter →':'🎉 Ergebnis';
+  nb.textContent=st.eidx<st.eqs.length-1?'Weiter →':'🎉 Ergebnis anzeigen';
 }
-
-function nextQ(){
-  st.eidx++;
-  if(st.eidx>=st.eqs.length){showRes();return;}
-  showQ();
-}
-
+function nextQ(){st.eidx++;if(st.eidx>=st.eqs.length){showRes();return;}showQ();}
 function showRes(){
   clearInterval(st.tiv);
   document.getElementById('erun').style.display='none';
   document.getElementById('eres').style.display='block';
   var pct=Math.round((st.ecorrect/st.eqs.length)*100);
   document.getElementById('remi').textContent=pct>=90?'🏆':pct>=75?'🎉':pct>=60?'✅':'📚';
-  document.getElementById('rtitle').textContent=pct>=60?'Bestanden!':'Nicht bestanden';
+  document.getElementById('rtitle').textContent=pct>=60?'Bestanden!':'Nicht bestanden – weiter lernen!';
   document.getElementById('rpct').textContent=pct+'%';
   var el=st.fmt.time*60-st.tleft;
   document.getElementById('rstats').innerHTML=
     '<div class="resstat"><div class="resval" style="color:var(--tealM)">'+pct+'%</div><div class="reslbl">Score</div></div>'+
-    '<div class="resstat"><div class="resval" style="color:var(--green)">'+st.ecorrect+'</div><div class="reslbl">Richtig</div></div>'+
+    '<div class="resstat"><div class="resval" style="color:var(--green)">'+st.ecorrect+'/'+st.eqs.length+'</div><div class="reslbl">Richtig</div></div>'+
     '<div class="resstat"><div class="resval" style="color:var(--gold)">'+Math.floor(el/60)+'min</div><div class="reslbl">Zeit</div></div>';
 }
-
-function resetExam(){
-  clearInterval(st.tiv);
-  document.getElementById('esetup').style.display='block';
-  document.getElementById('erun').style.display='none';
-  document.getElementById('eres').style.display='none';
-}
+function resetExam(){clearInterval(st.tiv);document.getElementById('esetup').style.display='block';document.getElementById('erun').style.display='none';document.getElementById('eres').style.display='none';}
 
 // INIT
 render();
