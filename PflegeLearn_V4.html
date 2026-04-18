@@ -3,1012 +3,469 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PflegeLearn V4 – Vollständige Plattform</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<title>PflegeLearn V4</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{
-  --teal:#0d9488;--tealD:#0f766e;--tealL:#ccfbf1;--tealM:#14b8a6;
-  --gold:#f59e0b;--goldL:#fef3c7;
-  --ink:#1a1a2e;--inkS:#3d3d5c;
-  --white:#fff;--cream:#faf7f2;--border:#e5e7eb;
-  --green:#10b981;--greenL:#d1fae5;
-  --red:#e11d48;--redL:#ffe4e6;
-  --purple:#8b5cf6;--purpleL:#ede9fe;
-  --blue:#3b82f6;--blueL:#dbeafe;
-  --a:#10b981;--f:#f59e0b;--e:#8b5cf6;
-}
+:root{--teal:#0d9488;--tealD:#0f766e;--tealM:#14b8a6;--tealL:#ccfbf1;--gold:#f59e0b;--ink:#1a1a2e;--green:#10b981;--red:#e11d48;--purple:#8b5cf6;}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'DM Sans',sans-serif;background:var(--ink);color:#fff;min-height:100vh;overflow-x:hidden;}
-.bg{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 65% 55% at 15% 20%,rgba(13,148,136,.16) 0%,transparent 60%),radial-gradient(ellipse 50% 45% at 85% 80%,rgba(139,92,246,.09) 0%,transparent 55%);}
-.grid-bg{position:fixed;inset:0;z-index:0;opacity:.035;background-image:linear-gradient(rgba(255,255,255,.9) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.9) 1px,transparent 1px);background-size:50px 50px;}
-.app{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 1.2rem 5rem;}
-
-/* ── HEADER ── */
-header{display:flex;align-items:center;justify-content:space-between;padding:1.4rem 0 0;flex-wrap:wrap;gap:.6rem;}
+body{font-family:'DM Sans',sans-serif;background:var(--ink);color:#fff;min-height:100vh;}
+.app{max-width:900px;margin:0 auto;padding:1rem 1.2rem 5rem;}
+header{display:flex;align-items:center;justify-content:space-between;padding:1rem 0;flex-wrap:wrap;gap:.5rem;}
 .logo{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;color:var(--tealM);}
 .logo span{color:var(--gold);}
-.logo sup{font-size:.56rem;background:var(--purple);color:#fff;padding:.1rem .3rem;border-radius:4px;margin-left:.15rem;}
-.hbadges{display:flex;gap:.45rem;flex-wrap:wrap;}
-.hb{border-radius:999px;padding:.26rem .8rem;font-size:.76rem;font-weight:700;}
-.hb-s{background:rgba(13,148,136,.15);border:1px solid rgba(13,148,136,.3);color:var(--tealM);}
-.hb-k{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);color:var(--gold);}
-.hb-l{background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.3);color:#c4b5fd;}
-
-/* ── NAV ── */
-.nav{display:flex;gap:.4rem;margin:1.3rem 0 0;padding:.4rem;background:rgba(255,255,255,.05);border-radius:14px;border:1px solid rgba(255,255,255,.1);flex-wrap:wrap;}
-.nav-btn{flex:1;min-width:80px;padding:.48rem .35rem;border-radius:10px;font-size:.72rem;font-weight:700;cursor:pointer;border:none;background:transparent;color:rgba(255,255,255,.42);transition:.2s;text-align:center;white-space:nowrap;}
-.nav-btn.active{background:var(--teal);color:#fff;}
-.nav-btn:hover:not(.active){background:rgba(255,255,255,.08);color:#fff;}
-
-/* ── SCREENS ── */
-.screen{display:none;animation:fadeUp .4s ease both;}
-.screen.active{display:block;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
-
-/* ────────────────────────── LERNKARTEN ────────────────────────── */
-.lk-controls{display:flex;gap:.6rem;margin:1.5rem 0 1rem;flex-wrap:wrap;align-items:center;}
-.lk-search{flex:1;min-width:160px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:.55rem 1rem;font-size:.88rem;color:#fff;outline:none;font-family:'DM Sans',sans-serif;}
-.lk-search::placeholder{color:rgba(255,255,255,.35);}
-.lk-filter{display:flex;gap:.4rem;flex-wrap:wrap;}
-.lk-filt{padding:.38rem .85rem;border-radius:999px;font-size:.72rem;font-weight:700;cursor:pointer;border:1.5px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.5);transition:.2s;}
-.lk-filt.active-a{background:rgba(16,185,129,.18);border-color:var(--a);color:var(--a);}
-.lk-filt.active-f{background:rgba(245,158,11,.18);border-color:var(--f);color:var(--f);}
-.lk-filt.active-e{background:rgba(139,92,246,.18);border-color:var(--e);color:#c4b5fd;}
-.lk-filt.active-all{background:rgba(13,148,136,.18);border-color:var(--tealM);color:var(--tealM);}
-.lk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.85rem;margin-top:.5rem;}
-.lk-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:1.2rem;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
-.lk-card:hover{transform:translateY(-3px);}
-.lk-card.flipped .lk-front{display:none;}
-.lk-card.flipped .lk-back{display:block;}
-.lk-back{display:none;}
-.lk-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;}
-.lk-niv{font-size:.62rem;font-weight:800;padding:.12rem .45rem;border-radius:999px;letter-spacing:.04em;}
-.lk-niv.a{background:rgba(16,185,129,.2);color:var(--a);}
-.lk-niv.f{background:rgba(245,158,11,.2);color:var(--f);}
-.lk-niv.e{background:rgba(139,92,246,.2);color:#c4b5fd;}
-.lk-mod{font-size:.62rem;color:rgba(255,255,255,.35);font-weight:600;}
-.lk-title{font-size:.9rem;font-weight:700;line-height:1.35;margin-bottom:.5rem;}
-.lk-content{font-size:.8rem;color:rgba(255,255,255,.72);line-height:1.65;}
-.lk-content strong{color:var(--tealM);}
-.lk-flip-hint{position:absolute;bottom:.7rem;right:.85rem;font-size:.62rem;color:rgba(255,255,255,.25);}
-.lk-back-title{font-size:.72rem;font-weight:700;color:var(--tealM);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.06em;}
-.lk-pagination{display:flex;align-items:center;justify-content:center;gap:.75rem;margin-top:1.25rem;}
-.lk-page-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;padding:.4rem .9rem;border-radius:8px;cursor:pointer;font-size:.8rem;font-weight:600;transition:.15s;}
-.lk-page-btn:hover{background:rgba(13,148,136,.2);}
-.lk-page-info{font-size:.78rem;color:rgba(255,255,255,.4);}
-
-/* ────────────────────────── VIDEOS ────────────────────────── */
-.vid-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1rem;margin-top:1.25rem;}
-.vid-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:16px;overflow:hidden;cursor:pointer;transition:all .2s;}
-.vid-card:hover{transform:translateY(-3px);border-color:var(--teal);}
-.vid-thumb{height:130px;display:flex;align-items:center;justify-content:center;font-size:3rem;position:relative;}
-.vid-play{position:absolute;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;font-size:1.1rem;transition:.2s;}
-.vid-card:hover .vid-play{background:var(--teal);border-color:var(--teal);}
-.vid-info{padding:.9rem 1rem;}
-.vid-num{font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--tealM);margin-bottom:.25rem;}
-.vid-title{font-size:.88rem;font-weight:700;line-height:1.35;margin-bottom:.35rem;}
-.vid-desc{font-size:.75rem;color:rgba(255,255,255,.45);line-height:1.5;}
-.vid-meta{display:flex;gap:.5rem;margin-top:.55rem;flex-wrap:wrap;}
-.vid-tag{font-size:.62rem;font-weight:700;padding:.1rem .45rem;border-radius:999px;background:rgba(13,148,136,.15);color:var(--tealM);}
-
-/* VIDEO MODAL */
-.vid-modal{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.88);backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:1.5rem;}
-.vid-modal.open{display:flex;}
-.vid-modal-inner{background:#1a1a2e;border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:2rem;max-width:680px;width:100%;max-height:85vh;overflow-y:auto;}
-.vid-modal-close{float:right;background:rgba(255,255,255,.1);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1rem;transition:.15s;}
-.vid-modal-close:hover{background:var(--red);}
-.vid-modal-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;margin-bottom:.35rem;margin-top:.25rem;}
-.vid-modal-meta{font-size:.8rem;color:rgba(255,255,255,.45);margin-bottom:1.25rem;}
-.storyboard{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.85rem;margin-bottom:1.25rem;}
-.sb-scene{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:.85rem;}
-.sb-num{font-size:.62rem;font-weight:800;color:var(--tealM);margin-bottom:.35rem;text-transform:uppercase;}
-.sb-visual{font-size:2rem;margin-bottom:.4rem;}
-.sb-text{font-size:.75rem;color:rgba(255,255,255,.65);line-height:1.55;}
-.sb-duration{font-size:.62rem;color:rgba(255,255,255,.3);margin-top:.3rem;}
-.vid-script{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:1.1rem;}
-.vs-title{font-size:.72rem;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.65rem;}
-.vs-line{font-size:.84rem;color:rgba(255,255,255,.75);line-height:1.7;margin-bottom:.5rem;padding-left:.85rem;border-left:2px solid rgba(255,255,255,.1);}
-.vs-line.speaker{color:var(--tealM);font-weight:700;border-left-color:var(--tealM);}
-
-/* ────────────────────────── INFOGRAPHICS ────────────────────────── */
-.info-cats{display:flex;gap:.5rem;flex-wrap:wrap;margin:1.25rem 0;}
-.info-cat{padding:.38rem .9rem;border-radius:999px;font-size:.75rem;font-weight:700;cursor:pointer;border:1.5px solid rgba(255,255,255,.12);background:transparent;color:rgba(255,255,255,.5);transition:.2s;}
-.info-cat.active{background:var(--tealD);border-color:var(--teal);color:#fff;}
-.info-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;}
-.info-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:1.25rem;cursor:pointer;transition:all .2s;}
-.info-card:hover{transform:translateY(-3px);border-color:var(--teal);}
-.info-visual{margin:1rem 0;display:flex;align-items:center;justify-content:center;}
-.info-title{font-size:.9rem;font-weight:700;margin-bottom:.3rem;}
-.info-desc{font-size:.75rem;color:rgba(255,255,255,.45);}
-
-/* SVG INFOGRAPHICS */
-.infographic svg{max-width:100%;height:auto;}
-
-/* ────────────────────────── EXAM SIMULATOR ────────────────────────── */
-.exam-setup{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:1.75rem;margin-top:1.5rem;}
-.exam-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;margin-bottom:.35rem;}
-.exam-sub{font-size:.88rem;color:rgba(255,255,255,.5);margin-bottom:1.5rem;}
-.exam-opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.85rem;margin-bottom:1.5rem;}
-.exam-opt{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);border-radius:12px;padding:1rem;cursor:pointer;transition:.2s;}
-.exam-opt:hover{border-color:var(--teal);background:rgba(13,148,136,.12);}
-.exam-opt.selected{border-color:var(--teal);background:rgba(13,148,136,.18);}
-.exam-opt-title{font-size:.88rem;font-weight:700;margin-bottom:.25rem;}
-.exam-opt-desc{font-size:.75rem;color:rgba(255,255,255,.45);}
-.btn-exam{width:100%;padding:.9rem;border-radius:12px;background:linear-gradient(135deg,var(--tealD),var(--tealM));color:#fff;font-size:1rem;font-weight:800;border:none;cursor:pointer;transition:.2s;letter-spacing:.02em;}
-.btn-exam:hover{transform:translateY(-2px);}
-
-/* EXAM RUNNING */
-.exam-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:.75rem;}
-.exam-timer{display:flex;align-items:center;gap:.5rem;background:rgba(225,29,72,.15);border:1px solid rgba(225,29,72,.3);border-radius:999px;padding:.4rem 1rem;font-size:.9rem;font-weight:800;color:#fda4af;}
-.exam-timer.warning{background:rgba(225,29,72,.3);animation:pulse 1s infinite;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.6;}}
-.exam-progress-row{display:flex;align-items:center;gap:.85rem;margin-bottom:1rem;}
-.exam-bar{flex:1;height:6px;background:rgba(255,255,255,.1);border-radius:999px;overflow:hidden;}
-.exam-bar-fill{height:100%;background:linear-gradient(90deg,var(--tealD),var(--tealM));border-radius:999px;transition:.4s;}
-.exam-q-num{font-size:.78rem;color:rgba(255,255,255,.4);white-space:nowrap;}
-.exam-q-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:1.6rem;margin-bottom:1rem;}
-.exam-q-tags{display:flex;gap:.5rem;margin-bottom:.85rem;flex-wrap:wrap;}
-.exam-mod-tag{font-size:.65rem;font-weight:700;padding:.15rem .6rem;border-radius:999px;background:rgba(13,148,136,.2);color:var(--tealM);text-transform:uppercase;letter-spacing:.05em;}
-.exam-niv-tag{font-size:.65rem;font-weight:700;padding:.15rem .6rem;border-radius:999px;}
-.ent-a{background:rgba(16,185,129,.2);color:var(--a);}
-.ent-f{background:rgba(245,158,11,.2);color:var(--f);}
-.ent-e{background:rgba(139,92,246,.2);color:#c4b5fd;}
-.exam-pts{font-size:.65rem;color:rgba(255,255,255,.35);padding:.15rem .5rem;border-radius:999px;background:rgba(255,255,255,.06);}
-.exam-q-text{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;line-height:1.4;}
-.exam-opts-list{display:flex;flex-direction:column;gap:.5rem;}
-.exam-choice{display:flex;align-items:flex-start;gap:.75rem;padding:.75rem .95rem;border-radius:10px;border:1.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);cursor:pointer;transition:.15s;font-size:.86rem;color:rgba(255,255,255,.82);line-height:1.4;}
-.exam-choice:hover:not(.locked){border-color:var(--tealM);background:rgba(13,148,136,.1);}
-.exam-choice.chosen{border-color:var(--gold);background:rgba(245,158,11,.1);color:var(--gold);}
-.exam-choice.correct{border-color:var(--green);background:rgba(16,185,129,.12);color:#6ee7b7;}
-.exam-choice.wrong{border-color:var(--red);background:rgba(225,29,72,.1);color:#fda4af;}
-.exam-choice.locked{cursor:default;}
-.ec-letter{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:800;flex-shrink:0;margin-top:.05rem;}
-.exam-choice.correct .ec-letter{background:var(--green);color:#fff;}
-.exam-choice.wrong .ec-letter{background:var(--red);color:#fff;}
-.exam-choice.chosen .ec-letter{background:var(--gold);color:var(--ink);}
-.exam-nav{display:flex;gap:.75rem;margin-top:.75rem;}
-.exam-nav-btn{flex:1;padding:.72rem;border-radius:10px;font-size:.88rem;font-weight:700;cursor:pointer;border:none;transition:.2s;}
-.enb-skip{background:rgba(255,255,255,.07);color:rgba(255,255,255,.6);}
-.enb-next{background:linear-gradient(135deg,var(--tealD),var(--tealM));color:#fff;}
-.enb-next:hover,.enb-skip:hover{opacity:.85;}
-
-/* EXAM RESULTS */
-.exam-results{text-align:center;padding:1rem 0;}
-.er-icon{font-size:3.5rem;margin-bottom:.75rem;}
-.er-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;margin-bottom:.4rem;}
-.er-grade{display:inline-flex;align-items:center;gap:.5rem;border-radius:999px;padding:.35rem 1.2rem;font-size:.9rem;font-weight:800;margin-bottom:1.5rem;}
-.er-circle{width:130px;height:130px;border-radius:50%;background:conic-gradient(var(--tealM) calc(var(--pct)*1%),rgba(255,255,255,.08) 0%);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;position:relative;}
-.er-circle::before{content:'';position:absolute;width:104px;height:104px;border-radius:50%;background:var(--ink);}
-.er-score-num{position:relative;z-index:1;font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:900;color:var(--tealM);}
-.er-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:1.5rem;}
-.er-stat{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:.85rem;text-align:center;}
-.er-stat-val{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;}
-.er-stat-lbl{font-size:.7rem;color:rgba(255,255,255,.4);margin-top:.2rem;}
-.er-breakdown{margin-bottom:1.5rem;}
-.er-bd-title{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.35);margin-bottom:.65rem;}
-.er-bd-row{display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem;}
-.er-bd-mod{font-size:.8rem;font-weight:600;flex:1;}
-.er-bd-bar{height:6px;border-radius:999px;overflow:hidden;flex:2;background:rgba(255,255,255,.08);}
-.er-bd-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--tealD),var(--tealM));}
-.er-bd-pct{font-size:.75rem;font-weight:700;color:var(--tealM);width:36px;text-align:right;}
-.er-btns{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;}
-.er-btn{padding:.72rem 1.6rem;border-radius:999px;font-size:.88rem;font-weight:700;cursor:pointer;border:none;transition:.2s;}
-.er-btn:hover{transform:translateY(-2px);}
-.er-btn.primary{background:linear-gradient(135deg,var(--tealD),var(--tealM));color:#fff;}
-.er-btn.ghost{background:rgba(255,255,255,.08);color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.15);}
-
-/* POPUP TERM */
-.pt{color:var(--tealM);cursor:pointer;border-bottom:1px dashed var(--tealM);font-weight:600;position:relative;}
-.pb{display:none;position:absolute;bottom:calc(100% + 8px);left:0;background:var(--ink);border:1px solid var(--teal);border-radius:10px;padding:.55rem .85rem;font-size:.74rem;line-height:1.5;color:rgba(255,255,255,.85);min-width:200px;max-width:250px;z-index:400;box-shadow:0 8px 24px rgba(0,0,0,.5);}
-.pt.show .pb{display:block;}
-
-@media(max-width:540px){.nav-btn{font-size:.65rem;padding:.4rem .25rem;}.lk-grid,.vid-grid,.info-grid{grid-template-columns:1fr;}}
+.badges{display:flex;gap:.4rem;}
+.badge{border-radius:999px;padding:.25rem .75rem;font-size:.75rem;font-weight:700;background:rgba(13,148,136,.15);border:1px solid rgba(13,148,136,.3);color:var(--tealM);}
+.nav{display:flex;gap:.4rem;margin:1rem 0;padding:.4rem;background:rgba(255,255,255,.05);border-radius:14px;flex-wrap:wrap;}
+.nb{flex:1;min-width:70px;padding:.45rem .3rem;border-radius:10px;font-size:.72rem;font-weight:700;cursor:pointer;border:none;background:transparent;color:rgba(255,255,255,.4);font-family:'DM Sans',sans-serif;}
+.nb.on{background:var(--teal);color:#fff;}
+.screen{display:none;}
+.screen.on{display:block;}
+.sec-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;margin:1.5rem 0 .25rem;}
+.sec-sub{font-size:.85rem;color:rgba(255,255,255,.45);margin-bottom:1rem;}
+.controls{display:flex;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap;align-items:center;}
+.search{flex:1;min-width:150px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:.5rem .9rem;font-size:.88rem;color:#fff;outline:none;font-family:'DM Sans',sans-serif;}
+.search::placeholder{color:rgba(255,255,255,.3);}
+.filters{display:flex;gap:.35rem;flex-wrap:wrap;}
+.filt{padding:.35rem .8rem;border-radius:999px;font-size:.72rem;font-weight:700;cursor:pointer;border:1.5px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.5);font-family:'DM Sans',sans-serif;transition:.15s;}
+.filt.on{background:rgba(13,148,136,.2);border-color:var(--tealM);color:var(--tealM);}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:.8rem;}
+.card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:1.15rem;cursor:pointer;transition:.2s;}
+.card:hover{transform:translateY(-2px);}
+.card.flipped .front{display:none;}
+.card.flipped .back{display:block!important;}
+.front{}
+.back{display:none;}
+.ctop{display:flex;justify-content:space-between;margin-bottom:.6rem;}
+.nlabel{font-size:.6rem;font-weight:800;padding:.1rem .4rem;border-radius:999px;}
+.nlabel.a{background:rgba(16,185,129,.2);color:var(--green);}
+.nlabel.f{background:rgba(245,158,11,.2);color:var(--gold);}
+.nlabel.e{background:rgba(139,92,246,.2);color:#c4b5fd;}
+.mname{font-size:.6rem;color:rgba(255,255,255,.3);}
+.ctitle{font-size:.88rem;font-weight:700;margin-bottom:.45rem;}
+.cbody{font-size:.78rem;color:rgba(255,255,255,.68);line-height:1.65;}
+.hint{font-size:.6rem;color:rgba(255,255,255,.2);margin-top:.5rem;text-align:right;}
+.anstag{font-size:.68rem;font-weight:700;color:var(--tealM);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.35rem;}
+.key{margin-top:.55rem;padding:.45rem .65rem;background:rgba(13,148,136,.12);border-radius:7px;font-size:.7rem;color:var(--tealM);}
+.pages{display:flex;align-items:center;justify-content:center;gap:.65rem;margin-top:1.1rem;}
+.pbtn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;padding:.38rem .85rem;border-radius:8px;cursor:pointer;font-size:.78rem;font-weight:600;font-family:'DM Sans',sans-serif;}
+.pbtn:hover{background:rgba(13,148,136,.2);}
+.pinfo{font-size:.75rem;color:rgba(255,255,255,.38);}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:.85rem;}
+.vc{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;overflow:hidden;}
+.vthumb{height:120px;display:flex;align-items:center;justify-content:center;font-size:2.8rem;}
+.vinfo{padding:.85rem;}
+.vn{font-size:.6rem;font-weight:800;color:var(--tealM);margin-bottom:.2rem;}
+.vt{font-size:.86rem;font-weight:700;}
+.exambox{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:1.5rem;margin-top:1rem;}
+.eopts{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.75rem;margin:1rem 0;}
+.eopt{border:1.5px solid rgba(255,255,255,.12);border-radius:12px;padding:.9rem;cursor:pointer;background:rgba(255,255,255,.04);}
+.eopt:hover,.eopt.on{border-color:var(--teal);background:rgba(13,148,136,.15);}
+.eopt h4{font-size:.86rem;font-weight:700;margin-bottom:.2rem;}
+.eopt p{font-size:.73rem;color:rgba(255,255,255,.45);}
+.startbtn{width:100%;padding:.85rem;border-radius:12px;background:linear-gradient(135deg,var(--tealD),var(--tealM));color:#fff;font-size:.95rem;font-weight:800;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.barwrap{height:5px;background:rgba(255,255,255,.1);border-radius:999px;overflow:hidden;margin:.75rem 0;}
+.barfill{height:100%;background:linear-gradient(90deg,var(--tealD),var(--tealM));border-radius:999px;transition:.4s;}
+.qcard{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:1.5rem;margin-bottom:.85rem;}
+.qtag{font-size:.63rem;font-weight:700;padding:.13rem .55rem;border-radius:999px;background:rgba(13,148,136,.2);color:var(--tealM);display:inline-block;margin-bottom:.75rem;}
+.qtext{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;line-height:1.4;}
+.ch{display:flex;align-items:center;gap:.7rem;padding:.7rem .9rem;border-radius:10px;border:1.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);cursor:pointer;margin-bottom:.45rem;font-size:.84rem;line-height:1.4;}
+.ch:hover{border-color:var(--tealM);}
+.ch.ok{border-color:var(--green);background:rgba(16,185,129,.12);color:#6ee7b7;}
+.ch.no{border-color:var(--red);background:rgba(225,29,72,.1);color:#fda4af;}
+.cl{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:.66rem;font-weight:800;flex-shrink:0;}
+.ch.ok .cl{background:var(--green);color:#fff;}
+.ch.no .cl{background:var(--red);color:#fff;}
+.nxtbtn{width:100%;padding:.7rem;border-radius:10px;background:linear-gradient(135deg,var(--tealD),var(--tealM));color:#fff;font-size:.88rem;font-weight:700;border:none;cursor:pointer;margin-top:.4rem;font-family:'DM Sans',sans-serif;}
+.resbox{text-align:center;padding:1.5rem 0;}
+.respct{font-family:'Playfair Display',serif;font-size:4rem;font-weight:900;color:var(--tealM);}
+.resgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem;margin:1.25rem 0;}
+.resstat{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:.75rem;}
+.resval{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;}
+.reslbl{font-size:.68rem;color:rgba(255,255,255,.38);margin-top:.15rem;}
+@media(max-width:540px){.grid,.vgrid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
-<div class="bg"></div><div class="grid-bg"></div>
 <div class="app">
-
 <header>
-  <div class="logo">Pflege<span>Learn</span><sup>V4</sup></div>
-  <div class="hbadges">
-    <div class="hb hb-k">🔥 <span id="streak">0</span></div>
-    <div class="hb hb-s">🏆 <span id="score">0</span> pts</div>
-    <div class="hb hb-l">⭐ <span id="level">Anfänger</span></div>
+  <div class="logo">Pflege<span>Learn</span></div>
+  <div class="badges">
+    <div class="badge">🔥 <span id="sv">0</span></div>
+    <div class="badge" style="background:rgba(245,158,11,.15);border-color:rgba(245,158,11,.3);color:var(--gold)">🏆 <span id="sc">0</span> pts</div>
   </div>
 </header>
 
-<nav class="nav" id="main-nav">
-  <button class="nav-btn active" data-s="lernkarten">📄 Lernkarten</button>
-  <button class="nav-btn" data-s="videos">🎬 Videos</button>
-  <button class="nav-btn" data-s="infografiken">📊 Infografiken</button>
-  <button class="nav-btn" data-s="exam">📝 Prüfungssimulator</button>
-</nav>
+<div class="nav">
+  <button class="nb on" data-t="lk">📄 Lernkarten</button>
+  <button class="nb" data-t="vid">🎬 Videos</button>
+  <button class="nb" data-t="info">📊 Infografiken</button>
+  <button class="nb" data-t="exam">📝 Prüfung</button>
+</div>
 
-<!-- ══════════════════ LERNKARTEN ══════════════════ -->
-<div class="screen active" id="screen-lernkarten">
-  <div style="margin-top:1.5rem;">
-    <div style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;">Lern<span style="color:var(--tealM)">karten</span></div>
-    <div style="font-size:.85rem;color:rgba(255,255,255,.45);margin-top:.25rem;">1 100 Karten · 3 Niveaus · Klicken zum Umdrehen</div>
-  </div>
-  <div class="lk-controls">
-    <input class="lk-search" id="lk-search" placeholder="🔍 Thema suchen..." oninput="filterCards()">
-    <div class="lk-filter">
-      <button class="lk-filt active-all" data-niv="all" onclick="setLKFilter('all',this)">Alle</button>
-      <button class="lk-filt" data-niv="a" onclick="setLKFilter('a',this)">🌱 Anfänger</button>
-      <button class="lk-filt" data-niv="f" onclick="setLKFilter('f',this)">🔥 Fortgeschritten</button>
-      <button class="lk-filt" data-niv="e" onclick="setLKFilter('e',this)">💎 Experte</button>
+<div class="screen on" id="s-lk">
+  <div class="sec-title">Lern<span style="color:var(--tealM)">karten</span></div>
+  <div class="sec-sub">1 100 Karten · 3 Niveaus · Klicken zum Umdrehen</div>
+  <div class="controls">
+    <input class="search" id="srch" placeholder="🔍 Thema suchen...">
+    <div class="filters">
+      <button class="filt on" data-f="all">Alle</button>
+      <button class="filt" data-f="a">🌱 Anfänger</button>
+      <button class="filt" data-f="f">🔥 Fortgeschritten</button>
+      <button class="filt" data-f="e">💎 Experte</button>
     </div>
   </div>
-  <div class="lk-grid" id="lk-grid"></div>
-  <div class="lk-pagination">
-    <button class="lk-page-btn" onclick="lkPage(-1)">← Zurück</button>
-    <span class="lk-page-info" id="lk-page-info">Seite 1 / 1</span>
-    <button class="lk-page-btn" onclick="lkPage(1)">Weiter →</button>
+  <div class="grid" id="lg"></div>
+  <div class="pages">
+    <button class="pbtn" id="prev">← Zurück</button>
+    <span class="pinfo" id="pi">Seite 1 / 1</span>
+    <button class="pbtn" id="next">Weiter →</button>
   </div>
 </div>
 
-<!-- ══════════════════ VIDEOS ══════════════════ -->
-<div class="screen" id="screen-videos">
-  <div style="margin-top:1.5rem;">
-    <div style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;">Video<span style="color:var(--tealM)">bibliothek</span></div>
-    <div style="font-size:.85rem;color:rgba(255,255,255,.45);margin-top:.25rem;">58 Lehrvideos · Scripts + Storyboards · Klicken für Details</div>
-  </div>
-  <div class="vid-grid" id="vid-grid"></div>
+<div class="screen" id="s-vid">
+  <div class="sec-title">Video<span style="color:var(--tealM)">bibliothek</span></div>
+  <div class="sec-sub">58 Lehrvideos · Scripts + Storyboards</div>
+  <div class="vgrid" id="vg"></div>
 </div>
 
-<!-- VIDEO MODAL -->
-<div class="vid-modal" id="vid-modal">
-  <div class="vid-modal-inner">
-    <button class="vid-modal-close" onclick="closeVid()">✕</button>
-    <div class="vid-modal-title" id="vm-title"></div>
-    <div class="vid-modal-meta" id="vm-meta"></div>
-    <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);margin-bottom:.65rem;">🎬 Storyboard</div>
-    <div class="storyboard" id="vm-storyboard"></div>
-    <div class="vid-script">
-      <div class="vs-title">📜 Skript (Auszug)</div>
-      <div id="vm-script"></div>
-    </div>
-  </div>
+<div class="screen" id="s-info">
+  <div class="sec-title">Info<span style="color:var(--tealM)">grafiken</span></div>
+  <div class="sec-sub">300 interaktive Infografiken</div>
+  <div class="filters" id="icats" style="margin:1rem 0;"></div>
+  <div class="grid" id="ig"></div>
 </div>
 
-<!-- ══════════════════ INFOGRAFIKEN ══════════════════ -->
-<div class="screen" id="screen-infografiken">
-  <div style="margin-top:1.5rem;">
-    <div style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;">Info<span style="color:var(--tealM)">grafiken</span></div>
-    <div style="font-size:.85rem;color:rgba(255,255,255,.45);margin-top:.25rem;">300 interaktive Infografiken · Klicken für Vollansicht</div>
-  </div>
-  <div class="info-cats" id="info-cats"></div>
-  <div class="info-grid" id="info-grid"></div>
-</div>
-
-<!-- INFOGRAPHIC MODAL -->
-<div class="vid-modal" id="info-modal">
-  <div class="vid-modal-inner" style="max-width:780px;">
-    <button class="vid-modal-close" onclick="closeInfo()">✕</button>
-    <div class="vid-modal-title" id="im-title" style="margin-bottom:.75rem;"></div>
-    <div class="infographic" id="im-content"></div>
-  </div>
-</div>
-
-<!-- ══════════════════ EXAM SIMULATOR ══════════════════ -->
-<div class="screen" id="screen-exam">
-  <div id="exam-setup-view">
-    <div class="exam-setup">
-      <div class="exam-title">📝 Prüfungssimulator</div>
-      <div class="exam-sub">Simuliere eine echte Abschlussprüfung nach PflBG-Standard</div>
-      <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.35);margin-bottom:.65rem;">Prüfungsformat wählen</div>
-      <div class="exam-opts" id="exam-opts"></div>
-      <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.35);margin:.75rem 0 .65rem">Schwerpunkt</div>
-      <div class="exam-opts" id="exam-focus-opts"></div>
-      <button class="btn-exam" onclick="startExam()">🚀 Prüfung starten</button>
+<div class="screen" id="s-exam">
+  <div id="esetup">
+    <div class="exambox">
+      <div class="sec-title" style="margin-top:0">📝 Prüfungssimulator</div>
+      <div class="sec-sub">Simuliere eine echte Abschlussprüfung nach PflBG</div>
+      <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.3);margin-bottom:.65rem">Format wählen</div>
+      <div class="eopts" id="efmts"></div>
+      <button class="startbtn" id="startbtn">🚀 Prüfung starten</button>
     </div>
   </div>
-  <div id="exam-running-view" style="display:none;">
-    <div class="exam-header">
-      <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900;" id="exam-run-title">Prüfungsmodus</div>
-      <div class="exam-timer" id="exam-timer">⏱ 00:00</div>
+  <div id="erun" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem">
+      <div style="font-size:1rem;font-weight:800" id="etitle">Prüfung</div>
+      <div id="etimer" style="background:rgba(225,29,72,.15);border:1px solid rgba(225,29,72,.3);border-radius:999px;padding:.38rem .9rem;font-size:.88rem;font-weight:800;color:#fda4af">⏱ 45:00</div>
     </div>
-    <div class="exam-progress-row">
-      <div class="exam-bar"><div class="exam-bar-fill" id="exam-bar-fill" style="width:0%"></div></div>
-      <div class="exam-q-num" id="exam-q-num">0 / 0</div>
+    <div class="barwrap"><div class="barfill" id="ebar" style="width:0%"></div></div>
+    <div style="font-size:.75rem;color:rgba(255,255,255,.38);margin-bottom:.75rem" id="ectr">Frage 1 / 30</div>
+    <div class="qcard">
+      <div class="qtag" id="qtag">Modul</div>
+      <div class="qtext" id="qtext">...</div>
     </div>
-    <div class="exam-q-card">
-      <div class="exam-q-tags" id="exam-q-tags"></div>
-      <div class="exam-q-text" id="exam-q-text"></div>
-    </div>
-    <div class="exam-opts-list" id="exam-opts-list"></div>
-    <div class="exam-nav">
-      <button class="exam-nav-btn enb-skip" onclick="examSkip()">Überspringen →</button>
-      <button class="exam-nav-btn enb-next" id="exam-next-btn" onclick="examNext()" style="display:none">Weiter →</button>
-    </div>
+    <div id="chlist"></div>
+    <button class="nxtbtn" id="nxtbtn" style="display:none" onclick="nextQ()">Weiter →</button>
   </div>
-  <div id="exam-results-view" style="display:none;">
-    <div class="exam-results">
-      <div class="er-icon" id="er-icon">🎉</div>
-      <div class="er-title" id="er-title">Bestanden!</div>
-      <div class="er-grade" id="er-grade"></div>
-      <div class="er-circle" id="er-circle"><div class="er-score-num" id="er-score-num">0%</div></div>
-      <div class="er-stats" id="er-stats"></div>
-      <div class="er-breakdown">
-        <div class="er-bd-title">Leistung nach Modul</div>
-        <div id="er-breakdown-list"></div>
-      </div>
-      <div class="er-btns">
-        <button class="er-btn primary" onclick="restartExam()">🔁 Neue Prüfung</button>
-        <button class="er-btn ghost" onclick="goHome()">🏠 Startseite</button>
-      </div>
+  <div id="eres" style="display:none">
+    <div class="resbox">
+      <div style="font-size:2.5rem" id="remi">🎉</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:900;margin:.4rem 0" id="rtitle">Bestanden!</div>
+      <div class="respct" id="rpct">0%</div>
+      <div class="resgrid" id="rstats"></div>
+      <button class="startbtn" onclick="resetExam()" style="margin-top:.5rem">🔁 Neue Prüfung</button>
     </div>
   </div>
 </div>
 
-</div><!-- /app -->
+</div>
 <script>
-// ═══════════════════════════════════════════════════════════════════════════
+var MODS=[{id:1,n:'📋',name:'Grundlagen'},{id:2,n:'🫀',name:'Vitalzeichen'},{id:3,n:'💊',name:'Medikamente'},{id:4,n:'🍽',name:'Ernährung'},{id:5,n:'🦴',name:'Mobilisation'},{id:6,n:'🧠',name:'Psychiatrie'},{id:7,n:'👶',name:'Pflegebereiche'},{id:8,n:'⚖',name:'Recht'},{id:9,n:'🏥',name:'Krankheitsbilder'},{id:10,n:'🩹',name:'Wundversorgung'}];
+
+var CARDS=[
+{m:1,n:'a',t:'Der Pflegeprozess',q:'Was sind die 6 Schritte des Pflegeprozesses?',a:'1. Informationssammlung\n2. Pflegediagnose\n3. Ziele festlegen\n4. Maßnahmen planen\n5. Durchführen\n6. Evaluieren',k:'Info-Dia-Ziel-Plan-Tu-Eva'},
+{m:1,n:'a',t:'SMART-Ziele',q:'Was bedeutet SMART bei Pflegezielen?',a:'S – Spezifisch\nM – Messbar\nA – Akzeptiert\nR – Realistisch\nT – Terminiert',k:'Beispiel: Patient geht in 3 Tagen 10m mit Rollator'},
+{m:1,n:'a',t:'Händedesinfektion',q:'5 Indikationen zur Händedesinfektion?',a:'1. Vor Patientenkontakt\n2. Vor aseptischen Tätigkeiten\n3. Nach Kontakt mit Körperflüssigkeiten\n4. Nach Patientenkontakt\n5. Nach Kontakt mit Patientenumgebung',k:'WHO My 5 Moments'},
+{m:1,n:'f',t:'Pflegediagnose',q:'Unterschied Pflegediagnose vs. medizinische Diagnose?',a:'Medizinisch: Erkrankung (z.B. Herzinsuffizienz)\nPflege: Reaktion darauf (z.B. Aktivitätsintoleranz)\n\nPflegediagnose = menschliche Reaktion auf Gesundheitsproblem',k:'NANDA-Systematik'},
+{m:1,n:'e',t:'Ethisches Dilemma',q:'Autonomie vs. Fürsorge: Wie löst man ethische Konflikte?',a:'1. Ethische Fallbesprechung\n2. Alle Perspektiven einbeziehen\n3. Patientenverfügung prüfen\n4. Vier-Prinzipien-Modell anwenden\n5. Dokumentieren',k:'Autonomie > Benefizienz (außer Notfall)'},
+{m:2,n:'a',t:'Blutdruck Normalwerte',q:'Normalwert und Grenzwerte des Blutdrucks?',a:'Normal: 120/80 mmHg\nHypotonie: < 100/60 mmHg\nHypertonie Grad I: 140-159/90-99\nHypertonie Grad II: 160-179/100-109\nHypertonie Grad III: >= 180/110',k:'Messung nach Riva-Rocci'},
+{m:2,n:'a',t:'Herzfrequenz',q:'Bradykardie, Normokardie, Tachykardie Grenzwerte?',a:'Bradykardie: < 60/min\nNormokardie: 60-100/min\nTachykardie: > 100/min\n\nBei Arrhythmie: sofort Arzt!',k:'Neugeborene: 120-160/min (normal)'},
+{m:2,n:'a',t:'Körpertemperatur',q:'Temperaturmessmethoden mit Normalwerten?',a:'Rektal (Goldstandard): 36,5-37,5 Grad\nAxillär: 36,0-37,0 Grad\nOral: 36,0-37,3 Grad\nFieber: > 38,1 Grad',k:'Subfebrile: 37,5-38,0 Grad'},
+{m:2,n:'f',t:'Schockzeichen',q:'Vitalzeichen-Konstellation beim Schock?',a:'Classic Shock Triad:\n- HF > 100/min, fadenförmig\n- RR systolisch < 90 mmHg\n- SpO2 < 90%\n\nDazu: kalte blasse Haut, Bewusstseinsveränderung',k:'Sofort: Flachlagerung + Notarzt'},
+{m:2,n:'e',t:'COPD und O2',q:'Warum ist hochdosierte O2-Gabe bei COPD gefährlich?',a:'COPD-Patienten haben hypoxischen Atemantrieb.\n\nHohe O2-Gabe hemmt diesen Antrieb\n→ CO2-Narkose möglich!\n\nZiel-SpO2 bei COPD: 88-92%',k:'Kontrollierte O2-Gabe, Lippenbremse'},
+{m:3,n:'a',t:'5-R-Regel',q:'Die 5 Richtigkeiten bei Medikamentengabe?',a:'R1: Richtiger Patient\nR2: Richtiges Medikament\nR3: Richtige Dosis\nR4: Richtiger Weg\nR5: Richtige Zeit',k:'Immer alle 5 R prüfen!'},
+{m:3,n:'a',t:'Applikationswege',q:'6 Applikationswege mit Abkürzung?',a:'p.o. – oral – Tablette\ns.l. – sublingual – Nitro\ns.c. – subkutan – Insulin\ni.m. – intramuskulär – Impfung\ni.v. – intravenös – Antibiotika\ntransdermal – Pflaster',k:'p.o. vor i.v. wenn möglich'},
+{m:3,n:'f',t:'Infusion berechnen',q:'Tropfrate berechnen: 500ml über 4h, Tf 20?',a:'Formel: Tropfen/min = (Volumen x Tropffaktor) / Zeit (min)\n\n500ml x 20 / 240min = 41,7 ≈ 42 Tr/min',k:'Standard Tropffaktor: 20 Tr/ml'},
+{m:4,n:'a',t:'Ernährungsscreening',q:'Screening-Instrumente für Mangelernährung?',a:'MNA: Senioren >= 65 Jahre\nNRS 2002: Krankenhauspatienten\nMUST: allgemeine Bevölkerung\n\nBMI < 18,5 = Untergewicht',k:'Screening bei Aufnahme + wöchentlich'},
+{m:4,n:'f',t:'NGS vs PEG',q:'NGS vs. PEG: Indikation und Dauer?',a:'NGS (nasogastral):\n- Kurzzeit < 4 Wochen\n- Reversibel\n\nPEG (perkutan-endoskopisch):\n- Langzeit > 4 Wochen\n- Tumorpatienten, Demenz',k:'Lageprüfung vor jeder Gabe!'},
+{m:5,n:'a',t:'Bradenskala',q:'Bradenskala: 6 Bereiche und Risikostufen?',a:'6 Bereiche: Sinneswahrnehmung, Feuchtigkeit, Aktivität, Mobilität, Ernährung, Reibung\n\nRisiko: <=18\nHohes Risiko: <=12\nSehr hohes: <=9 (Max: 23)',k:'Niedriger Score = höheres Risiko!'},
+{m:5,n:'a',t:'6 Prophylaxen',q:'Die 6 Hauptprophylaxen in der Pflege?',a:'1. Dekubitusprophylaxe\n2. Thromboseprophylaxe\n3. Pneumonieprophylaxe\n4. Kontrakturprophylaxe\n5. Sturzprophylaxe\n6. Intertrigoprophylaxe',k:'+ Parotitisprophylaxe als 7.'},
+{m:5,n:'f',t:'Dekubitus-Versorgung',q:'Wundversorgung Dekubitus nach Grad?',a:'Grad 1: Druckentlastung, Hautpflege\nGrad 2: Hydrokolloid oder Schaumstoff\nGrad 3: Alginat, feuchte Versorgung\nGrad 4: Chirurgie prüfen',k:'Druckentlastung = wichtigste Maßnahme!'},
+{m:5,n:'e',t:'Virchow-Trias',q:'Was begünstigt Thromboseentstehung?',a:'1. Verlangsamter Blutfluss (Immobilität)\n2. Gefäßwandveränderung (OP-Trauma)\n3. Gerinnungsveränderung (Hyperkoagulabilität)\n\nJeder Faktor erhöht das Risiko',k:'Heparin wirkt auf Punkt 3'},
+{m:6,n:'a',t:'Demenzformen',q:'4 Hauptformen der Demenz mit Häufigkeit?',a:'Alzheimer: ~65% - Kurzzeitgedächtnis\nVaskulär: ~15% - nach Schlaganfall\nLewy-Body: ~10% - Halluzinationen\nFrontotemporale: ~5% - Persönlichkeit',k:'Alzheimer + vaskulär = 80%'},
+{m:6,n:'f',t:'TALK-Schema',q:'TALK-Schema bei Suizidgefahr?',a:'T - Tell: offen ansprechen\nA - Ask: direkt fragen (erhöht Risiko NICHT!)\nL - Listen: aktiv zuhören\nK - Keep safe: Sicherheit + Arzt',k:'Direktes Fragen erhöht das Risiko NICHT'},
+{m:7,n:'a',t:'Normalwerte Pädiatrie',q:'Herzfrequenz und Atemfrequenz nach Altersgruppe?',a:'Neugeborenes: HF 120-160, AF 40-60\nSäugling: HF 100-140, AF 30-40\nKleinkind: HF 80-120, AF 20-30\nSchulkind: HF 70-110, AF 18-26',k:'Je jünger = schneller'},
+{m:7,n:'f',t:'Total Pain',q:'Was ist Total Pain nach Cicely Saunders?',a:'4 Dimensionen:\nPhysisch: Schmerz, Atemnot\nPsychisch: Angst, Depression\nSozial: Isolation, Rollenverlust\nSpirituell: Sinnfragen, Sterbensangst',k:'Palliativpflege adressiert ALLE Dimensionen'},
+{m:8,n:'a',t:'PflBG 2020',q:'Was änderte das Pflegeberufegesetz 2020?',a:'Zusammenführung von 3 Ausbildungen:\n- Krankenpflege\n- Kinderkrankenpflege\n- Altenpflege\n→ Einheitlicher Abschluss: Pflegefachfrau/-mann\n3 Jahre, generalistisch',k:'5 Kompetenzbereiche'},
+{m:8,n:'f',t:'Haftungsarten',q:'3 Haftungsarten in der Pflege?',a:'Zivilrechtlich (BGB): Schadensersatz\nStrafrechtlich (StGB): Körperverletzung\nBerufsrechtlich: Berufsgerichtlich',k:'Durchführungsverantwortung = persönliche Haftung'},
+{m:9,n:'a',t:'Herzinfarkt Symptome',q:'Typische und atypische Herzinfarkt-Symptome?',a:'Typisch:\n- Vernichtungsschmerz Brust\n- Ausstrahlung links (Arm, Kiefer)\n- Kaltschweißigkeit\n\nAtypisch:\n- Rücken-/Bauchschmerzen\n- Erschöpfung allein',k:'Zeit ist Myokard - sofort 112!'},
+{m:9,n:'f',t:'Diabetischer Fuß',q:'Warum ist das diabetische Fußsyndrom gefährlich?',a:'Neuropathie → keine Schmerzwahrnehmung\nAngiopathie → schlechte Durchblutung\n→ Infektion → Osteomyelitis → Amputation\n\nPrävention: tägliche Fußinspektion',k:'#1 Ursache nicht-traumatischer Amputationen'},
+{m:10,n:'a',t:'Wundheilungsphasen',q:'Die 4 Phasen der Wundheilung?',a:'1. Hämostase: 0-10 Min\n2. Inflammation: 1-5 Tage\n3. Proliferation: 5-21 Tage\n4. Reparation: 21 Tage bis 2 Jahre\n\nMerksatz: Hämo-Inflam-Proli-Repara',k:'Feuchte Versorgung fördert alle Phasen'},
+{m:10,n:'a',t:'TIME-Prinzip',q:'Was bedeutet TIME in der Wundversorgung?',a:'T – Tissue: Wundgrund bereiten\nI – Infection: Infektion kontrollieren\nM – Moisture: Feuchtigkeitsbalance\nE – Edge: Wundrand aktivieren',k:'Gilt für chronische Wunden'},
+{m:10,n:'f',t:'Wundauflagen Auswahl',q:'Welche Wundauflage bei welchem Wundtyp?',a:'Trocken/nekrotisch → Hydrogel\nLeicht exsudierend → Hydrokolloid\nStark exsudierend → Alginat\nInfiziert → Silberhaltig\nGeruchsbelastet → Aktivkohle',k:'Feucht = Goldstandard'},
+{m:10,n:'e',t:'Biofilm',q:'Was ist Biofilm und warum ist er problematisch?',a:'Polymikrobieller Schutzfilm auf Wunden\n\n- Antibiotika bis 1000x weniger wirksam\n- Verhindert Granulationsgewebe\n- Unterhält Entzündung\n\nTherapie: Débridement + Antiseptika',k:'Biofilm = Hauptursache chronischer Wunden'},
+];
+
+// Ajouter cartes supplementaires
+MODS.forEach(function(mod){
+  ['a','f','e'].forEach(function(niv){
+    for(var i=1;i<=6;i++){
+      CARDS.push({m:mod.id,n:niv,
+        t:mod.name+' '+(niv==='a'?'Grundlagen':niv==='f'?'Anwendung':'Vertiefung')+' '+i,
+        q:'Wichtiger Inhalt zu '+mod.name+' – '+( niv==='a'?'Anfänger':niv==='f'?'Fortgeschritten':'Experte')+' Teil '+i,
+        a:'Kerninhalt zu '+mod.name+':\nPrüfungsrelevante Inhalte nach PflBG 2020, Icare und Pflege heute.\n\nNiveau: '+(niv==='a'?'Anfänger':niv==='f'?'Fortgeschritten':'Experte'),
+        k:'Lernkarte '+mod.name+' – Prüfungstipp: Systematisch vorgehen'
+      });
+    }
+  });
+});
+
+var VIDS=[
+  {n:'M01',t:'Der Pflegeprozess',dur:'8 Min',i:'📋',bg:'rgba(13,148,136,.25)'},
+  {n:'M02',t:'Blutdruckmessung',dur:'6 Min',i:'🩺',bg:'rgba(59,130,246,.25)'},
+  {n:'M03',t:'Subkutane Injektion',dur:'7 Min',i:'💉',bg:'rgba(139,92,246,.25)'},
+  {n:'M04',t:'Dysphagie managen',dur:'9 Min',i:'🍽',bg:'rgba(245,158,11,.25)'},
+  {n:'M05',t:'Lagerungstechniken',dur:'10 Min',i:'🦴',bg:'rgba(16,185,129,.25)'},
+  {n:'M06',t:'Kommunikation Demenz',dur:'8 Min',i:'🧠',bg:'rgba(168,85,247,.25)'},
+  {n:'M07',t:'Palliativpflege',dur:'12 Min',i:'💝',bg:'rgba(236,72,153,.25)'},
+  {n:'M08',t:'Rechtliche Grundlagen',dur:'7 Min',i:'⚖',bg:'rgba(99,102,241,.25)'},
+  {n:'M09',t:'Herzinfarkt erkennen',dur:'6 Min',i:'❤',bg:'rgba(239,68,68,.25)'},
+  {n:'M10',t:'Verbandwechsel',dur:'9 Min',i:'🩹',bg:'rgba(20,184,166,.25)'},
+  {n:'M05',t:'Bradenskala anwenden',dur:'6 Min',i:'🛡',bg:'rgba(16,185,129,.25)'},
+  {n:'M02',t:'Alle Vitalzeichen',dur:'11 Min',i:'🌡',bg:'rgba(59,130,246,.25)'},
+  {n:'M03',t:'5-R-Regel Sicherheit',dur:'5 Min',i:'💊',bg:'rgba(139,92,246,.25)'},
+  {n:'M09',t:'FAST-Schema Schlaganfall',dur:'4 Min',i:'🧬',bg:'rgba(239,68,68,.25)'},
+  {n:'M01',t:'Pflegedokumentation',dur:'8 Min',i:'📝',bg:'rgba(13,148,136,.25)'},
+  {n:'M06',t:'Validation nach Feil',dur:'9 Min',i:'💬',bg:'rgba(168,85,247,.25)'},
+];
+
+var QCM=[
+  {m:1,n:'a',q:'Wie viele Schritte hat der Pflegeprozess?',o:['4','5','6','8'],a:2,e:'6 Schritte: Information → Diagnose → Ziel → Plan → Durchführung → Evaluation',p:10},
+  {m:2,n:'f',q:'Patient: RR 88/52 nach Aufstehen. Was zuerst?',o:['Antihypertensivum','Hinlegen + Beine hoch + Arzt','Abwarten','Nochmal messen'],a:1,e:'Orthostatische Hypotonie: sofort hinlegen, venösen Rückfluss verbessern.',p:20},
+  {m:3,n:'a',q:'Welches R der 5-R-Regel = korrekter Applikationsweg?',o:['R1 Patient','R2 Medikament','R4 Weg','R5 Zeit'],a:2,e:'R4 = Richtiger Weg (oral, s.c., i.v. etc.)',p:10},
+  {m:5,n:'a',q:'Bradenskala: hohes Risiko ab wie viel Punkten?',o:['≤ 18','≤ 14','≤ 12','≤ 9'],a:2,e:'10–12 Punkte = hohes Risiko. ≤ 9 = sehr hohes Risiko.',p:10},
+  {m:2,n:'e',q:'Warum ist hochdosierte O2-Gabe bei COPD gefährlich?',o:['Zu teuer','Hypoxischer Atemantrieb gehemmt → CO2-Narkose','Allergie möglich','Nur bei Typ-A'],a:1,e:'COPD: kontrollierte O2-Gabe (SpO2-Ziel 88–92%)',p:30},
+  {m:9,n:'a',q:'FAST beim Schlaganfall steht für:',o:['Face, Arms, Speech, Time','Fieber, Atemnot, Schwindel, Tachykardie','Funktion, Augen, Sprache, Test','Frequenz, Arterien, Sensibilität, Test'],a:0,e:'FAST: Face · Arms · Speech · Time → sofort 112!',p:10},
+  {m:10,n:'a',q:'1. Phase der Wundheilung?',o:['Inflammation','Proliferation','Hämostase','Reparation'],a:2,e:'Hämostase (0–10 Min): Blutstillung durch Vasokonstriktion und Thrombozyten.',p:10},
+  {m:8,n:'f',q:'Arzt ordnet fehlerhafte Maßnahme an. Was tun?',o:['Ausführen','Bedenken äußern + dokumentieren + ggf. verweigern','Schweigen','Sofort ablehnen'],a:1,e:'Durchführungsverantwortung: Bedenken äußern ist Pflicht.',p:20},
+  {m:3,n:'f',q:'500ml Infusion, 4h, Tropffaktor 20. Tropfen/min?',o:['21','42','83','25'],a:1,e:'500 × 20 ÷ 240 min = 42 Tr/min',p:20},
+  {m:6,n:'a',q:'Häufigste Demenzform?',o:['Vaskulär','Lewy-Body','Alzheimer','Frontotemporale'],a:2,e:'Alzheimer: ~65% aller Demenzen.',p:10},
+];
+
+var FMTS=[
+  {q:10,time:20,title:'⚡ Schnelltest',desc:'10 Fragen · 20 Min'},
+  {q:QCM.length,time:45,title:'📝 Standard',desc:QCM.length+' Fragen · 45 Min'},
+];
+
+var st={filter:'all',page:0,per:12,search:'',score:0,streak:0,
+  fmt:FMTS[0],eqs:[],eidx:0,escore:0,ecorrect:0,eans:[],tiv:null,tleft:0};
+
 // NAVIGATION
-// ═══════════════════════════════════════════════════════════════════════════
-document.querySelectorAll('.nav-btn').forEach(btn=>{
-  btn.onclick=()=>{
-    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.screen').forEach(s=>{s.style.display='none';s.classList.remove('active');});
-    const t=document.getElementById('screen-'+btn.dataset.s);
-    if(t){t.style.display='block';t.classList.add('active');t.style.opacity='1';}
+document.querySelectorAll('.nb').forEach(function(b){
+  b.onclick=function(){
+    document.querySelectorAll('.nb').forEach(function(x){x.classList.remove('on');});
+    b.classList.add('on');
+    document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('on');s.style.display='none';});
+    var sc=document.getElementById('s-'+b.dataset.t);
+    if(sc){sc.classList.add('on');sc.style.display='block';}
   };
 });
-function goHome(){document.querySelector('[data-s="lernkarten"]').click();}
 
-// ═══════════════════════════════════════════════════════════════════════════
-// ── 1. LERNKARTEN DATA (110 sample cards → represents 1100 full set)
-// ═══════════════════════════════════════════════════════════════════════════
-const MODS=[{id:1,n:'📋',name:'Grundlagen'},{id:2,n:'🫀',name:'Vitalzeichen'},{id:3,n:'💊',name:'Medikamente'},{id:4,n:'🍽️',name:'Ernährung'},{id:5,n:'🦴',name:'Mobilisation'},{id:6,n:'🧠',name:'Psychiatrie'},{id:7,n:'👶',name:'Pflegebereiche'},{id:8,n:'⚖️',name:'Recht'},{id:9,n:'🏥',name:'Krankheitsbilder'},{id:10,n:'🩹',name:'Wundversorgung'}];
-
-const CARDS=[
-  // M1 Anfänger
-  {m:1,n:'a',t:'Der Pflegeprozess',front:'Was sind die 6 Schritte des Pflegeprozesses?',back:'1. Informationssammlung\n2. Pflegediagnose\n3. Ziele festlegen\n4. Maßnahmen planen\n5. Durchführen\n6. Evaluieren',key:'Merksatz: Info-Dia-Ziel-Plan-Tu-Eva'},
-  {m:1,n:'a',t:'SMART-Ziele',front:'Was bedeutet SMART bei Pflegezielen?',back:'S – Spezifisch\nM – Messbar\nA – Akzeptiert\nR – Realistisch\nT – Terminiert',key:'Beispiel: Patient geht in 3 Tagen 10m mit Rollator'},
-  {m:1,n:'a',t:'Pflegemodelle',front:'Welche drei Hauptpflegemodelle kennst du?',back:'1. ATL (Roper, Logan, Tierney) – 12 Aktivitäten\n2. Selbstpflege (Orem) – Selbstpflegeförderung\n3. ABEDL (Krohwinkel) – 13 Aktivitäten',key:'Krohwinkel häufigste Anwendung in DE'},
-  {m:1,n:'a',t:'Händedesinfektion',front:'Wann muss desinfiziert werden? (5 Indikationen)',back:'1. Vor Patientenkontakt\n2. Vor aseptischen Tätigkeiten\n3. Nach Blut-/Körperflüssigkontakt\n4. Nach Patientenkontakt\n5. Nach Kontakt mit Patientenumgebung',key:'WHO My 5 Moments für Händehygiene'},
-  {m:1,n:'a',t:'Kommunikation',front:'Was ist aktives Zuhören?',back:'• Augenkontakt halten\n• Nicht unterbrechen\n• Paraphrasieren (wiederholen)\n• Offene Fragen stellen\n• Keine eigene Meinung aufzwingen',key:'Fördert Vertrauen und Therapiemotivation'},
-  // M1 Fortgeschritten
-  {m:1,n:'f',t:'Pflegeplanung klinisch',front:'Patient lehnt Pflegemaßnahme ab. Wie gehen Sie im Pflegeprozess vor?',back:'1. Gründe erfragen (Angst, Schmerz, Scham?)\n2. Patientenautonomie respektieren\n3. Ziel anpassen – keine Zwangsmaßnahme\n4. Kompromiss suchen\n5. Dokumentieren + Arzt informieren',key:'Autonomie > Benefizienz außer Notfall'},
-  {m:1,n:'f',t:'Pflegediagnose',front:'Was ist der Unterschied Pflegediagnose vs. medizinische Diagnose?',back:'Medizinisch: Erkrankung (Herzinsuffizienz)\nPflege: Reaktion darauf (Aktivitätsintoleranz, Angst vor Belastung)\n\nPflegediagnose = menschliche Reaktion auf Gesundheitsproblem',key:'NANDA-Systematik für Pflegediagnosen'},
-  {m:1,n:'f',t:'Qualität',front:'Erklären Sie die drei Qualitätsdimensionen nach Donabedian',back:'Strukturqualität: Voraussetzungen (Personal, Räume, Geräte)\nProzessqualität: Abläufe (Pflegeprozess, Hygiene)\nErgebnisqualität: Outcomes (Dekubitusrate, Zufriedenheit)',key:'Struktur → Prozess → Ergebnis'},
-  // M1 Experte
-  {m:1,n:'e',t:'Ethisches Dilemma',front:'Autonomie vs. Fürsorge: Wie lösen Sie ethische Konflikte?',back:'1. Ethische Fallbesprechung einberufen\n2. Alle Perspektiven (Patient, Familie, Team) einbeziehen\n3. Patientenwillen (Patientenverfügung) prüfen\n4. Vier-Prinzipien-Modell anwenden\n5. Entscheidung dokumentieren und begründen',key:'Bei einwilligungsfähigem Patient: Autonomie hat Vorrang'},
-  {m:1,n:'e',t:'Übernahmeverantwortung',front:'Wann darf eine Pflegeperson eine ärztliche Anordnung NICHT ausführen?',back:'• Bei offensichtlichem Fehler der Anordnung\n• Bei mangelnder eigener Kompetenz\n• Bei Verdacht auf Patientenschädigung\n\nHandlungsschritte: Bedenken äußern → dokumentieren → ggf. verweigern + Pflegeleitung informieren',key:'Strafbar: Ausführen obwohl Fehler erkannt'},
-  // M2
-  {m:2,n:'a',t:'Blutdruck',front:'Was sind die Normalwerte und Grenzwerte des Blutdrucks?',back:'Normal: 120/80 mmHg\nHypotonie: < 100/60 mmHg\nHypertonie Grad I: 140–159/90–99\nHypertonie Grad II: 160–179/100–109\nHypertonie Grad III: ≥ 180/110',key:'Messung nach Riva-Rocci: Korotkoff-Töne'},
-  {m:2,n:'a',t:'Herzfrequenz',front:'Bradykardie, Normokardie, Tachykardie: Grenzwerte?',back:'Bradykardie: < 60/min\nNormokardie: 60–100/min\nTachykardie: > 100/min\n\nBei Arrhythmie: sofort Arzt informieren',key:'Neugeborene: 120–160/min (normal!)'},
-  {m:2,n:'a',t:'Temperatur',front:'Temperaturmessmethoden mit Normalwerten',back:'Rektal (Goldstandard): 36,5–37,5°C\nAxillär: 36,0–37,0°C (0,5° niedriger)\nOral: 36,0–37,3°C\nTympanal: 36,5–37,5°C\n\nFieber: > 38,1°C',key:'Subfebrile: 37,5–38°C'},
-  {m:2,n:'f',t:'Schockzeichen',front:'Welche Konstellation von Vitalzeichen deutet auf Schock hin?',back:'Classic Shock Triad:\n• HF ↑ (> 100/min, fadenförmig)\n• RR ↓ (systolisch < 90 mmHg)\n• SpO₂ ↓ (< 90%)\n\nDazu: kalte, blasse Haut, Bewusstseinsveränderung',key:'Sofortmaßnahme: Flachlagerung + Beine hoch + Notarzt'},
-  {m:2,n:'e',t:'COPD O₂-Therapie',front:'Warum ist hochdosierte O₂-Gabe bei COPD gefährlich?',back:'Chronische Hyperkapnie → hypoxischer Atemantrieb\n→ Hohe O₂-Sättigung → Atemantrieb gehemmt → CO₂-Narkose\n\nZiel-SpO₂ bei COPD: 88–92%\n(Nicht 95–99% wie bei anderen Patienten)',key:'COPD = kontrollierte O₂-Gabe, Lippenbremse, Kutschersitz'},
-  // M3
-  {m:3,n:'a',t:'Applikationswege',front:'Nennen Sie 6 Applikationswege mit Abkürzung und Beispiel',back:'p.o. – oral – Tablette\ns.l. – sublingual – Nitro\ns.c. – subkutan – Insulin\ni.m. – intramuskulär – Impfung\ni.v. – intravenös – Antibiotika\ntransdermal – Pflaster',key:'Erst einfachsten Weg wählen: p.o. vor i.v.'},
-  {m:3,n:'a',t:'5-R-Regel',front:'Was sind die 5 Richtigkeiten bei der Medikamentengabe?',back:'R1: Richtiger Patient\nR2: Richtiges Medikament\nR3: Richtige Dosis\nR4: Richtiger Weg\nR5: Richtige Zeit',key:'Immer vor jeder Gabe prüfen – kein Ausnahme!'},
-  {m:3,n:'f',t:'Dosierungsrechnung',front:'Formel für Medikamentenberechnung + Beispiel Infusion',back:'Menge (ml) = Gewünschte Dosis ÷ Vorhandene Konzentration\n\nInfusion Tropfrate:\nTropfen/min = (Volumen × Tropffaktor) ÷ Zeit (min)\n\nBeispiel: 500ml × 20 ÷ 240min = 42 Tr/min',key:'Tropffaktor Standard: 20 Tr/ml'},
-  {m:3,n:'e',t:'Pharmakokinetik',front:'Was bedeuten Absorption, Distribution, Metabolismus, Exkretion (ADME)?',back:'A: Wie gelangt Stoff in Blut (oral, i.v. = 100%)\nD: Verteilung im Körper (Lipophilie)\nM: Abbau (meist Leber, CYP450)\nE: Ausscheidung (meist Niere)\n\nKlinisch: Niereninsuffizienz → renale Medikamente kumulieren',key:'Halbwertszeit = Zeit bis 50% abgebaut'},
-  // M4
-  {m:4,n:'a',t:'Mangelernährung',front:'Welche Screening-Instrumente gibt es für Mangelernährung?',back:'MNA: Senioren ≥ 65 Jahre\nNRS 2002: Krankenhauspatienten\nMUST: allgemeine Bevölkerung\n\nBMI < 18,5 = Untergewicht\n> 5% Gewichtsverlust in 3 Monaten = Risiko',key:'Screening bei Aufnahme + wöchentlich'},
-  {m:4,n:'f',t:'Sondenernährung',front:'NGS vs. PEG: Indikation, Dauer, Vorteile',back:'NGS (nasogastral):\n• Kurzzeit < 4 Wochen\n• Einfache Anlage, reversibel\n• Schluckstörung, postop.\n\nPEG (perkutan-endoskopisch):\n• Langzeit > 4 Wochen\n• Bessere Toleranz\n• Tumorpatienten, Demenz',key:'Lageprüfung vor jeder Gabe obligat!'},
-  {m:4,n:'e',t:'Refeeding-Syndrom',front:'Was ist das Refeeding-Syndrom und wie wird es verhindert?',back:'Definition: Elektrolytverschiebungen beim Wiederernähren nach Mangelernährung\n\nPathomechanismus: Insulin ↑ → Phosphat in Zellen → Hypophosphatämie → Herzrhythmusstörungen, Atemversagen\n\nPrävention: langsam steigern (10–20 kcal/kg/Tag), Elektrolytkontrolle, Thiamin prophylaktisch',key:'Risikogruppen: Anorexie, chron. Alkohol, Hungerzustände'},
-  // M5
-  {m:5,n:'a',t:'Bradenskala',front:'Bradenskala: Bereiche und Risikostufen',back:'6 Bereiche: Sinneswahrnehmung, Feuchtigkeit, Aktivität, Mobilität, Ernährung, Reibung/Scherkräfte\n\nRisiko: ≤ 18\nHohes Risiko: ≤ 12\nSehr hohes: ≤ 9\n\nMax. 23 Punkte',key:'Niedriger Score = höheres Risiko'},
-  {m:5,n:'a',t:'Prophylaxen Übersicht',front:'Welche 6 Hauptprophylaxen in der Pflege gibt es?',back:'1. Dekubitusprophylaxe\n2. Thromboseprophylaxe\n3. Pneumonieprophylaxe\n4. Kontrakturprophylaxe\n5. Sturzprophylaxe\n6. Intertrigoprophylaxe',key:'+ Parotitisprophylaxe als 7. Prophylaxe'},
-  {m:5,n:'f',t:'Wundauflage Dekubitus',front:'Wundversorgung Dekubitus nach Grad',back:'Grad 1: Druckentlastung, Hautpflege, keine Wundauflage\nGrad 2: Hydrokolloid oder Schaumstoff\nGrad 3: Schaumstoff/Alginat, feuchte Versorgung\nGrad 4: Chirurgie prüfen, feuchte Versorgung, Débridement\n\nImmer: Druckentlastung + Ernährungsoptimierung',key:'Ursache behandeln = Druckentlastung ist wichtigste Maßnahme'},
-  {m:5,n:'e',t:'Thrombose Pathophysiologie',front:'Virchow-Trias: Was begünstigt Thromboseentstehung?',back:'1. Verlangsamter Blutfluss (Immobilität, Herzinsuffizienz)\n2. Gefäßwandveränderung (Entzündung, OP-Trauma)\n3. Gerinnungsveränderung (Hyperkoagulabilität, Karzinom)\n\nJeder der drei Faktoren erhöht Thromboserisiko',key:'Heparin wirkt auf Gerinnungskaskade – Punkt 3'},
-  // M6
-  {m:6,n:'a',t:'Demenz Formen',front:'Die 4 Hauptformen der Demenz mit Häufigkeit',back:'Alzheimer: ~65% – schleichend, Kurzzeitgedächtnis\nVaskulär: ~15% – stufenweise, nach Schlaganfall\nLewy-Body: ~10% – Halluzinationen, Parkinson\nFrontotemporale: ~5% – Persönlichkeit, Enthemmung',key:'Alzheimer + vaskulär = 80% aller Demenzen'},
-  {m:6,n:'f',t:'Suizidalität',front:'TALK-Schema bei Suizidgefahr – Schritte und Hintergrund',back:'T – Tell: offen ansprechen, nicht verschweigen\nA – Ask: direkt fragen (erhöht NICHT das Risiko)\nL – Listen: aktiv zuhören, nicht bewerten\nK – Keep safe: Sicherheit + sofort Arzt\n\nImmer ernst nehmen, nie allein lassen',key:'Direktes Fragen nach Suizid erhöht das Risiko NICHT'},
-  {m:6,n:'e',t:'Ethik FEM',front:'Warum sind FEM oft kontraproduktiv trotz Sturzschutz-Absicht?',back:'Evidenz zeigt:\n• Erhöhtes Verletzungsrisiko (Strangulation, Sturz beim Befreiungsversuch)\n• Agitationsverstärkung → mehr Delir\n• Muskelabbau → mehr Sturzrisiko\n• Würdeverlust → Leidenszunahme\n\nAlternativen: Niedrigflurbett, Sensormatten, Hüftprotektor',key:'FEM-Rate ist Qualitätsindikator – je niedriger desto besser'},
-  // M7
-  {m:7,n:'a',t:'Pädiatrische Normalwerte',front:'Herzfrequenz und Atemfrequenz nach Altersgruppe',back:'Neugeborenes: HF 120–160, AF 40–60\nSäugling: HF 100–140, AF 30–40\nKleinkind: HF 80–120, AF 20–30\nSchulkind: HF 70–110, AF 18–26\nErwachsener: HF 60–100, AF 12–20',key:'Je jünger = schneller = höhere Werte'},
-  {m:7,n:'f',t:'Palliativpflege',front:'Was ist Total Pain nach Cicely Saunders?',back:'4 Dimensionen des Leidens:\n🔴 Physisch: Schmerz, Atemnot, Übelkeit\n🟡 Psychisch: Angst, Depression, Hoffnungslosigkeit\n🟢 Sozial: Isolation, Rollenverlust\n🟣 Spirituell: Sinnfragen, Sterbensangst\n\nEchte Palliativpflege adressiert ALLE Dimensionen',key:'Dame Cicely Saunders: Begründerin moderner Palliativpflege'},
-  {m:7,n:'e',t:'Deprescribing',front:'Was ist Deprescribing und warum ist es bei Senioren wichtig?',back:'Definition: systematische Überprüfung + Reduktion von Medikamenten\n\nGründe bei Senioren:\n• Polypharmazie ≥ 5 Medikamente: Interaktionsrisiko exponentiell\n• Reduzierte renale/hepatische Clearance\n• Erhöhtes Sturz-/Delirrisiko\n\nZiel: notwendige Medikamente behalten, unnötige absetzen',key:'STOPP/START Kriterien: Checkliste für problematische Medikamente'},
-  // M8
-  {m:8,n:'a',t:'PflBG 2020',front:'Was änderte das Pflegeberufegesetz 2020?',back:'Zusammenführung von 3 Ausbildungen:\n• Krankenpflege\n• Kinderkrankenpflege\n• Altenpflege\n→ Einheitlicher Abschluss: Pflegefachfrau/-mann\n\n3 Jahre, generalistisch\nVertiefungsjahr: Pädiatrie oder Altenpflege wählbar',key:'5 Kompetenzbereiche: Pflegeprozess, Kommunikation, Zusammenarbeit, Reflexion, Qualität'},
-  {m:8,n:'f',t:'Haftung',front:'Drei Haftungsarten in der Pflege mit Beispielen',back:'Zivilrechtlich (BGB): Schadensersatz bei Pflichtverletzung (z.B. Sturz durch Pflegefehler)\n\nStrafrechtlich (StGB): Körperverletzung durch Fahrlässigkeit\n\nBerufsrechtlich: Berufsgerichtliche Verfahren, Aberkennung Berufserlaubnis',key:'Übernahme- und Durchführungsverantwortung: persönliche Haftung!'},
-  {m:8,n:'e',t:'Informed Consent',front:'Was macht eine informierte Einwilligung rechtsgültig?',back:'Voraussetzungen:\n1. Aufklärung über Diagnose, Therapie, Risiken, Alternativen\n2. Verständnis (Sprache, Kognition – ggf. Dolmetscher)\n3. Einwilligungsfähigkeit\n4. Freiwilligkeit (kein Druck)\n5. Schriftlich (empfohlen, nicht immer zwingend)\n\nOhne Einwilligung = Körperverletzung',key:'Ausnahme: Notfall → mutmaßlicher Wille'},
-  // M9
-  {m:9,n:'a',t:'Herzinfarkt',front:'Typische und atypische Herzinfarkt-Symptome',back:'Typisch:\n• Vernichtungsschmerz Brust\n• Ausstrahlung links (Arm, Kiefer, Rücken)\n• Kaltschweißigkeit, Übelkeit\n\nAtypisch (bes. Frauen, Diabetiker, Ältere):\n• Rücken-/Bauch-/Kieferschmerzen\n• Erschöpfung, Übelkeit allein',key:'Zeit ist Myokard – sofort 112!'},
-  {m:9,n:'f',t:'Diabetisches Fußsyndrom',front:'Warum ist das diabetische Fußsyndrom gefährlich und wie verhindern?',back:'Pathomechanismus:\nNeuropathie → keine Schmerzwahrnehmung → Verletzung unbemerkt\nAngiopathie → schlechte Durchblutung → Heilungsstörung\n→ Infektion → Osteomyelitis → Amputation\n\nPrävention: tägliche Fußinspektion, passende Schuhe, keine Bartfußgehen',key:'1. Ursache aller nicht-traumatischen Amputationen in DE'},
-  {m:9,n:'e',t:'Lungenembolie',front:'Risikostratifizierung und Behandlung der Lungenembolie',back:'Niedrigriskio: stabile Hämodynamik → Antikoagulation\nMittelhohes Risiko: Troponin↑, Echo-Rechtsherz → engmaschiges Monitoring\nHohes Risiko: hämodynamisch instabil → Lyse/Embolektomie + Reanimationsbereitschaft\n\nInitialtherapie: Heparin i.v. sofort',key:'PESI-Score für Risikoeinschätzung'},
-  // M10
-  {m:10,n:'a',t:'Wundheilungsphasen',front:'Die 4 Phasen der Wundheilung',back:'1. Hämostase: 0–10 Min – Blutstillung\n2. Inflammation: 1–5 Tage – Reinigung\n3. Proliferation: 5–21 Tage – Granulation, Angiogenese\n4. Reparation: 21 Tage–2 Jahre – Narbe\n\nMerksatz: Hämo-Inflam-Proli-Repara',key:'Feuchte Versorgung fördert alle Phasen'},
-  {m:10,n:'a',t:'TIME-Prinzip',front:'Was bedeutet TIME in der modernen Wundversorgung?',back:'T – Tissue: Wundgrund bereiten (Débridement)\nI – Infection: Infektion kontrollieren\nM – Moisture: Feuchtigkeitsbalance\nE – Edge: Wundrand aktivieren\n\nGilt für chronische Wunden',key:'Feuchtes Wundmilieu = beschleunigte Heilung'},
-  {m:10,n:'f',t:'Wundauflagen Auswahl',front:'Welche Wundauflage bei welchem Wundtyp?',back:'Trocken/nekrotisch → Hydrogel (rehydriert)\nLeicht exsudierend → Hydrokolloid\nMittel exsudierend → Polyurethanschaum\nStark exsudierend → Alginat\nInfiziert → Silberhaltig\nGeruchsbelastet → Aktivkohle\nOberflächlich → Transparentfolie',key:'Feucht = Goldstandard. Trocken ist VERALTET'},
-  {m:10,n:'e',t:'Biofilm',front:'Was ist ein Biofilm und warum ist er therapeutisch problematisch?',back:'Definition: polymikrobieller Schutzfilm auf Wunden\n\nProbleme:\n• Antibiotika bis zu 1000x weniger wirksam\n• Verhindert Granulationsgewebe\n• Erhält chronischen Entzündungszustand\n\nTherapie: Débridement (physische Entfernung) + Antiseptika (Octenidin, PHMB) + silberhaltige Auflagen',key:'Biofilm = Hauptursache chronischer Wunden'},
-];
-
-// Generate remaining cards to reach 110 displayed
-['a','f','e'].forEach(niv=>{
-  MODS.forEach(mod=>{
-    for(let i=0;i<4;i++){
-      CARDS.push({m:mod.id,n:niv,t:`${mod.name} ${niv==='a'?'Grundlagen':niv==='f'?'Anwendung':'Vertiefung'} ${i+1}`,
-        front:`[${mod.n} ${mod.name}] – Wichtige Zusammenfassung ${niv.toUpperCase()} Teil ${i+1}`,
-        back:`Kerninhalt zu ${mod.name} auf ${niv==='a'?'Anfänger':niv==='f'?'Fortgeschritten':'Experte'}-Niveau.\n\nThema: Klinische Anwendung und Prüfungsrelevanz.`,
-        key:`Merksatz und Prüfungstipp für ${mod.name}`});
-    }
-  });
+// FILTERS
+document.querySelectorAll('.filt').forEach(function(b){
+  b.onclick=function(){
+    document.querySelectorAll('.filt').forEach(function(x){x.classList.remove('on');});
+    b.classList.add('on');
+    st.filter=b.dataset.f;
+    st.page=0;
+    render();
+  };
 });
 
-// ── Lernkarten State
-let lkFilter='all', lkCurPage=0, lkPerPage=24, lkSearchVal='';
-function getFilteredCards(){
-  let c=CARDS;
-  if(lkFilter!=='all') c=c.filter(x=>x.n===lkFilter);
-  if(lkSearchVal) c=c.filter(x=>x.t.toLowerCase().includes(lkSearchVal)||x.front.toLowerCase().includes(lkSearchVal));
+document.getElementById('srch').oninput=function(){
+  st.search=this.value.toLowerCase();
+  st.page=0;
+  render();
+};
+document.getElementById('prev').onclick=function(){if(st.page>0){st.page--;render();}};
+document.getElementById('next').onclick=function(){
+  var t=Math.ceil(filtered().length/st.per)||1;
+  if(st.page<t-1){st.page++;render();}
+};
+
+function filtered(){
+  var c=CARDS;
+  if(st.filter!=='all') c=c.filter(function(x){return x.n===st.filter;});
+  if(st.search) c=c.filter(function(x){return x.t.toLowerCase().indexOf(st.search)>=0||x.q.toLowerCase().indexOf(st.search)>=0;});
   return c;
 }
-function renderCards(){
-  const cards=getFilteredCards();
-  const total=Math.ceil(cards.length/lkPerPage);
-  if(lkCurPage>=total) lkCurPage=Math.max(0,total-1);
-  const slice=cards.slice(lkCurPage*lkPerPage,(lkCurPage+1)*lkPerPage);
-  const grid=document.getElementById('lk-grid');
-  grid.innerHTML=slice.map(c=>{
-    const niv=c.n==='a'?'🌱 Anfänger':c.n==='f'?'🔥 Fortgeschritten':'💎 Experte';
-    const mod=MODS.find(m=>m.id===c.m);
-    return `<div class="lk-card" onclick="this.classList.toggle('flipped')">
-      <div class="lk-front">
-        <div class="lk-top">
-          <span class="lk-niv ${c.n}">${niv}</span>
-          <span class="lk-mod">${mod?.n} ${mod?.name}</span>
-        </div>
-        <div class="lk-title">${c.t}</div>
-        <div class="lk-content">${c.front}</div>
-        <div class="lk-flip-hint">← Umdrehen</div>
-      </div>
-      <div class="lk-back">
-        <div class="lk-back-title">Antwort</div>
-        <div class="lk-content">${c.back.replace(/\n/g,'<br>')}</div>
-        ${c.key?`<div style="margin-top:.6rem;padding:.5rem .7rem;background:rgba(13,148,136,.12);border-radius:8px;font-size:.72rem;color:var(--tealM)">💡 ${c.key}</div>`:''}
-        <div class="lk-flip-hint">← Zurückdrehen</div>
-      </div>
-    </div>`;
+
+function render(){
+  var c=filtered();
+  var total=Math.ceil(c.length/st.per)||1;
+  if(st.page>=total) st.page=total-1;
+  var sl=c.slice(st.page*st.per,(st.page+1)*st.per);
+  var NL={a:'🌱 Anfänger',f:'🔥 Fortgeschritten',e:'💎 Experte'};
+  document.getElementById('lg').innerHTML=sl.map(function(c){
+    var mod=MODS.find(function(m){return m.id===c.m;})||{n:'📋',name:'Modul'};
+    return '<div class="card" onclick="this.classList.toggle(\'flipped\')">'
+      +'<div class="front"><div class="ctop">'
+      +'<span class="nlabel '+c.n+'">'+NL[c.n]+'</span>'
+      +'<span class="mname">'+mod.n+' '+mod.name+'</span>'
+      +'</div><div class="ctitle">'+c.t+'</div>'
+      +'<div class="cbody">'+c.q+'</div>'
+      +'<div class="hint">← Umdrehen</div></div>'
+      +'<div class="back"><div class="anstag">Antwort</div>'
+      +'<div class="cbody">'+c.a.replace(/\n/g,'<br>')+'</div>'
+      +(c.k?'<div class="key">💡 '+c.k+'</div>':'')
+      +'</div></div>';
   }).join('');
-  document.getElementById('lk-page-info').textContent=`Seite ${lkCurPage+1} / ${total||1} (${cards.length} Karten)`;
-}
-function setLKFilter(niv,btn){
-  lkFilter=niv; lkCurPage=0;
-  document.querySelectorAll('.lk-filt').forEach(b=>b.className='lk-filt');
-  btn.classList.add('active-'+niv);
-  renderCards();
-}
-function filterCards(){lkSearchVal=document.getElementById('lk-search').value.toLowerCase();lkCurPage=0;renderCards();}
-function lkPage(d){
-  const total=Math.ceil(getFilteredCards().length/lkPerPage);
-  lkCurPage=Math.max(0,Math.min(lkCurPage+d,total-1));
-  renderCards();
-  window.scrollTo({top:0,behavior:'smooth'});
+  document.getElementById('pi').textContent='Seite '+(st.page+1)+' / '+total+' ('+c.length+' Karten)';
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// ── 2. VIDEOS DATA (58 videos)
-// ═══════════════════════════════════════════════════════════════════════════
-const VIDEOS=[
-  {id:1,n:'M01',title:'Der Pflegeprozess – Schritt für Schritt',dur:'8 Min',icon:'📋',bg:'rgba(13,148,136,.2)',tags:['Grundlagen','Prüfung'],
-    scenes:[
-      {num:'01',vis:'📋',text:'Intro: Was ist der Pflegeprozess?',t:'0:00–0:45'},
-      {num:'02',vis:'🔍',text:'Schritt 1–2: Informationssammlung und Pflegediagnose',t:'0:45–2:30'},
-      {num:'03',vis:'🎯',text:'Schritt 3–4: Ziele und Maßnahmen festlegen',t:'2:30–4:15'},
-      {num:'04',vis:'✅',text:'Schritt 5–6: Durchführen und Evaluieren',t:'4:15–6:30'},
-      {num:'05',vis:'📝',text:'Praxisbeispiel: SMART-Ziel formulieren',t:'6:30–8:00'},
-    ],
-    script:[
-      {type:'speaker',text:'Kamera: Nahaufnahme Dokumentationsmappe'},
-      {type:'',text:'„Der Pflegeprozess ist das Herzstück unserer Arbeit. Er gibt uns Struktur und Qualität."'},
-      {type:'speaker',text:'Animation: 6 Schritte erscheinen nacheinander'},
-      {type:'',text:'„Beginnen wir mit der Informationssammlung – oder Anamnese. Hier erfassen wir systematisch alle pflegerelevanten Informationen über unseren Patienten."'},
-      {type:'speaker',text:'Simulation: Pflegerin führt Gespräch mit Patient'},
-      {type:'',text:'„Offene Fragen, aktives Zuhören und Beobachtung sind unsere wichtigsten Werkzeuge."'},
-    ]},
-  {id:2,n:'M02',title:'Blutdruckmessung – Technik & Dokumentation',dur:'6 Min',icon:'🩺',bg:'rgba(14,165,233,.2)',tags:['Vitalzeichen','Technik'],
-    scenes:[
-      {num:'01',vis:'🩺',text:'Materialkunde: Stethoskop, Manschette, Pflegeprozess',t:'0:00–1:00'},
-      {num:'02',vis:'💪',text:'Manschetten-Anlage: Position, Größe, Sitz',t:'1:00–2:30'},
-      {num:'03',vis:'👂',text:'Korotkoff-Töne: hören und interpretieren',t:'2:30–4:00'},
-      {num:'04',vis:'📊',text:'Dokumentation: Werte, Arm, Lage, Besonderheiten',t:'4:00–5:30'},
-      {num:'05',vis:'⚠️',text:'Fehlerquellen und Normabweichungen',t:'5:30–6:00'},
-    ],
-    script:[
-      {type:'speaker',text:'Kamera: Pflegeperson bereitet Material vor'},
-      {type:'',text:'„Vor der Blutdruckmessung: Patient 5 Minuten entspannen lassen, kein Rauchen, kein Koffein in den letzten 30 Minuten."'},
-      {type:'speaker',text:'Close-up: Manschetten-Anlage'},
-      {type:'',text:'„Die Manschette liegt 2–3 Zentimeter oberhalb der Ellenbeuge. Das Luftkissen sitzt über der Arteria brachialis."'},
-    ]},
-  {id:3,n:'M03',title:'Subkutane Injektion – Korrekte Technik',dur:'7 Min',icon:'💉',bg:'rgba(139,92,246,.2)',tags:['Injektionen','Technik'],
-    scenes:[
-      {num:'01',vis:'🧴',text:'Materialvorbereitung und Hygiene',t:'0:00–1:00'},
-      {num:'02',vis:'📐',text:'Injektionsorte und Wechselrotation',t:'1:00–2:30'},
-      {num:'03',vis:'💉',text:'Injektionstechnik: 45° vs 90°',t:'2:30–4:30'},
-      {num:'04',vis:'✅',text:'Nachsorge und Dokumentation',t:'4:30–6:00'},
-      {num:'05',vis:'⚠️',text:'Häufige Fehler und Komplikationen',t:'6:00–7:00'},
-    ],
-    script:[
-      {type:'speaker',text:'Animation: Injektionsorte am Körper'},
-      {type:'',text:'„Für die subkutane Injektion haben wir vier Hauptorte: den Bauch – besonders für Insulin – den Oberschenkel, den Oberarm und den Gesäßbereich."'},
-      {type:'speaker',text:'Simulation: Injektion am Phantomarm'},
-      {type:'',text:'„Der Winkel beträgt 45 Grad bei normalem Körpergewicht. Bei Adipositas können wir auch 90 Grad wählen."'},
-    ]},
-  {id:4,n:'M04',title:'Dysphagie erkennen und managen',dur:'9 Min',icon:'🍽️',bg:'rgba(245,158,11,.2)',tags:['Ernährung','Schluckstörung'],
-    scenes:[
-      {num:'01',vis:'🫁',text:'Physiologie des Schluckakts',t:'0:00–1:30'},
-      {num:'02',vis:'⚠️',text:'Warnsignale der Dysphagie erkennen',t:'1:30–3:30'},
-      {num:'03',vis:'🥣',text:'Kostanpassung: die 3 Stufen',t:'3:30–5:30'},
-      {num:'04',vis:'💧',text:'Flüssigkeiten andicken: Technik',t:'5:30–7:30'},
-      {num:'05',vis:'📋',text:'Dokumentation und Team-Kommunikation',t:'7:30–9:00'},
-    ],
-    script:[
-      {type:'speaker',text:'Animation: Schluckvorgang normal vs. gestört'},
-      {type:'',text:'„Das Schlucken ist ein hochkomplexer Vorgang mit 26 Muskeln. Bei einer Dysphagie ist dieser Vorgang gestört – mit der Gefahr der Aspiration."'},
-    ]},
-  {id:5,n:'M05',title:'Lagerungstechniken – 30°-Seitenlage & Kinetik',dur:'10 Min',icon:'🦴',bg:'rgba(16,185,129,.2)',tags:['Mobilisation','Dekubitus'],
-    scenes:[
-      {num:'01',vis:'🧍',text:'Kinästhetik-Grundprinzipien',t:'0:00–2:00'},
-      {num:'02',vis:'🛏️',text:'30°-Seitenlage – Schritt für Schritt',t:'2:00–5:00'},
-      {num:'03',vis:'🔄',text:'90°-Seitenlage und Oberkörperhochlage',t:'5:00–7:30'},
-      {num:'04',vis:'🧲',text:'Lagerungshilfsmittel korrekt einsetzen',t:'7:30–9:00'},
-      {num:'05',vis:'📝',text:'Lagerungsplan erstellen',t:'9:00–10:00'},
-    ],
-    script:[
-      {type:'speaker',text:'Kamera: Patient im Bett, Pflegerin erklärt'},
-      {type:'',text:'„Die 30-Grad-Seitenlagerung ist unsere wichtigste Maßnahme zur Dekubitusprophylaxe. Dabei liegt der Patient nicht auf der Seite, sondern leicht schräg – 30 Grad zur Unterlage."'},
-    ]},
-  {id:6,n:'M06',title:'Kommunikation mit dementen Patienten',dur:'8 Min',icon:'🧠',bg:'rgba(168,85,247,.2)',tags:['Demenz','Kommunikation'],
-    scenes:[
-      {num:'01',vis:'🧠',text:'Verstehen was Demenz bedeutet',t:'0:00–1:30'},
-      {num:'02',vis:'💬',text:'Validation nach Naomi Feil – Technik',t:'1:30–3:30'},
-      {num:'03',vis:'🤝',text:'Körpersprache und nonverbale Kommunikation',t:'3:30–5:30'},
-      {num:'04',vis:'😤',text:'Agitation bewältigen – Deeskalation',t:'5:30–7:00'},
-      {num:'05',vis:'📖',text:'Biografie als Ressource nutzen',t:'7:00–8:00'},
-    ],
-    script:[
-      {type:'speaker',text:'Simulation: Pflegegespräch mit dementer Patientin'},
-      {type:'',text:'„Frau Schmidt glaubt, noch in ihrer Wohnung zu sein. Die Versuchung ist groß, sie zu korrigieren. Aber das führt nur zu Angst und Agitation."'},
-      {type:'',text:'„Stattdessen: Validation. Wir bestätigen ihr Gefühl: 'Sie möchten nach Hause, das verstehe ich.' Wir korrigieren die Realität NICHT."'},
-    ]},
-  {id:7,n:'M07',title:'Palliativpflege und Sterbebegleitung',dur:'12 Min',icon:'💝',bg:'rgba(236,72,153,.2)',tags:['Palliativ','Sterbebegleitung'],
-    scenes:[
-      {num:'01',vis:'❤️',text:'Was ist Palliativpflege – Ziele und Haltung',t:'0:00–2:00'},
-      {num:'02',vis:'😣',text:'Total Pain: alle 4 Dimensionen',t:'2:00–4:30'},
-      {num:'03',vis:'🌊',text:'Kübler-Ross Phasen in der Praxis',t:'4:30–7:00'},
-      {num:'04',vis:'🕯️',text:'Sterbzeichen erkennen und begleiten',t:'7:00–9:30'},
-      {num:'05',vis:'🤝',text:'Angehörige begleiten und einbeziehen',t:'9:30–12:00'},
-    ],
-    script:[
-      {type:'speaker',text:'Ruhige Atmosphäre, sanfte Beleuchtung'},
-      {type:'',text:'„Palliativpflege bedeutet nicht aufgeben. Es bedeutet, den Menschen in seiner ganzen Würde zu begleiten – bis zuletzt."'},
-    ]},
-  {id:8,n:'M08',title:'Rechtliche Grundlagen der Pflege',dur:'7 Min',icon:'⚖️',bg:'rgba(99,102,241,.2)',tags:['Recht','PflBG'],
-    scenes:[
-      {num:'01',vis:'📜',text:'PflBG 2020 – was hat sich geändert?',t:'0:00–1:30'},
-      {num:'02',vis:'⚠️',text:'Haftung: Anordnung vs. Durchführung',t:'1:30–3:30'},
-      {num:'03',vis:'🔐',text:'Schweigepflicht § 203 StGB',t:'3:30–5:00'},
-      {num:'04',vis:'📋',text:'Patientenverfügung und Vorsorgevollmacht',t:'5:00–7:00'},
-    ],
-    script:[
-      {type:'speaker',text:'Interview: Pflegeexpertin erklärt'},
-      {type:'',text:'„Die Durchführungsverantwortung ist oft missverstanden. Wer eine Maßnahme ausführt, haftet für die korrekte Durchführung – unabhängig davon, wer die Anordnung gemacht hat."'},
-    ]},
-  {id:9,n:'M09',title:'Herzinfarkt erkennen und handeln',dur:'6 Min',icon:'❤️',bg:'rgba(239,68,68,.2)',tags:['Kardiologie','Notfall'],
-    scenes:[
-      {num:'01',vis:'❤️',text:'Pathophysiologie: Was passiert beim Infarkt?',t:'0:00–1:30'},
-      {num:'02',vis:'😰',text:'Symptome: typisch und atypisch',t:'1:30–3:00'},
-      {num:'03',vis:'🆘',text:'FAST-Test und Erstmaßnahmen',t:'3:00–4:30'},
-      {num:'04',vis:'🏥',text:'Krankenhauseinweisung und Monitoring',t:'4:30–6:00'},
-    ],
-    script:[
-      {type:'speaker',text:'Animation: Koronararterie, Plaque, Thrombus'},
-      {type:'',text:'„Zeit ist Myokard – das ist das wichtigste Prinzip beim Herzinfarkt. Jede Minute ohne Reperfusion kostet Herzmuskelgewebe."'},
-    ]},
-  {id:10,n:'M10',title:'Wundversorgung – Verbandwechsel korrekt',dur:'9 Min',icon:'🩹',bg:'rgba(20,184,166,.2)',tags:['Wunde','Technik'],
-    scenes:[
-      {num:'01',vis:'🧴',text:'Materialvorbereitung und steriles Arbeiten',t:'0:00–1:30'},
-      {num:'02',vis:'🔍',text:'Wundbeurteilung nach BIGE',t:'1:30–3:30'},
-      {num:'03',vis:'🚿',text:'Wundreinigung mit NaCl 0,9%',t:'3:30–5:30'},
-      {num:'04',vis:'🩹',text:'Wundauflage wählen und fixieren',t:'5:30–7:30'},
-      {num:'05',vis:'📝',text:'Dokumentation und Fotodokumentation',t:'7:30–9:00'},
-    ],
-    script:[
-      {type:'speaker',text:'Nahaufnahme: Wundbeurteilung'},
-      {type:'',text:'„BIGE – das ist unser Beurteilungsschema: Belag, Infektion, Größe, Exsudat. Wir gehen systematisch vor, bevor wir irgendetwas tun."'},
-    ]},
-];
-// Add remaining 48 videos
-const vidTopics=['Pneumonieprophylaxe','Sturzprophylaxe','Thromboseprophylaxe','Dekubitusprophylaxe vertiefen','Pflegedokumentation','Infusionstherapie','Stomapflege','Katheterpflege','Wundarten erkennen','BtMG-Gerechtes Arbeiten','Schmerzassessment','Ernährungsscreening MNA','Kinästhetik Basis','Kinästhetik Fortgeschritten','Demenz Grundlagen','Depression erkennen','Delir vs Demenz','COPD Pflege','Diabetes Pflege','Schlaganfall Nachsorge','Multiple Sklerose','Parkinson Pflege','Herzinsuffizienz','Hypertonie managen','Niereninsuffizienz','Leberzirrhose','Pädiatrische Besonderheiten','Geriatrisches Assessment','Intensivpflege Monitoring','Palliative Sedierung','Transkulturelle Pflege','FEM-Alternativen','Suizidprävention','Angehörigengespräch','Teambesprechung leiten','Übergabe strukturieren','SBAR-Methode','Qualitätssicherung','MDK-Vorbereitung','Aufnahmemanagement','Entlassungsmanagement','Wunddébridement','Chronische Wunden','Lymphödem','Kompressionstherapie','Inkontinenzversorgung','Sondenernährung praktisch','Parenterale Ernährung'];
-const icons=['🫁','🚶','💉','🛡️','📝','💊','🩺','💧','🔍','🔒','😣','🍽️','🤸','🏋️','🧠','😔','🔄','🌬️','🩸','🧬','🔬','🤲','❤️','📊','🫘','🍷','👶','👴','🏥','💊','🌍','🔓','🆘','👥','📋','📞','📡','✅','🔎','🚪','🏠','✂️','🔗','🦵','🧲','🩲','🧪','💉'];
-vidTopics.forEach((t,i)=>{
-  const modId=(i%10)+1;
-  const mod=MODS[modId-1];
-  VIDEOS.push({
-    id:i+11,n:`M${String(modId).padStart(2,'0')}`,
-    title:t,dur:`${5+Math.floor(Math.random()*8)} Min`,
-    icon:icons[i]||'📹',bg:`rgba(${Math.floor(Math.random()*200)},${Math.floor(Math.random()*200)},${Math.floor(Math.random()*200)},.2)`,
-    tags:[mod.name,'Praxis'],
-    scenes:[{num:'01',vis:icons[i]||'📹',text:'Einführung und Lernziele',t:'0:00–1:00'},{num:'02',vis:'📚',text:'Theoretischer Hintergrund',t:'1:00–3:00'},{num:'03',vis:'💡',text:'Praxisdemonstration',t:'3:00–5:00'},{num:'04',vis:'✅',text:'Zusammenfassung und Prüfungstipps',t:'5:00–Ende'}],
-    script:[{type:'speaker',text:'Kamera: Praxissituation'},{type:'',text:`„In diesem Video lernen Sie alles Wichtige zu: ${t}. Dieses Thema ist prüfungsrelevant und kommt häufig im klinischen Alltag vor."`,}]
-  });
-});
+// VIDEOS
+document.getElementById('vg').innerHTML=VIDS.map(function(v){
+  return '<div class="vc"><div class="vthumb" style="background:'+v.bg+'">'+v.i+'</div>'
+    +'<div class="vinfo"><div class="vn">'+v.n+'·'+v.dur+'</div>'
+    +'<div class="vt">'+v.t+'</div></div></div>';
+}).join('');
 
-function buildVidGrid(){
-  document.getElementById('vid-grid').innerHTML=VIDEOS.map(v=>`
-    <div class="vid-card" onclick="openVid(${v.id})">
-      <div class="vid-thumb" style="background:${v.bg}">
-        <span style="font-size:2.5rem">${v.icon}</span>
-        <div class="vid-play">▶</div>
-      </div>
-      <div class="vid-info">
-        <div class="vid-num">${v.n} · ${v.dur}</div>
-        <div class="vid-title">${v.title}</div>
-        <div class="vid-meta">${v.tags.map(t=>`<span class="vid-tag">${t}</span>`).join('')}</div>
-      </div>
-    </div>`).join('');
-}
-function openVid(id){
-  const v=VIDEOS.find(x=>x.id===id);
-  document.getElementById('vm-title').textContent=v.title;
-  document.getElementById('vm-meta').textContent=`${v.n} · ${v.dur} · Storyboard + Skript`;
-  document.getElementById('vm-storyboard').innerHTML=v.scenes.map(s=>`
-    <div class="sb-scene">
-      <div class="sb-num">Szene ${s.num}</div>
-      <div class="sb-visual">${s.vis}</div>
-      <div class="sb-text">${s.text}</div>
-      <div class="sb-duration">⏱ ${s.t}</div>
-    </div>`).join('');
-  document.getElementById('vm-script').innerHTML=v.script.map(l=>
-    `<div class="vs-line ${l.type}">${l.text}</div>`).join('');
-  document.getElementById('vid-modal').classList.add('open');
-}
-function closeVid(){document.getElementById('vid-modal').classList.remove('open');}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// ── 3. INFOGRAFIKEN (300 infographics – 30 SVG/HTML interactive)
-// ═══════════════════════════════════════════════════════════════════════════
-const INFO_CATS=['Alle','Vitalzeichen','Prophylaxen','Krankheitsbilder','Medikamente','Wunden','Recht'];
-const INFOS=[
-  {id:1,cat:'Vitalzeichen',t:'Blutdruck-Klassifikation',icon:'🩺',desc:'WHO-Klassifikation Hypertonie',
-    svg:`<svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:400px">
-      <defs><style>.inf-t{font-family:DM Sans,sans-serif;font-size:12px;fill:#fff;}.inf-s{font-size:10px;fill:rgba(255,255,255,.55);}</style></defs>
-      <rect width="400" height="220" fill="#1a1a2e" rx="12"/>
-      <text x="200" y="24" text-anchor="middle" class="inf-t" font-size="14" font-weight="700" fill="#14b8a6">Blutdruck-Klassifikation (WHO)</text>
-      ${[['Optimal','< 120','< 80','#10b981',40],['Normal','120–129','80–84','#6ee7b7',72],['Hochnormal','130–139','85–89','#fbbf24',104],['Hypertonie I','140–159','90–99','#f97316',136],['Hypertonie II','160–179','100–109','#ef4444',168],['Hypertonie III','≥ 180','≥ 110','#dc2626',200]].map(([l,s,d,c,y])=>`
-        <rect x="20" y="${y-14}" width="${parseInt(s)<120?100:Math.min((parseInt(s)||150)-80,120)}" height="20" fill="${c}" rx="4" opacity=".85"/>
-        <text x="24" y="${y}" class="inf-t" font-size="11" font-weight="600">${l}</text>
-        <text x="200" y="${y}" class="inf-s">${s} / ${d} mmHg</text>
-      `).join('')}
-    </svg>`},
-  {id:2,cat:'Prophylaxen',t:'Bradenskala Risikostufen',icon:'🛡️',desc:'Visuelle Übersicht Dekubitusrisiko',
-    svg:`<svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" style="width:100%">
-      <rect width="400" height="200" fill="#1a1a2e" rx="12"/>
-      <text x="200" y="24" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="13" font-weight="700" fill="#14b8a6">Bradenskala – Risikoeinschätzung</text>
-      ${[[23,'19','Kein Risiko','#10b981'],[18,'15','Geringes Risiko','#6ee7b7'],[14,'13','Mittleres Risiko','#fbbf24'],[12,'10','Hohes Risiko','#f97316'],[9,'≤9','Sehr hohes Risiko','#ef4444']].map(([max,min,label,col],i)=>`
-        <rect x="20" y="${45+i*30}" width="${(max/23)*300}" height="22" fill="${col}" rx="4" opacity=".8"/>
-        <text x="24" y="${61+i*30}" font-family="DM Sans,sans-serif" font-size="10" fill="#fff">${min}–${max} Pkt: ${label}</text>
-      `).join('')}
-      <text x="20" y="195" font-family="DM Sans,sans-serif" font-size="9" fill="rgba(255,255,255,.4)">Maximalpunktzahl: 23 · Je niedriger der Wert, desto höher das Risiko</text>
-    </svg>`},
-  {id:3,cat:'Vitalzeichen',t:'Fieber-Grade',icon:'🌡️',desc:'Temperaturklassifikation',
-    svg:`<svg viewBox="0 0 380 180" xmlns="http://www.w3.org/2000/svg" style="width:100%">
-      <rect width="380" height="180" fill="#1a1a2e" rx="12"/>
-      <text x="190" y="24" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="13" font-weight="700" fill="#14b8a6">Körpertemperatur – Klassifikation</text>
-      ${[['Hypothermie','< 36,0°C','#60a5fa',40],['Normaltemp.','36,0–37,4°C','#10b981',68],['Subfebrile','37,5–38,0°C','#fbbf24',96],['Mäßiges Fieber','38,1–39,0°C','#f97316',124],['Hohes Fieber','39,1–40,0°C','#ef4444',152],['Hyperpyrexie','> 40,0°C','#dc2626',180]].slice(0,5).map(([l,v,c,y])=>`
-        <circle cx="28" cy="${y-6}" r="7" fill="${c}"/>
-        <text x="42" y="${y-1}" font-family="DM Sans,sans-serif" font-size="11" font-weight="600" fill="${c}">${l}</text>
-        <text x="200" y="${y-1}" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(255,255,255,.6)">${v}</text>
-      `).join('')}
-    </svg>`},
-  {id:4,cat:'Wunden',t:'Wundheilungsphasen',icon:'🔬',desc:'4 Phasen im Überblick',
-    svg:`<svg viewBox="0 0 420 160" xmlns="http://www.w3.org/2000/svg" style="width:100%">
-      <rect width="420" height="160" fill="#1a1a2e" rx="12"/>
-      <text x="210" y="24" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="13" font-weight="700" fill="#14b8a6">Wundheilungsphasen</text>
-      ${[['Hämostase','0–10 Min','#ef4444',20],['Inflammation','1–5 Tage','#f97316',120],['Proliferation','5–21 Tage','#10b981',220],['Reparation','21T–2J','#6366f1',320]].map(([n,t,c,x])=>`
-        <rect x="${x}" y="40" width="90" height="80" fill="${c}" rx="8" opacity=".2"/>
-        <rect x="${x}" y="40" width="90" height="6" fill="${c}" rx="3"/>
-        <text x="${x+45}" y="72" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="700" fill="${c}">${n}</text>
-        <text x="${x+45}" y="90" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="rgba(255,255,255,.6)">${t}</text>
-        ${x<320?`<text x="${x+96}" y="82" font-family="DM Sans,sans-serif" font-size="14" fill="rgba(255,255,255,.3)">→</text>`:''}
-      `).join('')}
-    </svg>`},
-  {id:5,cat:'Medikamente',t:'WHO-Stufenschema Schmerztherapie',icon:'💊',desc:'Analgetika-Stufenplan',
-    svg:`<svg viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg" style="width:100%">
-      <rect width="360" height="180" fill="#1a1a2e" rx="12"/>
-      <text x="180" y="24" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" font-weight="700" fill="#14b8a6">WHO Stufenschema Schmerztherapie</text>
-      ${[['Stufe 3','Starke Opioide','Morphin, Fentanyl','#ef4444',40,280],['Stufe 2','Schwache Opioide','Tramadol, Codein','#f97316',80,200],['Stufe 1','Nicht-Opioide','Ibuprofen, Paracetamol','#10b981',120,120]].map(([s,n,e,c,y,w])=>`
-        <rect x="${(360-w)/2}" y="${y}" width="${w}" height="34" fill="${c}" rx="6" opacity=".25"/>
-        <rect x="${(360-w)/2}" y="${y}" width="${w}" height="5" fill="${c}" rx="3"/>
-        <text x="180" y="${y+18}" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="700" fill="${c}">${s}: ${n}</text>
-        <text x="180" y="${y+30}" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="rgba(255,255,255,.55)">${e}</text>
-      `).join('')}
-      <text x="180" y="170" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="rgba(255,255,255,.35)">Stufenweise eskalieren nach Schmerzstärke</text>
-    </svg>`},
-  {id:6,cat:'Krankheitsbilder',t:'NYHA-Klassifikation Herzinsuffizienz',icon:'❤️',desc:'Schweregradeinteilung',
-    svg:`<svg viewBox="0 0 380 190" xmlns="http://www.w3.org/2000/svg" style="width:100%">
-      <rect width="380" height="190" fill="#1a1a2e" rx="12"/>
-      <text x="190" y="24" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" font-weight="700" fill="#14b8a6">NYHA-Klassifikation Herzinsuffizienz</text>
-      ${[['I','Keine Beschwerden bei Alltagsbelastung','#10b981',42],['II','Beschwerden bei starker Belastung','#6ee7b7',82],['III','Beschwerden bei leichter Alltagsbelastung','#f97316',122],['IV','Beschwerden in Ruhe','#ef4444',162]].map(([k,v,c,y])=>`
-        <circle cx="36" cy="${y}" r="14" fill="${c}" opacity=".2"/>
-        <circle cx="36" cy="${y}" r="14" fill="none" stroke="${c}" stroke-width="2"/>
-        <text x="36" y="${y+5}" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" font-weight="800" fill="${c}">${k}</text>
-        <text x="60" y="${y+5}" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(255,255,255,.75)">${v}</text>
-      `).join('')}
-    </svg>`},
-  {id:7,cat:'Prophylaxen',t:'Dekubitus-Grade NPUAP',icon:'🛡️',desc:'Visuelle Darstellung der 4 Grade',
-    svg:`<svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg" style="width:100%">
-      <rect width="400" height="180" fill="#1a1a2e" rx="12"/>
-      <text x="200" y="22" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" font-weight="700" fill="#14b8a6">Dekubitus-Schweregrade (NPUAP/EPUAP)</text>
-      ${[['I','Rötung intakt','Epidermis','#fbbf24',20],['II','Blasen/Abschürfung','Dermis','#f97316',120],['III','Hautverlust + Nekrose','Subkutis','#ef4444',220],['IV','Knochen/Sehnen frei','Tiefst. Gewebe','#dc2626',320]].map(([g,d,s,c,x])=>`
-        <rect x="${x}" y="38" width="80" height="70" rx="8" fill="${c}" opacity=".18"/>
-        <rect x="${x}" y="38" width="80" height="6" rx="3" fill="${c}"/>
-        <text x="${x+40}" y="66" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="18" font-weight="900" fill="${c}">G${g}</text>
-        <text x="${x+40}" y="83" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="rgba(255,255,255,.7)">${d}</text>
-        <text x="${x+40}" y="98" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="${c}">${s}</text>
-      `).join('')}
-    </svg>`},
-  {id:8,cat:'Recht',t:'Donabedian Qualitätsmodell',icon:'⚖️',desc:'Struktur, Prozess, Ergebnis',
-    svg:`<svg viewBox="0 0 380 160" xmlns="http://www.w3.org/2000/svg" style="width:100%">
-      <rect width="380" height="160" fill="#1a1a2e" rx="12"/>
-      <text x="190" y="22" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" font-weight="700" fill="#14b8a6">Qualitätsmodell nach Donabedian</text>
-      ${[['Struktur','Personal, Räume, Geräte','Input','#6366f1',30],['Prozess','Pflegeabläufe, Hygiene','Throughput','#0d9488',150],['Ergebnis','Zufriedenheit, Outcomes','Output','#10b981',270]].map(([n,d,s,c,x])=>`
-        <rect x="${x}" y="38" width="100" height="90" rx="10" fill="${c}" opacity=".15"/>
-        <rect x="${x}" y="38" width="100" height="6" rx="3" fill="${c}"/>
-        <text x="${x+50}" y="66" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" font-weight="700" fill="${c}">${n}</text>
-        <text x="${x+50}" y="82" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="rgba(255,255,255,.6)">${d}</text>
-        <text x="${x+50}" y="116" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="${c}" font-weight="700">${s}</text>
-        ${x<270?`<text x="${x+106}" y="86" font-family="DM Sans,sans-serif" font-size="18" fill="rgba(255,255,255,.25)">→</text>`:''}
-      `).join('')}
-    </svg>`},
-];
-// Generate remaining info cards
-for(let i=9;i<=60;i++){
-  const cat=INFO_CATS[1+Math.floor(Math.random()*(INFO_CATS.length-1))];
-  const mod=MODS[Math.floor(Math.random()*MODS.length)];
-  INFOS.push({id:i,cat,t:`${mod.name}: Schema ${i}`,icon:mod.n,desc:`Strukturierte Übersicht`,
-    svg:`<svg viewBox="0 0 360 140" xmlns="http://www.w3.org/2000/svg" style="width:100%">
-      <rect width="360" height="140" fill="#1a1a2e" rx="12"/>
-      <text x="180" y="30" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="13" font-weight="700" fill="#14b8a6">${mod.name}: Übersicht ${i}</text>
-      <text x="180" y="70" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="36">${mod.n}</text>
-      <text x="180" y="110" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(255,255,255,.45)">Infografik ${i} · Kategorie: ${cat}</text>
-    </svg>`});
-}
-
-let infoFilter='Alle';
-function buildInfoCats(){
-  document.getElementById('info-cats').innerHTML=INFO_CATS.map(c=>
-    `<button class="info-cat ${c==='Alle'?'active':''}" onclick="setInfoCat('${c}',this)">${c}</button>`
-  ).join('');
-}
-function setInfoCat(cat,btn){
-  infoFilter=cat;
-  document.querySelectorAll('.info-cat').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  buildInfoGrid();
-}
-function buildInfoGrid(){
-  const items=infoFilter==='Alle'?INFOS:INFOS.filter(x=>x.cat===infoFilter);
-  document.getElementById('info-grid').innerHTML=items.slice(0,30).map(info=>`
-    <div class="info-card" onclick="openInfo(${info.id})">
-      <div style="font-size:1.8rem;margin-bottom:.5rem">${info.icon}</div>
-      <div class="info-title">${info.t}</div>
-      <div class="info-desc">${info.desc}</div>
-      <div style="margin-top:.85rem;border-radius:8px;overflow:hidden">${info.svg}</div>
-    </div>`).join('');
-}
-function openInfo(id){
-  const info=INFOS.find(x=>x.id===id);
-  document.getElementById('im-title').textContent=info.t;
-  document.getElementById('im-content').innerHTML=`<div style="transform:scale(1.2);transform-origin:top center;margin-bottom:1rem">${info.svg}</div><p style="font-size:.85rem;color:rgba(255,255,255,.55);margin-top:1rem">${info.desc}</p>`;
-  document.getElementById('info-modal').classList.add('open');
-}
-function closeInfo(){document.getElementById('info-modal').classList.remove('open');}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// ── 4. EXAM SIMULATOR
-// ═══════════════════════════════════════════════════════════════════════════
-const EXAM_FORMATS=[
-  {id:'standard',title:'Standard-Prüfung',desc:'30 Fragen · 45 Min · Mix aller Niveaus',q:30,time:45,mix:true},
-  {id:'intensiv',title:'Intensivprüfung',desc:'50 Fragen · 75 Min · Vollständige Simulation',q:50,time:75,mix:true},
-  {id:'schnell',title:'Schnelltest',desc:'15 Fragen · 20 Min · Anfänger-Niveau',q:15,time:20,mix:false,niv:'a'},
-  {id:'experte',title:'Expertenmodus',desc:'25 Fragen · 40 Min · Nur Experte-Niveau',q:25,time:40,mix:false,niv:'e'},
-];
-const EXAM_FOCUS=[
-  {id:'all',title:'Alle Module',desc:'Vollständiger Lehrplan'},
-  {id:'1-5',title:'Module 1–5',desc:'Grundlagen + Klinik Basis'},
-  {id:'6-10',title:'Module 6–10',desc:'Psychiatrie + Spezial'},
-  {id:'weak',title:'Schwache Themen',desc:'Nur fehleranfällige Bereiche'},
+// INFOGRAFIKEN
+var ICATS=['Alle','Vitalzeichen','Prophylaxen','Wunden','Medikamente'];
+var INFOS=[
+  {cat:'Vitalzeichen',t:'Blutdruck-Klassifikation WHO',i:'🩺'},
+  {cat:'Prophylaxen',t:'Bradenskala Risikostufen',i:'🛡'},
+  {cat:'Vitalzeichen',t:'Fieber-Grade',i:'🌡'},
+  {cat:'Wunden',t:'Wundheilungsphasen',i:'🔬'},
+  {cat:'Medikamente',t:'WHO-Stufenschema Schmerz',i:'💊'},
+  {cat:'Prophylaxen',t:'Dekubitus-Grade NPUAP',i:'🏥'},
+  {cat:'Vitalzeichen',t:'NYHA Herzinsuffizienz',i:'❤'},
+  {cat:'Wunden',t:'TIME-Prinzip',i:'🩹'},
+  {cat:'Medikamente',t:'5-R-Regel Übersicht',i:'✅'},
+  {cat:'Prophylaxen',t:'Thrombose Virchow-Trias',i:'🩸'},
+  {cat:'Vitalzeichen',t:'Schockzeichen-Trias',i:'🚨'},
+  {cat:'Prophylaxen',t:'Sturz-Prophylaxe Schema',i:'🦯'},
 ];
 
-// QCM bank for exam (import from V3 data – abbreviated)
-const EXAM_QUESTIONS=[
-  {m:1,n:'a',q:"Wie viele Schritte hat der Pflegeprozess?",opts:["4","5","6","8"],a:2,exp:"6 Schritte"},
-  {m:1,n:'f',q:"Patient lehnt Medikamente ab. Welcher Pflegeprozess-Schritt ist primär betroffen?",opts:["Informationssammlung","Zielformulierung – Ziel anpassen","Durchführung","Dokumentation"],a:1,exp:"Ablehnung = Ziel nicht erreicht → Evaluation → neues Ziel."},
-  {m:1,n:'e',q:"Warum ist die Übernahmeverantwortung für Pflegende rechtlich kritisch?",opts:["Nur für Ärzte","Persönliche strafrechtliche Haftung bei inkompetenter Ausführung","Betrifft nur Azubis","Gilt nur bei Medikamentengabe"],a:1,exp:"Wer inkompetent übernimmt und ausführt, haftet strafrechtlich."},
-  {m:2,n:'a',q:"Normaler Blutdruck Erwachsener:",opts:["100/60","120/80","140/90","160/100"],a:1,exp:"120/80 mmHg."},
-  {m:2,n:'f',q:"Patient hat RR 88/52 mmHg nach Aufstehen. Was zuerst?",opts:["Antihypertensivum geben","Hinlegen + Beine hoch + Arzt","Nochmal messen","Abwarten"],a:1,exp:"Orthostatische Hypotonie: hinlegen, Beine hochlagern."},
-  {m:2,n:'e',q:"Warum ist hochdosierte O₂-Gabe bei COPD gefährlich?",opts:["Zu teuer","Hypoxischer Atemantrieb wird gehemmt → CO₂-Narkose","Allergie möglich","Nur bei Typ-A-COPD"],a:1,exp:"COPD-Patienten haben hypoxischen Atemantrieb."},
-  {m:3,n:'a',q:"5-R-Regel: Welches R fehlt? Patient, Medikament, Dosis, ?, Zeit",opts:["Raum","Weg","Reaktion","Regel"],a:1,exp:"R4 = Richtiger Weg (oral, i.v., s.c. etc.)"},
-  {m:3,n:'f',q:"500ml über 4h, Tropffaktor 20. Tropfen/min?",opts:["21","42","83","25"],a:1,exp:"500×20÷240 = 42 Tr/min"},
-  {m:3,n:'e',q:"Patient nimmt Digoxin. Welcher Wert vor jeder Gabe?",opts:["Blutdruck","Herzfrequenz (< 60 = pausieren)","Blutzucker","Temperatur"],a:1,exp:"Digoxin: HF immer vor Gabe messen."},
-  {m:4,n:'a',q:"Dysphagie: gefährlichste Komplikation?",opts:["Gewichtsverlust","Aspiration → Pneumonie","Obstipation","Dehydratation"],a:1,exp:"Aspiration → Aspirationspneumonie."},
-  {m:4,n:'f',q:"Patient mit Niereninsuffizienz Grad 4: Ernährungsanpassung?",opts:["Eiweiß erhöhen","Phosphat + Kalium einschränken, Bilanz führen","Mehr Salz","Keine Einschränkung"],a:1,exp:"Phosphat + Kalium akkumulieren bei Nierenversagen."},
-  {m:4,n:'e',q:"Was ist das Refeeding-Syndrom?",opts:["Überessen nach Diät","Gefährliche Elektrolytverschiebung bei Wiederernähren nach Mangelernährung","Rückfall in alte Essgewohnheiten","Medikamentennebenwirkung"],a:1,exp:"Insulin↑ → Phosphat in Zellen → Hypophosphatämie → Herzrhythmusstörungen."},
-  {m:5,n:'a',q:"Bradenskala: hohes Risiko ab Punkte:",opts:["≤18","≤14","≤12","≤9"],a:2,exp:"10–12 = hohes Risiko."},
-  {m:5,n:'f',q:"Nach Hüft-TEP, Tag 2: Thromboseprophylaxe?",opts:["Keine","Kompressionsstrümpfe + NMWH + Frühmobilisation","Nur Heparin","Nur Kompression"],a:1,exp:"Kombinationstherapie nach Hüft-TEP."},
-  {m:5,n:'e',q:"Warum sind FEM bei Demenz oft kontraproduktiv?",opts:["Kein Problem","Erhöhen Agitation, Muskelabbau, Verletzungsrisiko – Alternativen effektiver","Nur bei jungen Patienten","Immer sicherer"],a:1,exp:"Evidenz: FEM erhöhen oft das Verletzungsrisiko."},
-  {m:6,n:'a',q:"Häufigste Demenzform:",opts:["Vaskulär","Lewy-Body","Alzheimer","Frontotemporale"],a:2,exp:"Alzheimer ~65%."},
-  {m:6,n:'f',q:"Patient sagt: 'Ich wäre besser tot.' Reaktion?",opts:["Thema wechseln","Direkt fragen + aktiv zuhören + Arzt sofort","Relativieren","Allein lassen"],a:1,exp:"Direkt ansprechen erhöht das Risiko NICHT."},
-  {m:6,n:'e',q:"Was ist der Unterschied passive Sterbehilfe vs. palliative Sedierung?",opts:["Identisch","Passive Sterbehilfe: Therapieverzicht auf Wunsch; Palliative Sedierung: Symptomkontrolle","Palliative Sedierung illegal","Beide verboten"],a:1,exp:"Beide legal in Deutschland. Aktive Sterbehilfe verboten."},
-  {m:7,n:'a',q:"Normale HF Neugeborenes:",opts:["60–100","80–120","120–160","160–200"],a:2,exp:"120–160/min"},
-  {m:7,n:'f',q:"Ältere Patientin hat Infektion ohne Fieber, nur Verwirrtheit. Bedeutung?",opts:["Normale Altersverwirrtheit","Atypische Infektionssymptomatik bei Senioren","Kein Zusammenhang","Demenz-Exazerbation"],a:1,exp:"Senioren: atypische Infektionssymptome häufig."},
-  {m:7,n:'e',q:"Warum ist Deprescribing bei Senioren wichtig?",opts:["Kostenersparnis","Jedes Medikament ↑ Interaktionsrisiko exponentiell + reduzierter Metabolismus","Nur > 10 Medikamente","Erst bei Niereninsuffizienz"],a:1,exp:"Polypharmazie: exponentiell steigende Interaktionen."},
-  {m:8,n:'a',q:"Schweigepflicht geregelt in:",opts:["PflBG","BGB","StGB § 203","SGB XI"],a:2,exp:"§ 203 StGB."},
-  {m:8,n:'f',q:"Arzt ordnet fehlerhafte Maßnahme an. Was tun?",opts:["Ausführen","Bedenken äußern + dokumentieren + bei Gefahr verweigern","Schweigen","Polizei"],a:1,exp:"Durchführungsverantwortung: Bedenken äußern ist Pflicht."},
-  {m:8,n:'e',q:"Was macht Informed Consent rechtsgültig?",opts:["Unterschrift allein","Aufklärung + Verständnis + Einwilligungsfähigkeit + Freiwilligkeit","Nur bei Operationen","Arzt entscheidet"],a:1,exp:"Alle vier Elemente müssen vorliegen."},
-  {m:9,n:'a',q:"FAST beim Schlaganfall:",opts:["Face, Arms, Speech, Time","Fieber, Atemnot, Schwindel, Tachykardie","Funktion, Augen, Sprache, Test","Frequenz, Arterien, Sensibilität, Test"],a:0,exp:"FAST: Face · Arms · Speech · Time."},
-  {m:9,n:'f',q:"Diabetisches Fußulkus: warum schmerzlos?",opts:["Arterielle Ursache","Neuropathie","Infektion","Venöse Ursache"],a:1,exp:"Diabetische Neuropathie → keine Schmerzwahrnehmung."},
-  {m:9,n:'e',q:"STEMI: optimales Zeitfenster PCI?",opts:["Beliebig","< 90 Minuten ab Symptombeginn","< 12 Stunden reicht immer","PCI nicht nötig bei Lyse"],a:1,exp:"'Time is muscle' – PCI < 90 Min ist Goldstandard."},
-  {m:10,n:'a',q:"Chronische Wunde ab:",opts:["2 Wochen","4 Wochen","8 Wochen","6 Monaten"],a:2,exp:"> 8 Wochen trotz Therapie."},
-  {m:10,n:'f',q:"Wundrand mazeriert: Ursache und Maßnahme?",opts:["Austrocknung → Hydrogel","Zu viel Exsudat → saugstärkere Auflage + Wundrandschutz","Infektion → Antibiotika","Normal"],a:1,exp:"Mazerierung = Aufweichung durch zu viel Feuchtigkeit."},
-  {m:10,n:'e',q:"Warum ist H₂O₂ in der Wundversorgung kontraindiziert?",opts:["Zu teuer","Zytotoxisch – zerstört Granulationsgewebe","Fördert Infektion","Nur bei tiefen Wunden"],a:1,exp:"H₂O₂ zerstört Fibroblasten → Heilungsverzögerung."},
-];
+document.getElementById('icats').innerHTML=ICATS.map(function(c,i){
+  return '<button class="filt'+(i===0?' on':'')+'" onclick="filterInfo(\''+c+'\',this)">'+c+'</button>';
+}).join('');
 
-let examFormat=EXAM_FORMATS[0], examFocus=EXAM_FOCUS[0];
-let examQuestions=[], examIdx=0, examScore=0, examCorrect=0, examAnswers=[];
-let examTimerInterval=null, examTimeLeft=0, examStartTime=null;
+function filterInfo(cat,btn){
+  document.querySelectorAll('#icats .filt').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+  var items=cat==='Alle'?INFOS:INFOS.filter(function(x){return x.cat===cat;});
+  document.getElementById('ig').innerHTML=items.map(function(x){
+    return '<div class="card" style="cursor:default">'
+      +'<div style="font-size:2rem;margin-bottom:.55rem">'+x.i+'</div>'
+      +'<div class="ctitle">'+x.t+'</div>'
+      +'<div class="cbody" style="margin-top:.3rem">'+x.cat+'</div>'
+      +'</div>';
+  }).join('');
+}
+filterInfo('Alle',document.querySelector('#icats .filt'));
 
-function buildExamSetup(){
-  document.getElementById('exam-opts').innerHTML=EXAM_FORMATS.map(f=>`
-    <div class="exam-opt ${f.id==='standard'?'selected':''}" onclick="selectExamFormat('${f.id}',this)">
-      <div class="exam-opt-title">${f.title}</div>
-      <div class="exam-opt-desc">${f.desc}</div>
-    </div>`).join('');
-  document.getElementById('exam-focus-opts').innerHTML=EXAM_FOCUS.map(f=>`
-    <div class="exam-opt ${f.id==='all'?'selected':''}" onclick="selectExamFocus('${f.id}',this)">
-      <div class="exam-opt-title">${f.title}</div>
-      <div class="exam-opt-desc">${f.desc}</div>
-    </div>`).join('');
-}
-function selectExamFormat(id,el){
-  examFormat=EXAM_FORMATS.find(x=>x.id===id);
-  document.querySelectorAll('#exam-opts .exam-opt').forEach(e=>e.classList.remove('selected'));
-  el.classList.add('selected');
-}
-function selectExamFocus(id,el){
-  examFocus=EXAM_FOCUS.find(x=>x.id===id);
-  document.querySelectorAll('#exam-focus-opts .exam-opt').forEach(e=>e.classList.remove('selected'));
-  el.classList.add('selected');
-}
-function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+// EXAM
+document.getElementById('efmts').innerHTML=FMTS.map(function(f,i){
+  return '<div class="eopt'+(i===0?' on':'')+'" onclick="selFmt('+i+',this)">'
+    +'<h4>'+f.title+'</h4><p>'+f.desc+'</p></div>';
+}).join('');
 
-function startExam(){
-  let pool=[...EXAM_QUESTIONS];
-  if(!examFormat.mix) pool=pool.filter(q=>q.n===examFormat.niv);
-  if(examFocus.id==='1-5') pool=pool.filter(q=>q.m<=5);
-  if(examFocus.id==='6-10') pool=pool.filter(q=>q.m>=6);
-  examQuestions=shuffle(pool).slice(0,examFormat.q);
-  examIdx=0; examScore=0; examCorrect=0; examAnswers=new Array(examFormat.q).fill(null);
-  examTimeLeft=examFormat.time*60;
-  document.getElementById('exam-setup-view').style.display='none';
-  document.getElementById('exam-running-view').style.display='block';
-  document.getElementById('exam-results-view').style.display='none';
-  document.getElementById('exam-run-title').textContent=examFormat.title;
-  startExamTimer();
-  renderExamQ();
+function selFmt(i,el){
+  st.fmt=FMTS[i];
+  document.querySelectorAll('.eopt').forEach(function(e){e.classList.remove('on');});
+  el.classList.add('on');
 }
-function startExamTimer(){
-  clearInterval(examTimerInterval);
-  examTimerInterval=setInterval(()=>{
-    examTimeLeft--;
-    const m=Math.floor(examTimeLeft/60), s=examTimeLeft%60;
-    const el=document.getElementById('exam-timer');
-    el.textContent=`⏱ ${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-    if(examTimeLeft<=120) el.classList.add('warning');
-    if(examTimeLeft<=0){clearInterval(examTimerInterval);showExamResults();}
+
+document.getElementById('startbtn').onclick=function(){
+  var pool=QCM.slice().sort(function(){return Math.random()-.5;}).slice(0,st.fmt.q);
+  st.eqs=pool;
+  st.eidx=0;st.escore=0;st.ecorrect=0;
+  st.eans=new Array(pool.length).fill(null);
+  st.tleft=st.fmt.time*60;
+  document.getElementById('esetup').style.display='none';
+  document.getElementById('erun').style.display='block';
+  document.getElementById('eres').style.display='none';
+  document.getElementById('etitle').textContent=st.fmt.title;
+  clearInterval(st.tiv);
+  st.tiv=setInterval(function(){
+    st.tleft--;
+    var m=Math.floor(st.tleft/60),s=st.tleft%60;
+    document.getElementById('etimer').textContent='⏱ '+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    if(st.tleft<=0){clearInterval(st.tiv);showRes();}
   },1000);
-}
-function renderExamQ(){
-  const q=examQuestions[examIdx];
-  const total=examQuestions.length;
-  document.getElementById('exam-bar-fill').style.width=`${(examIdx/total)*100}%`;
-  document.getElementById('exam-q-num').textContent=`${examIdx+1} / ${total}`;
-  const mod=MODS.find(m=>m.id===q.m);
-  const niv=q.n==='a'?'🌱 Anfänger':q.n==='f'?'🔥 Fortgeschritten':'💎 Experte';
-  const pts=q.n==='a'?10:q.n==='f'?20:30;
-  document.getElementById('exam-q-tags').innerHTML=`
-    <span class="exam-mod-tag">${mod?.n} ${mod?.name}</span>
-    <span class="exam-niv-tag ent-${q.n}">${niv}</span>
-    <span class="exam-pts">+${pts} Pkt</span>`;
-  document.getElementById('exam-q-text').textContent=q.q;
-  const chosen=examAnswers[examIdx];
-  document.getElementById('exam-opts-list').innerHTML=['A','B','C','D'].map((l,i)=>{
-    let cls='exam-choice';
-    if(chosen!==null){
-      cls+=' locked';
-      if(i===q.a) cls+=' correct';
-      else if(i===chosen) cls+=' wrong';
-    }
-    return `<div class="${cls}" onclick="examChoose(${i})"><span class="ec-letter">${l}</span>${q.opts[i]}</div>`;
+  showQ();
+};
+
+function showQ(){
+  var q=st.eqs[st.eidx];
+  var mod=MODS.find(function(m){return m.id===q.m;})||{name:'Modul'};
+  var pct=(st.eidx/st.eqs.length)*100;
+  document.getElementById('ebar').style.width=pct+'%';
+  document.getElementById('ectr').textContent='Frage '+(st.eidx+1)+' / '+st.eqs.length;
+  document.getElementById('qtag').textContent=mod.name+' · +'+q.p+' Pkt';
+  document.getElementById('qtext').textContent=q.q;
+  document.getElementById('chlist').innerHTML=['A','B','C','D'].map(function(l,i){
+    return '<div class="ch" onclick="pick('+i+')"><div class="cl">'+l+'</div>'+q.o[i]+'</div>';
   }).join('');
-  const nextBtn=document.getElementById('exam-next-btn');
-  nextBtn.style.display=chosen!==null?'':'none';
-  nextBtn.textContent=examIdx<examQuestions.length-1?'Weiter →':'Prüfung beenden ✓';
-}
-function examChoose(i){
-  if(examAnswers[examIdx]!==null) return;
-  examAnswers[examIdx]=i;
-  const q=examQuestions[examIdx];
-  if(i===q.a){
-    examCorrect++;
-    examScore+=q.n==='a'?10:q.n==='f'?20:30;
-    document.getElementById('score').textContent=parseInt(document.getElementById('score').textContent)+examScore;
-  }
-  renderExamQ();
-}
-function examSkip(){examAnswers[examIdx]=-1;examNext();}
-function examNext(){
-  examIdx++;
-  if(examIdx>=examQuestions.length) showExamResults();
-  else renderExamQ();
-}
-function showExamResults(){
-  clearInterval(examTimerInterval);
-  document.getElementById('exam-running-view').style.display='none';
-  document.getElementById('exam-results-view').style.display='block';
-  const total=examQuestions.length;
-  const pct=Math.round((examCorrect/total)*100);
-  const passed=pct>=60;
-  document.getElementById('er-icon').textContent=pct>=90?'🏆':pct>=75?'🎉':pct>=60?'✅':'📚';
-  document.getElementById('er-title').textContent=passed?'Bestanden!':'Nicht bestanden';
-  const gradeEl=document.getElementById('er-grade');
-  gradeEl.textContent=pct>=90?'Sehr gut':pct>=80?'Gut':pct>=70?'Befriedigend':pct>=60?'Ausreichend':'Ungenügend';
-  gradeEl.style.background=passed?'rgba(16,185,129,.2)':'rgba(225,29,72,.15)';
-  gradeEl.style.color=passed?'#6ee7b7':'#fda4af';
-  gradeEl.style.border=`1px solid ${passed?'rgba(16,185,129,.3)':'rgba(225,29,72,.2)'}`;
-  document.getElementById('er-score-num').textContent=pct+'%';
-  document.getElementById('er-circle').style.setProperty('--pct',pct);
-  const elapsed=examFormat.time*60-examTimeLeft;
-  const em=Math.floor(elapsed/60), es=elapsed%60;
-  document.getElementById('er-stats').innerHTML=`
-    <div class="er-stat"><div class="er-stat-val" style="color:var(--tealM)">${pct}%</div><div class="er-stat-lbl">Score</div></div>
-    <div class="er-stat"><div class="er-stat-val" style="color:var(--green)">${examCorrect}</div><div class="er-stat-lbl">Richtig</div></div>
-    <div class="er-stat"><div class="er-stat-val" style="color:var(--gold)">${em}:${String(es).padStart(2,'0')}</div><div class="er-stat-lbl">Zeit</div></div>`;
-  // Breakdown by module
-  const byMod={};
-  examQuestions.forEach((q,i)=>{
-    if(!byMod[q.m]) byMod[q.m]={total:0,correct:0};
-    byMod[q.m].total++;
-    if(examAnswers[i]===q.a) byMod[q.m].correct++;
-  });
-  document.getElementById('er-breakdown-list').innerHTML=Object.entries(byMod).map(([m,s])=>{
-    const mod=MODS.find(x=>x.id==m);
-    const p=Math.round(s.correct/s.total*100);
-    return `<div class="er-bd-row">
-      <div class="er-bd-mod">${mod?.n} ${mod?.name}</div>
-      <div class="er-bd-bar"><div class="er-bd-fill" style="width:${p}%"></div></div>
-      <div class="er-bd-pct">${p}%</div>
-    </div>`;}).join('');
-  document.getElementById('score').textContent=parseInt(document.getElementById('score').textContent||0)+examScore;
-}
-function restartExam(){
-  document.getElementById('exam-setup-view').style.display='block';
-  document.getElementById('exam-running-view').style.display='none';
-  document.getElementById('exam-results-view').style.display='none';
+  document.getElementById('nxtbtn').style.display='none';
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
+function pick(i){
+  if(st.eans[st.eidx]!==null) return;
+  st.eans[st.eidx]=i;
+  var q=st.eqs[st.eidx];
+  var chs=document.querySelectorAll('.ch');
+  chs.forEach(function(c){c.onclick=null;});
+  chs[q.a].classList.add('ok');
+  if(i!==q.a) chs[i].classList.add('no');
+  else{
+    st.ecorrect++;
+    st.escore+=q.p;
+    st.score+=q.p;
+    document.getElementById('sc').textContent=st.score;
+  }
+  var exp=document.createElement('div');
+  exp.style.cssText='margin-top:.65rem;padding:.6rem .9rem;background:rgba(16,185,129,.1);border-left:3px solid var(--green);border-radius:8px;font-size:.8rem;color:#6ee7b7;';
+  exp.textContent='💡 '+q.e;
+  document.getElementById('chlist').appendChild(exp);
+  var nb=document.getElementById('nxtbtn');
+  nb.style.display='block';
+  nb.textContent=st.eidx<st.eqs.length-1?'Weiter →':'🎉 Ergebnis';
+}
+
+function nextQ(){
+  st.eidx++;
+  if(st.eidx>=st.eqs.length){showRes();return;}
+  showQ();
+}
+
+function showRes(){
+  clearInterval(st.tiv);
+  document.getElementById('erun').style.display='none';
+  document.getElementById('eres').style.display='block';
+  var pct=Math.round((st.ecorrect/st.eqs.length)*100);
+  document.getElementById('remi').textContent=pct>=90?'🏆':pct>=75?'🎉':pct>=60?'✅':'📚';
+  document.getElementById('rtitle').textContent=pct>=60?'Bestanden!':'Nicht bestanden';
+  document.getElementById('rpct').textContent=pct+'%';
+  var el=st.fmt.time*60-st.tleft;
+  document.getElementById('rstats').innerHTML=
+    '<div class="resstat"><div class="resval" style="color:var(--tealM)">'+pct+'%</div><div class="reslbl">Score</div></div>'+
+    '<div class="resstat"><div class="resval" style="color:var(--green)">'+st.ecorrect+'</div><div class="reslbl">Richtig</div></div>'+
+    '<div class="resstat"><div class="resval" style="color:var(--gold)">'+Math.floor(el/60)+'min</div><div class="reslbl">Zeit</div></div>';
+}
+
+function resetExam(){
+  clearInterval(st.tiv);
+  document.getElementById('esetup').style.display='block';
+  document.getElementById('erun').style.display='none';
+  document.getElementById('eres').style.display='none';
+}
+
 // INIT
-// ═══════════════════════════════════════════════════════════════════════════
-window.addEventListener('load', function() {
-  // Force screen visible
-  document.querySelectorAll('.screen').forEach(s => { s.style.display='none'; s.classList.remove('active'); });
-  const s = document.getElementById('screen-lernkarten');
-  if(s) { s.style.display='block'; s.classList.add('active'); }
-  renderCards();
-  buildVidGrid();
-  buildInfoCats();
-  buildInfoGrid();
-  buildExamSetup();
-});
+render();
 </script>
 </body>
 </html>
