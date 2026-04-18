@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PflegeLearn – Onboarding Email Sequenz</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--t:#0d9488;--td:#0f766e;--tl:#ccfbf1;--g:#f59e0b;--ink:#0f172a;--ins:#334155;--br:#e2e8f0;--cr:#f8fafc;--w:#fff;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:#f1f5f9;padding:2rem 1rem;color:var(--ink);}
+.page-title{text-align:center;font-size:1.8rem;font-weight:800;color:var(--td);margin-bottom:.35rem;}
+.page-sub{text-align:center;font-size:.92rem;color:var(--ins);margin-bottom:3rem;}
+.sequence{max-width:700px;margin:0 auto;}
+.step{display:flex;gap:1.25rem;margin-bottom:3.5rem;align-items:flex-start;}
+.step-num{flex-shrink:0;width:48px;height:48px;border-radius:50%;background:var(--td);color:#fff;font-size:1.1rem;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(13,148,136,.3);}
+.step-content{flex:1;}
+.step-meta{font-size:.78rem;font-weight:700;color:var(--t);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.35rem;}
+.email-card{background:var(--w);border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.07);border:1px solid var(--br);}
+.ec-header{background:var(--ink);padding:1rem 1.25rem;display:flex;justify-content:space-between;align-items:center;}
+.ec-from{font-size:.78rem;color:rgba(255,255,255,.55);}
+.ec-subject{font-size:.95rem;font-weight:700;color:#fff;margin-top:.18rem;}
+.ec-preview{font-size:.75rem;color:rgba(255,255,255,.35);margin-top:.1rem;}
+.ec-body{padding:1.5rem;}
+/* Email layout inner */
+.em{background:var(--w);max-width:580px;}
+.em-banner{background:linear-gradient(135deg,var(--td),var(--t));padding:1.5rem;text-align:center;border-radius:10px;margin-bottom:1.25rem;}
+.em-logo{font-size:1.5rem;font-weight:800;color:#fff;letter-spacing:-.5px;}
+.em-logo span{color:#fef3c7;}
+.em-greeting{font-size:1.05rem;font-weight:700;margin-bottom:.65rem;}
+.em-text{font-size:.9rem;line-height:1.72;color:var(--ins);margin-bottom:.75rem;}
+.em-cta{display:inline-block;background:linear-gradient(135deg,var(--td),var(--t));color:#fff;padding:.72rem 1.75rem;border-radius:999px;font-size:.92rem;font-weight:700;text-decoration:none;margin:1rem 0;}
+.em-checklist{display:flex;flex-direction:column;gap:.45rem;margin:1rem 0;}
+.em-check{display:flex;align-items:flex-start;gap:.65rem;font-size:.88rem;color:var(--ins);}
+.em-check::before{content:'✓';color:var(--t);font-weight:800;flex-shrink:0;margin-top:.05rem;}
+.em-highlight{background:var(--tl);border-radius:10px;padding:1rem;margin:1rem 0;font-size:.88rem;color:var(--td);}
+.em-footer{margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--br);font-size:.78rem;color:#94a3b8;text-align:center;}
+.em-modules{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin:1rem 0;}
+.em-mod{background:var(--cr);border-radius:8px;padding:.65rem .85rem;font-size:.82rem;font-weight:600;display:flex;align-items:center;gap:.5rem;}
+.em-stats{display:flex;gap:1rem;margin:1rem 0;justify-content:center;}
+.em-stat{text-align:center;flex:1;}
+.em-stat-n{font-size:1.6rem;font-weight:900;color:var(--t);}
+.em-stat-l{font-size:.72rem;color:var(--ins);}
+/* Connector */
+.connector{display:flex;align-items:center;margin-bottom:.75rem;padding-left:23px;}
+.conn-line{width:2px;height:24px;background:linear-gradient(var(--t),var(--tl));margin-left:.5px;}
+.conn-label{font-size:.75rem;font-weight:700;color:var(--t);margin-left:.65rem;}
+</style>
+</head>
+<body>
+
+<div class="page-title">📧 Onboarding Email-Sequenz</div>
+<div class="page-sub">5 automatisierte E-Mails · Brevo/Mailchimp kompatibel · Deutsch</div>
+
+<div class="sequence">
+
+<!-- ══════════════ EMAIL 1 ══════════════ -->
+<div class="step">
+  <div class="step-num">1</div>
+  <div class="step-content">
+    <div class="step-meta">Tag 0 · Sofort nach Registrierung · Willkommen</div>
+    <div class="email-card">
+      <div class="ec-header">
+        <div>
+          <div class="ec-from">von: georges@pflegelearn.de</div>
+          <div class="ec-subject">🎉 Willkommen bei PflegeLearn, {{Vorname}}!</div>
+          <div class="ec-preview">Dein Konto ist aktiviert – hier ist dein Schnellstart-Guide</div>
+        </div>
+        <div style="font-size:.72rem;color:rgba(255,255,255,.35);text-align:right">Tag 0<br>Sofort</div>
+      </div>
+      <div class="ec-body">
+        <div class="em">
+          <div class="em-banner">
+            <div class="em-logo">Pflege<span>Learn</span></div>
+            <div style="color:rgba(255,255,255,.75);font-size:.88rem;margin-top:.35rem">Die smarte Lernplattform für die Pflegeausbildung</div>
+          </div>
+          <div class="em-greeting">Hey {{Vorname}}, willkommen! 👋</div>
+          <p class="em-text">Dein Konto ist aktiviert. Du hast mit dem Free-Plan Zugang zu <strong>2 kompletten Modulen</strong> – kein Zeitlimit, keine Kreditkarte.</p>
+          <div class="em-highlight">
+            🎯 <strong>Dein kostenloser Inhalt:</strong><br>
+            Modul 01 (Grundlagen) + Modul 02 (Vitalzeichen) · 20 Lernkarten · 50 QCM
+          </div>
+          <p class="em-text">In <strong>3 Minuten</strong> kannst du deine erste Lernkarte umdrehen:</p>
+          <div class="em-checklist">
+            <div class="em-check">Konto öffnen → Modul 01 auswählen</div>
+            <div class="em-check">🌱 Anfänger-Modus starten (ideal zum Einstieg)</div>
+            <div class="em-check">Erste 10 QCM beantworten → Fortschritt checken</div>
+          </div>
+          <div style="text-align:center"><a class="em-cta" href="https://pflegelearn.de/app">🚀 Jetzt loslegen</a></div>
+          <div class="em-footer">
+            PflegeLearn GmbH · georges@pflegelearn.de · pflegelearn.de<br>
+            Du erhältst diese E-Mail weil du dich bei PflegeLearn registriert hast.<br>
+            <a href="{{unsubscribe_url}}" style="color:#0d9488">Abmelden</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="connector"><div class="conn-line"></div><span class="conn-label">48 Stunden später →</span></div>
+
+<!-- ══════════════ EMAIL 2 ══════════════ -->
+<div class="step">
+  <div class="step-num">2</div>
+  <div class="step-content">
+    <div class="step-meta">Tag 2 · Aktivierungserinnerung</div>
+    <div class="email-card">
+      <div class="ec-header">
+        <div>
+          <div class="ec-from">von: georges@pflegelearn.de</div>
+          <div class="ec-subject">{{Vorname}}, dein Lernstart wartet 📚</div>
+          <div class="ec-preview">20 Minuten täglich reichen – so funktioniert's</div>
+        </div>
+        <div style="font-size:.72rem;color:rgba(255,255,255,.35);text-align:right">Tag 2<br>10:00 Uhr</div>
+      </div>
+      <div class="ec-body">
+        <div class="em">
+          <div class="em-banner" style="background:linear-gradient(135deg,#1e293b,#0f172a)">
+            <div style="font-size:2.5rem">📚</div>
+            <div style="font-size:1.1rem;font-weight:700;color:#fff;margin-top:.5rem">Noch nicht gestartet?</div>
+          </div>
+          <div class="em-greeting">{{Vorname}}, das verstehen wir! 😊</div>
+          <p class="em-text">Manchmal fehlt nur der erste Impuls. Hier ist der Trick der Bestschüler:</p>
+          <div class="em-highlight">
+            💡 <strong>Die 20-Minuten-Methode:</strong><br>
+            Nicht 3 Stunden am Wochenende – sondern <strong>20 Minuten täglich</strong> in der U-Bahn, in der Mittagspause oder vor dem Schlafen. Wissenschaftlich belegt: Spaced Repetition schlägt Marathon-Lernen um Faktor 3.
+          </div>
+          <p class="em-text">Konkret für heute Abend:</p>
+          <div class="em-checklist">
+            <div class="em-check">Modul 02 – Vitalzeichen öffnen (10 Min)</div>
+            <div class="em-check">5 Lernkarten umdrehen (5 Min)</div>
+            <div class="em-check">5 QCM beantworten und Erklärungen lesen (5 Min)</div>
+          </div>
+          <div style="text-align:center"><a class="em-cta" href="https://pflegelearn.de/app/module/2">🫀 Vitalzeichen starten</a></div>
+          <p class="em-text" style="font-size:.82rem">P.S.: Sobald du ≥ 75% in Modul 02 erreichst, wird das 🔥 Fortgeschritten-Level freigeschaltet!</p>
+          <div class="em-footer">PflegeLearn GmbH · <a href="{{unsubscribe_url}}" style="color:#0d9488">Abmelden</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="connector"><div class="conn-line"></div><span class="conn-label">5 Tage später →</span></div>
+
+<!-- ══════════════ EMAIL 3 ══════════════ -->
+<div class="step">
+  <div class="step-num">3</div>
+  <div class="step-content">
+    <div class="step-meta">Tag 7 · Feature-Highlight + Upgrade-Nudge</div>
+    <div class="email-card">
+      <div class="ec-header">
+        <div>
+          <div class="ec-from">von: georges@pflegelearn.de</div>
+          <div class="ec-subject">8 Module warten auf dich, {{Vorname}} 🔓</div>
+          <div class="ec-preview">Hier sind alle Inhalte, die du noch nicht siehst</div>
+        </div>
+        <div style="font-size:.72rem;color:rgba(255,255,255,.35);text-align:right">Tag 7<br>18:00 Uhr</div>
+      </div>
+      <div class="ec-body">
+        <div class="em">
+          <div class="em-banner">
+            <div style="font-size:2rem">🔓</div>
+            <div style="font-size:1.1rem;font-weight:700;color:#fff;margin-top:.5rem">Was du noch nicht siehst</div>
+          </div>
+          <p class="em-text">Du hast 2 von 10 Modulen. Hier ist was dich auf dem Student-Plan erwartet:</p>
+          <div class="em-modules">
+            <div class="em-mod">💊 Medikamente</div>
+            <div class="em-mod">🍽️ Ernährung</div>
+            <div class="em-mod">🦴 Mobilisation</div>
+            <div class="em-mod">🧠 Psychiatrie</div>
+            <div class="em-mod">👶 Pflegebereiche</div>
+            <div class="em-mod">⚖️ Recht & Beruf</div>
+            <div class="em-mod">🏥 Krankheitsbilder</div>
+            <div class="em-mod">🩹 Wundversorgung</div>
+          </div>
+          <div class="em-stats">
+            <div class="em-stat"><div class="em-stat-n">500+</div><div class="em-stat-l">QCM</div></div>
+            <div class="em-stat"><div class="em-stat-n">1 100</div><div class="em-stat-l">Lernkarten</div></div>
+            <div class="em-stat"><div class="em-stat-n">58</div><div class="em-stat-l">Videos</div></div>
+            <div class="em-stat"><div class="em-stat-n">300</div><div class="em-stat-l">Infografiken</div></div>
+          </div>
+          <div class="em-highlight">
+            💰 Alles für <strong>9 € pro Monat</strong> – das ist weniger als ein Lehrbuch.<br>
+            Jederzeit kündbar. Keine versteckten Kosten.
+          </div>
+          <div style="text-align:center"><a class="em-cta" href="https://pflegelearn.de/upgrade">🚀 Jetzt upgraden</a></div>
+          <p class="em-text" style="font-size:.82rem;text-align:center;color:#94a3b8">Oder bleib beim Free-Plan – kein Druck. 😊</p>
+          <div class="em-footer">PflegeLearn GmbH · <a href="{{unsubscribe_url}}" style="color:#0d9488">Abmelden</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="connector"><div class="conn-line"></div><span class="conn-label">7 Tage später →</span></div>
+
+<!-- ══════════════ EMAIL 4 ══════════════ -->
+<div class="step">
+  <div class="step-num">4</div>
+  <div class="step-content">
+    <div class="step-meta">Tag 14 · Sozialer Beweis + Prüfungstipp</div>
+    <div class="email-card">
+      <div class="ec-header">
+        <div>
+          <div class="ec-from">von: georges@pflegelearn.de</div>
+          <div class="ec-subject">Was Laura in 3 Wochen geschafft hat 💪</div>
+          <div class="ec-preview">Echte Erfahrung + dein Prüfungstipp der Woche</div>
+        </div>
+        <div style="font-size:.72rem;color:rgba(255,255,255,.35);text-align:right">Tag 14<br>09:00 Uhr</div>
+      </div>
+      <div class="ec-body">
+        <div class="em">
+          <div class="em-banner" style="background:linear-gradient(135deg,#7c3aed,#8b5cf6)">
+            <div style="font-size:2rem">💬</div>
+            <div style="font-size:1rem;font-weight:700;color:#fff;margin-top:.5rem">Was andere sagen</div>
+          </div>
+          <div class="em-greeting">Hallo {{Vorname}}!</div>
+          <p class="em-text">Georges P. aus München (3. Ausbildungsjahr) hat uns letzte Woche geschrieben:</p>
+          <div style="background:#f5f3ff;border-left:4px solid #8b5cf6;border-radius:0 10px 10px 0;padding:1rem;margin:1rem 0;font-size:.9rem;font-style:italic;color:#4c1d95;">
+            "Ich lerne jetzt 20 Minuten täglich in der U-Bahn. Meine letzte Klausur: <strong>87%</strong>. Vorher war ich bei 68%. Die Erklärungen bei den QCM sind das Beste – endlich verstehe ich warum, nicht nur was."
+          </div>
+          <p class="em-text"><strong>Prüfungstipp der Woche: Die 3-Pass-Methode</strong></p>
+          <div class="em-checklist">
+            <div class="em-check"><strong>Pass 1:</strong> Alle Anfänger-QCM eines Moduls → Grundlagen festigen</div>
+            <div class="em-check"><strong>Pass 2:</strong> Fortgeschritten → Anwendung trainieren</div>
+            <div class="em-check"><strong>Pass 3:</strong> Experten-Fälle → Differenzialdiagnosen üben</div>
+          </div>
+          <div class="em-highlight">
+            🎯 Ziel diese Woche: Modul 01 vollständig auf allen 3 Niveaus abschließen.
+          </div>
+          <div style="text-align:center"><a class="em-cta" href="https://pflegelearn.de/app">Jetzt weiterlernen →</a></div>
+          <div class="em-footer">PflegeLearn GmbH · <a href="{{unsubscribe_url}}" style="color:#0d9488">Abmelden</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="connector"><div class="conn-line"></div><span class="conn-label">16 Tage später →</span></div>
+
+<!-- ══════════════ EMAIL 5 ══════════════ -->
+<div class="step">
+  <div class="step-num">5</div>
+  <div class="step-content">
+    <div class="step-meta">Tag 30 · Letzter Upgrade-Push + Prüfungssimulator</div>
+    <div class="email-card">
+      <div class="ec-header">
+        <div>
+          <div class="ec-from">von: georges@pflegelearn.de</div>
+          <div class="ec-subject">{{Vorname}}, dein Prüfungstag ist näher als du denkst ⏱️</div>
+          <div class="ec-preview">1 Monat – Zeit für den Prüfungssimulator</div>
+        </div>
+        <div style="font-size:.72rem;color:rgba(255,255,255,.35);text-align:right">Tag 30<br>18:30 Uhr</div>
+      </div>
+      <div class="ec-body">
+        <div class="em">
+          <div class="em-banner" style="background:linear-gradient(135deg,#ef4444,#dc2626)">
+            <div style="font-size:2rem">⏱️</div>
+            <div style="font-size:1.1rem;font-weight:700;color:#fff;margin-top:.5rem">1 Monat PflegeLearn 🎉</div>
+          </div>
+          <div class="em-greeting">{{Vorname}}, du bist seit einem Monat dabei!</div>
+          <p class="em-text">Ein Monat ist eine gute Zeit, um sich dem echten Prüfungsmodus zu stellen.</p>
+          <p class="em-text">Mit dem <strong>Student-Plan</strong> hast du Zugang zum <strong>Prüfungssimulator</strong> – das Herzstück der Prüfungsvorbereitung:</p>
+          <div class="em-checklist">
+            <div class="em-check">📝 <strong>Standard-Prüfung:</strong> 30 Fragen · 45 Minuten – wie die echte Klausur</div>
+            <div class="em-check">🎯 <strong>Intensivprüfung:</strong> 50 Fragen · 75 Minuten – komplette Simulation</div>
+            <div class="em-check">💎 <strong>Expertenmodus:</strong> 25 Fragen nur Experten-Niveau · 40 Minuten</div>
+            <div class="em-check">📊 Detaillierte Auswertung: Score, Schwachstellen, Zeitanalyse</div>
+          </div>
+          <div class="em-highlight">
+            🔥 Sonderangebot: <strong>Erster Monat gratis</strong> wenn du heute upgradest.<br>
+            Danach 9 €/Monat – jederzeit kündbar.<br>
+            Aktionscode: <strong>ERSTEMONAT</strong>
+          </div>
+          <div style="text-align:center"><a class="em-cta" href="https://pflegelearn.de/upgrade?code=ERSTEMONAT">🎓 Prüfungssimulator freischalten</a></div>
+          <p class="em-text" style="font-size:.8rem;color:#94a3b8;text-align:center">Angebot gültig bis {{date+7days}}. Ohne Risiko – jederzeit kündbar.</p>
+          <div style="border-top:1px solid var(--br);margin-top:1.25rem;padding-top:1rem;">
+            <p class="em-text" style="font-size:.82rem">Fragen? Antworte einfach auf diese E-Mail oder schreib uns: georges@pflegelearn.de</p>
+          </div>
+          <div class="em-footer">PflegeLearn GmbH · pflegelearn.de · <a href="{{unsubscribe_url}}" style="color:#0d9488">Abmelden</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- KONFIGURATION HINT -->
+<div style="background:#fff;border-radius:16px;padding:1.75rem;border:1px solid var(--br);margin-top:2rem;">
+  <div style="font-size:1rem;font-weight:800;color:var(--td);margin-bottom:1rem;">⚙️ Brevo / Mailchimp Konfiguration</div>
+  <table style="width:100%;border-collapse:collapse;font-size:.85rem;">
+    <tr style="background:#f1f5f9;"><th style="padding:.55rem;text-align:left">E-Mail</th><th style="padding:.55rem;text-align:left">Trigger</th><th style="padding:.55rem;text-align:left">Segment</th></tr>
+    <tr><td style="padding:.5rem;border-bottom:1px solid var(--br)">E-Mail 1 – Willkommen</td><td style="padding:.5rem;border-bottom:1px solid var(--br)">Registrierung</td><td style="padding:.5rem;border-bottom:1px solid var(--br)">Alle neuen User</td></tr>
+    <tr><td style="padding:.5rem;border-bottom:1px solid var(--br)">E-Mail 2 – Aktivierung</td><td style="padding:.5rem;border-bottom:1px solid var(--br)">Tag 2, kein Login</td><td style="padding:.5rem;border-bottom:1px solid var(--br)">Inaktive (0 QCM)</td></tr>
+    <tr><td style="padding:.5rem;border-bottom:1px solid var(--br)">E-Mail 3 – Feature</td><td style="padding:.5rem;border-bottom:1px solid var(--br)">Tag 7</td><td style="padding:.5rem;border-bottom:1px solid var(--br)">Free-Plan User</td></tr>
+    <tr><td style="padding:.5rem;border-bottom:1px solid var(--br)">E-Mail 4 – Social Proof</td><td style="padding:.5rem;border-bottom:1px solid var(--br)">Tag 14</td><td style="padding:.5rem;border-bottom:1px solid var(--br)">Free-Plan User</td></tr>
+    <tr><td style="padding:.5rem">E-Mail 5 – Upgrade</td><td style="padding:.5rem">Tag 30</td><td style="padding:.5rem">Free-Plan User (noch kein Upgrade)</td></tr>
+  </table>
+  <div style="margin-top:1rem;font-size:.82rem;color:var(--ins);">
+    <strong>Variablen:</strong> {{Vorname}}, {{unsubscribe_url}}, {{date+7days}}<br>
+    <strong>A/B-Tests empfohlen:</strong> Betreffzeilen E-Mail 3 und 5 (Conversion-kritisch)
+  </div>
+</div>
+
+</div><!-- /sequence -->
+</body>
+</html>

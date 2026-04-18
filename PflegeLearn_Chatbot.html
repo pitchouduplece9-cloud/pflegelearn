@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PflegeLearn – KI-Lernassistent</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f172a;--bg2:#1e293b;--bg3:#263244;--t:#0d9488;--td:#0f766e;--tl:#ccfbf1;--tm:#14b8a6;--g:#f59e0b;--ink:#e2e8f0;--ink2:#8896a8;--ink3:#334155;--br:rgba(255,255,255,.08);--gr:#10b981;--re:#ef4444;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+.bg-orb{position:fixed;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(13,148,136,.12) 0%,transparent 70%);top:-150px;right:-100px;pointer-events:none;}
+
+/* HEADER */
+header{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.5rem;background:var(--bg2);border-bottom:1px solid var(--br);flex-shrink:0;}
+.h-left{display:flex;align-items:center;gap:.75rem;}
+.bot-av{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--td),var(--tm));display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;position:relative;}
+.bot-av::after{content:'';position:absolute;bottom:2px;right:2px;width:8px;height:8px;border-radius:50%;background:var(--gr);border:2px solid var(--bg2);}
+.bot-name{font-size:.9rem;font-weight:700;}
+.bot-status{font-size:.72rem;color:var(--gr);}
+.h-right{display:flex;gap:.5rem;}
+.h-btn{background:var(--bg3);border:1px solid var(--br);color:var(--ink2);padding:.35rem .75rem;border-radius:8px;font-size:.75rem;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:.15s;}
+.h-btn:hover{border-color:var(--t);color:var(--tm);}
+
+/* QUICK TOPICS */
+.quick-topics{padding:.75rem 1.5rem;background:var(--bg);border-bottom:1px solid var(--br);display:flex;gap:.5rem;overflow-x:auto;flex-shrink:0;}
+.qt{padding:.32rem .85rem;border-radius:999px;font-size:.75rem;font-weight:600;cursor:pointer;white-space:nowrap;background:var(--bg3);border:1px solid var(--br);color:var(--ink2);transition:.15s;}
+.qt:hover{border-color:var(--t);color:var(--tm);}
+
+/* MESSAGES */
+.messages{flex:1;overflow-y:auto;padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:.85rem;}
+.msg{display:flex;gap:.65rem;max-width:85%;animation:fadeUp .3s ease;}
+.msg.bot{align-self:flex-start;}
+.msg.user{align-self:flex-end;flex-direction:row-reverse;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.msg-av{width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0;margin-top:.1rem;}
+.msg.bot .msg-av{background:linear-gradient(135deg,var(--td),var(--tm));}
+.msg.user .msg-av{background:var(--bg3);border:1px solid var(--br);}
+.msg-bubble{padding:.75rem 1rem;border-radius:14px;font-size:.875rem;line-height:1.65;}
+.msg.bot .msg-bubble{background:var(--bg2);border:1px solid var(--br);color:var(--ink);}
+.msg.user .msg-bubble{background:linear-gradient(135deg,var(--td),var(--t));color:#fff;}
+.msg-time{font-size:.62rem;color:var(--ink3);align-self:flex-end;margin-bottom:.15rem;font-family:'DM Mono',monospace;}
+.msg.user .msg-time{text-align:right;}
+
+/* Typing indicator */
+.typing-dots{display:flex;gap:.3rem;padding:.85rem 1rem;}
+.typing-dots span{width:7px;height:7px;border-radius:50%;background:var(--ink3);animation:bounce .9s infinite;}
+.typing-dots span:nth-child(2){animation-delay:.15s;}
+.typing-dots span:nth-child(3){animation-delay:.3s;}
+@keyframes bounce{0%,80%,100%{transform:scale(1);}40%{transform:scale(1.4);}}
+
+/* Suggestion chips */
+.suggestions{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.55rem;}
+.sugg{padding:.28rem .75rem;border-radius:999px;font-size:.75rem;font-weight:600;background:rgba(13,148,136,.1);border:1px solid rgba(13,148,136,.2);color:var(--tm);cursor:pointer;transition:.15s;}
+.sugg:hover{background:rgba(13,148,136,.2);}
+
+/* Cards in chat */
+.msg-card{background:var(--bg3);border:1px solid var(--br);border-radius:10px;padding:.85rem;margin-top:.55rem;}
+.mc-title{font-size:.82rem;font-weight:700;color:var(--tm);margin-bottom:.45rem;}
+.mc-item{font-size:.8rem;color:var(--ink2);padding:.28rem 0;border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:flex-start;gap:.45rem;}
+.mc-item:last-child{border-bottom:none;}
+.mc-item::before{content:'→';color:var(--t);flex-shrink:0;}
+
+/* Code block in chat */
+.code-block{background:rgba(0,0,0,.3);border-radius:8px;padding:.75rem 1rem;margin-top:.5rem;font-family:'DM Mono',monospace;font-size:.8rem;color:#99f6e4;white-space:pre-wrap;}
+
+/* INPUT */
+.input-area{padding:1rem 1.5rem;background:var(--bg2);border-top:1px solid var(--br);flex-shrink:0;}
+.input-wrap{display:flex;gap:.65rem;align-items:flex-end;background:var(--bg3);border:1.5px solid var(--br);border-radius:14px;padding:.5rem .65rem;transition:.2s;}
+.input-wrap:focus-within{border-color:var(--t);box-shadow:0 0 0 3px rgba(13,148,136,.1);}
+.chat-input{flex:1;background:none;border:none;font-family:'DM Sans',sans-serif;font-size:.9rem;color:var(--ink);outline:none;resize:none;max-height:120px;line-height:1.5;}
+.chat-input::placeholder{color:var(--ink3);}
+.send-btn{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--td),var(--tm));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:.15s;flex-shrink:0;}
+.send-btn:hover{transform:scale(1.05);}
+.send-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+.input-meta{display:flex;justify-content:space-between;align-items:center;margin-top:.45rem;padding:0 .25rem;}
+.im-note{font-size:.68rem;color:var(--ink3);}
+.im-mode{display:flex;gap:.35rem;}
+.mode-btn{font-size:.68rem;font-weight:600;padding:.15rem .55rem;border-radius:999px;border:1px solid var(--br);background:transparent;color:var(--ink2);cursor:pointer;font-family:'DM Sans',sans-serif;transition:.12s;}
+.mode-btn.active{background:var(--tl);color:var(--td);border-color:rgba(13,148,136,.3);}
+</style>
+</head>
+<body>
+<div class="bg-orb"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="h-left">
+    <div class="bot-av">🩺</div>
+    <div>
+      <div class="bot-name">PflegeLearn Assistent</div>
+      <div class="bot-status">● Online · KI-powered</div>
+    </div>
+  </div>
+  <div class="h-right">
+    <button class="h-btn" onclick="clearChat()">🗑 Chat leeren</button>
+    <button class="h-btn" onclick="toggleMode()">⚙️ Einstellungen</button>
+  </div>
+</header>
+
+<!-- QUICK TOPICS -->
+<div class="quick-topics">
+  <div class="qt" onclick="sendQuick('Was ist die Bradenskala?')">🛡️ Bradenskala</div>
+  <div class="qt" onclick="sendQuick('Erkläre die 5-R-Regel bei Medikamenten')">💊 5-R-Regel</div>
+  <div class="qt" onclick="sendQuick('Was sind Schockzeichen?')">🚨 Schockzeichen</div>
+  <div class="qt" onclick="sendQuick('Erkläre die Wundheilungsphasen')">🔬 Wundheilung</div>
+  <div class="qt" onclick="sendQuick('Was ist der Pflegeprozess?')">📋 Pflegeprozess</div>
+  <div class="qt" onclick="sendQuick('Gib mir 5 Prüfungsfragen zu Vitalzeichen')">❓ QCM generieren</div>
+  <div class="qt" onclick="sendQuick('Wie lerne ich effektiv für die Pflegeprüfung?')">💡 Lerntipps</div>
+  <div class="qt" onclick="sendQuick('Erkläre FAST beim Schlaganfall')">🧠 FAST-Schema</div>
+</div>
+
+<!-- MESSAGES -->
+<div class="messages" id="messages">
+  <div class="msg bot">
+    <div class="msg-av">🩺</div>
+    <div>
+      <div class="msg-bubble">
+        Hallo! Ich bin dein KI-Lernassistent für die Pflegeausbildung. 👋<br><br>
+        Ich kann dir helfen bei:
+        <div class="msg-card">
+          <div class="mc-title">Was ich für dich tun kann</div>
+          <div class="mc-item">Pflegewissen erklären (PflBG, Icare, Pflege heute)</div>
+          <div class="mc-item">QCM-Fragen generieren und erklären</div>
+          <div class="mc-item">Prüfungstipps und Lernstrategien</div>
+          <div class="mc-item">Fachbegriffe und Assessments erklären</div>
+          <div class="mc-item">Differenzialdiagnosen und klinische Szenarien</div>
+        </div>
+        <div class="suggestions">
+          <span class="sugg" onclick="sendQuick('Was ist die Bradenskala?')">🛡️ Bradenskala</span>
+          <span class="sugg" onclick="sendQuick('Gib mir 3 QCM zu Vitalzeichen')">❓ QCM generieren</span>
+          <span class="sugg" onclick="sendQuick('Wie lerne ich effektiv für die Pflegeprüfung?')">💡 Lerntipps</span>
+        </div>
+      </div>
+      <div class="msg-time">Heute · PflegeLearn KI</div>
+    </div>
+  </div>
+</div>
+
+<!-- INPUT AREA -->
+<div class="input-area">
+  <div class="input-wrap">
+    <textarea class="chat-input" id="chat-input" placeholder="Stelle eine Frage zur Pflegeausbildung..." rows="1" onkeydown="handleKey(event)" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+    <button class="send-btn" id="send-btn" onclick="sendMessage()">➤</button>
+  </div>
+  <div class="input-meta">
+    <span class="im-note">Claude Sonnet · Pflegeausbildung DE · PflBG 2020</span>
+    <div class="im-mode">
+      <button class="mode-btn active" id="mode-learn">📚 Lernen</button>
+      <button class="mode-btn" id="mode-qcm" onclick="switchMode('qcm')">❓ QCM</button>
+      <button class="mode-btn" id="mode-exam" onclick="switchMode('exam')">📝 Prüfung</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let mode = 'learn';
+let isTyping = false;
+
+const SYSTEM_PROMPT = `Du bist ein spezialisierter KI-Lernassistent für die deutsche Pflegeausbildung.
+Deine Aufgaben:
+- Pflegewissen verständlich erklären basierend auf PflBG 2020, Icare und Pflege heute
+- QCM-Fragen mit Erklärungen generieren (auf Wunsch)
+- Prüfungsrelevante Inhalte hervorheben
+- Klinische Szenarien analysieren
+- IMMER auf Deutsch antworten
+- Antworten strukturiert und präzise halten
+- Prüfungsrelevantes fett markieren`;
+
+function switchMode(m) {
+  mode = m;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('mode-'+m).classList.add('active');
+  const placeholders = {
+    learn: 'Stelle eine Frage zur Pflegeausbildung...',
+    qcm: 'Thema eingeben → QCM werden generiert...',
+    exam: 'Szenario oder Thema für Prüfungsfrage...'
+  };
+  document.getElementById('chat-input').placeholder = placeholders[m];
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function sendQuick(msg) {
+  document.getElementById('chat-input').value = msg;
+  sendMessage();
+}
+
+function addMessage(text, type, extra = null) {
+  const msgs = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = 'msg ' + type;
+  const av = type === 'bot' ? '🩺' : '👤';
+  const time = new Date().toLocaleTimeString('de', {hour:'2-digit',minute:'2-digit'});
+  let inner = `<div class="msg-bubble">${text}`;
+  if (extra?.suggestions) {
+    inner += '<div class="suggestions">' + extra.suggestions.map(s => `<span class="sugg" onclick="sendQuick('${s}')">${s}</span>`).join('') + '</div>';
+  }
+  if (extra?.card) {
+    inner += `<div class="msg-card"><div class="mc-title">${extra.card.title}</div>${extra.card.items.map(i => `<div class="mc-item">${i}</div>`).join('')}</div>`;
+  }
+  inner += '</div>';
+  div.innerHTML = `<div class="msg-av">${av}</div><div>${inner}<div class="msg-time">${time} · ${type==='bot'?'PflegeLearn KI':'Du'}</div></div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function showTyping() {
+  const msgs = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = 'msg bot'; div.id = 'typing-indicator';
+  div.innerHTML = '<div class="msg-av">🩺</div><div class="msg-bubble"><div class="typing-dots"><span></span><span></span><span></span></div></div>';
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function removeTyping() { document.getElementById('typing-indicator')?.remove(); }
+
+async function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text || isTyping) return;
+  input.value = ''; input.style.height = 'auto';
+  isTyping = true;
+  document.getElementById('send-btn').disabled = true;
+  addMessage(text, 'user');
+  showTyping();
+
+  // Prepare mode-specific prompt
+  let userPrompt = text;
+  if (mode === 'qcm') userPrompt = `Generiere 3 Multiple-Choice-Fragen (je 4 Optionen, 1 korrekt) zu diesem Thema für die Pflegeprüfung: ${text}. Format: Frage, Optionen A-D, Antwort, Erklärung.`;
+  if (mode === 'exam') userPrompt = `Erstelle eine realistische Prüfungsfrage im Stil der deutschen Pflegeprüfung zu: ${text}. Dann beantworte sie ausführlich.`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: 'user', content: userPrompt }]
+      })
+    });
+    const data = await response.json();
+    removeTyping();
+    const reply = data.content?.[0]?.text || 'Antwort nicht verfügbar.';
+    // Format markdown-like bold
+    const formatted = reply
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\n\n/g, '<br><br>')
+      .replace(/\n/g, '<br>');
+    addMessage(formatted, 'bot', {
+      suggestions: ['Erkläre mehr dazu', 'Gib mir eine QCM dazu', 'Was ist prüfungsrelevant?']
+    });
+  } catch (err) {
+    removeTyping();
+    // Fallback with pre-built answers
+    const fallbacks = {
+      'bradenskala': `<strong>Bradenskala – Dekubitusrisiko</strong><br><br>Die Bradenskala ist das Standardinstrument zur Risikoeinschätzung für Dekubitus.<br><br><strong>6 Bewertungsbereiche:</strong><br>1. Sinneswahrnehmung<br>2. Feuchtigkeit<br>3. Aktivität<br>4. Mobilität<br>5. Ernährung<br>6. Reibung/Scherkräfte<br><br><strong>Risikowerte:</strong><br>• ≤ 18 = erhöhtes Risiko<br>• ≤ 12 = hohes Risiko<br>• ≤ 9 = sehr hohes Risiko`,
+      '5-r': `<strong>Die 5-R-Regel bei Medikamenten</strong><br><br><strong>R1</strong> – Richtiger Patient (Name, Geburtsdatum prüfen)<br><strong>R2</strong> – Richtiges Medikament (Bezeichnung vergleichen)<br><strong>R3</strong> – Richtige Dosis (Verordnung vs. vorliegend)<br><strong>R4</strong> – Richtiger Weg (oral, s.c., i.v. etc.)<br><strong>R5</strong> – Richtige Zeit (Einnahme-Zeitpunkt beachten)<br><br>📋 Prüfungsrelevant: Immer alle 5 R prüfen – kein Abkürzen!`,
+      'schock': `<strong>Schockzeichen – Klinisches Bild</strong><br><br><strong>Classic Shock Triad:</strong><br>• HF ↑ &gt; 100/min, fadenförmig<br>• RR ↓ systolisch &lt; 90 mmHg<br>• SpO₂ ↓ &lt; 90%<br><br><strong>Weitere Zeichen:</strong><br>• Kalte, blasse, marmorierte Haut<br>• Bewusstseinsveränderung<br>• Oligurie<br><br><strong>Sofortmaßnahme:</strong> Flachlagerung, Beine hoch, Notarzt!`,
+      'default': `Ich beantworte gerne deine Frage zur Pflegeausbildung! Für detaillierte Antworten basierend auf dem aktuellen PflBG-Lehrplan ist eine aktive API-Verbindung erforderlich.<br><br>Probiere eine der vorgeschlagenen Fragen unten, oder stelle mir eine spezifische Frage zu einem Pflegemodul.`
+    };
+    const key = text.toLowerCase().includes('braden') ? 'bradenskala' : text.toLowerCase().includes('5-r') ? '5-r' : text.toLowerCase().includes('schock') ? 'schock' : 'default';
+    addMessage(fallbacks[key], 'bot', {
+      suggestions: ['🛡️ Bradenskala erklären', '💊 5-R-Regel', '🚨 Schockzeichen', '📋 Pflegeprozess']
+    });
+  } finally {
+    isTyping = false;
+    document.getElementById('send-btn').disabled = false;
+  }
+}
+
+function clearChat() {
+  const msgs = document.getElementById('messages');
+  msgs.innerHTML = '';
+  addMessage('Chat wurde geleert. Wie kann ich dir helfen? 😊', 'bot', {
+    suggestions: ['🛡️ Bradenskala', '❓ QCM generieren', '💡 Lerntipps']
+  });
+}
+</script>
+</body>
+</html>

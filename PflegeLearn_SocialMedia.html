@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PflegeLearn – Social Media Strategie</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--t:#0d9488;--td:#0f766e;--tl:#ccfbf1;--g:#f59e0b;--ink:#0f172a;--ins:#334155;--br:#e2e8f0;--cr:#f8fafc;--w:#fff;--gr:#10b981;--re:#ef4444;--pu:#8b5cf6;
+--tk:#000000;--ig:#e1306c;--li:#0077b5;--yt:#ff0000;--wa:#25d366;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--cr);color:var(--ink);padding:2.5rem 1.5rem 5rem;}
+.max{max-width:1100px;margin:0 auto;}
+.title{font-size:2rem;font-weight:800;color:var(--td);margin-bottom:.3rem;}
+.sub{font-size:.92rem;color:var(--ins);margin-bottom:3rem;}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+.card{background:var(--w);border:1px solid var(--br);border-radius:16px;padding:1.5rem;}
+.section-title{font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--t);margin-bottom:1.25rem;display:flex;align-items:center;gap:.65rem;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--br);}
+.card-title{font-size:1rem;font-weight:700;margin-bottom:.75rem;}
+
+/* Platform cards */
+.platform{border-radius:14px;padding:1.4rem;position:relative;overflow:hidden;}
+.platform.tiktok{background:linear-gradient(135deg,#000,#1a1a2e);}
+.platform.instagram{background:linear-gradient(135deg,#405de6,#5851db,#833ab4,#c13584,#e1306c,#fd1d1d);}
+.platform.linkedin{background:linear-gradient(135deg,#004182,#0077b5);}
+.platform.youtube{background:linear-gradient(135deg,#1a0000,var(--yt));}
+.plat-icon{font-size:2rem;margin-bottom:.55rem;}
+.plat-name{font-size:1.05rem;font-weight:800;color:#fff;}
+.plat-handle{font-size:.78rem;color:rgba(255,255,255,.6);margin-top:.15rem;}
+.plat-kpi{display:flex;gap:.75rem;margin-top:1rem;flex-wrap:wrap;}
+.pk{background:rgba(255,255,255,.12);border-radius:8px;padding:.4rem .75rem;text-align:center;}
+.pk-n{font-size:1rem;font-weight:800;color:#fff;}
+.pk-l{font-size:.62rem;color:rgba(255,255,255,.55);}
+.plat-strategy{margin-top:1rem;font-size:.82rem;color:rgba(255,255,255,.72);line-height:1.65;}
+.plat-tags{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.75rem;}
+.ptag{background:rgba(255,255,255,.15);color:rgba(255,255,255,.8);font-size:.68rem;font-weight:700;padding:.14rem .5rem;border-radius:999px;}
+
+/* Content calendar */
+.cal-week{margin-bottom:1.5rem;}
+.cal-week-title{font-size:.82rem;font-weight:800;color:var(--td);margin-bottom:.75rem;padding-bottom:.4rem;border-bottom:1px solid var(--br);}
+.cal-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.6rem;}
+.cal-day{background:var(--w);border:1px solid var(--br);border-radius:10px;padding:.75rem;min-height:100px;}
+.cal-day-name{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ins);margin-bottom:.5rem;}
+.cal-post{border-radius:7px;padding:.45rem .6rem;margin-bottom:.35rem;font-size:.73rem;line-height:1.4;}
+.cp-tk{background:rgba(0,0,0,.07);color:var(--ink);}
+.cp-ig{background:rgba(225,48,108,.1);color:var(--ig);}
+.cp-li{background:rgba(0,119,181,.1);color:var(--li);}
+.cp-em{background:var(--tl);color:var(--td);}
+.cal-platform{font-size:.6rem;font-weight:800;text-transform:uppercase;margin-bottom:.18rem;}
+
+/* Post templates */
+.post-tpl{border-radius:12px;overflow:hidden;}
+.pt-header{height:140px;display:flex;align-items:center;justify-content:center;font-size:3rem;position:relative;}
+.pt-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent,rgba(0,0,0,.5));}
+.pt-body{background:var(--w);border:1px solid var(--br);border-left:none;border-right:none;border-bottom:none;padding:1rem;}
+.pt-caption{font-size:.82rem;line-height:1.6;color:var(--ins);}
+.pt-hashtags{margin-top:.6rem;font-size:.72rem;font-family:'DM Mono',monospace;color:var(--t);}
+.pt-metrics{display:flex;gap:1rem;margin-top:.65rem;font-size:.72rem;color:var(--ins);}
+
+/* KPI targets */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.85rem;}
+.kpi-c{background:var(--w);border:1px solid var(--br);border-radius:12px;padding:1.1rem;text-align:center;}
+.kpi-n{font-size:1.8rem;font-weight:900;font-family:'DM Mono',monospace;}
+.kpi-l{font-size:.72rem;color:var(--ins);margin-top:.2rem;}
+.kpi-t{font-size:.65rem;color:#94a3b8;margin-top:.1rem;}
+
+/* Hashtag strategy */
+.hashtag-sets{display:flex;flex-direction:column;gap:.85rem;}
+.hset{background:var(--cr);border-radius:10px;padding:.85rem 1rem;}
+.hset-title{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--t);margin-bottom:.5rem;}
+.htags{display:flex;flex-wrap:wrap;gap:.35rem;}
+.ht{font-size:.75rem;font-family:'DM Mono',monospace;background:rgba(13,148,136,.1);color:var(--td);padding:.18rem .55rem;border-radius:6px;}
+
+/* TikTok video ideas */
+.vid-ideas{display:flex;flex-direction:column;gap:.65rem;}
+.vid-idea{display:flex;align-items:flex-start;gap:.85rem;padding:.75rem;background:var(--cr);border-radius:10px;}
+.vi-num{width:30px;height:30px;border-radius:8px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;flex-shrink:0;}
+.vi-title{font-size:.88rem;font-weight:700;margin-bottom:.2rem;}
+.vi-desc{font-size:.78rem;color:var(--ins);}
+.vi-meta{display:flex;gap:.5rem;margin-top:.35rem;flex-wrap:wrap;}
+.vmt{font-size:.65rem;font-weight:700;padding:.1rem .42rem;border-radius:999px;}
+.vmt-hook{background:#fef3c7;color:#d97706;}
+.vmt-views{background:var(--tl);color:var(--td);}
+.vmt-diff{background:#ede9fe;color:var(--pu);}
+
+@media(max-width:768px){.grid-2,.grid-3,.grid-4,.cal-grid,.kpi-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:480px){.grid-2,.grid-3,.grid-4,.cal-grid,.kpi-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="max">
+  <div class="title">📱 Social Media Strategie</div>
+  <div class="sub">PflegeLearn · TikTok, Instagram, LinkedIn · Kalender + Content-Vorlagen</div>
+
+  <!-- ── PLATFORMS ── -->
+  <div class="section-title">01 · Plattformen & Strategie</div>
+  <div class="grid-2" style="margin-bottom:3rem">
+    <div class="platform tiktok">
+      <div class="plat-icon">🎵</div>
+      <div class="plat-name">TikTok</div>
+      <div class="plat-handle">@pflegelearn</div>
+      <div class="plat-kpi">
+        <div class="pk"><div class="pk-n">3×</div><div class="pk-l">pro Woche</div></div>
+        <div class="pk"><div class="pk-n">30–60s</div><div class="pk-l">Video-Länge</div></div>
+        <div class="pk"><div class="pk-n">18–25</div><div class="pk-l">Zielgruppe</div></div>
+      </div>
+      <div class="plat-strategy">Schnelle Lern-Nuggets im „Did you know?"-Format. Hook in 1.5s. Pflegewissen trifft GenZ-Aesthetic. Trending sounds + Bildungsinhalt = virales Potenzial.</div>
+      <div class="plat-tags"><span class="ptag">#Pflegeausbildung</span><span class="ptag">#Pflegewissen</span><span class="ptag">#Azubi</span><span class="ptag">#Examen</span></div>
+    </div>
+    <div class="platform instagram">
+      <div class="plat-icon">📸</div>
+      <div class="plat-name">Instagram</div>
+      <div class="plat-handle">@pflegelearn.de</div>
+      <div class="plat-kpi">
+        <div class="pk"><div class="pk-n">5×</div><div class="pk-l">pro Woche</div></div>
+        <div class="pk"><div class="pk-n">Reels+Posts</div><div class="pk-l">Mix</div></div>
+        <div class="pk"><div class="pk-n">20–30</div><div class="pk-l">Zielgruppe</div></div>
+      </div>
+      <div class="plat-strategy">Visuelles Lernen: Infografiken, Lernkarten als Stories, Schüler-Testimonials. Regelmäßige Prüfungstipps als Karussell. Hochästhetisches Feed-Design (teal/gold).</div>
+      <div class="plat-tags"><span class="ptag">#Pflegeschule</span><span class="ptag">#PflBG</span><span class="ptag">#Lernkarten</span><span class="ptag">#Prüfungstipp</span></div>
+    </div>
+    <div class="platform linkedin">
+      <div class="plat-icon">💼</div>
+      <div class="plat-name">LinkedIn</div>
+      <div class="plat-handle">PflegeLearn GmbH</div>
+      <div class="plat-kpi">
+        <div class="pk"><div class="pk-n">3×</div><div class="pk-l">pro Woche</div></div>
+        <div class="pk"><div class="pk-n">B2B</div><div class="pk-l">Fokus</div></div>
+        <div class="pk"><div class="pk-n">35–55</div><div class="pk-l">Zielgruppe</div></div>
+      </div>
+      <div class="plat-strategy">Thought Leadership für Pflegeschulleitungen und Praxisanleiter. Daten zur Pflegekrise, Digitalisierung der Ausbildung, Erfahrungsberichte aus Pilotschulen.</div>
+      <div class="plat-tags"><span class="ptag">#Pflegebildung</span><span class="ptag">#EdTech</span><span class="ptag">#Digitalisierung</span><span class="ptag">#PflBG2020</span></div>
+    </div>
+    <div class="platform youtube" style="background:linear-gradient(135deg,#1a0000,#cc0000);">
+      <div class="plat-icon">▶️</div>
+      <div class="plat-name">YouTube</div>
+      <div class="plat-handle">PflegeLearn</div>
+      <div class="plat-kpi">
+        <div class="pk"><div class="pk-n">1×</div><div class="pk-l">pro Monat</div></div>
+        <div class="pk"><div class="pk-n">8–15 Min</div><div class="pk-l">Länge</div></div>
+        <div class="pk"><div class="pk-n">SEO</div><div class="pk-l">Fokus</div></div>
+      </div>
+      <div class="plat-strategy">Vollständige Modul-Erklärungen für SEO. "Alles über Dekubitus", "Bradenskala erklärt", "PflBG 2020 einfach erklärt". Langfristiger organischer Traffic.</div>
+      <div class="plat-tags"><span class="ptag">#Pflegeausbildung</span><span class="ptag">#Dekubitus</span><span class="ptag">#Vitalzeichen</span></div>
+    </div>
+  </div>
+
+  <!-- ── KPIs ── -->
+  <div class="section-title">02 · KPI-Ziele (12 Monate)</div>
+  <div class="kpi-grid" style="margin-bottom:3rem">
+    <div class="kpi-c"><div class="kpi-n" style="color:var(--tk)">10K</div><div class="kpi-l">TikTok Follower</div><div class="kpi-t">Monate 1–6</div></div>
+    <div class="kpi-c"><div class="kpi-n" style="color:var(--ig)">5K</div><div class="kpi-l">Instagram Follower</div><div class="kpi-t">Monate 1–8</div></div>
+    <div class="kpi-c"><div class="kpi-n" style="color:var(--li)">2K</div><div class="kpi-l">LinkedIn Follower</div><div class="kpi-t">Monate 3–12</div></div>
+    <div class="kpi-c"><div class="kpi-n" style="color:var(--t)">500</div><div class="kpi-l">App-Downloads via Social</div><div class="kpi-t">Monat 6+</div></div>
+  </div>
+
+  <!-- ── TIKTOK IDEAS ── -->
+  <div class="section-title">03 · TikTok Video-Ideen (30 Videos)</div>
+  <div class="vid-ideas" style="margin-bottom:3rem">
+    <div class="vid-idea">
+      <div class="vi-num">01</div>
+      <div><div class="vi-title">„Was bedeutet FAST beim Schlaganfall?" 🧠</div><div class="vi-desc">Hook: „Diese 4 Buchstaben können ein Leben retten." F=Face, A=Arms, S=Speech, T=Time. 30s Explainer mit Text-Overlay.</div><div class="vi-meta"><span class="vmt vmt-hook">🎣 Starker Hook</span><span class="vmt vmt-views">500K+ Potenzial</span><span class="vmt vmt-diff">Anfänger</span></div></div>
+    </div>
+    <div class="vid-idea">
+      <div class="vi-num">02</div>
+      <div><div class="vi-title">„5-R-Regel bei Medikamenten" 💊</div><div class="vi-desc">Hook: „Dieser Fehler kann tödlich sein." 5 Punkte als Countdown. Prüfungsrelevant, hohe Shares von Azubis.</div><div class="vi-meta"><span class="vmt vmt-hook">🎣 Angst-Hook</span><span class="vmt vmt-views">Sehr teilbar</span><span class="vmt vmt-diff">Anfänger</span></div></div>
+    </div>
+    <div class="vid-idea">
+      <div class="vi-num">03</div>
+      <div><div class="vi-title">„Bradenkala in 60 Sekunden erklärt" 🛡️</div><div class="vi-desc">Hook: „So berechne ich das Dekubitusrisiko meiner Patienten." Infografik-Style, sehr prüfungsrelevant.</div><div class="vi-meta"><span class="vmt vmt-hook">🎓 Bildung</span><span class="vmt vmt-views">Prüfungs-Season</span><span class="vmt vmt-diff">Fortgeschritten</span></div></div>
+    </div>
+    <div class="vid-idea">
+      <div class="vi-num">04</div>
+      <div><div class="vi-title">„Pflegeazubi erklärt Schockzeichen" 🚨</div><div class="vi-desc">Hook: „Als Azubi im 2. Lehrjahr erkenne ich diese Zeichen sofort." Authentisch, User-Generated-Content Style.</div><div class="vi-meta"><span class="vmt vmt-hook">🙋 Relatable</span><span class="vmt vmt-views">Hohe Retention</span><span class="vmt vmt-diff">Fortgeschritten</span></div></div>
+    </div>
+    <div class="vid-idea">
+      <div class="vi-num">05</div>
+      <div><div class="vi-title">„Day in my Life als Pflegeazubi" 📱</div><div class="vi-desc">Lifestyle + Lernen kombiniert. „So lerne ich 20 Minuten in der U-Bahn mit PflegeLearn." App-Showcase natürlich eingebettet.</div><div class="vi-meta"><span class="vmt vmt-hook">✨ Lifestyle</span><span class="vmt vmt-views">Brand Awareness</span><span class="vmt vmt-diff">Organisch</span></div></div>
+    </div>
+    <div class="vid-idea">
+      <div class="vi-num">06</div>
+      <div><div class="vi-title">„Meine Prüfungsnote war 87% – so habe ich gelernt"</div><div class="vi-desc">Testimonial-Format. Echte Schülerin zeigt ihre Lernmethode. Authentizität schlägt Hochglanz.</div><div class="vi-meta"><span class="vmt vmt-hook">💬 Social Proof</span><span class="vmt vmt-views">Hohes Vertrauen</span><span class="vmt vmt-diff">Konversion</span></div></div>
+    </div>
+  </div>
+
+  <!-- ── CONTENT CALENDAR ── -->
+  <div class="section-title">04 · Content-Kalender (Monat 1 · Beispielwoche)</div>
+  <div style="margin-bottom:3rem">
+    <div class="cal-week">
+      <div class="cal-week-title">Woche 1 – Thema: Vitalzeichen</div>
+      <div class="cal-grid">
+        <div class="cal-day"><div class="cal-day-name">Montag</div>
+          <div class="cal-post cp-tk"><div class="cal-platform" style="color:#000">🎵 TikTok</div>„Normaler Blutdruck: 120/80 mmHg" – Erklärvideo</div>
+          <div class="cal-post cp-em"><div class="cal-platform" style="color:var(--td)">📧 Email</div>Onboarding Email 1 → Neue User</div>
+        </div>
+        <div class="cal-day"><div class="cal-day-name">Dienstag</div>
+          <div class="cal-post cp-ig"><div class="cal-platform" style="color:var(--ig)">📸 Instagram</div>Infografik: Herzfrequenz nach Alter</div>
+        </div>
+        <div class="cal-day"><div class="cal-day-name">Mittwoch</div>
+          <div class="cal-post cp-tk"><div class="cal-platform" style="color:#000">🎵 TikTok</div>„FAST-Schema: Schlaganfall erkennen"</div>
+          <div class="cal-post cp-li"><div class="cal-platform" style="color:var(--li)">💼 LinkedIn</div>„Warum 30% der Pflegeazubis durchfallen"</div>
+        </div>
+        <div class="cal-day"><div class="cal-day-name">Donnerstag</div>
+          <div class="cal-post cp-ig"><div class="cal-platform" style="color:var(--ig)">📸 Instagram</div>Story: „Quiz du jour – Hypertonie"</div>
+        </div>
+        <div class="cal-day"><div class="cal-day-name">Freitag</div>
+          <div class="cal-post cp-tk"><div class="cal-platform" style="color:#000">🎵 TikTok</div>„Day in Life" – Lernroutine Azubi</div>
+          <div class="cal-post cp-ig"><div class="cal-platform" style="color:var(--ig)">📸 Instagram</div>Wochenrückblick + Lernkarte teilen</div>
+        </div>
+      </div>
+    </div>
+    <div class="cal-week">
+      <div class="cal-week-title">Woche 2 – Thema: Dekubitus & Prophylaxen</div>
+      <div class="cal-grid">
+        <div class="cal-day"><div class="cal-day-name">Montag</div>
+          <div class="cal-post cp-li"><div class="cal-platform" style="color:var(--li)">💼 LinkedIn</div>„Bradenskala: Das wichtigste Assessment" (Lehrkräfte)</div>
+        </div>
+        <div class="cal-day"><div class="cal-day-name">Dienstag</div>
+          <div class="cal-post cp-tk"><div class="cal-platform" style="color:#000">🎵 TikTok</div>„4 Dekubitus-Grade in 45 Sekunden"</div>
+          <div class="cal-post cp-ig"><div class="cal-platform" style="color:var(--ig)">📸 Instagram</div>Karussell: Lagerungstechniken</div>
+        </div>
+        <div class="cal-day"><div class="cal-day-name">Mittwoch</div>
+          <div class="cal-post cp-ig"><div class="cal-platform" style="color:var(--ig)">📸 Instagram</div>Reel: „30°-Seitenlage richtig machen"</div>
+        </div>
+        <div class="cal-day"><div class="cal-day-name">Donnerstag</div>
+          <div class="cal-post cp-tk"><div class="cal-platform" style="color:#000">🎵 TikTok</div>„Prüfungstipp: Bradenskala auswendig lernen"</div>
+          <div class="cal-post cp-em"><div class="cal-platform" style="color:var(--td)">📧 Email</div>Email 2 → Aktivierungserinnerung (inaktiv)</div>
+        </div>
+        <div class="cal-day"><div class="cal-day-name">Freitag</div>
+          <div class="cal-post cp-li"><div class="cal-platform" style="color:var(--li)">💼 LinkedIn</div>Fallstudie: Pilotschule Ergebnis +23%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── POST TEMPLATES ── -->
+  <div class="section-title">05 · Post-Vorlagen</div>
+  <div class="grid-3" style="margin-bottom:3rem">
+    <!-- TikTok -->
+    <div class="post-tpl">
+      <div class="pt-header" style="background:linear-gradient(135deg,#1a1a2e,#0d9488)">
+        🧠<div class="pt-overlay"></div>
+      </div>
+      <div class="pt-body">
+        <div style="font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:#000;margin-bottom:.4rem">🎵 TikTok Script</div>
+        <div class="pt-caption">
+          <strong>Hook (0–1.5s):</strong> „Diese 4 Buchstaben können ein Leben retten 🚨"<br><br>
+          <strong>Content (1.5–25s):</strong> F = Face (Gesicht hängt?), A = Arms (Arm fällt?), S = Speech (Sprache undeutlich?), T = Time (sofort 112!)<br><br>
+          <strong>CTA (25–30s):</strong> „Noch mehr Pflegewissen auf @pflegelearn – Link in Bio!"
+        </div>
+        <div class="pt-hashtags">#Pflegeausbildung #FAST #Schlaganfall #Pflegewissen #Azubi #Examen</div>
+        <div class="pt-metrics"><span>🎯 Ziel: 50K Views</span><span>💾 Saves: 2K+</span></div>
+      </div>
+    </div>
+    <!-- Instagram -->
+    <div class="post-tpl">
+      <div class="pt-header" style="background:linear-gradient(135deg,#0d9488,#14b8a6)">
+        📊<div class="pt-overlay"></div>
+      </div>
+      <div class="pt-body">
+        <div style="font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--ig);margin-bottom:.4rem">📸 Instagram Karussell (7 Slides)</div>
+        <div class="pt-caption">
+          <strong>Slide 1:</strong> „Bradenskala in 60 Sekunden 🛡️"<br>
+          <strong>Slide 2:</strong> Was ist die Bradenskala?<br>
+          <strong>Slide 3–7:</strong> Je 1 Risikostufe visuell erklärt<br>
+          <strong>Slide 7:</strong> CTA: „Jetzt kostenlos üben → pflegelearn.de"
+        </div>
+        <div class="pt-hashtags">#Bradenskala #Dekubitus #Pflegeschule #Lernkarte #QCM #PflBG</div>
+        <div class="pt-metrics"><span>💾 Saves: Ziel 500+</span><span>🔗 Bio-Klicks: 50+</span></div>
+      </div>
+    </div>
+    <!-- LinkedIn -->
+    <div class="post-tpl">
+      <div class="pt-header" style="background:linear-gradient(135deg,#004182,#0077b5)">
+        💼<div class="pt-overlay"></div>
+      </div>
+      <div class="pt-body">
+        <div style="font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--li);margin-bottom:.4rem">💼 LinkedIn Article</div>
+        <div class="pt-caption">
+          <strong>Titel:</strong> „Warum 30% der Pflegeazubis beim ersten Versuch durchfallen – und was wir dagegen tun können"<br><br>
+          <strong>Struktur:</strong> Problem → Ursachen → Lösung (PflegeLearn) → Call to Action für Schulen<br><br>
+          <strong>CTA:</strong> „Demo für Ihre Schule buchen → pflegelearn.de/schulen"
+        </div>
+        <div class="pt-hashtags">#Pflegeausbildung #Digitalisierung #EdTech #Pflegebildung #PflBG2020</div>
+        <div class="pt-metrics"><span>👁️ Impressions: 5K+</span><span>📩 Leads: 10+</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── HASHTAG STRATEGY ── -->
+  <div class="section-title">06 · Hashtag-Strategie</div>
+  <div class="hashtag-sets">
+    <div class="hset"><div class="hset-title">Marken-Hashtags (immer verwenden)</div><div class="htags"><span class="ht">#PflegeLearn</span><span class="ht">#PflegeLernen</span><span class="ht">#PflegeLearnDE</span></div></div>
+    <div class="hset"><div class="hset-title">Community-Hashtags (große Reichweite)</div><div class="htags"><span class="ht">#Pflegeausbildung</span><span class="ht">#Pflegeazubi</span><span class="ht">#Pflegeschule</span><span class="ht">#Pflegefachfrau</span><span class="ht">#Pflegefachmann</span><span class="ht">#PflBG</span><span class="ht">#GeneralistischePflege</span></div></div>
+    <div class="hset"><div class="hset-title">Themen-Hashtags (pro Content rotieren)</div><div class="htags"><span class="ht">#Vitalzeichen</span><span class="ht">#Dekubitus</span><span class="ht">#Bradenskala</span><span class="ht">#Lernkarten</span><span class="ht">#QCM</span><span class="ht">#Prüfungstipp</span><span class="ht">#Icare</span><span class="ht">#PflegeHeute</span><span class="ht">#Examen</span><span class="ht">#Wundversorgung</span><span class="ht">#FAST</span></div></div>
+    <div class="hset"><div class="hset-title">B2B-Hashtags (LinkedIn)</div><div class="htags"><span class="ht">#Pflegebildung</span><span class="ht">#EdTech</span><span class="ht">#Digitalisierung</span><span class="ht">#elearning</span><span class="ht">#Pflegemanagement</span><span class="ht">#Pflegepädagogik</span></div></div>
+  </div>
+
+</div>
+</body>
+</html>

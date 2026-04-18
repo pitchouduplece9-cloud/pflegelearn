@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PflegeLearn – Brand & Design System</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --p:#0d9488;--pd:#0f766e;--pl:#ccfbf1;--pm:#14b8a6;
+  --g:#f59e0b;--gl:#fef3c7;
+  --ink:#0f172a;--ins:#334155;--w:#fff;--cr:#faf7f2;--br:#e2e8f0;
+  --gr:#10b981;--re:#ef4444;--pu:#8b5cf6;--bl:#3b82f6;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:#f8fafc;color:var(--ink);line-height:1.6;}
+
+/* PAGE */
+.page-wrap{max-width:1140px;margin:0 auto;padding:3rem 2rem 6rem;}
+.page-title{font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:900;color:var(--pd);margin-bottom:.35rem;}
+.page-sub{font-size:1rem;color:var(--ins);margin-bottom:3.5rem;}
+
+/* SECTIONS */
+.section{margin-bottom:4rem;}
+.sec-title{font-size:.72rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--p);margin-bottom:1.25rem;display:flex;align-items:center;gap:.65rem;}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--br);}
+.sec-h{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;color:var(--ink);margin-bottom:.5rem;}
+.sec-desc{font-size:.9rem;color:var(--ins);margin-bottom:2rem;max-width:640px;}
+
+/* LOGOS */
+.logos-grid{display:flex;flex-direction:column;gap:1.25rem;}
+.logo-row{display:flex;gap:1.25rem;flex-wrap:wrap;}
+.logo-card{border-radius:16px;padding:2rem 2.5rem;display:flex;align-items:center;justify-content:center;flex:1;min-width:200px;}
+.logo-card.dark{background:var(--ink);}
+.logo-card.teal{background:linear-gradient(135deg,var(--pd),var(--p));}
+.logo-card.light{background:var(--w);border:1px solid var(--br);}
+.logo-card.cream{background:var(--cr);border:1px solid var(--br);}
+.logo-text{font-family:'Playfair Display',serif;font-weight:900;line-height:1.1;}
+.lt-main{font-size:2.2rem;display:flex;align-items:baseline;gap:0;}
+.lt-sub{font-size:.78rem;font-weight:500;font-family:'DM Sans',sans-serif;letter-spacing:.08em;display:block;margin-top:.2rem;}
+
+/* Logo icon variant */
+.logo-icon{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--pd),var(--pm));display:flex;align-items:center;justify-content:center;}
+.li-inner{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:#fff;line-height:1;}
+
+/* Favicon */
+.favicon{width:32px;height:32px;border-radius:7px;background:linear-gradient(135deg,var(--pd),var(--pm));display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1rem;font-weight:900;color:#fff;}
+
+/* COLORS */
+.color-grid{display:flex;flex-direction:column;gap:1.5rem;}
+.color-row-title{font-size:.78rem;font-weight:700;color:var(--ins);margin-bottom:.75rem;}
+.color-swatches{display:flex;gap:.75rem;flex-wrap:wrap;}
+.swatch{border-radius:12px;overflow:hidden;width:130px;}
+.sw-color{height:72px;}
+.sw-info{padding:.55rem .7rem;background:var(--w);border:1px solid var(--br);border-top:none;}
+.sw-name{font-size:.78rem;font-weight:700;color:var(--ink);}
+.sw-hex{font-size:.68rem;font-family:'DM Mono',monospace;color:var(--ins);}
+.sw-usage{font-size:.64rem;color:#94a3b8;margin-top:.1rem;}
+
+/* TYPOGRAPHY */
+.type-sample{margin-bottom:1.75rem;}
+.ts-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ins);margin-bottom:.55rem;}
+.ts-spec{font-size:.72rem;font-family:'DM Mono',monospace;color:#94a3b8;margin-top:.35rem;}
+.t-display{font-family:'Playfair Display',serif;font-size:3.5rem;font-weight:900;line-height:1.05;color:var(--ink);}
+.t-h1{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:900;line-height:1.1;color:var(--ink);}
+.t-h2{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:700;color:var(--ink);}
+.t-h3{font-size:1.15rem;font-weight:700;color:var(--ink);}
+.t-body{font-size:1rem;color:var(--ins);line-height:1.75;}
+.t-small{font-size:.875rem;color:var(--ins);}
+.t-caption{font-size:.75rem;color:#94a3b8;}
+.t-mono{font-family:'DM Mono',monospace;font-size:.875rem;color:var(--ins);}
+
+/* SPACING */
+.spacing-row{display:flex;align-items:flex-end;gap:1rem;flex-wrap:wrap;}
+.sp-item{display:flex;flex-direction:column;align-items:flex-start;gap:.4rem;}
+.sp-bar{background:var(--p);border-radius:3px;width:28px;}
+.sp-label{font-size:.65rem;font-family:'DM Mono',monospace;color:var(--ins);}
+
+/* UI COMPONENTS */
+.comp-row{display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-start;margin-bottom:1.5rem;}
+/* Buttons */
+.btn{padding:.65rem 1.5rem;border-radius:999px;font-size:.9rem;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;border:none;transition:all .2s;display:inline-flex;align-items:center;gap:.45rem;}
+.btn-primary{background:linear-gradient(135deg,var(--pd),var(--pm));color:#fff;box-shadow:0 4px 16px rgba(13,148,136,.3);}
+.btn-primary:hover{transform:translateY(-2px);}
+.btn-secondary{background:transparent;color:var(--p);border:1.5px solid var(--p);}
+.btn-gold{background:linear-gradient(135deg,#d97706,var(--g));color:#fff;}
+.btn-ghost{background:rgba(13,148,136,.08);color:var(--pd);}
+.btn-sm{padding:.42rem 1rem;font-size:.78rem;}
+.btn-icon{width:40px;height:40px;padding:0;border-radius:12px;justify-content:center;background:var(--pl);color:var(--pd);font-size:1.1rem;}
+
+/* Cards */
+.card{background:var(--w);border:1px solid var(--br);border-radius:16px;padding:1.5rem;transition:.2s;}
+.card:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,.07);}
+.card-accent{border-top:3px solid var(--p);}
+.card-teal{background:linear-gradient(135deg,var(--pl),#e0fdf4);}
+
+/* Badges */
+.badge-row{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;}
+.badge{display:inline-flex;align-items:center;gap:.3rem;padding:.22rem .72rem;border-radius:999px;font-size:.72rem;font-weight:700;}
+.b-teal{background:var(--pl);color:var(--pd);}
+.b-gold{background:var(--gl);color:#92400e;}
+.b-green{background:#d1fae5;color:#065f46;}
+.b-red{background:#fee2e2;color:#991b1b;}
+.b-purple{background:#ede9fe;color:#4c1d95;}
+.b-outline{background:transparent;border:1.5px solid var(--br);color:var(--ins);}
+
+/* Niveau chips */
+.niv-chips{display:flex;gap:.65rem;}
+.niv-chip{padding:.42rem 1.1rem;border-radius:999px;font-size:.82rem;font-weight:700;}
+.nc-a{background:#d1fae5;color:#065f46;}
+.nc-f{background:#fef3c7;color:#92400e;}
+.nc-e{background:#ede9fe;color:#4c1d95;}
+
+/* Progress */
+.progress{height:8px;background:var(--br);border-radius:999px;overflow:hidden;margin-top:.5rem;}
+.pf{height:100%;border-radius:999px;}
+.pf-teal{background:linear-gradient(90deg,var(--pd),var(--pm));}
+.pf-gold{background:linear-gradient(90deg,#d97706,var(--g));}
+.pf-green{background:var(--gr);}
+
+/* QCM option */
+.qcm-opt{display:flex;align-items:center;gap:.75rem;padding:.72rem 1rem;border-radius:10px;border:1.5px solid var(--br);font-size:.88rem;cursor:pointer;transition:.15s;background:var(--w);}
+.qcm-opt:hover{border-color:var(--p);}
+.qcm-opt.correct{border-color:var(--gr);background:#f0fdf4;color:#065f46;}
+.qcm-opt.wrong{border-color:var(--re);background:#fef2f2;color:#991b1b;}
+.qo-letter{width:24px;height:24px;border-radius:50%;background:var(--br);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;flex-shrink:0;}
+.qcm-opt.correct .qo-letter{background:var(--gr);color:#fff;}
+.qcm-opt.wrong .qo-letter{background:var(--re);color:#fff;}
+
+/* Lernkarte */
+.lk{background:var(--w);border:1px solid var(--br);border-radius:16px;padding:1.35rem;border-top:4px solid var(--p);width:240px;}
+.lk-niv{font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--p);margin-bottom:.5rem;}
+.lk-title{font-size:.92rem;font-weight:700;margin-bottom:.4rem;}
+.lk-body{font-size:.82rem;color:var(--ins);line-height:1.6;}
+.lk-hint{font-size:.62rem;color:#cbd5e1;margin-top:.75rem;text-align:right;}
+
+/* Stat card */
+.stat-card{background:var(--w);border:1px solid var(--br);border-radius:14px;padding:1.25rem;text-align:center;width:110px;}
+.sc-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--pm);}
+.sc-lbl{font-size:.7rem;color:var(--ins);margin-top:.2rem;}
+
+/* ICONS (SVG inline) */
+.icon-grid{display:flex;gap:1rem;flex-wrap:wrap;align-items:center;}
+.icon-box{display:flex;flex-direction:column;align-items:center;gap:.4rem;}
+.icon-circle{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;}
+.ic-label{font-size:.65rem;color:var(--ins);}
+
+/* GRID SYSTEM */
+.grid-demo{display:grid;grid-template-columns:repeat(12,1fr);gap:.5rem;margin-bottom:1rem;}
+.gcol{background:rgba(13,148,136,.12);border-radius:4px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-family:'DM Mono',monospace;color:var(--p);}
+
+/* MOTION EXAMPLES */
+.motion-cards{display:flex;gap:1rem;}
+.motion-demo{background:var(--w);border:1px solid var(--br);border-radius:12px;padding:1rem;text-align:center;width:130px;cursor:pointer;}
+.motion-demo:hover .mo-box{transform:translateY(-4px);box-shadow:0 8px 20px rgba(13,148,136,.2);}
+.motion-demo:active .mo-box{transform:scale(.96);}
+.mo-box{width:60px;height:60px;border-radius:14px;background:linear-gradient(135deg,var(--pd),var(--pm));margin:0 auto .6rem;transition:.25s cubic-bezier(.34,1.56,.64,1);}
+.mo-label{font-size:.72rem;color:var(--ins);}
+
+/* DARK PREVIEW */
+.dark-preview{background:var(--ink);border-radius:20px;padding:2rem;margin-bottom:1.5rem;}
+.dp-logo{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--pm);}
+.dp-logo span{color:var(--g);}
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <div class="page-title">PflegeLearn<br>Brand & Design System</div>
+  <div class="page-sub">Charte graphique complète · Composants UI · Guidelines · Tokens de design</div>
+
+  <!-- ─── LOGOS ─── -->
+  <div class="section">
+    <div class="sec-title">01 · Logo</div>
+    <h2 class="sec-h">Identité visuelle</h2>
+    <p class="sec-desc">Le logo PflegeLearn combine Playfair Display (serif élégant) pour le nom et DM Sans pour le sous-titre. La couleur principale est le Teal — couleur de confiance et de santé.</p>
+    <div class="logos-grid">
+      <div class="logo-row">
+        <div class="logo-card dark">
+          <div>
+            <div class="logo-text lt-main" style="color:#fff">Pflege<span style="color:#fcd34d">Learn</span></div>
+            <span class="lt-sub" style="color:rgba(255,255,255,.45)">LERNPLATTFORM PFLEGE</span>
+          </div>
+        </div>
+        <div class="logo-card teal">
+          <div>
+            <div class="logo-text lt-main" style="color:#fff">Pflege<span style="color:#fef3c7">Learn</span></div>
+            <span class="lt-sub" style="color:rgba(255,255,255,.65)">LERNPLATTFORM PFLEGE</span>
+          </div>
+        </div>
+        <div class="logo-card light">
+          <div>
+            <div class="logo-text lt-main" style="color:var(--pd)">Pflege<span style="color:var(--g)">Learn</span></div>
+            <span class="lt-sub" style="color:var(--ins)">LERNPLATTFORM PFLEGE</span>
+          </div>
+        </div>
+      </div>
+      <div class="logo-row" style="align-items:center">
+        <div class="logo-card light" style="flex:0 0 auto;padding:1.5rem 2rem;">
+          <div style="display:flex;align-items:center;gap:1rem">
+            <div class="logo-icon"><div class="li-inner">P<span style="font-size:.9rem">L</span></div></div>
+            <div>
+              <div class="logo-text" style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:var(--pd)">Pflege<span style="color:var(--g)">Learn</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="logo-card light" style="flex:0 0 auto;padding:1.5rem 2rem;">
+          <div style="display:flex;align-items:center;gap:.75rem">
+            <div class="logo-icon" style="width:36px;height:36px;border-radius:9px;"><div class="li-inner" style="font-size:1.1rem">PL</div></div>
+            <div class="logo-text" style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900;color:var(--pd)">Pflege<span style="color:var(--g)">Learn</span></div>
+          </div>
+        </div>
+        <div class="logo-card light" style="flex:0 0 auto;padding:1.5rem;">
+          <div style="display:flex;gap:.75rem;align-items:center">
+            <div class="favicon">PL</div>
+            <span style="font-size:.78rem;color:var(--ins)">Favicon 32px</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── COLORS ─── -->
+  <div class="section">
+    <div class="sec-title">02 · Couleurs</div>
+    <h2 class="sec-h">Système de couleurs</h2>
+    <div class="color-grid">
+      <div>
+        <div class="color-row-title">Primaire – Teal (couleur de marque)</div>
+        <div class="color-swatches">
+          <div class="swatch"><div class="sw-color" style="background:#0f766e"></div><div class="sw-info"><div class="sw-name">Teal Dark</div><div class="sw-hex">#0F766E</div><div class="sw-usage">Textes, CTAs foncés</div></div></div>
+          <div class="swatch"><div class="sw-color" style="background:#0d9488"></div><div class="sw-info"><div class="sw-name">Teal Primary</div><div class="sw-hex">#0D9488</div><div class="sw-usage">Boutons, liens, accents</div></div></div>
+          <div class="swatch"><div class="sw-color" style="background:#14b8a6"></div><div class="sw-info"><div class="sw-name">Teal Mid</div><div class="sw-hex">#14B8A6</div><div class="sw-usage">Icônes, highlights</div></div></div>
+          <div class="swatch"><div class="sw-color" style="background:#99f6e4"></div><div class="sw-info"><div class="sw-name">Teal Light</div><div class="sw-hex">#99F6E4</div><div class="sw-usage">Texte sur fond sombre</div></div></div>
+          <div class="swatch"><div class="sw-color" style="background:#ccfbf1"></div><div class="sw-info"><div class="sw-name">Teal Soft</div><div class="sw-hex">#CCFBF1</div><div class="sw-usage">Backgrounds, badges</div></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="color-row-title">Secondaire – Gold (accent)</div>
+        <div class="color-swatches">
+          <div class="swatch"><div class="sw-color" style="background:#d97706"></div><div class="sw-info"><div class="sw-name">Gold Dark</div><div class="sw-hex">#D97706</div><div class="sw-usage">Textes dorés</div></div></div>
+          <div class="swatch"><div class="sw-color" style="background:#f59e0b"></div><div class="sw-info"><div class="sw-name">Gold Primary</div><div class="sw-hex">#F59E0B</div><div class="sw-usage">Logo span, badges</div></div></div>
+          <div class="swatch"><div class="sw-color" style="background:#fcd34d"></div><div class="sw-info"><div class="sw-name">Gold Light</div><div class="sw-hex">#FCD34D</div><div class="sw-usage">Sur fond sombre</div></div></div>
+          <div class="swatch"><div class="sw-color" style="background:#fef3c7"></div><div class="sw-info"><div class="sw-name">Gold Soft</div><div class="sw-hex">#FEF3C7</div><div class="sw-usage">Backgrounds gold</div></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="color-row-title">Neutres & Sémantiques</div>
+        <div class="color-swatches">
+          <div class="swatch"><div class="sw-color" style="background:#0f172a"></div><div class="sw-info"><div class="sw-name">Ink</div><div class="sw-hex">#0F172A</div><div class="sw-usage">Fond sombre, texte principal</div></div></div>
+          <div class="swatch"><div class="sw-color" style="background:#334155"></div><div class="sw-info"><div class="sw-name">Ink Soft</div><div class="sw-hex">#334155</div><div class="sw-usage">Texte secondaire</div></div></div>
+          <div class="swatch"><div class="sw-color" style="background:#10b981"></div><div class="sw-info"><div class="sw-name">Success</div><div class="sw-hex">#10B981</div><div class="sw-usage">Réponses correctes</div></div></div>
+          <div class="swatch"><div class="sw-color" style="background:#ef4444"></div><div class="sw-info"><div class="sw-name">Error</div><div class="sw-hex">#EF4444</div><div class="sw-usage">Alertes, erreurs</div></div></div>
+          <div class="swatch"><div class="sw-color" style="background:#8b5cf6"></div><div class="sw-info"><div class="sw-name">Experte</div><div class="sw-hex">#8B5CF6</div><div class="sw-usage">Niveau Experte 💎</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── TYPOGRAPHY ─── -->
+  <div class="section">
+    <div class="sec-title">03 · Typographie</div>
+    <h2 class="sec-h">Système typographique</h2>
+    <p class="sec-desc">Playfair Display pour les titres (caractère, élégance médicale). DM Sans pour l'interface (lisibilité, neutralité). DM Mono pour les données et codes.</p>
+
+    <div class="type-sample"><div class="ts-label">Display / Hero</div><div class="t-display">Smarter<br>lernen.</div><div class="ts-spec">Playfair Display · 900 · 56px / 1.05 · color: Ink</div></div>
+    <div class="type-sample"><div class="ts-label">H1 – Titre de section</div><div class="t-h1">Alle 10 Module auf<br><em style="color:var(--p);font-style:normal">deinem Niveau</em></div><div class="ts-spec">Playfair Display · 900 · 38px / 1.1</div></div>
+    <div class="type-sample"><div class="ts-label">H2 – Sous-section</div><div class="t-h2">500 QCM mit ausführlichen Erklärungen</div><div class="ts-spec">Playfair Display · 700 · 28px</div></div>
+    <div class="type-sample"><div class="ts-label">H3 – Card title</div><div class="t-h3">Dekubitusprophylaxe – Bradenskala</div><div class="ts-spec">DM Sans · 700 · 18px</div></div>
+    <div class="type-sample"><div class="ts-label">Body</div><div class="t-body">Der Pflegeprozess ist das Herzstück strukturierter Pflegearbeit. Er ermöglicht eine individuelle, ressourcenorientierte und evaluierbare Pflege – und ist Grundlage jeder Pflegeleistung.</div><div class="ts-spec">DM Sans · 400 · 16px / 1.72</div></div>
+    <div class="type-sample"><div class="ts-label">Small / Caption</div><div class="t-small">Modul 02 · Vitalzeichen & Beobachtung · 50 QCM</div><div class="ts-spec">DM Sans · 400 · 14px</div></div>
+    <div class="type-sample"><div class="ts-label">Mono (scores, code)</div><div class="t-mono">Trefferquote: 84.2% · Streak: 🔥 9 Tage · +20 Pkt</div><div class="ts-spec">DM Mono · 500 · 14px</div></div>
+  </div>
+
+  <!-- ─── SPACING ─── -->
+  <div class="section">
+    <div class="sec-title">04 · Espacements</div>
+    <h2 class="sec-h">Grille de 8px</h2>
+    <div class="spacing-row">
+      <div class="sp-item"><div class="sp-bar" style="height:4px;background:#cbd5e1"></div><div class="sp-label">4px · xs</div></div>
+      <div class="sp-item"><div class="sp-bar" style="height:8px;"></div><div class="sp-label">8px · sm</div></div>
+      <div class="sp-item"><div class="sp-bar" style="height:12px;"></div><div class="sp-label">12px</div></div>
+      <div class="sp-item"><div class="sp-bar" style="height:16px;"></div><div class="sp-label">16px · md</div></div>
+      <div class="sp-item"><div class="sp-bar" style="height:20px;"></div><div class="sp-label">20px</div></div>
+      <div class="sp-item"><div class="sp-bar" style="height:24px;"></div><div class="sp-label">24px · lg</div></div>
+      <div class="sp-item"><div class="sp-bar" style="height:32px;"></div><div class="sp-label">32px · xl</div></div>
+      <div class="sp-item"><div class="sp-bar" style="height:48px;"></div><div class="sp-label">48px · 2xl</div></div>
+      <div class="sp-item"><div class="sp-bar" style="height:64px;"></div><div class="sp-label">64px · 3xl</div></div>
+    </div>
+  </div>
+
+  <!-- ─── COMPONENTS ─── -->
+  <div class="section">
+    <div class="sec-title">05 · Composants UI</div>
+    <h2 class="sec-h">Bibliothèque de composants</h2>
+
+    <h3 style="font-size:.9rem;color:var(--ins);margin:1.5rem 0 .75rem;">Boutons</h3>
+    <div class="comp-row">
+      <button class="btn btn-primary">🚀 Kostenlos starten</button>
+      <button class="btn btn-secondary">Demo ansehen</button>
+      <button class="btn btn-gold">⭐ Upgrade</button>
+      <button class="btn btn-ghost">Mehr erfahren</button>
+      <button class="btn btn-primary btn-sm">Klein</button>
+      <button class="btn btn-icon">📋</button>
+    </div>
+
+    <h3 style="font-size:.9rem;color:var(--ins);margin:1.5rem 0 .75rem;">Niveaux</h3>
+    <div class="niv-chips">
+      <div class="niv-chip nc-a">🌱 Anfänger · +10 Pkt</div>
+      <div class="niv-chip nc-f">🔥 Fortgeschritten · +20 Pkt</div>
+      <div class="niv-chip nc-e">💎 Experte · +30 Pkt</div>
+    </div>
+
+    <h3 style="font-size:.9rem;color:var(--ins);margin:1.5rem 0 .75rem;">Badges</h3>
+    <div class="badge-row">
+      <span class="badge b-teal">PflBG-konform</span>
+      <span class="badge b-gold">⭐ Beliebt</span>
+      <span class="badge b-green">✓ Abgeschlossen</span>
+      <span class="badge b-red">⚠️ Risiko</span>
+      <span class="badge b-purple">💎 Experte</span>
+      <span class="badge b-outline">DSGVO</span>
+    </div>
+
+    <h3 style="font-size:.9rem;color:var(--ins);margin:1.5rem 0 .75rem;">Progress Bars</h3>
+    <div style="max-width:400px;display:flex;flex-direction:column;gap:.75rem;">
+      <div><div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--ins);margin-bottom:.3rem"><span>Modul 01 – Grundlagen</span><span>84%</span></div><div class="progress"><div class="pf pf-green" style="width:84%"></div></div></div>
+      <div><div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--ins);margin-bottom:.3rem"><span>Modul 03 – Medikamente</span><span>61%</span></div><div class="progress"><div class="pf pf-gold" style="width:61%"></div></div></div>
+      <div><div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--ins);margin-bottom:.3rem"><span>Modul 05 – Mobilisation</span><span>38%</span></div><div class="progress"><div class="pf pf-teal" style="width:38%;background:var(--re)"></div></div></div>
+    </div>
+
+    <h3 style="font-size:.9rem;color:var(--ins);margin:1.5rem 0 .75rem;">QCM Options</h3>
+    <div style="max-width:500px;display:flex;flex-direction:column;gap:.5rem;">
+      <div class="qcm-opt correct"><div class="qo-letter">B</div>140/90 mmHg – Hypertonie Grad I ✓</div>
+      <div class="qcm-opt wrong"><div class="qo-letter" style="background:var(--re);color:#fff">A</div>120/80 mmHg</div>
+      <div class="qcm-opt"><div class="qo-letter">C</div>160/100 mmHg</div>
+    </div>
+
+    <h3 style="font-size:.9rem;color:var(--ins);margin:1.5rem 0 .75rem;">Lernkarte</h3>
+    <div class="comp-row">
+      <div class="lk"><div class="lk-niv">🌱 Anfänger · M02</div><div class="lk-title">Blutdrucknormalwert</div><div class="lk-body">Systolisch: <strong>120 mmHg</strong><br>Diastolisch: <strong>80 mmHg</strong><br><br>Hypertonie: ≥ 140/90<br>Hypotonie: &lt; 100/60</div><div class="lk-hint">← klicken zum Umdrehen</div></div>
+      <div class="lk" style="border-top-color:var(--g)"><div class="lk-niv" style="color:#d97706">🔥 Fortgeschritten · M03</div><div class="lk-title">5-R-Regel</div><div class="lk-body">R1 Richtiger Patient<br>R2 Richtiges Medikament<br>R3 Richtige Dosis<br>R4 Richtiger Weg<br>R5 Richtige Zeit</div></div>
+    </div>
+
+    <h3 style="font-size:.9rem;color:var(--ins);margin:1.5rem 0 .75rem;">Stat Cards</h3>
+    <div class="comp-row">
+      <div class="stat-card"><div class="sc-num">500+</div><div class="sc-lbl">QCM Fragen</div></div>
+      <div class="stat-card"><div class="sc-num" style="color:var(--g)">🔥 9</div><div class="sc-lbl">Tage Streak</div></div>
+      <div class="stat-card"><div class="sc-num" style="color:var(--gr)">84%</div><div class="sc-lbl">Trefferquote</div></div>
+    </div>
+
+    <h3 style="font-size:.9rem;color:var(--ins);margin:1.5rem 0 .75rem;">Icônes UI (système)</h3>
+    <div class="icon-grid">
+      <div class="icon-box"><div class="icon-circle" style="background:var(--pl)">📋</div><div class="ic-label">Grundlagen</div></div>
+      <div class="icon-box"><div class="icon-circle" style="background:#dbeafe">🫀</div><div class="ic-label">Vitalzeichen</div></div>
+      <div class="icon-box"><div class="icon-circle" style="background:#ede9fe">💊</div><div class="ic-label">Medikamente</div></div>
+      <div class="icon-box"><div class="icon-circle" style="background:#fef3c7">🍽️</div><div class="ic-label">Ernährung</div></div>
+      <div class="icon-box"><div class="icon-circle" style="background:#d1fae5">🦴</div><div class="ic-label">Mobilisation</div></div>
+      <div class="icon-box"><div class="icon-circle" style="background:#fce7f3">🧠</div><div class="ic-label">Psychiatrie</div></div>
+      <div class="icon-box"><div class="icon-circle" style="background:#ffedd5">👶</div><div class="ic-label">Pflegebereiche</div></div>
+      <div class="icon-box"><div class="icon-circle" style="background:#e0e7ff">⚖️</div><div class="ic-label">Recht</div></div>
+      <div class="icon-box"><div class="icon-circle" style="background:#fee2e2">🏥</div><div class="ic-label">Krankheiten</div></div>
+      <div class="icon-box"><div class="icon-circle" style="background:var(--pl)">🩹</div><div class="ic-label">Wunden</div></div>
+    </div>
+  </div>
+
+  <!-- ─── DARK MODE ─── -->
+  <div class="section">
+    <div class="sec-title">06 · Mode sombre</div>
+    <h2 class="sec-h">Dark Theme Preview</h2>
+    <div class="dark-preview">
+      <div class="dp-logo">Pflege<span>Learn</span></div>
+      <div style="margin-top:1.5rem;display:flex;gap:1rem;flex-wrap:wrap;">
+        <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:1rem;flex:1;min-width:150px;">
+          <div style="font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.35);margin-bottom:.5rem">Aktive Nutzer</div>
+          <div style="font-size:2rem;font-weight:900;color:#fff">87</div>
+          <div style="font-size:.75rem;color:#22d06e;margin-top:.3rem">↑ +12 diese Woche</div>
+        </div>
+        <div style="background:rgba(0,212,180,.1);border:1px solid rgba(0,212,180,.2);border-radius:12px;padding:1rem;flex:1;min-width:150px;">
+          <div style="font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:rgba(0,212,180,.6);margin-bottom:.5rem">Ø Trefferquote</div>
+          <div style="font-size:2rem;font-weight:900;color:#0ff4c6">72%</div>
+          <div style="font-size:.75rem;color:rgba(255,255,255,.45);margin-top:.3rem">+3% vs Vorwoche</div>
+        </div>
+      </div>
+      <div style="margin-top:1rem;display:flex;gap:.65rem;">
+        <button style="background:linear-gradient(135deg,#0d9488,#14b8a6);color:#fff;padding:.6rem 1.4rem;border-radius:999px;font-weight:700;border:none;cursor:pointer;font-family:'DM Sans',sans-serif">🚀 Starten</button>
+        <button style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.8);padding:.6rem 1.4rem;border-radius:999px;font-weight:700;border:1.5px solid rgba(255,255,255,.18);cursor:pointer;font-family:'DM Sans',sans-serif">Demo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── GRID ─── -->
+  <div class="section">
+    <div class="sec-title">07 · Grille</div>
+    <h2 class="sec-h">Grid 12 colonnes</h2>
+    <div class="grid-demo">
+      <div class="gcol" style="grid-column:span 12">12 / full-width</div>
+    </div>
+    <div class="grid-demo">
+      <div class="gcol" style="grid-column:span 6">6 col</div>
+      <div class="gcol" style="grid-column:span 6">6 col</div>
+    </div>
+    <div class="grid-demo">
+      <div class="gcol" style="grid-column:span 4">4</div>
+      <div class="gcol" style="grid-column:span 4">4</div>
+      <div class="gcol" style="grid-column:span 4">4</div>
+    </div>
+    <div class="grid-demo">
+      <div class="gcol" style="grid-column:span 3">3</div>
+      <div class="gcol" style="grid-column:span 3">3</div>
+      <div class="gcol" style="grid-column:span 3">3</div>
+      <div class="gcol" style="grid-column:span 3">3</div>
+    </div>
+  </div>
+
+  <!-- ─── MOTION ─── -->
+  <div class="section">
+    <div class="sec-title">08 · Motion & Animation</div>
+    <h2 class="sec-h">Principes d'animation</h2>
+    <p class="sec-desc">Toutes les animations utilisent cubic-bezier(.4,0,.2,1) — fluide, naturel, rapide. Durées : 150ms micro, 250ms transitions, 400ms entrées de page.</p>
+    <div class="motion-cards">
+      <div class="motion-demo"><div class="mo-box"></div><div class="mo-label">Hover lift<br><span style="font-size:.62rem">250ms spring</span></div></div>
+      <div class="motion-demo" style="--p:var(--g)"><div class="mo-box" style="background:linear-gradient(135deg,#d97706,var(--g))"></div><div class="mo-label">Scale active<br><span style="font-size:.62rem">150ms ease</span></div></div>
+      <div class="motion-demo"><div class="mo-box" style="background:linear-gradient(135deg,#7c3aed,var(--pu))"></div><div class="mo-label">Fade up<br><span style="font-size:.62rem">400ms delay</span></div></div>
+    </div>
+    <p style="font-size:.82rem;color:var(--ins);margin-top:1rem;">Survoler les cartes ci-dessus pour voir les animations.</p>
+  </div>
+
+</div>
+</body>
+</html>

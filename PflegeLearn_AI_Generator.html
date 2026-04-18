@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PflegeLearn AI – Fragen-Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060b14;--bg2:#0d1525;--bg3:#152038;
+  --teal:#0ff4c6;--teal2:rgba(15,244,198,.12);--teal3:rgba(15,244,198,.06);
+  --purple:#bd5dff;--purp2:rgba(189,93,255,.12);
+  --gold:#ffd166;
+  --ink:#dce8f7;--ink2:#7a92b0;--ink3:#2a3a52;
+  --border:rgba(255,255,255,.07);
+  --green:#00f5a0;--red:#ff4f72;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;padding:0;}
+
+/* mesh bg */
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70% 60% at 15% 20%,rgba(15,244,198,.06) 0%,transparent 55%),radial-gradient(ellipse 50% 50% at 85% 80%,rgba(189,93,255,.07) 0%,transparent 55%);pointer-events:none;}
+
+.app{max-width:920px;margin:0 auto;padding:2.5rem 1.5rem;}
+
+/* HEADER */
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2.5rem;}
+.logo{font-size:1.35rem;font-weight:700;color:var(--teal);}
+.logo span{color:var(--ink2);font-weight:400;}
+.ai-badge{display:flex;align-items:center;gap:.5rem;background:var(--purp2);border:1px solid rgba(189,93,255,.3);border-radius:999px;padding:.3rem .9rem;font-size:.78rem;font-weight:600;color:var(--purple);}
+.ai-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+/* CONTROLS */
+.controls{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:.85rem;margin-bottom:1.5rem;align-items:end;}
+.ctrl-group label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);display:block;margin-bottom:.45rem;}
+.ctrl-select,.ctrl-input{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:.6rem .9rem;font-size:.88rem;font-family:'Space Grotesk',sans-serif;color:var(--ink);outline:none;transition:.15s;appearance:none;}
+.ctrl-select:focus,.ctrl-input:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(15,244,198,.1);}
+.btn-gen{background:linear-gradient(135deg,#0ff4c6,#00c9a0);color:var(--bg);padding:.62rem 1.5rem;border-radius:10px;font-size:.9rem;font-weight:700;font-family:'Space Grotesk',sans-serif;border:none;cursor:pointer;white-space:nowrap;transition:.2s;box-shadow:0 4px 20px rgba(15,244,198,.3);}
+.btn-gen:hover{transform:translateY(-2px);}
+.btn-gen:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+
+/* TOPIC INPUT */
+.topic-row{margin-bottom:1.5rem;}
+.topic-row label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);display:block;margin-bottom:.45rem;}
+.topic-input{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:.7rem 1rem;font-size:.9rem;font-family:'Space Grotesk',sans-serif;color:var(--ink);outline:none;transition:.15s;}
+.topic-input:focus{border-color:var(--teal);}
+.topic-chips{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.55rem;}
+.chip{padding:.28rem .75rem;border-radius:999px;font-size:.73rem;font-weight:600;cursor:pointer;background:var(--bg3);border:1px solid var(--border);color:var(--ink2);transition:.15s;}
+.chip:hover{border-color:var(--teal);color:var(--teal);}
+
+/* STATUS */
+.status-bar{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:.75rem 1.1rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:.75rem;font-size:.85rem;color:var(--ink2);}
+.status-bar.loading{border-color:rgba(15,244,198,.3);}
+.status-bar.done{border-color:rgba(0,245,160,.3);}
+.spinner{width:16px;height:16px;border:2px solid var(--teal3);border-top-color:var(--teal);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* QUESTIONS OUTPUT */
+.q-list{display:flex;flex-direction:column;gap:1.1rem;}
+.q-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.4rem;transition:.2s;animation:slideIn .35s ease both;}
+@keyframes slideIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.q-card:hover{border-color:rgba(255,255,255,.12);}
+.q-head{display:flex;align-items:center;gap:.65rem;margin-bottom:.85rem;}
+.q-num{width:26px;height:26px;border-radius:50%;background:var(--teal2);border:1px solid rgba(15,244,198,.3);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:var(--teal);flex-shrink:0;}
+.q-niv{font-size:.65rem;font-weight:700;padding:.14rem .5rem;border-radius:999px;}
+.niv-a{background:rgba(0,245,160,.15);color:var(--green);}
+.niv-f{background:rgba(255,209,102,.15);color:var(--gold);}
+.niv-e{background:var(--purp2);color:var(--purple);}
+.q-pts{font-size:.65rem;color:var(--ink2);margin-left:auto;font-family:'JetBrains Mono',monospace;}
+.q-text{font-size:.95rem;font-weight:600;line-height:1.5;margin-bottom:.85rem;color:var(--ink);}
+.q-opts{display:flex;flex-direction:column;gap:.4rem;}
+.q-opt{padding:.52rem .85rem;border-radius:8px;border:1px solid var(--border);font-size:.85rem;color:var(--ink2);display:flex;align-items:center;gap:.55rem;cursor:pointer;transition:.12s;}
+.q-opt:hover{border-color:var(--teal);color:var(--ink);}
+.q-opt.correct{border-color:var(--green);background:rgba(0,245,160,.08);color:var(--green);}
+.q-opt-letter{width:22px;height:22px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;flex-shrink:0;}
+.q-opt.correct .q-opt-letter{background:var(--green);color:var(--bg);}
+.q-expl{margin-top:.85rem;padding:.7rem .95rem;background:rgba(0,245,160,.06);border-left:2px solid var(--green);border-radius:0 8px 8px 0;font-size:.82rem;color:rgba(0,245,160,.8);line-height:1.6;}
+.q-actions{display:flex;gap:.6rem;margin-top:1rem;}
+.qa-btn{padding:.3rem .75rem;border-radius:7px;font-size:.75rem;font-weight:600;font-family:'Space Grotesk',sans-serif;border:1px solid var(--border);background:transparent;color:var(--ink2);cursor:pointer;transition:.15s;}
+.qa-btn:hover{border-color:var(--teal);color:var(--teal);}
+.qa-btn.accept{background:rgba(0,245,160,.12);border-color:rgba(0,245,160,.3);color:var(--green);}
+.qa-btn.reject{background:rgba(255,79,114,.1);border-color:rgba(255,79,114,.2);color:var(--red);}
+
+/* Empty state */
+.empty{text-align:center;padding:4rem 2rem;color:var(--ink2);}
+.empty-icon{font-size:3rem;margin-bottom:1rem;opacity:.5;}
+.empty-text{font-size:1rem;font-weight:500;}
+.empty-sub{font-size:.85rem;margin-top:.4rem;opacity:.6;}
+
+/* Saved bank */
+.bank-header{display:flex;align-items:center;justify-content:space-between;margin-top:2.5rem;margin-bottom:.85rem;}
+.bank-title{font-size:.85rem;font-weight:700;color:var(--ink);}
+.bank-count{font-size:.75rem;font-family:'JetBrains Mono',monospace;color:var(--teal);}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="logo">PflegeLearn <span>/ KI-Fragengenerator</span></div>
+    <div class="ai-badge"><div class="ai-dot"></div> Claude Sonnet</div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <div class="ctrl-group">
+      <label>Modul</label>
+      <select class="ctrl-select" id="sel-module">
+        <option value="1">M01 – Grundlagen der Pflege</option>
+        <option value="2" selected>M02 – Vitalzeichen & Beobachtung</option>
+        <option value="3">M03 – Medikamente & Injektionen</option>
+        <option value="4">M04 – Ernährung & Ausscheidung</option>
+        <option value="5">M05 – Mobilisation & Prophylaxen</option>
+        <option value="6">M06 – Psychiatrie & Psychosoziales</option>
+        <option value="7">M07 – Pflegebereiche spezifisch</option>
+        <option value="8">M08 – Recht & Beruf</option>
+        <option value="9">M09 – Krankheitsbilder</option>
+        <option value="10">M10 – Wundversorgung</option>
+      </select>
+    </div>
+    <div class="ctrl-group">
+      <label>Niveau</label>
+      <select class="ctrl-select" id="sel-niveau">
+        <option value="anfaenger">🌱 Anfänger (+10 Pkt)</option>
+        <option value="fortgeschritten" selected>🔥 Fortgeschritten (+20 Pkt)</option>
+        <option value="experte">💎 Experte (+30 Pkt)</option>
+      </select>
+    </div>
+    <div class="ctrl-group">
+      <label>Anzahl</label>
+      <select class="ctrl-select" id="sel-count">
+        <option value="3">3 Fragen</option>
+        <option value="5" selected>5 Fragen</option>
+        <option value="10">10 Fragen</option>
+      </select>
+    </div>
+    <button class="btn-gen" id="btn-gen" onclick="generateQuestions()">⚡ Generieren</button>
+  </div>
+
+  <!-- Topic -->
+  <div class="topic-row">
+    <label>Thema / Schwerpunkt (optional)</label>
+    <input class="topic-input" id="topic-input" placeholder="z.B. Blutdruckmessung, Schockzeichen, Bradenkala...">
+    <div class="topic-chips">
+      <span class="chip" onclick="setTopic('Blutdruckmessung')">Blutdruckmessung</span>
+      <span class="chip" onclick="setTopic('Dekubitusprophylaxe')">Dekubitus</span>
+      <span class="chip" onclick="setTopic('Medikamentendosierung')">Dosierung</span>
+      <span class="chip" onclick="setTopic('Schmerzassessment')">Schmerzassessment</span>
+      <span class="chip" onclick="setTopic('Dysphagie und Aspiration')">Dysphagie</span>
+      <span class="chip" onclick="setTopic('Schlaganfall FAST')">FAST-Schema</span>
+      <span class="chip" onclick="setTopic('Wundheilung TIME-Prinzip')">TIME-Prinzip</span>
+    </div>
+  </div>
+
+  <!-- Status -->
+  <div class="status-bar" id="status-bar" style="display:none"></div>
+
+  <!-- Output -->
+  <div id="q-output">
+    <div class="empty">
+      <div class="empty-icon">🤖</div>
+      <div class="empty-text">Bereit zur Fragengeneration</div>
+      <div class="empty-sub">Wähle Modul, Niveau und Thema – dann klicke auf Generieren</div>
+    </div>
+  </div>
+
+  <!-- Saved bank -->
+  <div id="bank-section" style="display:none">
+    <div class="bank-header">
+      <div class="bank-title">✅ Gespeicherte Fragen</div>
+      <div class="bank-count" id="bank-count">0 Fragen</div>
+    </div>
+    <div id="bank-list" class="q-list"></div>
+  </div>
+
+</div>
+
+<script>
+function setTopic(t) { document.getElementById('topic-input').value = t; }
+
+const saved = [];
+
+const MODULE_NAMES = {
+  1:'Grundlagen der Pflege', 2:'Vitalzeichen & Beobachtung', 3:'Medikamente & Injektionen',
+  4:'Ernährung & Ausscheidung', 5:'Mobilisation & Prophylaxen', 6:'Psychiatrie & Psychosoziales',
+  7:'Pflegebereiche spezifisch', 8:'Recht & Beruf', 9:'Krankheitsbilder', 10:'Wundversorgung'
+};
+
+async function generateQuestions() {
+  const mod = document.getElementById('sel-module').value;
+  const niveau = document.getElementById('sel-niveau').value;
+  const count = document.getElementById('sel-count').value;
+  const topic = document.getElementById('topic-input').value.trim();
+  const btn = document.getElementById('btn-gen');
+
+  const niveauDesc = {
+    anfaenger: 'Anfänger (Grundbegriffe, Definitionen, direkte Fakten, einfache Ja/Nein-Entscheidungen)',
+    fortgeschritten: 'Fortgeschritten (klinische Szenarien, Anwendung im Pflegealltag, Zusammenhänge)',
+    experte: 'Experte (komplexe Fälle, Differenzialdiagnosen, ethische Dilemmata, Vertiefung)'
+  };
+  const pts = { anfaenger: 10, fortgeschritten: 20, experte: 30 };
+  const modName = MODULE_NAMES[mod];
+  const topicStr = topic ? ` Schwerpunkt auf: ${topic}.` : '';
+
+  const prompt = `Du bist ein Experte für die deutsche Pflegeausbildung (PflBG 2020). Erstelle ${count} prüfungsrelevante Multiple-Choice-Fragen für:
+- Modul: ${modName}
+- Niveau: ${niveauDesc[niveau]}
+- ${topicStr}
+
+WICHTIG: Basiere die Fragen auf Icare, Pflege heute und dem deutschen Rahmenlehrplan.
+
+Antworte NUR mit einem JSON-Array (kein Text davor/danach, keine Markdown-Backticks):
+[
+  {
+    "frage": "Die Frage",
+    "optionen": ["A: ...", "B: ...", "C: ...", "D: ..."],
+    "korrekt": 0,
+    "erklaerung": "Ausführliche Erklärung warum A korrekt ist und die anderen nicht.",
+    "niveau": "${niveau}",
+    "modul": ${mod},
+    "punkte": ${pts[niveau]}
+  }
+]`;
+
+  btn.disabled = true;
+  const statusBar = document.getElementById('status-bar');
+  statusBar.style.display = 'flex';
+  statusBar.className = 'status-bar loading';
+  statusBar.innerHTML = '<div class="spinner"></div> Claude generiert ' + count + ' Fragen zu ' + modName + '…';
+  document.getElementById('q-output').innerHTML = '';
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await response.json();
+    const raw = data.content?.[0]?.text || '';
+    // Strip any markdown fences
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const questions = JSON.parse(clean);
+
+    statusBar.className = 'status-bar done';
+    statusBar.innerHTML = '✅ ' + questions.length + ' Fragen erfolgreich generiert';
+
+    renderQuestions(questions);
+  } catch(err) {
+    statusBar.className = 'status-bar';
+    statusBar.style.borderColor = 'rgba(255,79,114,.3)';
+    statusBar.innerHTML = '⚠️ Fehler: ' + (err.message || 'Unbekannter Fehler');
+    // Demo fallback
+    renderQuestions(getDemoQuestions(mod, niveau, parseInt(count)));
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function getDemoQuestions(mod, niveau, count) {
+  const demos = [
+    { frage: 'Bei einem COPD-Patienten wird SpO₂ 86% gemessen. Was ist die korrekte O₂-Gabe?', optionen: ['A: Sofort 100% O₂', 'B: Kontrolliert 1-2 L/min (Ziel 88-92%)', 'C: Gar kein O₂', 'D: 4 L/min sofort'], korrekt: 1, erklaerung: 'COPD-Patienten haben oft hypoxischen Atemantrieb. Hohe O₂-Gabe kann Atemantrieb hemmen → CO₂-Narkose. Ziel-SpO₂: 88-92%.', niveau, modul: parseInt(mod), punkte: niveau==='anfaenger'?10:niveau==='fortgeschritten'?20:30 },
+    { frage: 'Welches Assessment-Instrument wird für das Mangelernährungsscreening bei Senioren eingesetzt?', optionen: ['A: Bradenskala', 'B: Morse Fall Scale', 'C: MNA (Mini Nutritional Assessment)', 'D: GCS'], korrekt: 2, erklaerung: 'MNA ist der Goldstandard für Senioren ≥ 65 Jahre. Bradenskala = Dekubitus. Morse = Sturzrisiko. GCS = Bewusstsein.', niveau, modul: parseInt(mod), punkte: niveau==='anfaenger'?10:niveau==='fortgeschritten'?20:30 },
+    { frage: 'Ein Patient hat RR 88/52 mmHg nach dem Aufstehen, ist schwindelig. Erste Maßnahme?', optionen: ['A: Antihypertensivum geben', 'B: Hinlegen, Beine hochlagern, Arzt informieren', 'C: Blutdruck nochmal messen und abwarten', 'D: Patienten auffordern langsamer zu werden'], korrekt: 1, erklaerung: 'Orthostatische Hypotonie: sofort hinlegen, Beine hochlagern zur Verbesserung des venösen Rückflusses. Arzt informieren. Antihypertensiva sind kontraindiziert.', niveau, modul: parseInt(mod), punkte: niveau==='anfaenger'?10:niveau==='fortgeschritten'?20:30 },
+    { frage: 'Dekubitus Grad II zeigt:', optionen: ['A: Nicht wegdrückbare Rötung, Haut intakt', 'B: Teilverlust der Haut, Blase oder Abschürfung', 'C: Vollständiger Hautverlust, Nekrose sichtbar', 'D: Knochen oder Sehnen frei liegend'], korrekt: 1, erklaerung: 'Grad I = Rötung intakt. Grad II = Teilverlust (Dermis). Grad III = bis Subkutis. Grad IV = Knochen/Sehnen.', niveau, modul: parseInt(mod), punkte: niveau==='anfaenger'?10:niveau==='fortgeschritten'?20:30 },
+    { frage: 'Welche Maßnahme ist bei Biofilm auf einer chronischen Wunde vorrangig?', optionen: ['A: Systemische Antibiotika', 'B: Débridement + antiseptische Wundspülung', 'C: Nur Verbandwechsel täglich', 'D: Abwarten, heilt spontan'], korrekt: 1, erklaerung: 'Biofilm ist antibiotikaresistent. Débridement (physische Entfernung) + Octenidin/PHMB-Spülung + silberhaltige Auflagen. Antibiotika allein wirkungslos.', niveau, modul: parseInt(mod), punkte: niveau==='anfaenger'?10:niveau==='fortgeschritten'?20:30 },
+  ];
+  return demos.slice(0, count);
+}
+
+function renderQuestions(questions) {
+  const nivLabel = { anfaenger:'🌱 Anfänger', fortgeschritten:'🔥 Fortgeschritten', experte:'💎 Experte' };
+  const nivClass = { anfaenger:'niv-a', fortgeschritten:'niv-f', experte:'niv-e' };
+  const out = document.getElementById('q-output');
+  out.innerHTML = '<div class="q-list">' + questions.map((q, i) => `
+    <div class="q-card" style="animation-delay:${i*0.08}s">
+      <div class="q-head">
+        <div class="q-num">${i+1}</div>
+        <span class="q-niv ${nivClass[q.niveau]}">${nivLabel[q.niveau]}</span>
+        <span class="q-pts">+${q.punkte} Pkt</span>
+      </div>
+      <div class="q-text">${q.frage}</div>
+      <div class="q-opts">
+        ${q.optionen.map((opt, oi) => `
+          <div class="q-opt ${oi === q.korrekt ? 'correct' : ''}">
+            <div class="q-opt-letter">${'ABCD'[oi]}</div>
+            ${opt.replace(/^[A-D]:\s*/,'')}
+          </div>`).join('')}
+      </div>
+      <div class="q-expl">💡 ${q.erklaerung}</div>
+      <div class="q-actions">
+        <button class="qa-btn accept" onclick="acceptQ(${i}, this)">✓ Zur Bank hinzufügen</button>
+        <button class="qa-btn" onclick="editQ(${i})">✏️ Bearbeiten</button>
+        <button class="qa-btn reject" onclick="this.closest('.q-card').remove()">✕ Ablehnen</button>
+      </div>
+    </div>
+  `).join('') + '</div>';
+  window._lastQuestions = questions;
+}
+
+function acceptQ(idx, btn) {
+  const q = window._lastQuestions[idx];
+  saved.push(q);
+  btn.textContent = '✓ Gespeichert';
+  btn.disabled = true;
+  document.getElementById('bank-section').style.display = '';
+  document.getElementById('bank-count').textContent = saved.length + ' Fragen';
+  // Add to bank
+  const nivLabel = { anfaenger:'🌱 Anfänger', fortgeschritten:'🔥 Fortgeschritten', experte:'💎 Experte' };
+  const div = document.createElement('div');
+  div.className = 'q-card';
+  div.innerHTML = `<div class="q-head"><div class="q-num" style="background:rgba(0,245,160,.15);border-color:rgba(0,245,160,.3);color:var(--green)">✓</div><span class="q-niv niv-a" style="background:rgba(0,245,160,.15);color:var(--green)">${nivLabel[q.niveau]}</span></div><div class="q-text">${q.frage}</div>`;
+  document.getElementById('bank-list').appendChild(div);
+}
+function editQ(idx) { alert('Bearbeitungsmodus: In der Vollversion können Fragen direkt editiert werden.'); }
+</script>
+</body>
+</html>

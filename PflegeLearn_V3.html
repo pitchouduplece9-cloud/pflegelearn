@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PflegeLearn V3 – Niveaustufen</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#0d9488;--tealD:#0f766e;--tealL:#ccfbf1;--tealM:#14b8a6;
+  --gold:#f59e0b;--goldL:#fef3c7;
+  --ink:#1a1a2e;--inkS:#3d3d5c;
+  --white:#ffffff;--cream:#faf7f2;--border:#e5e7eb;
+  --green:#10b981;--greenL:#d1fae5;
+  --red:#e11d48;--redL:#ffe4e6;
+  /* NIVEAU COULEURS */
+  --anfaenger:#10b981;--anfaengerL:#d1fae5;--anfaengerD:#065f46;
+  --fortgeschritten:#f59e0b;--fortgeschrittenL:#fef3c7;--fortgeschrittenD:#92400e;
+  --experte:#8b5cf6;--experteL:#ede9fe;--experteD:#4c1d95;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--ink);color:var(--white);min-height:100vh;overflow-x:hidden;}
+.bg-mesh{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 60% 50% at 20% 20%,rgba(13,148,136,.18) 0%,transparent 60%),radial-gradient(ellipse 40% 50% at 80% 80%,rgba(139,92,246,.08) 0%,transparent 55%);}
+.bg-grid{position:fixed;inset:0;z-index:0;opacity:.04;background-image:linear-gradient(rgba(255,255,255,.8) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.8) 1px,transparent 1px);background-size:48px 48px;}
+.app{position:relative;z-index:1;max-width:820px;margin:0 auto;padding:0 1.25rem 4rem;}
+
+/* HEADER */
+header{display:flex;align-items:center;justify-content:space-between;padding:1.5rem 0 0;flex-wrap:wrap;gap:.75rem;}
+.logo{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;color:var(--tealM);}
+.logo span{color:var(--gold);}
+.logo sup{font-size:.58rem;background:var(--experte);color:white;padding:.1rem .35rem;border-radius:4px;margin-left:.2rem;font-family:'DM Sans',sans-serif;}
+.hbadges{display:flex;gap:.5rem;flex-wrap:wrap;}
+.hbadge{display:flex;align-items:center;gap:.35rem;border-radius:999px;padding:.28rem .8rem;font-size:.78rem;font-weight:700;}
+.hb-score{background:rgba(13,148,136,.15);border:1px solid rgba(13,148,136,.3);color:var(--tealM);}
+.hb-streak{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);color:var(--gold);}
+.hb-level{background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.3);color:#a78bfa;}
+
+/* TOP TABS */
+.top-tabs{display:flex;gap:.5rem;margin:1.5rem 0 0;padding:.45rem;background:rgba(255,255,255,.05);border-radius:14px;border:1px solid rgba(255,255,255,.1);}
+.top-tab{flex:1;padding:.5rem .4rem;border-radius:10px;font-size:.75rem;font-weight:700;cursor:pointer;border:none;background:transparent;color:rgba(255,255,255,.45);transition:.2s;text-align:center;}
+.top-tab.active{background:var(--teal);color:white;}
+.top-tab:hover:not(.active){background:rgba(255,255,255,.08);color:white;}
+
+/* SCREENS */
+.screen{display:none;animation:fadeUp .4s ease both;}
+.screen.active{display:block;}
+
+/* ── HOME ── */
+.home-hero{margin:2rem 0 1.5rem;}
+.home-title{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,3.5vw,2.4rem);font-weight:900;line-height:1.1;}
+.home-title em{color:var(--tealM);font-style:normal;}
+.home-sub{color:rgba(255,255,255,.5);font-size:.9rem;margin-top:.5rem;}
+
+/* NIVEAU SELECTOR */
+.niveau-section{margin:1.5rem 0;}
+.niveau-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.75rem;}
+.niveau-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;}
+.niveau-card{border-radius:14px;padding:1.1rem;cursor:pointer;transition:all .2s;border:2px solid transparent;position:relative;overflow:hidden;}
+.niveau-card.anfaenger{background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.25);}
+.niveau-card.fortgeschritten{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.25);}
+.niveau-card.experte{background:rgba(139,92,246,.1);border-color:rgba(139,92,246,.25);}
+.niveau-card.selected.anfaenger{border-color:var(--anfaenger);box-shadow:0 0 0 3px rgba(16,185,129,.25);}
+.niveau-card.selected.fortgeschritten{border-color:var(--fortgeschritten);box-shadow:0 0 0 3px rgba(245,158,11,.25);}
+.niveau-card.selected.experte{border-color:var(--experte);box-shadow:0 0 0 3px rgba(139,92,246,.25);}
+.niv-icon{font-size:1.5rem;margin-bottom:.4rem;}
+.niv-name{font-size:.85rem;font-weight:800;margin-bottom:.15rem;}
+.niv-name.anfaenger{color:var(--anfaenger);}
+.niv-name.fortgeschritten{color:var(--fortgeschritten);}
+.niv-name.experte{color:#a78bfa;}
+.niv-desc{font-size:.7rem;color:rgba(255,255,255,.45);line-height:1.4;}
+.niv-check{position:absolute;top:.6rem;right:.7rem;font-size:.85rem;display:none;}
+.niveau-card.selected .niv-check{display:block;}
+
+/* MODULES GRID */
+.modules-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.8rem;margin-bottom:1.25rem;}
+.module-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:1rem 1.1rem;cursor:pointer;transition:all .2s;position:relative;}
+.module-card:hover{background:rgba(13,148,136,.15);border-color:var(--teal);transform:translateY(-2px);}
+.module-card.done{border-color:var(--green);background:rgba(16,185,129,.08);}
+.mod-num{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--tealM);margin-bottom:.2rem;}
+.mod-name{font-size:.88rem;font-weight:600;margin-bottom:.3rem;}
+.mod-pills{display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.45rem;}
+.mod-pill{font-size:.6rem;font-weight:700;padding:.12rem .45rem;border-radius:999px;}
+.mp-a{background:rgba(16,185,129,.2);color:var(--anfaenger);}
+.mp-f{background:rgba(245,158,11,.2);color:var(--fortgeschritten);}
+.mp-e{background:rgba(139,92,246,.2);color:#a78bfa;}
+.mod-check{position:absolute;top:.7rem;right:.8rem;color:var(--green);font-size:.9rem;}
+
+.btn-start{width:100%;padding:.85rem;border-radius:12px;font-size:1rem;font-weight:700;border:none;cursor:pointer;transition:all .2s;letter-spacing:.02em;margin-bottom:.75rem;}
+.btn-start.anfaenger{background:linear-gradient(135deg,#059669,var(--anfaenger));color:white;box-shadow:0 4px 20px rgba(16,185,129,.35);}
+.btn-start.fortgeschritten{background:linear-gradient(135deg,#d97706,var(--fortgeschritten));color:white;box-shadow:0 4px 20px rgba(245,158,11,.35);}
+.btn-start.experte{background:linear-gradient(135deg,#7c3aed,var(--experte));color:white;box-shadow:0 4px 20px rgba(139,92,246,.35);}
+.btn-start:hover{transform:translateY(-2px);}
+
+/* NIVEAU PROGRESS SUMMARY */
+.niveau-progress{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin:1.5rem 0;}
+.np-card{border-radius:12px;padding:1rem;text-align:center;}
+.np-card.anfaenger{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);}
+.np-card.fortgeschritten{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);}
+.np-card.experte{background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.2);}
+.np-pct{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;}
+.np-pct.anfaenger{color:var(--anfaenger);}
+.np-pct.fortgeschritten{color:var(--fortgeschritten);}
+.np-pct.experte{color:#a78bfa;}
+.np-label{font-size:.7rem;color:rgba(255,255,255,.45);margin-top:.2rem;}
+
+/* ── QCM SCREEN ── */
+.progress-wrap{margin:1.5rem 0 1.1rem;}
+.progress-meta{display:flex;justify-content:space-between;font-size:.76rem;color:rgba(255,255,255,.4);margin-bottom:.4rem;}
+.niveau-tag{display:inline-flex;align-items:center;gap:.3rem;border-radius:999px;padding:.18rem .65rem;font-size:.68rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;}
+.nt-anfaenger{background:rgba(16,185,129,.2);color:var(--anfaenger);}
+.nt-fortgeschritten{background:rgba(245,158,11,.2);color:var(--fortgeschritten);}
+.nt-experte{background:rgba(139,92,246,.2);color:#a78bfa;}
+.progress-bar{height:5px;background:rgba(255,255,255,.1);border-radius:999px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:999px;transition:.4s cubic-bezier(.4,0,.2,1);}
+.pf-anfaenger{background:linear-gradient(90deg,#059669,var(--anfaenger));}
+.pf-fortgeschritten{background:linear-gradient(90deg,#d97706,var(--fortgeschritten));}
+.pf-experte{background:linear-gradient(90deg,#7c3aed,var(--experte));}
+
+.q-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:1.6rem;margin-bottom:1rem;backdrop-filter:blur(8px);}
+.q-tags{display:flex;align-items:center;gap:.5rem;margin-bottom:.9rem;flex-wrap:wrap;}
+.q-module-tag{display:inline-flex;align-items:center;gap:.3rem;background:rgba(13,148,136,.2);border:1px solid rgba(13,148,136,.3);color:var(--tealM);border-radius:999px;padding:.18rem .7rem;font-size:.65rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
+.q-pts{font-size:.65rem;font-weight:700;border-radius:999px;padding:.15rem .55rem;background:rgba(255,255,255,.08);color:rgba(255,255,255,.5);}
+.q-text{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;line-height:1.4;}
+.explanation{margin-top:.9rem;padding:.85rem 1rem;background:rgba(13,148,136,.1);border-left:3px solid var(--tealM);border-radius:0 10px 10px 0;font-size:.86rem;line-height:1.65;color:rgba(255,255,255,.75);display:none;}
+.explanation.show{display:block;animation:fadeUp .25s ease;}
+.explanation strong{color:var(--tealM);}
+
+.options{display:flex;flex-direction:column;gap:.55rem;}
+.option{display:flex;align-items:flex-start;gap:.75rem;padding:.8rem 1rem;border-radius:12px;border:1.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);cursor:pointer;transition:.15s;font-size:.88rem;font-weight:500;color:rgba(255,255,255,.85);line-height:1.45;}
+.option:hover:not(.disabled){border-color:var(--teal);background:rgba(13,148,136,.12);color:white;}
+.option.correct{border-color:var(--green);background:rgba(16,185,129,.15);color:#6ee7b7;animation:popIn .25s ease;}
+.option.wrong{border-color:var(--red);background:rgba(225,29,72,.12);color:#fda4af;}
+.option.disabled{cursor:default;}
+.opt-letter{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;flex-shrink:0;margin-top:.05rem;transition:.15s;}
+.option.correct .opt-letter{background:var(--green);color:white;}
+.option.wrong .opt-letter{background:var(--red);color:white;}
+
+.btn-next{width:100%;padding:.82rem;border-radius:12px;color:white;font-size:.95rem;font-weight:700;border:none;cursor:pointer;transition:.2s;display:none;margin-top:.5rem;}
+.btn-next.show{display:block;animation:fadeUp .3s .1s ease both;}
+.btn-next:hover{transform:translateY(-2px);}
+.bn-anfaenger{background:linear-gradient(135deg,#059669,var(--anfaenger));box-shadow:0 4px 16px rgba(16,185,129,.3);}
+.bn-fortgeschritten{background:linear-gradient(135deg,#d97706,var(--fortgeschritten));box-shadow:0 4px 16px rgba(245,158,11,.3);}
+.bn-experte{background:linear-gradient(135deg,#7c3aed,var(--experte));box-shadow:0 4px 16px rgba(139,92,246,.3);}
+
+/* POPUP BLASEN */
+.popup-term{color:var(--tealM);cursor:pointer;border-bottom:1px dashed var(--tealM);font-weight:600;position:relative;}
+.popup-bubble{display:none;position:absolute;bottom:calc(100% + 8px);left:0;background:var(--ink);border:1px solid var(--teal);border-radius:10px;padding:.6rem .9rem;font-size:.75rem;line-height:1.5;color:rgba(255,255,255,.85);min-width:200px;max-width:260px;z-index:300;box-shadow:0 8px 24px rgba(0,0,0,.5);}
+.popup-term.show .popup-bubble{display:block;}
+
+/* ── RESULTS ── */
+#screen-results{text-align:center;}
+.result-icon{font-size:3.2rem;margin:2rem 0 .75rem;}
+.result-title{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:900;margin-bottom:.4rem;}
+.result-niveau-badge{display:inline-flex;align-items:center;gap:.4rem;border-radius:999px;padding:.3rem 1rem;font-size:.8rem;font-weight:700;margin-bottom:1.5rem;}
+.score-circle{width:128px;height:128px;border-radius:50%;background:conic-gradient(var(--score-color) calc(var(--pct)*1%),rgba(255,255,255,.08) 0%);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;position:relative;}
+.score-circle::before{content:'';position:absolute;width:102px;height:102px;border-radius:50%;background:var(--ink);}
+.score-num{position:relative;z-index:1;font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:900;}
+.result-breakdown{display:flex;gap:.75rem;justify-content:center;margin-bottom:.85rem;flex-wrap:wrap;}
+.rb-item{padding:.45rem 1rem;border-radius:999px;font-size:.8rem;font-weight:600;}
+.rb-correct{background:rgba(16,185,129,.15);color:#6ee7b7;border:1px solid rgba(16,185,129,.3);}
+.rb-wrong{background:rgba(225,29,72,.12);color:#fda4af;border:1px solid rgba(225,29,72,.2);}
+.rb-pts{border:1px solid rgba(255,255,255,.15);}
+.unlock-banner{margin:1rem 0;padding:1rem 1.25rem;border-radius:14px;background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.3);font-size:.875rem;color:#c4b5fd;display:none;}
+.unlock-banner.show{display:block;animation:fadeUp .4s ease;}
+.result-btns{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;margin-top:1.25rem;}
+.btn-result{padding:.72rem 1.6rem;border-radius:999px;font-size:.88rem;font-weight:700;cursor:pointer;transition:.2s;border:none;}
+.btn-result:hover{transform:translateY(-2px);}
+.br-primary{background:linear-gradient(135deg,var(--teal),var(--tealM));color:white;}
+.br-next{background:linear-gradient(135deg,#7c3aed,var(--experte));color:white;}
+.br-ghost{background:rgba(255,255,255,.08);color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.15);}
+
+/* ── RAHMENLEHRPLAN ── */
+.rlp-section{margin-bottom:.85rem;}
+.rlp-header{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:.85rem 1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:.15s;}
+.rlp-header:hover{background:rgba(13,148,136,.15);border-color:var(--teal);}
+.rlp-title{font-size:.9rem;font-weight:700;}
+.rlp-meta{font-size:.7rem;color:rgba(255,255,255,.4);margin-top:.1rem;}
+.rlp-arrow{font-size:.72rem;color:var(--tealM);transition:.2s;flex-shrink:0;}
+.rlp-section.open .rlp-arrow{transform:rotate(180deg);}
+.rlp-body{display:none;padding:.6rem 0 .2rem;}
+.rlp-section.open .rlp-body{display:block;}
+.rlp-item{display:flex;align-items:center;gap:.65rem;padding:.45rem .6rem;border-radius:8px;cursor:pointer;transition:.15s;margin-bottom:.25rem;}
+.rlp-item:hover{background:rgba(13,148,136,.15);}
+.rlp-item-icon{font-size:.9rem;width:20px;text-align:center;flex-shrink:0;}
+.rlp-item-name{font-size:.83rem;font-weight:500;flex:1;}
+.rlp-niv-pills{display:flex;gap:.25rem;flex-shrink:0;}
+.rlp-niv-pill{font-size:.58rem;font-weight:700;padding:.1rem .35rem;border-radius:999px;cursor:pointer;}
+.rnp-a{background:rgba(16,185,129,.2);color:var(--anfaenger);}
+.rnp-f{background:rgba(245,158,11,.2);color:var(--fortgeschritten);}
+.rnp-e{background:rgba(139,92,246,.2);color:#a78bfa;}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+@keyframes popIn{0%{transform:scale(1);}40%{transform:scale(1.02);}100%{transform:scale(1);}}
+@media(max-width:520px){.niveau-cards{grid-template-columns:1fr;}.niveau-progress{grid-template-columns:repeat(3,1fr);gap:.4rem;}.q-text{font-size:1rem;}}
+</style>
+</head>
+<body>
+<div class="bg-mesh"></div><div class="bg-grid"></div>
+<div class="app">
+
+<header>
+  <div class="logo">Pflege<span>Learn</span><sup>V3</sup></div>
+  <div class="hbadges">
+    <div class="hbadge hb-streak">🔥 <span id="streak-val">0</span></div>
+    <div class="hbadge hb-score">🏆 <span id="score-val">0</span> pts</div>
+    <div class="hbadge hb-level">⭐ <span id="level-val">Anfänger</span></div>
+  </div>
+</header>
+
+<div class="top-tabs" id="top-tabs">
+  <button class="top-tab active" data-screen="home">📚 Module</button>
+  <button class="top-tab" data-screen="rlp">📋 Rahmenlehrplan</button>
+  <button class="top-tab" data-screen="stats">📊 Mein Fortschritt</button>
+</div>
+
+<!-- ══════ HOME ══════ -->
+<div class="screen active" id="screen-home">
+  <div class="home-hero">
+    <h1 class="home-title">Lerne auf <em>deinem Niveau</em></h1>
+    <p class="home-sub">3 Schwierigkeitsstufen · 500 Fragen · Schalte das nächste Level frei</p>
+  </div>
+
+  <!-- Niveau selector -->
+  <div class="niveau-section">
+    <div class="niveau-label">Schwierigkeitsstufe wählen</div>
+    <div class="niveau-cards">
+      <div class="niveau-card anfaenger selected" onclick="selectNiveau('anfaenger',this)">
+        <span class="niv-check">✓</span>
+        <div class="niv-icon">🌱</div>
+        <div class="niv-name anfaenger">Anfänger</div>
+        <div class="niv-desc">Grundbegriffe, Definitionen, direkte Fakten</div>
+        <div style="margin-top:.5rem;font-size:.65rem;font-weight:700;color:rgba(255,255,255,.3)">+10 Punkte/Frage</div>
+      </div>
+      <div class="niveau-card fortgeschritten" onclick="selectNiveau('fortgeschritten',this)" id="niv-fort-card">
+        <span class="niv-check">✓</span>
+        <div class="niv-icon">🔥</div>
+        <div class="niv-name fortgeschritten">Fortgeschritten</div>
+        <div class="niv-desc">Anwendung, Zusammenhänge, klinische Szenarien</div>
+        <div style="margin-top:.5rem;font-size:.65rem;font-weight:700;color:rgba(255,255,255,.3)">+20 Punkte/Frage</div>
+      </div>
+      <div class="niveau-card experte" onclick="selectNiveau('experte',this)" id="niv-exp-card">
+        <span class="niv-check">✓</span>
+        <div class="niv-icon">💎</div>
+        <div class="niv-name experte">Experte</div>
+        <div class="niv-desc">Komplexe Fälle, Differenzialdiagnosen, Vertiefung</div>
+        <div style="margin-top:.5rem;font-size:.65rem;font-weight:700;color:rgba(255,255,255,.3)">+30 Punkte/Frage</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Niveau progress summary -->
+  <div class="niveau-progress">
+    <div class="np-card anfaenger"><div class="np-pct anfaenger" id="pct-a">0%</div><div class="np-label">🌱 Anfänger</div></div>
+    <div class="np-card fortgeschritten"><div class="np-pct fortgeschritten" id="pct-f">0%</div><div class="np-label">🔥 Fortgeschritten</div></div>
+    <div class="np-card experte"><div class="np-pct experte" id="pct-e">0%</div><div class="np-label">💎 Experte</div></div>
+  </div>
+
+  <!-- Modules -->
+  <div class="niveau-label" style="margin-bottom:.75rem">Modul wählen</div>
+  <div class="modules-grid" id="modules-grid"></div>
+
+  <button class="btn-start anfaenger" id="btn-start-all" onclick="startQuiz('all')">
+    🚀 Alle Module starten (<span id="btn-start-label">Anfänger</span>)
+  </button>
+</div>
+
+<!-- ══════ RAHMENLEHRPLAN ══════ -->
+<div class="screen" id="screen-rlp">
+  <div class="home-hero">
+    <h1 class="home-title">Rahmen<em>lehrplan</em></h1>
+    <p class="home-sub">PflBG-Struktur · Klicke auf ein Niveau um gezielt zu üben</p>
+  </div>
+  <div id="rlp-list"></div>
+</div>
+
+<!-- ══════ STATS ══════ -->
+<div class="screen" id="screen-stats">
+  <div class="home-hero">
+    <h1 class="home-title">Mein <em>Fortschritt</em></h1>
+    <p class="home-sub">Übersicht deiner Leistung nach Niveaustufe</p>
+  </div>
+  <div id="stats-content"></div>
+</div>
+
+<!-- ══════ QCM ══════ -->
+<div class="screen" id="screen-quiz">
+  <div class="progress-wrap">
+    <div class="progress-meta">
+      <span id="q-counter">Frage 1 / 10</span>
+      <div style="display:flex;align-items:center;gap:.5rem;">
+        <span class="niveau-tag" id="q-niveau-tag">🌱 Anfänger</span>
+        <span id="q-module-label" style="font-size:.72rem;color:rgba(255,255,255,.4)"></span>
+      </div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill pf-anfaenger" id="progress-fill" style="width:0%"></div></div>
+  </div>
+  <div class="q-card">
+    <div class="q-tags">
+      <div class="q-module-tag" id="q-tag">📋 M01</div>
+      <div class="q-pts" id="q-pts">+10 Pkt</div>
+    </div>
+    <div class="q-text" id="q-text"></div>
+    <div class="explanation" id="q-explanation"></div>
+  </div>
+  <div class="options" id="options-container"></div>
+  <button class="btn-next bn-anfaenger" id="btn-next" onclick="nextQuestion()">Weiter →</button>
+</div>
+
+<!-- ══════ RESULTS ══════ -->
+<div class="screen" id="screen-results">
+  <div class="result-icon" id="result-icon">🎉</div>
+  <h2 class="result-title" id="result-title">Sehr gut!</h2>
+  <div class="result-niveau-badge" id="result-badge"></div>
+  <div class="score-circle" id="score-circle"><div class="score-num" id="score-num"></div></div>
+  <div class="result-breakdown">
+    <div class="rb-item rb-correct" id="rb-correct">✓ 0 richtig</div>
+    <div class="rb-item rb-wrong" id="rb-wrong">✗ 0 falsch</div>
+    <div class="rb-item rb-pts" id="rb-pts" style="background:rgba(245,158,11,.15);color:var(--gold);border-color:rgba(245,158,11,.3)">+0 Punkte</div>
+  </div>
+  <div class="unlock-banner" id="unlock-banner"></div>
+  <div class="result-btns">
+    <button class="btn-result br-primary" id="btn-retry" onclick="retryQuiz()">🔁 Nochmal</button>
+    <button class="btn-result br-next" id="btn-next-level" onclick="nextLevel()" style="display:none">⬆️ Nächstes Level</button>
+    <button class="btn-result br-ghost" onclick="goHome()">🏠 Startseite</button>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+// GLOSSARY
+// ═══════════════════════════════════════════════════════════════════════════
+const GLOSSARY={
+  "Pflegeprozess":"Systematischer 6-Schritte-Prozess: Anamnese → Diagnose → Ziele → Planung → Durchführung → Evaluation",
+  "Bradykardie":"Herzfrequenz unter 60 Schlägen pro Minute",
+  "Tachykardie":"Herzfrequenz über 100 Schlägen pro Minute",
+  "Hypertonie":"Blutdruck ≥ 140/90 mmHg – Risikofaktor für Herzinfarkt und Schlaganfall",
+  "Hypotonie":"Blutdruck < 100/60 mmHg",
+  "Dekubitus":"Druckgeschwür durch anhaltenden Druck – 4 Schweregrade (NPUAP/EPUAP)",
+  "Bradenskala":"Risikoeinschätzung Dekubitus: max. 23 Punkte; ≤12 = hohes Risiko",
+  "Dysphagie":"Schluckstörung – Aspirationsrisiko!",
+  "Aspiration":"Eindringen von Fremdmaterial in die Atemwege",
+  "Validation":"Pflegekonzept nach Feil: Gefühle bestätigen, nicht korrigieren",
+  "Delir":"Akute, reversible Hirnfunktionsstörung",
+  "Hämostase":"Blutstillung – Phase 1 der Wundheilung (0–10 Min.)",
+  "Granulation":"Bildung von Granulationsgewebe (Proliferationsphase)",
+  "Nekrose":"Abgestorbenes Gewebe – muss débridiert werden",
+  "Débridement":"Entfernung von Nekrosen/Belägen aus der Wunde",
+  "Polypharmazie":"≥ 5 Medikamente gleichzeitig täglich",
+  "NRS":"Numerische Schmerzskala 0–10",
+  "BESD":"Schmerzskala für Demente – Verhaltensbeobachtung",
+  "Kinästhetik":"Eigenbewegung des Patienten fördern statt übernehmen",
+  "Thrombose":"Blutgerinnselbildung in Gefäßen",
+  "Apoplex":"Schlaganfall – akute Durchblutungsstörung Gehirn",
+  "Hypoglykämie":"BZ < 70 mg/dl – Zittern, Schwitzen, Bewusstlosigkeit",
+  "Hyperglykämie":"BZ > 180 mg/dl – Polyurie, Polydipsie",
+  "Prophylaxe":"Vorbeugende Maßnahme",
+};
+function wrapGlossary(text){
+  let r=text;
+  Object.keys(GLOSSARY).forEach(t=>{
+    r=r.replace(new RegExp(`\\b(${t})\\b`,'g'),
+      `<span class="popup-term" onclick="this.classList.toggle('show')">${t}<span class="popup-bubble">${GLOSSARY[t]}</span></span>`);
+  });
+  return r;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MODULES
+// ═══════════════════════════════════════════════════════════════════════════
+const MODULES=[
+  {id:1,name:"Grundlagen der Pflege",icon:"📋"},
+  {id:2,name:"Vitalzeichen & Beobachtung",icon:"🫀"},
+  {id:3,name:"Medikamente & Injektionen",icon:"💊"},
+  {id:4,name:"Ernährung & Ausscheidung",icon:"🍽️"},
+  {id:5,name:"Mobilisation & Prävention",icon:"🦴"},
+  {id:6,name:"Psychiatrie & Psychosoziales",icon:"🧠"},
+  {id:7,name:"Pflegebereiche spezifisch",icon:"👶"},
+  {id:8,name:"Recht & Beruf",icon:"⚖️"},
+  {id:9,name:"Krankheitsbilder",icon:"🏥"},
+  {id:10,name:"Wundversorgung",icon:"🩹"},
+];
+
+// ═══════════════════════════════════════════════════════════════════════════
+// QUESTIONS — 3 levels × 10 modules × ~17 questions each
+// niveau: 'a' = Anfänger | 'f' = Fortgeschritten | 'e' = Experte
+// pts:  a=10 | f=20 | e=30
+// ═══════════════════════════════════════════════════════════════════════════
+const Q=[
+  // ──────────────────────────── MODUL 1 ─────────────────────────────────
+  // ANFÄNGER – définitions, faits directs
+  {m:1,n:'a',q:"Wie viele Schritte hat der Pflegeprozess?",opts:["4","5","6","8"],a:2,exp:"6 Schritte: Informationssammlung, Pflegediagnose, Zielformulierung, Planung, Durchführung, Evaluation."},
+  {m:1,n:'a',q:"Was bedeutet 'p.o.' bei der Medikamentengabe?",opts:["Per Okular","Per Os (Mund)","Per Ohr","Per Osmose"],a:1,exp:"p.o. = per os = durch den Mund – orale Einnahme."},
+  {m:1,n:'a',q:"Wie lange muss Händedesinfektion einwirken?",opts:["10 Sekunden","20 Sekunden","30 Sekunden","60 Sekunden"],a:2,exp:"WHO empfiehlt mindestens 30 Sekunden Einwirkzeit."},
+  {m:1,n:'a',q:"ABEDL-Modell wurde entwickelt von:",opts:["Orem","Roper","Krohwinkel","Maslow"],a:2,exp:"Monika Krohwinkel: ABEDL-Modell mit 13 Aktivitäten und existenziellen Erfahrungen."},
+  {m:1,n:'a',q:"Was ist ein SMART-Ziel?",opts:["Spezifisch, Messbar, Akzeptiert, Realistisch, Terminiert","Schnell, Motivierend, Angepasst, Realistisch, Tolerant","Sicher, Medizinisch, Akut, Relevant, Testbar","Subjektiv, Methodisch, Angepasst, Reaktiv, Terminiert"],a:0,exp:"SMART = Spezifisch · Messbar · Akzeptiert · Realistisch · Terminiert."},
+  {m:1,n:'a',q:"Pflegedokumentation: Grundsatz?",opts:["Erledigt wenn gemacht","Was nicht dokumentiert ist, gilt als nicht getan","Nur für Ärzte","Optional bei erfahrenen Pflegenden"],a:1,exp:"Rechtsgrundsatz: Was nicht dokumentiert ist, gilt als nicht getan."},
+  {m:1,n:'a',q:"Was umfasst verbale Kommunikation?",opts:["Mimik","Körperhaltung","Worte, Sprache, Tonfall","Blickkontakt"],a:2,exp:"Verbal = Worte, Sprache, Tonfall. Nonverbal = Körpersprache, Mimik, Gestik."},
+  {m:1,n:'a',q:"ATL-Modell kommt von:",opts:["Orem","Krohwinkel","Roper, Logan & Tierney","Maslow"],a:2,exp:"ATL (Aktivitäten des täglichen Lebens) = Roper, Logan & Tierney."},
+  {m:1,n:'a',q:"Wie viele ATL hat das ATL-Modell?",opts:["8","10","12","15"],a:2,exp:"12 Aktivitäten des täglichen Lebens nach Roper, Logan & Tierney."},
+  {m:1,n:'a',q:"Primäre Prävention bedeutet:",opts:["Früherkennung","Krankheit verhindern bevor sie entsteht","Rehabilitation","Schmerztherapie"],a:1,exp:"Primäre Prävention = Krankheit verhindern (z.B. Impfung, Prophylaxen)."},
+  // FORTGESCHRITTEN – anwendung, szenarien
+  {m:1,n:'f',q:"Eine Patientin lehnt ihre Medikamente ab. Welcher Schritt des Pflegeprozesses ist primär betroffen?",opts:["Informationssammlung","Zielformulierung – Ziel muss angepasst werden","Dokumentation","Durchführung nach Plan fortsetzen"],a:1,exp:"Ablehnung = Ziel wurde nicht erreicht → Evaluation → neues Ziel formulieren (Schritt 3)."},
+  {m:1,n:'f',q:"Welcher Kommunikationsfehler liegt vor: 'Sie müssen jetzt die Tabletten nehmen, sonst wird es schlimmer!'?",opts:["Aktives Zuhören","Bevormundung (paternalistische Kommunikation)","Empathie","Offene Frage"],a:1,exp:"Paternalismus = Bevormundung. Patientenautonomie respektieren – gemeinsam entscheiden statt befehlen."},
+  {m:1,n:'f',q:"Wann ist aktives Zuhören besonders wichtig?",opts:["Bei Routineaufgaben","Bei einem ängstlichen/traurigen Patienten","Nur bei Erstkontakt","Nur bei Beschwerden"],a:1,exp:"Aktives Zuhören ist essenziell wenn Patienten emotional belastet sind – schafft Vertrauen."},
+  {m:1,n:'f',q:"Validierung nach Naomi Feil ist NICHT geeignet für:",opts:["Mittelschwere Demenz","Spätstadium Demenz","Kognitiv klare Patienten die sachlich informiert werden wollen","Alle Demenzkranken"],a:2,exp:"Validation für Demenzkranke – bei kognitiv klaren Patienten normale Gesprächsführung anwenden."},
+  {m:1,n:'f',q:"Pflegeplanung: In welchem Schritt werden Ressourcen des Patienten erfasst?",opts:["Schritt 3 (Ziele)","Schritt 1 (Informationssammlung)","Schritt 5 (Durchführung)","Schritt 6 (Evaluation)"],a:1,exp:"Schritt 1 erfasst BOTH Probleme UND Ressourcen – Stärken des Patienten nutzen."},
+  {m:1,n:'f',q:"Biografiearbeit in der Pflege bedeutet:",opts:["Lebenslauf schreiben","Lebensgeschichte für individuelle Pflege nutzen","Nur bei Sterbenden","Medikamentenanamnese"],a:1,exp:"Biografiearbeit: Lebensgeschichte verstehen → individuelle, ressourcenorientierte Pflege."},
+  {m:1,n:'f',q:"Wann ist Desinfektion vor Handschuhanziehen nötig?",opts:["Nie – Handschuhe reichen","Immer vor UND nach Handschuhen","Nur danach","Nur bei sichtbarer Verschmutzung"],a:1,exp:"Händedesinfektion VOR dem Anziehen und NACH dem Ausziehen – Handschuhe sind kein Ersatz!"},
+  {m:1,n:'f',q:"Sekundäre Prävention unterscheidet sich von tertiärer durch:",opts:["Keine Unterschied","Sekundär = Früherkennung; tertiär = Folgeschäden reduzieren","Sekundär = Rehabilitation","Tertiär = Impfung"],a:1,exp:"Sekundär: Früherkennung. Tertiär: Rehabilitation, Folgeschäden minimieren."},
+  // EXPERTE – komplexe Fälle, Differenzialdiagnose
+  {m:1,n:'e',q:"Ein Patient mit Demenz gibt nonverbal Zeichen von Schmerz, verneint aber verbal. Was gilt?",opts:["Verbale Aussage hat Vorrang","Nonverbale Zeichen priorisieren + BESD-Skala anwenden","Beides ignorieren","Arzt sofort rufen ohne Einschätzung"],a:1,exp:"Bei Demenz: Verhaltensbeobachtung (BESD) ist zuverlässiger als Selbstauskunft. Nonverbale Zeichen priorisieren."},
+  {m:1,n:'e',q:"Welches Pflegemodell würden Sie für einen jungen Patienten mit Querschnittslähmung wählen und warum?",opts:["ATL – da 12 Aktivitäten gut strukturiert","Orem – Fokus auf verbleibende Selbstpflegefähigkeiten und Förderung","ABEDL – nur für Senioren","Maslow – nur für psychiatrische Patienten"],a:1,exp:"Orem-Modell ist ideal: Patient kann viele Aktivitäten selbst – Selbstpflege fördern, Defizite kompensieren. Empowerment-Fokus."},
+  {m:1,n:'e',q:"Eine Pflegeplanung gilt als Qualitätsmerkmal. Welches Kriterium zeigt Ergebnisqualität?",opts:["Anzahl der Pflegenden","Ausstattung der Station","Messbare Verbesserung des Patientenzustands (Zielzielerreichung)","Vorhandensein einer Dokumentation"],a:2,exp:"Ergebnisqualität (Donabedian): messbare Outcomes – Zielzielerreichung, Patientenzufriedenheit, Komplikationsrate."},
+  {m:1,n:'e',q:"Warum ist die Übernahmeverantwortung für Pflegende rechtlich kritisch?",opts:["Nur für Ärzte relevant","Führt zur persönlichen strafrechtlichen Haftung bei Ausführung einer Aufgabe über eigene Kompetenz","Betrifft nur Auszubildende","Gilt nur bei Medikamentengabe"],a:1,exp:"Übernahmeverantwortung: wer eine Aufgabe über eigene Kompetenz ausführt, haftet strafrechtlich (Körperverletzung durch Fahrlässigkeit, § StGB)."},
+  {m:1,n:'e',q:"Warum ist das Vier-Augen-Prinzip bei BtM ein Qualitätssicherungsmerkmal?",opts:["Spart Zeit","Verhindert Verwechslungen und Missbrauch durch doppelte Kontrolle","Nur bei Morphin nötig","Ist nicht gesetzlich vorgeschrieben"],a:1,exp:"BtM-Vier-Augen-Prinzip: gesetzlich vorgeschrieben (BtMG), verhindert Missbrauch und Fehldosierung durch gegenseitige Kontrolle."},
+
+  // ──────────────────────────── MODUL 2 ─────────────────────────────────
+  {m:2,n:'a',q:"Normaler Blutdruck Erwachsener:",opts:["100/60","120/80","140/90","160/100"],a:1,exp:"Normblutdruck: 120/80 mmHg systolisch/diastolisch."},
+  {m:2,n:'a',q:"Ab welchem Wert Hypertonie Grad I?",opts:["120/80","130/85","140/90","160/100"],a:2,exp:"Hypertonie Grad I: ≥ 140/90 mmHg (WHO)."},
+  {m:2,n:'a',q:"Bradykardie = HF unter:",opts:["100","80","60","40"],a:2,exp:"Bradykardie: < 60/min."},
+  {m:2,n:'a',q:"Goldstandard Temperaturmessung:",opts:["Axillär","Oral","Rektal","Tympanal"],a:2,exp:"Rektal: genaueste Methode."},
+  {m:2,n:'a',q:"Normale Atemfrequenz Erwachsener:",opts:["8–12","12–20","20–30","30–40"],a:1,exp:"12–20 Atemzüge/Minute."},
+  {m:2,n:'a',q:"SpO₂ < 90% bedeutet:",opts:["Normal","Leichte Hypoxämie","Sofort Arzt + O₂","Abwarten"],a:2,exp:"SpO₂ < 90% = kritisch → sofort Arzt informieren, O₂ vorbereiten."},
+  {m:2,n:'a',q:"Fieber beginnt ab:",opts:["37°C","37,5°C","38,1°C","39°C"],a:2,exp:"Mäßiges Fieber: 38,1–39,0°C. Subfebrile Temperaturen: 37,5–38,0°C."},
+  {m:2,n:'a',q:"Schmerzskala NRS geht von:",opts:["0–5","0–10","1–10","0–100"],a:1,exp:"NRS: 0 (kein Schmerz) bis 10 (stärkster vorstellbarer Schmerz)."},
+  {m:2,n:'a',q:"BESD-Skala wird eingesetzt bei:",opts:["Kindern","Intensivpatienten","Dementen Patienten","Postoperativen Patienten"],a:2,exp:"BESD: Verhaltensbeobachtung zur Schmerzeinschätzung bei Demenzpatienten."},
+  {m:2,n:'a',q:"Pulsörtlichkeit: häufigster Messort?",opts:["A. carotis","A. radialis","A. femoralis","A. brachialis"],a:1,exp:"A. radialis am Handgelenk – am häufigsten im klinischen Alltag."},
+  {m:2,n:'f',q:"Patient hat RR 92/58 mmHg nach dem Aufstehen. Was zuerst?",opts:["Antihypertensivum geben","Patient hinlegen, Beine hochlagern, Arzt informieren","Blutdruck nochmal messen und abwarten","Nichts – Normalbefund"],a:1,exp:"Orthostatische Hypotonie: Patient sofort hinlegen, Beine hochlagern → verbessert venösen Rückfluss. Arzt informieren."},
+  {m:2,n:'f',q:"Welche Kombination von Vitalzeichen deutet auf Schock hin?",opts:["HF 60, RR 130/80, SpO2 98%","HF 130, RR 80/50, SpO2 88%, kalte Extremitäten","HF 80, Temp 39°C, SpO2 95%","HF 55, RR 110/70, Temp 36,5°C"],a:1,exp:"Schockzeichen: Tachykardie + Hypotonie + Hypoxämie + periphere Vasokonstriktion (kalte Haut)."},
+  {m:2,n:'f',q:"Patientin mit COPD wird schlechter. SpO₂ 88%. Was ist zu beachten vor O₂-Gabe?",opts:["Sofort hochdosiert O₂ geben","Vorsichtig dosieren – COPD-Patienten haben oft hypoxischen Atemantrieb","O₂-Gabe kontraindiziert","Nur inhalieren lassen"],a:1,exp:"COPD: chronische Hyperkapnie → hypoxischer Atemantrieb. Hohe O₂-Gabe kann Atemantrieb hemmen → kontrollierte O₂-Gabe (88–92% Ziel-SpO₂)."},
+  {m:2,n:'f',q:"Cheyne-Stokes-Atmung wird beobachtet. Was sollten Sie tun?",opts:["Nichts – normal bei alten Menschen","Arzt informieren + Angehörige vorbereiten – oft Sterbephase","Sofort Reanimation","O₂ geben"],a:1,exp:"Cheyne-Stokes in Kombination mit anderen Sterbzeichen = Arzt + Angehörige informieren, Würde wahren."},
+  {m:2,n:'f',q:"OPQRST: Was erfasst 'R'?",opts:["Rhythmus","Radiation – Ausstrahlung des Schmerzes","Ruhe","Reaktion auf Schmerzmedikamente"],a:1,exp:"R = Radiation: Strahlt der Schmerz aus? (z.B. Herzinfarkt → linker Arm/Kiefer)."},
+  {m:2,n:'e',q:"Patient hat HF 42/min, asymptomatisch. Welche Differenzialdiagnose hat KEINE sofortige Behandlung?",opts:["Sick-Sinus-Syndrom","AV-Block III°","Vagotone Bradykardie bei Sportler","Herzstillstand"],a:2,exp:"Sportler können physiologisch 40–50/min haben (Vagotonie) – asymptomatisch, keine Behandlung nötig. AV-Block III° und Sick-Sinus erfordern ggf. Schrittmacher."},
+  {m:2,n:'e',q:"Eine Messung zeigt RR 190/115 mmHg ohne Symptome. Was unterscheidet hypertensive Krise von hypertensivem Notfall?",opts:["Kein Unterschied","Hypertensive Krise: kein Organschaden; Notfall: mit akutem Organschaden","Notfall: nur bei Kopfschmerzen","Krise: immer sofort behandeln"],a:1,exp:"Hypertensive Krise (urgency): hoher RR ohne Organschaden → orale Therapie, vorsichtige Senkung. Hypertensiver Notfall (emergency): mit Organschaden → sofortige i.v. Therapie, Intensivstation."},
+  {m:2,n:'e',q:"Welcher Schmerzmechanismus liegt beim diabetischen Neuropathieschmerz vor?",opts:["Nozizeptiver Schmerz","Neuropathischer Schmerz (Nervenschaden)","Viszeraler Schmerz","Psychogener Schmerz"],a:1,exp:"Neuropathischer Schmerz: direkte Nervenschädigung durch Diabetes → brennend, einschießend. Therapie: Antikonvulsiva (Gabapentin), Antidepressiva – klassische Analgetika oft weniger wirksam."},
+
+  // ──────────────────────────── MODUL 3 ─────────────────────────────────
+  {m:3,n:'a',q:"Was bedeutet s.c.?",opts:["Subkutan","Sublingual","Subkortical","Submukös"],a:0,exp:"s.c. = subkutan = unter die Haut."},
+  {m:3,n:'a',q:"5-R-Regel: R3 bedeutet?",opts:["Richtiger Patient","Richtiges Medikament","Richtige Dosis","Richtiger Weg"],a:2,exp:"R3 = Richtige Dosis: Verordnung vs. vorrätige Konzentration prüfen."},
+  {m:3,n:'a',q:"Injektionswinkel s.c. bei normalem BMI:",opts:["90°","45°","30°","15°"],a:1,exp:"45° bei normalem BMI. 90° bei Adipositas."},
+  {m:3,n:'a',q:"Heparin wird verabreicht als:",opts:["i.m.","p.o.","s.c.","i.v. immer"],a:2,exp:"Heparin (niedermolekulares) subkutan injiziert."},
+  {m:3,n:'a',q:"BtMG-Medikamente erfordern:",opts:["Normale Dokumentation","Vier-Augen-Prinzip + BtM-Buch","Einmal täglich dokumentieren","Nur ärztliche Unterschrift"],a:1,exp:"BtMG: Vier-Augen-Prinzip + Eintrag in BtM-Buch (Datum, Menge, Patient, 2 Unterschriften)."},
+  {m:3,n:'a',q:"Was ist die Hauptnebenwirkung von Diuretika?",opts:["Hypoglykämie","Osteoporose","Elektrolytstörungen","Allergie"],a:2,exp:"Diuretika steigern Wasserausscheidung → Elektrolytverluste (bes. Kalium, Natrium)."},
+  {m:3,n:'a',q:"Hauptnebenwirkung von Insulin:",opts:["Hypertonie","Hypoglykämie","Osteoporose","Allergie"],a:1,exp:"Insulin → Blutzuckersenkung → Überdosierung → Hypoglykämie."},
+  {m:3,n:'a',q:"i.v. steht für:",opts:["In die Vene","Inhalativ","In den Muskel","Intraperitoneal"],a:0,exp:"i.v. = intravenös = in die Vene."},
+  {m:3,n:'a',q:"Nadellänge für i.m. Injektion Erwachsene:",opts:["8mm","12mm","25mm","40mm"],a:3,exp:"i.m. Erwachsene: 40 mm Nadellänge, 90° Winkel."},
+  {m:3,n:'a',q:"Welches Analgetikum ist auf WHO-Stufe 1?",opts:["Morphin","Tramadol","Ibuprofen","Fentanyl"],a:2,exp:"Stufe 1: Nicht-Opioide (Ibuprofen, Paracetamol, Metamizol)."},
+  {m:3,n:'f',q:"500ml NaCl soll über 4 Stunden laufen. Tropffaktor 20. Wie viele Tropfen/min?",opts:["21","42","83","25"],a:1,exp:"500 × 20 ÷ 240 min = 10000 ÷ 240 = 41,7 ≈ 42 Tropfen/min."},
+  {m:3,n:'f',q:"Patient erhält Ramipril 10 mg/Tag. Vorrätig: Ramipril 5 mg Tabletten. Was geben?",opts:["1 Tablette","2 Tabletten","0,5 Tabletten","3 Tabletten"],a:1,exp:"10 mg ÷ 5 mg = 2 Tabletten."},
+  {m:3,n:'f',q:"Warum wird Metformin bei Niereninsuffizienz abgesetzt?",opts:["Allergie","Laktatazidose-Risiko bei reduzierter Ausscheidung","Hypoglykämie-Risiko","Blutdrucksenkung"],a:1,exp:"Metformin wird renal ausgeschieden – bei Niereninsuffizienz Kumulation → Laktatazidose (lebensbedrohlich)."},
+  {m:3,n:'f',q:"Welche Maßnahme nach versehentlicher Nadelstichverletzung ZUERST?",opts:["Arzt informieren","Wunde ausbluten lassen + gründlich waschen + Betriebsarzt sofort","Mundschutz anlegen","Impfung sofort"],a:1,exp:"1. Wunde ausbluten lassen (nicht ausdrücken), 2. Waschen + desinfizieren, 3. Sofort Betriebsarzt/D-Arzt informieren für Infektionsprophylaxe (HIV, HBV, HCV)."},
+  {m:3,n:'f',q:"Welche Medikamentenkombination erhöht Blutungsrisiko stark?",opts:["Ibuprofen + Paracetamol","Heparin + Marcumar","Amoxicillin + Ibuprofen","Metoprolol + Ramipril"],a:1,exp:"Heparin + Marcumar (Cumarintherapie): beide hemmen Gerinnung → stark erhöhtes Blutungsrisiko – strenge Indikation, regelmäßige INR-Kontrollen."},
+  {m:3,n:'e',q:"Patient mit Vorhofflimmern erhält Phenprocoumon (Marcumar). INR 4,8. Was bedeutet das klinisch?",opts:["Gut eingestellt","Zu gering antikoaguliert","Zu stark antikoaguliert – Blutungsrisiko erhöht","Normal – kein Handlungsbedarf"],a:2,exp:"Ziel-INR bei Vorhofflimmern: 2,0–3,0. INR 4,8 = Überantikoagulation → erhöhtes Blutungsrisiko. Dosisreduktion, ggf. Antidot (Vitamin K)."},
+  {m:3,n:'e',q:"Warum sollte Insulin NIE intramuskulär injiziert werden (außer Notfall)?",opts:["Schmerzen","Zu schnelle Resorption → Hypoglykämiegefahr","Geht technisch nicht","Infektionsrisiko"],a:1,exp:"i.m. Resorption unkontrollierbar schnell → peakdosis → Hypoglykämie. s.c. ist standardisiert mit vorhersehbarer Pharmakokinetik."},
+  {m:3,n:'e',q:"Patient erhält Digoxin. Welcher Wert muss VOR jeder Gabe kontrolliert werden?",opts:["Blutdruck","Herzfrequenz (< 60/min = Gabe pausieren)","Blutzucker","Temperatur"],a:1,exp:"Digoxin: Herzfrequenz IMMER vor Gabe messen. Bei HF < 60/min Gabe pausieren + Arzt informieren (Bradykardie-Risiko, enge therapeutische Breite)."},
+
+  // ──────────────────────────── MODUL 4 ─────────────────────────────────
+  {m:4,n:'a',q:"MNA misst:",opts:["Dekubitusrisiko","Mangelernährung bei Senioren","Sturzrisiko","Schmerz"],a:1,exp:"MNA = Mini Nutritional Assessment für Senioren ≥ 65 Jahre."},
+  {m:4,n:'a',q:"BMI < 18,5 bedeutet:",opts:["Normalgewicht","Übergewicht","Untergewicht","Adipositas"],a:2,exp:"BMI < 18,5 = Untergewicht → Mangelernährungsrisiko."},
+  {m:4,n:'a',q:"Dysphagie: gefährlichste Komplikation?",opts:["Mangelernährung allein","Aspiration → Aspirationspneumonie","Obstipation","Dehydratation"],a:1,exp:"Aspiration von Speisen/Flüssigkeiten → Aspirationspneumonie (lebensbedrohlich)."},
+  {m:4,n:'a',q:"Wann PEG statt NGS?",opts:["< 1 Woche","< 2 Wochen","Voraussichtlich > 4 Wochen","Immer"],a:2,exp:"PEG bei voraussichtlicher Ernährungsdauer > 4 Wochen."},
+  {m:4,n:'a',q:"Normale Urinmenge/Tag:",opts:["500ml","1000–2000ml","3000ml","200ml"],a:1,exp:"1000–2000 ml/Tag. < 500 ml = Oligurie. < 100 ml = Anurie."},
+  {m:4,n:'a',q:"Stressinkontinenz: typischer Auslöser?",opts:["Starker Harndrang","Husten, Niesen, Lachen","Harnverhalt","Neurologisch"],a:1,exp:"Stressinkontinenz: Urinverlust bei körperlicher Belastung (Beckenbodenschwäche)."},
+  {m:4,n:'a',q:"Katheterstärke Frauen:",opts:["Ch 10–12","Ch 14–16","Ch 18–20","Ch 22–24"],a:1,exp:"Frauen: Ch 14–16. Männer: Ch 16–18."},
+  {m:4,n:'a',q:"Obstipation: Risikofaktor?",opts:["Viel trinken","Ballaststoffe","Immobilität + wenig Trinken + Opiate","Sport"],a:2,exp:"Immobilität, Opiatgabe, Ballaststoffmangel, wenig Trinken → Obstipation."},
+  {m:4,n:'a',q:"Parenterale Ernährung wird verabreicht:",opts:["Oral","Über Sonde","Intravenös","Inhalativ"],a:2,exp:"Parenteral = intravenös – umgeht Magen-Darm-Trakt."},
+  {m:4,n:'a',q:"Harnbeutel hängt:",opts:["Über Blasenniveau","Auf Augenhöhe","Unter Blasenniveau","Auf dem Boden"],a:2,exp:"Harnbeutel immer unter Blasenniveau – verhindert Reflux + Infektionen."},
+  {m:4,n:'f',q:"Patient mit Dysphagie nach Schlaganfall. Welche Konsistenz zuerst testen?",opts:["Normal feste Nahrung","Breiige/pürierte Kost (Stufe 1–2)","Flüssigkeiten ohne Verdickung","Nüsse und Brot"],a:1,exp:"Nach Schlaganfall: stufenweise Kostaufbau beginnen. Dünnflüssige Getränke oft schwieriger als breiige Kost → FEES/Schluckuntersuchung empfohlen."},
+  {m:4,n:'f',q:"Patientin mit Harnwegsinfekt fragt nach mehr Flüssigkeit. Empfehlung?",opts:["Weniger trinken","1,5–2,5 l/Tag trinken + Wärme + Antibiotika nach ärztlicher Verordnung","Nur Blasentee","Kein Rat geben"],a:1,exp:"Ausreichend trinken verdünnt Bakterien + spült Harnwege. Antibiotikatherapie nach Erregernachweis. Wärme lindert Beschwerden."},
+  {m:4,n:'f',q:"Patient mit Niereninsuffizienz Grad 4. Welche Ernährungsanpassung?",opts:["Eiweiß erhöhen","Phosphat und Kalium einschränken, Flüssigkeit bilanzieren","Mehr Salz","Keine Einschränkungen"],a:1,exp:"Niereninsuffizienz: Phosphat + Kalium einschränken (Akkumulation), Flüssigkeit bilanzieren (Ödeme, Hypertonie)."},
+  {m:4,n:'f',q:"Wann ist suprapubischer Katheter gegenüber transurethral bevorzugt?",opts:["Kurzzeit-Entleerung","Langzeit + Harnröhrenobstruktion/Verletzung","Bei Männern immer","Bei Frauen nie"],a:1,exp:"Suprapubisch: Langzeitversorgung, bei Harnröhrenproblemen (Strikturen, Verletzungen, Prostatahyperplasie)."},
+  {m:4,n:'f',q:"BMI 17, Patient isst wenig. MNA-Score 10. Was empfehlen?",opts:["Abwarten","Ernährungsberatung + hochkalorische Supplemente + ggf. Sondenernährung","Nur Diät","Infusion"],a:1,exp:"MNA < 12 = Mangelernährung → Ernährungsberatung, Energy-Drinks, Zwischenmahlzeiten, bei Bedarf enterale Ernährung."},
+  {m:4,n:'e',q:"Refeeding-Syndrom: wann und warum gefährlich?",opts:["Beim ersten Essen nach Fasten – immer harmlos","Beim Wiederernähren nach langer Mangelernährung: Phosphat fällt ab → Herzrhythmusstörungen, Atemversagen","Nur bei Kindern","Betrifft nur Kalium"],a:1,exp:"Refeeding-Syndrom: Insulinanstieg bei Wiedernähren → Phosphat, Magnesium, Kalium verschieben sich in Zellen → Elektrolytmangel → kardiale + pulmonale Komplikationen. Langsam ernähren!"},
+  {m:4,n:'e',q:"Patient hat Aszites durch Leberzirrhose. Welche Ernährungs- UND Flüssigkeitsmaßnahme?",opts:["Viel trinken + salzig essen","Natriumrestriktion < 2g/Tag + Flüssigkeitsrestriktion + kalorienreiche Kost","Eiweiß stark einschränken","Parenterale Ernährung sofort"],a:1,exp:"Leberzirrhose + Aszites: Na-Restriktion (reduziert Wasserretention), Flüssigkeitsbilanz, Kalorienbedarf hoch (Katabolismus), Eiweiß 1,2–1,5 g/kg (nicht einschränken außer hepatische Enzephalopathie)."},
+  {m:4,n:'e',q:"Welche Komplikation droht bei langem Blasendauerkatheter?",opts:["Hypokaliämie","Katheter-assoziierte Harnwegsinfektion (CAUTI) – häufigste nosokomiale Infektion","Thrombose","Dekubitus"],a:1,exp:"CAUTI (catheter-associated UTI): häufigste nosokomiale Infektion. Prävention: sterile Anlage, geschlossenes System, tägliche Pflege, frühzeitige Entfernung."},
+
+  // ──────────────────────────── MODUL 5 ─────────────────────────────────
+  {m:5,n:'a',q:"Dekubitusprophylaxe: beste Lagerung?",opts:["Rückenlage dauerhaft","30°-Seitenlage","Bauchlage","Sitzend immer"],a:1,exp:"30°-Seitenlage: reduziert Druck auf Sakrum, Trochanteren."},
+  {m:5,n:'a',q:"Bradenskala: hohes Risiko ab Wert:",opts:["≤ 18","≤ 14","≤ 12","≤ 9"],a:2,exp:"10–12 Punkte = hohes Risiko. ≤ 9 = sehr hohes Risiko."},
+  {m:5,n:'a',q:"Umlagerung bei hohem Dekubitusrisiko:",opts:["Alle 6h","Alle 4h","Alle 2h","Einmal täglich"],a:2,exp:"Alle 2 Stunden umlagern."},
+  {m:5,n:'a',q:"Thromboseprophylaxe: Medikament?",opts:["Ibuprofen","Enoxaparin (Heparin)","Paracetamol","Amoxicillin"],a:1,exp:"Niedermolekulares Heparin (Enoxaparin) s.c."},
+  {m:5,n:'a',q:"Kinästhetik: Grundprinzip?",opts:["Patienten tragen","Eigenbewegung fördern","Immobilisieren","Medikamentös unterstützen"],a:1,exp:"Kinästhetik: Eigenbewegung des Patienten unterstützen – nicht übernehmen."},
+  {m:5,n:'a',q:"Pneumonieprophylaxe: falsch?",opts:["Atemübungen","Oberkörperhochlage","Flachlagerung","Frühmobilisation"],a:2,exp:"Flachlagerung fördert Sekretansammlungen – kontraindiziert bei Pneumonieprophylaxe."},
+  {m:5,n:'a',q:"Sturzprophylaxe: richtige Maßnahme?",opts:["Bett hochstellen","Klingel weit weg","Rutschfeste Schuhe + Nachts Orientierungslicht","Sedativa"],a:2,exp:"Rutschfeste Schuhe und Licht = einfach und effektiv."},
+  {m:5,n:'a',q:"Dekubitus Grad 2:",opts:["Rötung intakt","Teilverlust Haut + Blasen","Nekrose sichtbar","Knochen frei"],a:1,exp:"Grad 2: Teilverlust, Blasenbildung, Abschürfung."},
+  {m:5,n:'a',q:"TVT-Zeichen:",opts:["Blässe","Schwellung + Rötung + Überwärmung","Kribbeln","Kopfschmerz"],a:1,exp:"Tiefe Venenthrombose: Schwellung, Rötung, Überwärmung, Schmerz."},
+  {m:5,n:'a',q:"Kontrakturprophylaxe: wichtigste Maßnahme?",opts:["Ruhigstellen","Passive + aktive Bewegungsübungen","Schienen dauerhaft","Wärme"],a:1,exp:"Bewegungsübungen erhalten Gelenkbeweglichkeit."},
+  {m:5,n:'f',q:"Patient nach Hüft-TEP, 2. postop. Tag. Thromboseprophylaxe?",opts:["Keine – zu früh","Kompressionsstrümpfe + Heparin + Frühmobilisation sofort","Nur Heparin","Nur Kompressionsstrümpfe"],a:1,exp:"Nach Hüft-TEP: Kombination Kompressionsstrümpfe + NMWH + Frühmobilisation – hohes Thromboserisiko."},
+  {m:5,n:'f',q:"Bradenskala: Patient hat 23 Punkte. Was tun?",opts:["Sofort Spezialmatratze","Alle 2h umlagern","Standardpflege – kein erhöhtes Risiko","Ernährungsintervention sofort"],a:2,exp:"23 Punkte (max.) = kein Risiko → Standardpflege. Erst bei ≤ 18 Punkte erhöhter Fokus."},
+  {m:5,n:'f',q:"Patient atmet nach OP flach und hustet nicht. Was tun?",opts:["Nichts – postop. normal","Atemübungen anleiten (Triflow), Oberkörperhoch, Schmerzmanagement","Sofort Arzt rufen","Antibiotika geben"],a:1,exp:"Flache Atmung + kein Abhusten → Sekretansammlung → Pneumoniegefahr. Atemübungen, Schmerzkontrolle für tiefes Atmen, früh mobilisieren."},
+  {m:5,n:'f',q:"Kompressionstrümpfe wurden nach dem Aufstehen angelegt. Fehler?",opts:["Kein Fehler","Ja – müssen morgens VOR dem Aufstehen (liegend) angelegt werden","Nur abends anlegen","Nur bei Ödemen"],a:1,exp:"Kompressionsstrümpfe morgens im Liegen anlegen – bevor das Blut in die Beine sinkt."},
+  {m:5,n:'f',q:"Dekubitus Grad 3 am Sakrum. Erstmaßnahmen?",opts:["Wunde verbinden und abwarten","Wundversorgung + Druckentlastung + Ernährungsoptimierung + Dokumentation + Arzt","Antibiotika sofort","Bettruhige Lagerung auf der Wunde"],a:1,exp:"Grad 3: Wundversorgung (feuchte Versorgung), vollständige Druckentlastung, Protein/Zink/Vitamin C, Fotodokumentation, Arzt."},
+  {m:5,n:'e',q:"Was ist der Unterschied zwischen Dekubitus und Feuchtigkeitsassoziierter Dermatitis (FAD)?",opts:["Identisch","FAD durch Feuchtigkeit (Urin/Stuhl), Dekubitus durch Druck – unterschiedliche Lokalisation und Behandlung","Nur bei Inkontinenz","Nur Terminology-Unterschied"],a:1,exp:"FAD (MAD): Hautschaden durch Feuchtigkeit (Inkontinenz), diffuse Rötung, oft perianal. Dekubitus: Druck/Scherkräfte, über Knochen. Unterschiedliche Präventions- und Therapieansätze."},
+  {m:5,n:'e',q:"Warum erhöht Sarkopenie das Dekubitus- UND Sturzrisiko gleichzeitig?",opts:["Kein Zusammenhang","Muskelabbau → Immobilität + verringerte Gewebeperfusion + eingeschränkte Reflexe","Nur Sturzrisiko","Nur bei Demenz"],a:1,exp:"Sarkopenie (Muskelabbau im Alter): weniger Puffergewebe über Knochen → Dekubitusgefährdung. Schwächere Muskulatur → Gleichgewichts- und Gangstörung → Sturz. Interdisziplinäre Prävention nötig."},
+  {m:5,n:'e',q:"Patient auf Intensivstation, beatmet, 5 Tage Bettruhe. Risikoeinschätzung?",opts:["Niedriges Dekubitusrisiko","Alle Prophylaxen: Dekubitus, Thrombose, Pneumonie, Kontraktur, Parotitis gleichzeitig","Nur Thromboseprophylaxe","Abwarten"],a:1,exp:"Intensivpatient: maximales Risiko für ALLE Immobilitätsfolgen gleichzeitig. Prophylaxenpaket: Umlagerung 2h, NMWH, Atemtherapie, Bewegungsübungen, Mundpflege."},
+
+  // ──────────────────────────── MODUL 6 ─────────────────────────────────
+  {m:6,n:'a',q:"Häufigste Demenzform?",opts:["Vaskulär","Lewy-Body","Alzheimer","Frontotemporale"],a:2,exp:"Alzheimer: ~65% aller Demenzen."},
+  {m:6,n:'a',q:"Delir: akut oder chronisch?",opts:["Chronisch, irreversibel","Akut, reversibel","Chronisch, reversibel","Akut, irreversibel"],a:1,exp:"Delir: akuter Beginn, reversibel bei Ursachenbehandlung."},
+  {m:6,n:'a',q:"TALK – A bedeutet:",opts:["Abstand halten","Ask – nach Suizidgedanken fragen","Arzt holen","Aktivität anbieten"],a:1,exp:"A = Ask: Direkt nach Suizidgedanken fragen."},
+  {m:6,n:'a',q:"§ 1906 BGB regelt:",opts:["Schweigepflicht","FEM brauchen Richtererlaubnis","Medikamentengabe","Patientenrechte"],a:1,exp:"§ 1906 BGB: FEM bedürfen richterlicher Genehmigung."},
+  {m:6,n:'a',q:"Validation nach Feil:",opts:["Fehler korrigieren","Realität aufzwingen","Gefühle bestätigen und akzeptieren","Sedieren"],a:2,exp:"Validation: subjektive Realität des Patienten anerkennen."},
+  {m:6,n:'a',q:"Wie viele Kernsymptome bei Depression mindestens?",opts:["1","2","3","4"],a:1,exp:"Diagnose Depression: ≥ 2 Kernsymptome + ≥ 2 Nebensymptome > 2 Wochen."},
+  {m:6,n:'a',q:"FEM-Alternative:",opts:["Fixiergurt","Sedierung","Niedrigflurbett + Sensormatten","Bettgitter beidseitig"],a:2,exp:"Niedrigflurbetten und Sensormatten sind sicherere Alternativen zu FEM."},
+  {m:6,n:'a',q:"Biografiearbeit bei Demenz:",opts:["Irrelevant","Lebensgeschichte für individuelle Pflege nutzen","Nur für junge Patienten","Medikamentöse Ergänzung"],a:1,exp:"Biografiearbeit: Ressourcen aus der Lebensgeschichte nutzen."},
+  {m:6,n:'a',q:"Sundowning bedeutet:",opts:["Früh morgens Verwirrtheit","Verstärkte Verwirrung am Abend bei Demenz","Schlafstörung","Nachtaktivität"],a:1,exp:"Sundowning: Zunahme von Unruhe/Verwirrung am späten Nachmittag/Abend."},
+  {m:6,n:'a',q:"Kulturelle Wünsche des Patienten:",opts:["Ablehnen","Ignorieren","Respektieren + erfüllen wenn möglich","Arzt entscheiden"],a:2,exp:"Transkulturelle Kompetenz: kulturelle Wünsche respektieren."},
+  {m:6,n:'f',q:"Demenzpatient schlägt Pflegeperson. Ursache und Reaktion?",opts:["Absichtlich – Polizei rufen","Krankheitsbedingt (Agitation) – Ursache suchen, Ruhe, kein Strafvorwurf, Arzt","Ignorieren","FEM sofort"],a:1,exp:"Aggressivität bei Demenz ist krankheitsbedingt (nicht absichtlich). Auslöser suchen (Schmerz, Angst, Überreizung), Ruhe, Distanz, validieren – FEM nur als letztes Mittel."},
+  {m:6,n:'f',q:"Patient äußert: 'Ich wäre besser tot.' Wie reagieren?",opts:["Thema wechseln","Direkt fragen ('Haben Sie Gedanken, sich das Leben zu nehmen?') + aktiv zuhören + Arzt informieren","Relativieren ('Das sagen alle')","Allein lassen"],a:1,exp:"Suizidgedanken IMMER ernst nehmen. Direkt ansprechen erhöht NICHT das Risiko. Offenes Gespräch + Arzt informieren + nicht allein lassen."},
+  {m:6,n:'f',q:"Was unterscheidet Delir von Demenz in der Praxis?",opts:["Kein Unterschied","Delir: Beginn innerhalb Stunden/Tage, Bewusstseinsschwankung, Ursache findbar; Demenz: Monate/Jahre, kein Bewusstseinsdefizit","Demenz: akuter Beginn","Delir: irreversibel"],a:1,exp:"Delir: akut (Stunden–Tage), fluktuierend, Bewusstseinsveränderung. Ursache behandeln → reversibel. Demenz: schleichend, progredient."},
+  {m:6,n:'f',q:"Patient lehnt Pflege ab (Inkontinenzversorgung). Was tun?",opts:["Pflege erzwingen","Gründe erfragen, Würde wahren, Kompromiss suchen, dokumentieren","Ignorieren","FEM anwenden"],a:1,exp:"Patientenautonomie respektieren. Gründe erfragen (Scham, Schmerz). Würde wahren. Kompromiss (Zeitpunkt, weibliche Pflegende). Dokumentieren."},
+  {m:6,n:'f',q:"Zwangsmaßnahmen in der Psychiatrie erfordern:",opts:["Nur Arztentscheidung","Richterliche Genehmigung + regelmäßige Überprüfung + Dokumentation + Alternativen ausgeschöpft","Nur Pflegeleitung","Keine besonderen Anforderungen"],a:1,exp:"FEM/Zwangsmaßnahmen: richterliche Genehmigung (§ 1906 BGB), Alternativen ausschöpfen, regelmäßige Überprüfung, lückenlose Dokumentation."},
+  {m:6,n:'e',q:"Welcher Unterschied besteht zwischen passiver Sterbehilfe und palliativer Sedierung?",opts:["Kein Unterschied","Passive Sterbehilfe: lebenserhaltende Maßnahmen einstellen auf Patientenwunsch. Palliative Sedierung: Symptomkontrolle durch Sedativa – beide ethisch akzeptiert","Palliative Sedierung ist aktive Sterbehilfe","Beide verboten in Deutschland"],a:1,exp:"Passive Sterbehilfe (Therapieverzicht): auf Wunsch Abschalten lebensverlängernder Maßnahmen – legal. Palliative Sedierung: Symptomlinderung durch Sedativa, Tod kann eintreten, ist aber nicht Ziel – legal. Aktive Sterbehilfe (Tötung auf Verlangen): in Deutschland verboten."},
+  {m:6,n:'e',q:"Warum sind FEM bei Demenz trotz Sturzschutz problematisch?",opts:["Kein Problem","FEM erhöhen Agitation, Muskelabbau, Würdeverlust und oft NICHT die Sicherheit – Alternativen oft effektiver","Nur bei jungen Patienten problematisch","Immer sicherer als Freiheit"],a:1,exp:"Evidenz zeigt: FEM erhöhen oft Verletzungsrisiko (Strangulation, Sturz beim Befreiungsversuch), fördern Agitation/Delir, Muskelschwund. Niedrigflurbetten, Sensormatten, Hüftprotektoren effektiver."},
+  {m:6,n:'e',q:"Patient mit paranoider Schizophrenie glaubt, vergiftet zu werden. Er verweigert Medikamente. Vorgehen?",opts:["Medikamente heimlich ins Essen geben","Arzt informieren; Gespräch suchen; wenn einwilligungsunfähig → Betreuer/Richter; heimliche Gabe verboten","FEM sofort","Ignorieren"],a:1,exp:"Heimliche Medikamentengabe ist verboten (Körperverletzung). Aufklärung versuchen, Arzt, Betreuer einschalten. Bei Einwilligungsunfähigkeit: Richter entscheidet über Zwangsbehandlung (§ 1906a BGB)."},
+
+  // ──────────────────────────── MODUL 7 ─────────────────────────────────
+  {m:7,n:'a',q:"Normale HF Neugeborenes:",opts:["60–100","80–120","120–160","160–200"],a:2,exp:"Neugeborene: 120–160/min."},
+  {m:7,n:'a',q:"Palliativpflege Ziel:",opts:["Lebensverlängerung","Heilung","Lebensqualität + Leidenslinderung","Sedierung"],a:2,exp:"Palliativ: Lebensqualität, Symptomkontrolle."},
+  {m:7,n:'a',q:"Kübler-Ross Phase 2:",opts:["Verleugnung","Zorn/Wut","Verhandeln","Akzeptanz"],a:1,exp:"1. Verleugnung → 2. Zorn → 3. Verhandeln → 4. Depression → 5. Akzeptanz."},
+  {m:7,n:'a',q:"Barthel-Index 0–30 =",opts:["Selbstständig","Teilabhängig","Hoch pflegebedürftig","Rehabilitierbar"],a:2,exp:"0–30 Punkte: hohe Abhängigkeit."},
+  {m:7,n:'a',q:"Polypharmazie ab:",opts:["≥3","≥5","≥8","≥10"],a:1,exp:"Polypharmazie: ≥ 5 Medikamente täglich."},
+  {m:7,n:'a',q:"GCS misst:",opts:["Schmerzintensität","Bewusstseinszustand","Herzfrequenz","Blutdruck"],a:1,exp:"Glasgow Coma Scale: Augenöffnen + Sprache + Motorik. Max. 15, Koma < 8."},
+  {m:7,n:'a',q:"Total Pain Dimensionen:",opts:["2","3","4","5"],a:2,exp:"Total Pain (Saunders): physisch, psychisch, sozial, spirituell."},
+  {m:7,n:'a',q:"Exsikkose bedeutet:",opts:["Übelkeit","Dehydratation","Obstipation","Schwindel"],a:1,exp:"Exsikkose = Dehydratation/Austrocknung."},
+  {m:7,n:'a',q:"APGAR-Score bewertet:",opts:["Geburtsgewicht","Zustand des Neugeborenen (Atmung, HF, Tonus, Farbe, Reflexe)","Blutgruppe","Glucose"],a:1,exp:"APGAR: Atmung, Puls, Grimassieren, Aktivität, Reflexe – 0–10 Punkte."},
+  {m:7,n:'a',q:"I in I'M SAFE =",opts:["Infektion","Immobilität","Inkontinenz","Insomnie"],a:1,exp:"I'M SAFE: Immobilität, Mangelernährung, Sturzgefahr, Arzneimittelprobleme, Funktionsverlust, Exsikkose."},
+  {m:7,n:'f',q:"Kind, 6 Jahre, RR 110/70, HF 95/min. Befund?",opts:["Hypertonie","Normalbefund für Schulkind","Tachykardie","Hypotonie"],a:1,exp:"Schulkind: RR ca. 100–120/60–80 mmHg, HF 70–110/min – altersgerecht normal."},
+  {m:7,n:'f',q:"Sterbender Patient atmet rasselnd. Familie ist erschrocken. Was sagen?",opts:["'Das ist gefährlich'","'Rasselatmung ist häufig am Lebensende – kein Zeichen von Schmerz oder Erstickung, Patient ist tief entspannt'","Nichts sagen","Sofort Absaugung"],a:1,exp:"Rasselatmung (Todesrasseln): Sekret in Atemwegen – Patient nimmt es nicht wahr. Familie beruhigen, erklären, da sein."},
+  {m:7,n:'f',q:"Ältere Patientin hat Infektion, aber kein Fieber, nur Verwirrtheit. Bedeutung?",opts:["Kein Zusammenhang","Atypische Infektionssymptomatik bei Senioren – Verwirrtheit als Erstzeichen","Normale Altersverwirrtheit","Demenz-Exazerbation"],a:1,exp:"Senioren zeigen oft atypische Infektionssymptome: keine Fieber-Reaktion (Immunalterung), stattdessen Verwirrtheit, Sturz, Erschöpfung."},
+  {m:7,n:'f',q:"Patient nach Schlaganfall mit Neglect (ignoriert linke Körperhälfte). Pflegekonsequenz?",opts:["Nur von rechts ansprechen","Von links ansprechen + pflegen + Stimulation der vernachlässigten Seite","Ignorieren","Bettgitter links hochstellen"],a:1,exp:"Neglect-Rehabilitation: vernachlässigte Seite aktiv stimulieren (visuell, taktil, auditiv). Von links ansprechen, Gegenstände links positionieren."},
+  {m:7,n:'f',q:"Wann ist Reanimation beim sterbenden Patienten NICHT indiziert?",opts:["Immer indiziert","Bei vorliegender DNR-Verfügung, Patientenverfügung oder wenn Sterben natürlicher Verlauf der Erkrankung","Nur bei Bewusstlosigkeit","Immer nach Angehörigenwunsch"],a:1,exp:"DNR (Do Not Resuscitate) / Patientenverfügung ist bindend. Sterben in Würde ist ein Recht. Palliativer Ansatz respektiert den natürlichen Sterbeprozess."},
+  {m:7,n:'e',q:"Multimorbidität + Polypharmazie: Warum ist Medikamentenreduktion (Deprescribing) wichtig?",opts:["Spart Geld, sonst kein Vorteil","Reduziert Interaktionen, Nebenwirkungen, Stürze, Hospitalisierungen – verbessert Lebensqualität","Nur bei > 10 Medikamente","Erst bei Niereninsuffizienz"],a:1,exp:"Polypharmazie: jedes weitere Medikament erhöht Interaktionsrisiko exponentiell. Deprescribing: systematische Überprüfung ob alle Medikamente noch indiziert – reduziert Stürze, kognitive Einschränkungen, Hospitalisierungen."},
+  {m:7,n:'e',q:"Ein Kind mit Fieber erhält Ibuprofen vom Elternteil ohne Rücksprache. Welches Risiko bei < 6 Monaten?",opts:["Kein Risiko","Ibuprofen < 3–6 Monate kontraindiziert – Nierenfunktion unreif, Reye-Syndrom-Risiko bei Aspiringabe","Nur bei Allergie","Nur Überdosierung"],a:1,exp:"Ibuprofen: < 3 Monate kontraindiziert. ASS < 12 Jahre Reye-Syndrom-Risiko. Paracetamol ab Geburt möglich. Altersdosierungen immer prüfen."},
+  {m:7,n:'e',q:"Wie unterscheidet sich palliative Chemotherapie von kurativer Chemotherapie?",opts:["Identisch","Palliativ: Symptomkontrolle, Lebensqualität, weniger aggressive Dosierung; kurativ: Heilungsintention, höhere Toxizität akzeptiert","Palliativ immer stärker","Kurativ ohne Nebenwirkungen"],a:1,exp:"Palliative Chemotherapie: Ziel = Tumorkontrolle, Symptomlinderung, Lebensqualität erhalten. Toxizität sorgfältig abwägen. Kurativ: Heilung angestrebt → höhere Toxizität akzeptabel."},
+
+  // ──────────────────────────── MODUL 8 ─────────────────────────────────
+  {m:8,n:'a',q:"PflBG trat in Kraft:",opts:["2015","2018","2020","2022"],a:2,exp:"1. Januar 2020."},
+  {m:8,n:'a',q:"Schweigepflicht = StGB §?",opts:["203","218","323c","1906"],a:0,exp:"§ 203 StGB: Verletzung von Privatgeheimnissen."},
+  {m:8,n:'a',q:"Strukturqualität nach Donabedian =",opts:["Patientenzufriedenheit","Pflegeprozess","Personal + Räume + Ausstattung","Komplikationsrate"],a:2,exp:"Strukturqualität: Voraussetzungen (Input)."},
+  {m:8,n:'a',q:"Non-Malefizienz bedeutet:",opts:["Autonomie","Wohl fördern","Schaden vermeiden","Gerechtigkeit"],a:2,exp:"Non-Malefizienz: keinen Schaden zufügen."},
+  {m:8,n:'a',q:"Patientenrechtegesetz: Jahr?",opts:["2007","2010","2013","2020"],a:2,exp:"Patientenrechtegesetz trat 2013 in Kraft."},
+  {m:8,n:'a',q:"Vorsorgevollmacht:",opts:["Unverbindlicher Wunsch","Bindende Bevollmächtigung einer Person","Nur für Ärzte","Nur bei Demenz"],a:1,exp:"Vorsorgevollmacht: bindend. Betreuungsverfügung: unverbindlicher Wunsch."},
+  {m:8,n:'a',q:"MDK steht für:",opts:["Medizinischer Dienst der Krankenversicherung","Modernes Dokumentationssystem Krankenhaus","Multiprofessionelles Diagnoseteam","Medikamentendossier Kontrolle"],a:0,exp:"MDK: Medizinischer Dienst der Krankenversicherung – prüft Pflegequalität."},
+  {m:8,n:'a',q:"Im Notfall ohne Einwilligung:",opts:["Verboten","Erlaubt nach mutmaßlichem Willen","Nur Betreuer","Abwarten"],a:1,exp:"Notfallbehandlung nach mutmaßlichem Willen zulässig."},
+  {m:8,n:'a',q:"Durchführungsverantwortung trägt:",opts:["Arzt immer","Pflegeleitung","Pflegeperson die ausführt","Niemand"],a:2,exp:"Wer ausführt, trägt Durchführungsverantwortung."},
+  {m:8,n:'a',q:"ICN Ethikkodex hat wie viele Grundelemente?",opts:["2","4","6","8"],a:1,exp:"ICN: 4 Grundelemente."},
+  {m:8,n:'f',q:"Arzt ordnet Maßnahme an, die Sie als fehlerhaft einschätzen. Was tun?",opts:["Ausführen – Arzt trägt Verantwortung","Bedenken äußern (Rückfrage), dokumentieren, bei Gefahr verweigern","Schweigen","Sofort Polizei"],a:1,exp:"Durchführungsverantwortung: Bedenken äußern ist Pflicht! Bei klarem Fehler: ablehnen, dokumentieren. Schweigen und Ausführen macht Pflegeperson mitverantwortlich."},
+  {m:8,n:'f',q:"Angehöriger fragt nach Diagnose ohne Patienteneinwilligung. Was antworten?",opts:["Vollständig informieren","'Ich brauche die Erlaubnis des Patienten – Schweigepflicht gilt auch gegenüber Familie'","Schweigen ohne Erklärung","Arzt muss antworten"],a:1,exp:"§ 203 StGB: Schweigepflicht gilt gegenüber ALLEN Dritten inkl. Familie ohne Patienteneinwilligung."},
+  {m:8,n:'f',q:"Welches Qualitätsmerkmal unterscheidet Prozess- von Ergebnisqualität?",opts:["Gleich","Prozessqualität: korrekte Abläufe; Ergebnisqualität: messbare Outcomes","Ergebnisqualität: nur Struktur","Prozessqualität: Patientenzufriedenheit"],a:1,exp:"Prozess: wie wird gepflegt (Pflegeprozess, Hygiene). Ergebnis: was kommt dabei raus (Dekubitusrate, Zufriedenheit, Zielzielerreichung)."},
+  {m:8,n:'f',q:"Patient unterschreibt Einwilligung, versteht aber nicht was er unterschreibt (Sprachbarriere). Gültig?",opts:["Ja – Unterschrift reicht","Nein – informierte Einwilligung erfordert Verständnis; Dolmetscher nötig","Nur bei Operationen problematisch","Arzt entscheidet"],a:1,exp:"Informed Consent: Einwilligung nur gültig wenn Patient aufgeklärt UND verstanden hat. Sprachbarriere = Dolmetscher zwingend."},
+  {m:8,n:'f',q:"Wann kann Patientenverfügung übergangen werden?",opts:["Wenn Angehörige widersprechen","Bei Unklarheit: Arzt + Betreuer + Pflegeteam gemeinsam mutmaßlichen Willen ermitteln","Nie – immer bindend","Wenn sie älter als 5 Jahre ist"],a:1,exp:"PV ist grundsätzlich bindend. Bei Unklarheit/Widerspruch: Betreuer, Arzt, Team ermitteln mutmaßlichen Willen. PV hat kein Ablaufdatum."},
+  {m:8,n:'e',q:"DSGVO und Pflege: Was darf mit Patientendaten NICHT gemacht werden?",opts:["Im Team besprechen","Weitergabe an Dritte ohne Einwilligung, außer gesetzliche Ausnahmen (Meldepflicht)","Dokumentation","Forschung nach Anonymisierung"],a:1,exp:"DSGVO: Gesundheitsdaten = besonders schützenswert. Weitergabe nur mit Einwilligung oder gesetzlicher Grundlage. Verstöße: empfindliche Bußgelder + strafrechtliche Konsequenzen."},
+  {m:8,n:'e',q:"Welches ethische Dilemma entsteht wenn Autonomie gegen Fürsorge steht?",opts:["Kein Dilemma","Z.B. Patient lehnt lebensrettende Therapie ab – Autonomie (Selbstbestimmung) vs. Benefizienz (Leben retten) → ethische Fallbesprechung nötig","Fürsorge immer wichtiger","Autonomie immer Vorrang"],a:1,exp:"Ethisches Dilemma: einwilligungsfähiger Patient entscheidet gegen medizinische Empfehlung → Autonomie hat Vorrang. Bei Einwilligungsunfähigkeit: Betreuer + Arzt + Team ermitteln Wohl."},
+  {m:8,n:'e',q:"Pflegefehler wurde begangen. Was ist rechtlich + ethisch geboten?",opts:["Vertuschen","Offenlegung gegenüber Patient + Arzt + Dokumentation + Schadensbegrenzung + ggf. Meldung","Nur intern besprechen","Abwarten ob etwas passiert"],a:1,exp:"Fehlerkultur: offen kommunizieren (kein Vertuschen), Patient informieren, dokumentieren, Maßnahmen zur Schadensbegrenzung. Versicherung + Haftpflicht einschalten. Aus Fehlern lernen = Qualitätsmanagement."},
+
+  // ──────────────────────────── MODUL 9 ─────────────────────────────────
+  {m:9,n:'a',q:"Linksherzinsuffizienz: Hauptsymptom?",opts:["Beinödeme","Dyspnoe + Lungenödem","Hepatomegalie","Aszites"],a:1,exp:"Links: Rückstau in Lunge → Dyspnoe."},
+  {m:9,n:'a',q:"AHA = COPD Leitsymptome:",opts:["Atemstillstand, Husten, Atemnot","Auswurf, Husten, Atemnot","Arrhythmie, Hypertonie, Atemnot","Apnoe, Hypoxie, Azidose"],a:1,exp:"AHA = Auswurf · Husten · Atemnot."},
+  {m:9,n:'a',q:"Diabetes Typ 1 Therapie:",opts:["Diät allein","OAD","Insulin lebenslang","Spontane Remission"],a:2,exp:"Typ 1: absoluter Insulinmangel → Insulin notwendig."},
+  {m:9,n:'a',q:"FAST Schlaganfall:",opts:["Face, Arms, Speech, Time","Fieber, Atemnot, Schwindel, Tachykardie","Frequenz, Arterien, Sensibilität, Test","Funktion, Augen, Sprache, Therapie"],a:0,exp:"FAST: Face · Arms · Speech · Time → 112 rufen."},
+  {m:9,n:'a',q:"Parkinson Ruhetremor = ?",opts:["Rigor","Akinese","Pillendreher","Gleichgewichtsstörung"],a:2,exp:"Pillendreher/Münzenzähler = Ruhetremor bei Parkinson."},
+  {m:9,n:'a',q:"Hypoglykämie ab BZ:",opts:["< 100","< 80","< 70","< 50"],a:2,exp:"Hypoglykämie: BZ < 70 mg/dl."},
+  {m:9,n:'a',q:"Asthma vs. COPD Hauptunterschied:",opts:["Asthma nur bei Kindern","Asthma reversibel; COPD irreversibel","COPD reversibel","Identisch"],a:1,exp:"Asthma = reversibel. COPD = irreversibel, progredient."},
+  {m:9,n:'a',q:"Herzinfarkt: atypisch bei Frauen:",opts:["Brustschmerz","Ausstrahlung linker Arm","Rücken-/Bauchschmerzen, Übelkeit","Kaltschweißigkeit"],a:2,exp:"Frauen: oft atypisch – Rücken, Bauch, Kiefer, Übelkeit, Erschöpfung."},
+  {m:9,n:'a',q:"MS = Multiple Sklerose: Verlauf?",opts:["Immer gleich","Schubförmig oder progredient","Einmalig","Nur bei Älteren"],a:1,exp:"MS: schubförmig oder primär/sekundär progredient."},
+  {m:9,n:'a',q:"NYHA IV =",opts:["Keine Beschwerden","Beschwerden bei starker Belastung","Beschwerden bei leichter Belastung","Beschwerden in Ruhe"],a:3,exp:"NYHA IV: Beschwerden in Ruhe."},
+  {m:9,n:'f',q:"Patient mit Diabetes Typ 2 hat BZ 35 mg/dl, bewusstlos. Was sofort?",opts:["Traubenzucker oral geben","Glukose 40% i.v. + Notarzt + Glucagon i.m.","Insulin geben","Abwarten"],a:1,exp:"BZ 35 + bewusstlos = schwere Hypoglykämie. Oral nicht möglich → Glukose 40% i.v. Glucagon i.m. wenn kein i.v. Zugang. Notarzt sofort."},
+  {m:9,n:'f',q:"COPD-Patient wird zunehmend zyanotisch, verwirrt. Welche akute Komplikation?",opts:["Hypoglykämie","Hyperkapnische Krise (CO₂-Narkose)","Asthmaanfall","Thrombose"],a:1,exp:"CO₂-Retention bei COPD: Verwirrtheit, Zyanose, flache Atmung → hyperkapnische Krise. Sofort Arzt, kontrollierte O₂-Gabe, ggf. NIV-Beatmung."},
+  {m:9,n:'f',q:"Patient nach Schlaganfall, linkseitige Hemiparese. Pflegerische Priorität?",opts:["Rechte Seite stärken","Linke Seite stimulieren + Neglect berücksichtigen + Frühmobilisation + Schluckdiagnostik","Bettruhe","Schmerztherapie"],a:1,exp:"Schlaganfall-Pflege: betroffene Seite aktivieren, Neglect berücksichtigen, Frühmobilisation (Stroke Unit), Schluck-Assessment (Aspirationsgefahr)."},
+  {m:9,n:'f',q:"Welcher Wert deutet auf Niereninsuffizienz hin?",opts:["BZ 90 mg/dl","Kreatinin 3,2 mg/dl + GFR 25 ml/min","Kalium 4,5 mmol/l","Na 138 mmol/l"],a:1,exp:"Kreatinin erhöht + GFR erniedrigt = Niereninsuffizienz (Stadium 4 bei GFR 15–29)."},
+  {m:9,n:'f',q:"Rheumatoide Arthritis Morgensteifigkeit > 1 Stunde. Differenzial zur Arthrose?",opts:["Kein Unterschied","Arthrose: Morgensteifigkeit < 30 min + Belastungsschmerz; RA: > 1h + Ruheschmerz + Entzündungszeichen","Arthrose hat keine Steifigkeit","RA nur bei Alten"],a:1,exp:"RA: Morgensteifigkeit > 1h, symmetrisch, kleine Gelenke, Entzündungsparameter erhöht. Arthrose: < 30 min, Belastungsschmerz, degenerativ."},
+  {m:9,n:'e',q:"Patient hat STEMI. Zeitfenster für Lyse und PCI?",opts:["Beliebig","Lyse < 12h, PCI (Herzkatheter) bevorzugt < 90 min – je früher desto besser","Nur PCI, kein Zeitlimit","Lyse immer besser als PCI"],a:1,exp:"STEMI: 'Zeit ist Myokard' (time is muscle). PCI (Herzkatheter) bevorzugt < 90 min Symptombeginn – Goldstandard. Lyse wenn PCI nicht rechtzeitig möglich, < 12h."},
+  {m:9,n:'e',q:"Diabetisches Fußsyndrom: warum ist Schmerzlosigkeit gefährlich?",opts:["Kein Problem","Neuropathie verhindert Schmerzwahrnehmung → Verletzungen bleiben unbemerkt → Infektion → Amputation","Nur Ästhetikproblem","Nur bei Typ 2"],a:1,exp:"Diabetische Neuropathie: keine Schmerzempfindung → Druckstellen, Verletzungen unbemerkt → Infektion, tiefe Gewebeschäden → Amputation wenn unbehandelt. Tägliche Fußinspektion obligat!"},
+  {m:9,n:'e',q:"Welche Komplikation des Lungenembolismus-Verdachts erfordert sofort Reanimationsbereitschaft?",opts:["Keine","Massive Lungenembolie mit Rechtsherzversagen + hämodynamischer Instabilität – lebensbedrohlich","Nur bei Fieber","Nur bei SpO₂ < 90%"],a:1,exp:"Massive Lungenembolie: Obstruktion > 50% Lungenstrombahn → akutes Rechtsherzversagen, Schock, Reanimationspflichtig. Sofort Notarzt, Lyse (rtPA), ggf. Embolektomie."},
+
+  // ──────────────────────────── MODUL 10 ─────────────────────────────────
+  {m:10,n:'a',q:"Granulationsgewebe entsteht in:",opts:["Hämostase","Inflammation","Proliferationsphase","Reparation"],a:2,exp:"Proliferationsphase (5–21 Tage): Granulation + Angiogenese."},
+  {m:10,n:'a',q:"E im BIGE =",opts:["Entzündung","Epithel","Exsudat","Erhöhung"],a:2,exp:"E = Exsudat: Menge, Farbe, Konsistenz."},
+  {m:10,n:'a',q:"Stark exsudierend → Wundauflage?",opts:["Folie","Hydrokolloid","Alginat","Hydrogel"],a:2,exp:"Alginat: hohe Saugkraft."},
+  {m:10,n:'a',q:"Chronische Wunde ab:",opts:["2 Wochen","4 Wochen","8 Wochen","6 Monaten"],a:2,exp:"Chronisch: > 8 Wochen trotz Therapie."},
+  {m:10,n:'a',q:"TIME-Prinzip: M = ?",opts:["Morphin","Moisture – Feuchtigkeitsbalance","Messung","Maden"],a:1,exp:"M = Moisture Management: feuchtes Wundmilieu herstellen."},
+  {m:10,n:'a',q:"Diabetisches Fußulkus: warum schmerzlos?",opts:["Arterielle Ursache","Neuropathie","Venöse Ursache","Infektion"],a:1,exp:"Diabetische Neuropathie = keine Schmerzwahrnehmung."},
+  {m:10,n:'a',q:"Goldstandard moderne Wundversorgung:",opts:["Trockene Gaze","Alkohol","Feuchte Wundversorgung","Jod"],a:2,exp:"Feuchte Wundversorgung: fördert Zellmigration, verhindert Austrocknung."},
+  {m:10,n:'a',q:"Wundreinigung mit:",opts:["H₂O₂","Alkohol","NaCl 0,9%","Kochsalz hypertonisch"],a:2,exp:"NaCl 0,9% oder Ringerlösung: isoton, zellschonend."},
+  {m:10,n:'a',q:"Madentherapie =",opts:["Enzymatisch","Autolytisch","Biochirurgisch","Mechanisch"],a:2,exp:"Biochirurgisch: Fliegenlarven bauen Nekrosen selektiv ab."},
+  {m:10,n:'a',q:"Ulcus cruris venosum: Lokalisation?",opts:["Fußsohle","Ferse","Innenknöchel","Zehen"],a:2,exp:"Venöses Ulcus: Innenknöchel."},
+  {m:10,n:'f',q:"Wundrand ist mazeriert. Was bedeutet das und was tun?",opts:["Austrocknung – Hydrogel","Zu viel Feuchtigkeit – saugstärkere Wundauflage wechseln + Wundrand schützen","Infektion – Antibiotika","Normal"],a:1,exp:"Mazerierter Rand = aufgeweicht durch zu viel Exsudat. Saugstärkere Auflage (Alginat, Schaum), Wundrand mit Zinkpaste oder Hautschutzfilm schützen."},
+  {m:10,n:'f',q:"Patient hat Dekubitus Grad 3. Wundversorgung?",opts:["Trockene Gaze","Feuchte Wundversorgung (Schaum/Alginat) + Druckentlastung + Ernährungsoptimierung","Antibiotika lokal immer","Spontan heilen lassen"],a:1,exp:"Grad 3: feuchte Versorgung, vollständige Druckentlastung, Proteinzufuhr, Vit. C, Zink, Fotodokumentation."},
+  {m:10,n:'f',q:"Wunde riecht stark. Welche Wundauflage?",opts:["Hydrogel","Hydrokolloid","Aktivkohle","Folie"],a:2,exp:"Aktivkohle bindet Geruchsmoleküle – für malodorante Wunden (Tumornekrose, infizierte Wunden)."},
+  {m:10,n:'f',q:"Verbandwechsel: wann muss Wundauflage SOFORT gewechselt werden?",opts:["Nach 3 Tagen immer","Wenn durchgenässt, disloziert oder Infektionszeichen","Nur nach Anordnung","Nicht vor Ablauf von 7 Tagen"],a:1,exp:"Wechsel wenn: durchgenässt (Exsudat sickert durch), disloziert, Infektionszeichen (Rötung, Geruch, Fieber, Schmerzzunahme)."},
+  {m:10,n:'f',q:"Welcher Wundtyp heilt per primam (primäre Wundheilung)?",opts:["Dekubitus Grad 3","Klaffende traumatische Wunde","Chirurgisch genähte Wunde","Ulcus cruris"],a:2,exp:"Primäre Heilung: Wundränder liegen an (z.B. genähte OP-Wunde) → schnell, wenig Narbe."},
+  {m:10,n:'e',q:"Warum ist Wasserstoffperoxid bei der Wundreinigung kontraindiziert?",opts:["Zu teuer","Zytotoxisch – zerstört Granulationsgewebe und Fibroblasten, verzögert Heilung","Nur bei tiefen Wunden","Fördert Infektion"],a:1,exp:"H₂O₂: zytotoxisch, zerstört Fibroblasten und Granulationsgewebe → Heilungsverzögerung. Nur noch historisch – durch isotone Lösungen (NaCl 0,9%, Ringer) ersetzt."},
+  {m:10,n:'e',q:"Patient mit pAVK (Ulcus cruris arteriosum) und Ulcus cruris venosum gleichzeitig (Mischulkus). Was beachten?",opts:["Kompressionsverband wie normal","Vorsicht bei Kompression – pAVK kann durch Kompression Durchblutung verschlechtern; ABI messen","Nur Débridement","Sofort OP"],a:1,exp:"Mischulkus: venöse + arterielle Komponente. ABI (ankle-brachial index) < 0,8 = Kompressionstherapie kontraindiziert oder nur mit reduziertem Druck. Gefäßchirurgische Konsultation."},
+  {m:10,n:'e',q:"Biofilm auf einer chronischen Wunde verhindert Heilung. Welche Maßnahme?",opts:["Nur Antibiotika lokal","Débridement (mechanisch/chirurgisch) + antiseptische Wundspülung + ggf. silberhaltige Auflagen – Biofilm ist antibiotikaresistent","Abwarten","Nur Verbandwechsel"],a:1,exp:"Biofilm: polymikrobieller, antibiotikaresistenter Schutzfilm auf Wunden. Antibiotika systemisch oder lokal unzureichend. Débridement zur physischen Entfernung + Antiseptika (Octenidin, PHMB) + silberhaltige Auflagen."},
+];
+
+// ═══════════════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════════════
+let currentNiveau='anfaenger', currentQuestions=[], currentIdx=0,
+    totalScore=0, correct=0, wrong=0, answered=false,
+    currentModule=null, streakCount=0,
+    progress={a:{done:0,total:0},f:{done:0,total:0},e:{done:0,total:0}},
+    completedModules=new Set(), niveauPoints={a:10,f:20,e:30};
+
+// Calculate totals
+['a','f','e'].forEach(n=>{ progress[n].total=Q.filter(q=>q.n===n).length; });
+
+// ═══════════════════════════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════════════════════════
+document.querySelectorAll('.top-tab').forEach(tab=>{
+  tab.onclick=()=>{
+    const sc=tab.dataset.screen;
+    document.querySelectorAll('.top-tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    showScreen('screen-'+sc);
+    if(sc==='stats') buildStats();
+  };
+});
+
+function showScreen(id){
+  ['screen-home','screen-rlp','screen-stats','screen-quiz','screen-results'].forEach(s=>{
+    const el=document.getElementById(s);
+    if(el){el.style.display='none';el.classList.remove('active');}
+  });
+  const t=document.getElementById(id);
+  if(t){t.style.display='block';t.classList.add('active');}
+}
+
+function goHome(){
+  document.querySelectorAll('.top-tab').forEach((t,i)=>t.classList.toggle('active',i===0));
+  showScreen('screen-home');
+  buildModuleGrid();
+  updateProgressSummary();
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// NIVEAU
+// ═══════════════════════════════════════════════════════════════════════════
+function selectNiveau(niveau, card){
+  currentNiveau=niveau;
+  document.querySelectorAll('.niveau-card').forEach(c=>c.classList.remove('selected'));
+  card.classList.add('selected');
+  // update button
+  const labels={anfaenger:'🌱 Anfänger',fortgeschritten:'🔥 Fortgeschritten',experte:'💎 Experte'};
+  document.getElementById('btn-start-label').textContent=labels[niveau];
+  document.getElementById('btn-start-all').className='btn-start '+niveau;
+  buildModuleGrid();
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// QUIZ
+// ═══════════════════════════════════════════════════════════════════════════
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function startQuiz(modId){
+  currentModule=modId; correct=0; wrong=0; answered=false;
+  const pool=modId==='all'
+    ? Q.filter(q=>q.n===currentNiveau[0])
+    : Q.filter(q=>q.m===modId && q.n===currentNiveau[0]);
+  currentQuestions=shuffle(pool);
+  currentIdx=0;
+  // Update progress bar class + button class
+  const pfc=document.getElementById('progress-fill');
+  pfc.className='progress-fill pf-'+currentNiveau;
+  const bn=document.getElementById('btn-next');
+  bn.className='btn-next bn-'+currentNiveau;
+  showScreen('screen-quiz');
+  showQuestion();
+}
+
+function showQuestion(){
+  const q=currentQuestions[currentIdx];
+  const total=currentQuestions.length;
+  answered=false;
+  const mod=MODULES.find(m=>m.id===q.m);
+  document.getElementById('q-counter').textContent=`Frage ${currentIdx+1} / ${total}`;
+  document.getElementById('q-module-label').textContent=mod?mod.name:'';
+  document.getElementById('q-tag').textContent=mod?`${mod.icon} M${String(q.m).padStart(2,'0')}`:'';
+  const pts=niveauPoints[currentNiveau[0]];
+  document.getElementById('q-pts').textContent=`+${pts} Pkt`;
+  // Niveau tag
+  const ntag=document.getElementById('q-niveau-tag');
+  const nlabels={anfaenger:'🌱 Anfänger',fortgeschritten:'🔥 Fortgeschritten',experte:'💎 Experte'};
+  ntag.textContent=nlabels[currentNiveau];
+  ntag.className='niveau-tag nt-'+currentNiveau;
+  document.getElementById('q-text').textContent=q.q;
+  document.getElementById('progress-fill').style.width=`${(currentIdx/total)*100}%`;
+  const exp=document.getElementById('q-explanation');
+  exp.classList.remove('show'); exp.innerHTML='';
+  const container=document.getElementById('options-container');
+  container.innerHTML='';
+  const letters=['A','B','C','D'];
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('div');
+    btn.className='option';
+    btn.innerHTML=`<div class="opt-letter">${letters[i]}</div><span>${opt}</span>`;
+    btn.onclick=()=>selectAnswer(i,q.a,q.exp);
+    container.appendChild(btn);
+  });
+  const btnNext=document.getElementById('btn-next');
+  btnNext.classList.remove('show');
+  btnNext.textContent=currentIdx<currentQuestions.length-1?'Weiter →':'Ergebnis anzeigen 🎯';
+}
+
+function selectAnswer(chosen, correctIdx, explanation){
+  if(answered) return;
+  answered=true;
+  document.querySelectorAll('.option').forEach((opt,i)=>{
+    opt.classList.add('disabled');
+    if(i===correctIdx) opt.classList.add('correct');
+    else if(i===chosen) opt.classList.add('wrong');
+  });
+  const pts=niveauPoints[currentNiveau[0]];
+  const exp=document.getElementById('q-explanation');
+  exp.innerHTML=`<strong>✅ Erklärung:</strong> ${wrapGlossary(explanation)}`;
+  exp.classList.add('show');
+  if(chosen===correctIdx){
+    correct++;
+    totalScore+=pts;
+    progress[currentNiveau[0]].done=Math.min(progress[currentNiveau[0]].done+1, progress[currentNiveau[0]].total);
+    document.getElementById('score-val').textContent=totalScore;
+  } else { wrong++; }
+  document.getElementById('btn-next').classList.add('show');
+}
+
+function nextQuestion(){
+  currentIdx++;
+  if(currentIdx>=currentQuestions.length) showResults();
+  else showQuestion();
+}
+
+function showResults(){
+  if(currentModule!=='all') completedModules.add(currentModule+'_'+currentNiveau);
+  const total=currentQuestions.length;
+  const pct=Math.round((correct/total)*100);
+  const earnedPts=correct*niveauPoints[currentNiveau[0]];
+  const nlabels={anfaenger:'🌱 Anfänger',fortgeschritten:'🔥 Fortgeschritten',experte:'💎 Experte'};
+  const ncolors={anfaenger:'var(--anfaenger)',fortgeschritten:'var(--fortgeschritten)',experte:'#a78bfa'};
+  const nbg={anfaenger:'rgba(16,185,129,.2)',fortgeschritten:'rgba(245,158,11,.2)',experte:'rgba(139,92,246,.2)'};
+  let icon='💪',title='Weiter üben!';
+  if(pct>=90){icon='🏆';title='Ausgezeichnet!';}
+  else if(pct>=75){icon='🎉';title='Sehr gut!';streakCount++;document.getElementById('streak-val').textContent=streakCount;}
+  else if(pct>=60){icon='👍';title='Gut gemacht!';}
+  else if(pct>=40){icon='📚';title='Noch üben!';}
+  document.getElementById('result-icon').textContent=icon;
+  document.getElementById('result-title').textContent=title;
+  const badge=document.getElementById('result-badge');
+  badge.textContent=nlabels[currentNiveau];
+  badge.style.background=nbg[currentNiveau];
+  badge.style.color=ncolors[currentNiveau];
+  badge.style.border=`1px solid ${ncolors[currentNiveau]}`;
+  document.getElementById('score-num').textContent=pct+'%';
+  document.getElementById('score-circle').style.setProperty('--pct',pct);
+  document.getElementById('score-circle').style.setProperty('--score-color',ncolors[currentNiveau]);
+  document.getElementById('score-num').style.color=ncolors[currentNiveau];
+  document.getElementById('rb-correct').textContent=`✓ ${correct} richtig`;
+  document.getElementById('rb-wrong').textContent=`✗ ${wrong} falsch`;
+  document.getElementById('rb-pts').textContent=`+${earnedPts} Punkte`;
+  // Unlock banner
+  const unlock=document.getElementById('unlock-banner');
+  const btnNL=document.getElementById('btn-next-level');
+  if(pct>=75 && currentNiveau==='anfaenger'){
+    unlock.innerHTML='🔥 <strong>Fortgeschritten freigeschaltet!</strong> Du hast ≥ 75% – bereit für das nächste Niveau?';
+    unlock.classList.add('show');
+    btnNL.style.display='';
+    btnNL.textContent='🔥 Weiter zu Fortgeschritten';
+  } else if(pct>=75 && currentNiveau==='fortgeschritten'){
+    unlock.innerHTML='💎 <strong>Experte freigeschaltet!</strong> Beeindruckend – bereit für die Königsklasse?';
+    unlock.classList.add('show');
+    btnNL.style.display='';
+    btnNL.textContent='💎 Weiter zu Experte';
+  } else {
+    unlock.classList.remove('show');
+    btnNL.style.display='none';
+  }
+  // Level badge
+  if(totalScore >= 500) document.getElementById('level-val').textContent='Fortgeschritten';
+  if(totalScore >= 1500) document.getElementById('level-val').textContent='Experte';
+  document.getElementById('btn-retry').textContent='🔁 Nochmal ('+nlabels[currentNiveau]+')';
+  updateProgressSummary();
+  showScreen('screen-results');
+}
+
+function retryQuiz(){startQuiz(currentModule);}
+function nextLevel(){
+  const levels=['anfaenger','fortgeschritten','experte'];
+  const idx=levels.indexOf(currentNiveau);
+  if(idx<2){
+    currentNiveau=levels[idx+1];
+    document.querySelectorAll('.niveau-card').forEach((c,i)=>c.classList.toggle('selected',i===idx+1));
+    document.getElementById('btn-start-label').textContent=['🌱 Anfänger','🔥 Fortgeschritten','💎 Experte'][idx+1];
+    document.getElementById('btn-start-all').className='btn-start '+currentNiveau;
+  }
+  startQuiz(currentModule||'all');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MODULE GRID
+// ═══════════════════════════════════════════════════════════════════════════
+function buildModuleGrid(){
+  const grid=document.getElementById('modules-grid');
+  if(!grid) return;
+  grid.innerHTML='';
+  MODULES.forEach(mod=>{
+    const countA=Q.filter(q=>q.m===mod.id&&q.n==='a').length;
+    const countF=Q.filter(q=>q.m===mod.id&&q.n==='f').length;
+    const countE=Q.filter(q=>q.m===mod.id&&q.n==='e').length;
+    const done=completedModules.has(mod.id+'_'+currentNiveau);
+    const card=document.createElement('div');
+    card.className='module-card'+(done?' done':'');
+    card.innerHTML=`
+      ${done?'<span class="mod-check">✓</span>':''}
+      <div class="mod-num">Modul ${String(mod.id).padStart(2,'0')}</div>
+      <div class="mod-name">${mod.icon} ${mod.name}</div>
+      <div class="mod-pills">
+        <span class="mod-pill mp-a">🌱 ${countA}</span>
+        <span class="mod-pill mp-f">🔥 ${countF}</span>
+        <span class="mod-pill mp-e">💎 ${countE}</span>
+      </div>`;
+    card.onclick=()=>startQuiz(mod.id);
+    grid.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PROGRESS SUMMARY
+// ═══════════════════════════════════════════════════════════════════════════
+function updateProgressSummary(){
+  const a=progress.a, f=progress.f, e=progress.e;
+  document.getElementById('pct-a').textContent=a.total?Math.round(a.done/a.total*100)+'%':'0%';
+  document.getElementById('pct-f').textContent=f.total?Math.round(f.done/f.total*100)+'%':'0%';
+  document.getElementById('pct-e').textContent=e.total?Math.round(e.done/e.total*100)+'%':'0%';
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// RAHMENLEHRPLAN
+// ═══════════════════════════════════════════════════════════════════════════
+const RLP=[
+  {lb:"LB 1 – Pflegeprozess & Kommunikation",k:"I.1",items:[{icon:"📋",name:"Pflegeprozess",m:1},{icon:"💬",name:"Kommunikation",m:1},{icon:"📝",name:"Dokumentation",m:1}]},
+  {lb:"LB 2 – Vitalfunktionen & Beobachtung",k:"I.2",items:[{icon:"🩺",name:"Blutdruck & HF",m:2},{icon:"🌡️",name:"Temperatur & Atmung",m:2},{icon:"📊",name:"Schmerz & Bewusstsein",m:2}]},
+  {lb:"LB 3 – Medikamentöse Therapie",k:"I.3",items:[{icon:"💊",name:"Applikationswege",m:3},{icon:"🧮",name:"Dosierungsrechnung",m:3},{icon:"🔒",name:"BtMG & 5-R-Regel",m:3}]},
+  {lb:"LB 4 – Ernährung & Ausscheidung",k:"II.1",items:[{icon:"🍽️",name:"Mangelernährung",m:4},{icon:"🩺",name:"Dysphagie & Sonden",m:4},{icon:"💧",name:"Harnkatheter",m:4}]},
+  {lb:"LB 5 – Mobilisation & Prophylaxen",k:"II.2",items:[{icon:"🛡️",name:"Dekubitus",m:5},{icon:"🚶",name:"Sturz",m:5},{icon:"💉",name:"Thrombose & Pneumonie",m:5}]},
+  {lb:"LB 6 – Psychosoziale Pflege",k:"III.1",items:[{icon:"🧠",name:"Demenz & Delir",m:6},{icon:"⚖️",name:"FEM & Ethik",m:6},{icon:"🌍",name:"Transkulturell",m:6}]},
+  {lb:"LB 7 – Spezielle Pflegebereiche",k:"III.2",items:[{icon:"👶",name:"Pädiatrie & Geriatrie",m:7},{icon:"💝",name:"Palliativ & Onkologie",m:7},{icon:"🏥",name:"Intensiv",m:7}]},
+  {lb:"LB 8 – Recht & Ethik",k:"IV.1",items:[{icon:"📜",name:"PflBG & Haftung",m:8},{icon:"👤",name:"Patientenrechte",m:8},{icon:"📊",name:"Qualität",m:8}]},
+  {lb:"LB 9 – Krankheitsbilder",k:"IV.2",items:[{icon:"❤️",name:"Herz-Kreislauf",m:9},{icon:"🫁",name:"Atemwege & Stoffwechsel",m:9},{icon:"🧠",name:"Neurologie",m:9}]},
+  {lb:"LB 10 – Wundversorgung",k:"V.1",items:[{icon:"🔬",name:"Wundheilung & Beurteilung",m:10},{icon:"🩹",name:"Wundauflagen",m:10},{icon:"✂️",name:"Débridement",m:10}]},
+];
+
+function buildRLP(){
+  const list=document.getElementById('rlp-list');
+  if(!list) return;
+  list.innerHTML='';
+  RLP.forEach(lb=>{
+    const sec=document.createElement('div');
+    sec.className='rlp-section';
+    sec.innerHTML=`
+      <div class="rlp-header" onclick="this.closest('.rlp-section').classList.toggle('open')">
+        <div><div class="rlp-title">${lb.lb}</div><div class="rlp-meta">Kompetenz ${lb.k} · ${lb.items.length} Themen</div></div>
+        <span class="rlp-arrow">▼</span>
+      </div>
+      <div class="rlp-body">
+        ${lb.items.map(item=>`
+          <div class="rlp-item">
+            <div class="rlp-item-icon">${item.icon}</div>
+            <div class="rlp-item-name">${item.name}</div>
+            <div class="rlp-niv-pills">
+              <span class="rlp-niv-pill rnp-a" onclick="setNiveauAndStart('anfaenger',${item.m})">🌱</span>
+              <span class="rlp-niv-pill rnp-f" onclick="setNiveauAndStart('fortgeschritten',${item.m})">🔥</span>
+              <span class="rlp-niv-pill rnp-e" onclick="setNiveauAndStart('experte',${item.m})">💎</span>
+            </div>
+          </div>`).join('')}
+      </div>`;
+    list.appendChild(sec);
+  });
+}
+
+function setNiveauAndStart(niveau, modId){
+  currentNiveau=niveau;
+  startQuiz(modId);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// STATS
+// ═══════════════════════════════════════════════════════════════════════════
+function buildStats(){
+  const el=document.getElementById('stats-content');
+  const total=Q.length;
+  const byMod=MODULES.map(m=>({
+    ...m,
+    a:Q.filter(q=>q.m===m.id&&q.n==='a').length,
+    f:Q.filter(q=>q.m===m.id&&q.n==='f').length,
+    e:Q.filter(q=>q.m===m.id&&q.n==='e').length,
+  }));
+  el.innerHTML=`
+    <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:1.25rem;margin-bottom:1.25rem;">
+      <div style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.75rem;">Gesamtstatistik</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;text-align:center;">
+        <div><div style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;color:var(--tealM)">${totalScore}</div><div style="font-size:.72rem;color:rgba(255,255,255,.4)">Gesamtpunkte</div></div>
+        <div><div style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;color:var(--gold)">${streakCount}</div><div style="font-size:.72rem;color:rgba(255,255,255,.4)">Streak</div></div>
+        <div><div style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;color:#a78bfa">${total}</div><div style="font-size:.72rem;color:rgba(255,255,255,.4)">Fragen gesamt</div></div>
+      </div>
+    </div>
+    <div style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.75rem;">Fragen nach Modul & Niveau</div>
+    ${byMod.map(m=>`
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:.75rem 1rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.75rem;">
+        <div style="font-size:1.1rem;width:24px;text-align:center;flex-shrink:0;">${m.icon}</div>
+        <div style="flex:1;font-size:.83rem;font-weight:600;">${m.name}</div>
+        <div style="display:flex;gap:.35rem;">
+          <span style="font-size:.65rem;font-weight:700;padding:.12rem .45rem;border-radius:999px;background:rgba(16,185,129,.2);color:var(--anfaenger)">🌱 ${m.a}</span>
+          <span style="font-size:.65rem;font-weight:700;padding:.12rem .45rem;border-radius:999px;background:rgba(245,158,11,.2);color:var(--fortgeschritten)">🔥 ${m.f}</span>
+          <span style="font-size:.65rem;font-weight:700;padding:.12rem .45rem;border-radius:999px;background:rgba(139,92,246,.2);color:#a78bfa">💎 ${m.e}</span>
+        </div>
+      </div>`).join('')}`;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════════════
+buildModuleGrid();
+buildRLP();
+updateProgressSummary();
+</script>
+</body>
+</html>

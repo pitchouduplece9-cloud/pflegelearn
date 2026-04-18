@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PflegeLearn – DSGVO-Paket</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--t:#0d9488;--td:#0f766e;--tl:#ccfbf1;--ink:#0f172a;--ins:#334155;--br:#e2e8f0;--cr:#faf7f2;--w:#fff;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--w);line-height:1.7;font-size:15px;}
+.top-bar{background:var(--td);color:#fff;padding:.65rem 2rem;font-size:.82rem;font-weight:600;display:flex;justify-content:space-between;}
+.container{max-width:860px;margin:0 auto;padding:3rem 2rem 5rem;}
+.doc-header{border-bottom:3px solid var(--t);padding-bottom:1.5rem;margin-bottom:2.5rem;}
+.doc-title{font-size:2rem;font-weight:800;color:var(--td);margin-bottom:.35rem;}
+.doc-meta{font-size:.85rem;color:var(--ins);}
+h1{font-size:1.4rem;font-weight:800;color:var(--td);margin:2rem 0 .75rem;padding-top:1rem;border-top:1px solid var(--br);}
+h2{font-size:1.1rem;font-weight:700;color:var(--ink);margin:1.5rem 0 .5rem;}
+p{margin-bottom:.75rem;color:var(--ins);}
+ul,ol{padding-left:1.5rem;margin-bottom:.75rem;color:var(--ins);}
+li{margin-bottom:.35rem;}
+.box{background:var(--cr);border:1px solid var(--br);border-radius:10px;padding:1.25rem;margin:1.25rem 0;}
+.box.info{border-left:4px solid var(--t);}
+.box.warn{border-left:4px solid #f59e0b;background:#fffbeb;}
+.box.success{border-left:4px solid #10b981;background:#f0fdf4;}
+.box-title{font-size:.85rem;font-weight:800;color:var(--t);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;}
+.box.warn .box-title{color:#d97706;}
+.box.success .box-title{color:#065f46;}
+.table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.875rem;}
+.table th{background:var(--td);color:#fff;padding:.6rem .85rem;text-align:left;font-weight:700;}
+.table td{padding:.55rem .85rem;border-bottom:1px solid var(--br);}
+.table tr:nth-child(even) td{background:var(--cr);}
+.doc-sep{height:3rem;border-top:3px solid var(--t);margin-top:4rem;margin-bottom:3rem;}
+.sign-row{display:flex;gap:2rem;margin-top:2rem;}
+.sign-box{flex:1;border-top:1.5px solid var(--ink);padding-top:.5rem;font-size:.82rem;color:var(--ins);}
+@media print{.top-bar{display:none;}.container{padding:1rem;}}
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <span>PflegeLearn GmbH · DSGVO-Paket</span>
+  <span>Stand: 2025 · Vertraulich</span>
+</div>
+<div class="container">
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- DOKUMENT 1: DATENSCHUTZERKLÄRUNG -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="doc-header">
+  <div class="doc-title">📄 Datenschutzerklärung</div>
+  <div class="doc-meta">PflegeLearn GmbH · www.pflegelearn.de · Stand: Januar 2025</div>
+</div>
+
+<div class="box info">
+  <div class="box-title">Hinweis</div>
+  Diese Datenschutzerklärung gilt für die Website pflegelearn.de sowie die PflegeLearn-App (iOS und Android) und entspricht den Anforderungen der DSGVO, des BDSG und des TTDSG.
+</div>
+
+<h1>§ 1 Verantwortlicher</h1>
+<p><strong>PflegeLearn GmbH</strong><br>
+Schulstraße 7<br>
+38440 Wolfsburg<br>
+E-Mail: georges@pflegelearn.de<br>
+Web: www.pflegelearn.de</p>
+
+<p>Für Anfragen zum Datenschutz wenden Sie sich bitte ausschließlich an: georges@pflegelearn.de</p>
+
+<h1>§ 2 Grundsätze der Datenverarbeitung</h1>
+<p>Wir verarbeiten personenbezogene Daten nur, wenn eine gesetzliche Grundlage nach Art. 6 DSGVO vorliegt:</p>
+<ul>
+  <li><strong>Art. 6 Abs. 1 lit. a DSGVO:</strong> Einwilligung (z.B. Newsletter)</li>
+  <li><strong>Art. 6 Abs. 1 lit. b DSGVO:</strong> Vertragserfüllung (Konto, Abonnement)</li>
+  <li><strong>Art. 6 Abs. 1 lit. c DSGVO:</strong> Rechtliche Verpflichtung</li>
+  <li><strong>Art. 6 Abs. 1 lit. f DSGVO:</strong> Berechtigtes Interesse (Sicherheit, Analyse)</li>
+</ul>
+
+<h1>§ 3 Erhobene Daten und Zwecke</h1>
+<table class="table">
+  <tr><th>Datenkategorie</th><th>Konkrete Daten</th><th>Rechtsgrundlage</th><th>Zweck</th></tr>
+  <tr><td>Kontodaten</td><td>E-Mail, Passwort (gehashed), Name</td><td>Art. 6 I b</td><td>Registrierung, Login</td></tr>
+  <tr><td>Nutzungsdaten</td><td>Lernfortschritt, Punkte, Streak</td><td>Art. 6 I b</td><td>Produktfunktion</td></tr>
+  <tr><td>Zahlungsdaten</td><td>Über Stripe verarbeitet – nicht bei uns</td><td>Art. 6 I b</td><td>Abonnement</td></tr>
+  <tr><td>Gerätedaten</td><td>IP (anonymisiert), Browser, OS</td><td>Art. 6 I f</td><td>Sicherheit, Debugging</td></tr>
+  <tr><td>Analytics</td><td>Seitenaufrufe (anonym, Plausible)</td><td>Art. 6 I f</td><td>Produktverbesserung</td></tr>
+  <tr><td>Schulkontodaten</td><td>Name Schule, Ansprechpartner</td><td>Art. 6 I b</td><td>B2B-Vertragserfüllung</td></tr>
+</table>
+
+<h1>§ 4 Auftragsverarbeiter</h1>
+<table class="table">
+  <tr><th>Anbieter</th><th>Sitz</th><th>Zweck</th><th>Safeguards</th></tr>
+  <tr><td>Hetzner Online GmbH</td><td>Deutschland 🇩🇪</td><td>Server-Hosting</td><td>AVV geschlossen</td></tr>
+  <tr><td>Supabase Inc.</td><td>USA (EU-Region)</td><td>Datenbank</td><td>SCCs, AVV</td></tr>
+  <tr><td>Stripe Inc.</td><td>EU (Dublin)</td><td>Zahlungsabwicklung</td><td>Eigene Datenschutzpolitik</td></tr>
+  <tr><td>Plausible Analytics</td><td>EU 🇪🇺</td><td>Webanalyse (cookielos)</td><td>AVV, keine Cookies</td></tr>
+  <tr><td>Brevo SAS</td><td>Frankreich 🇫🇷</td><td>E-Mail-Versand</td><td>AVV, SCCs</td></tr>
+</table>
+
+<h1>§ 5 Keine Weitergabe an Dritte</h1>
+<p>Wir verkaufen keine personenbezogenen Daten. Eine Weitergabe an Dritte erfolgt ausschließlich:</p>
+<ul>
+  <li>An oben genannte Auftragsverarbeiter zur Vertragserfüllung</li>
+  <li>Bei gesetzlicher Verpflichtung (z.B. Behördenanfragen)</li>
+  <li>Mit ausdrücklicher Einwilligung</li>
+</ul>
+
+<h1>§ 6 Betroffenenrechte</h1>
+<p>Sie haben folgende Rechte gemäß DSGVO:</p>
+<ul>
+  <li><strong>Auskunft</strong> (Art. 15) – Welche Daten wir über Sie haben</li>
+  <li><strong>Berichtigung</strong> (Art. 16) – Korrektur falscher Daten</li>
+  <li><strong>Löschung</strong> (Art. 17) – "Recht auf Vergessenwerden"</li>
+  <li><strong>Einschränkung</strong> (Art. 18) – Einschränkung der Verarbeitung</li>
+  <li><strong>Datenportabilität</strong> (Art. 20) – Export in maschinenlesbarem Format</li>
+  <li><strong>Widerspruch</strong> (Art. 21) – Gegen berechtigtes Interesse</li>
+  <li><strong>Widerruf</strong> – Einwilligung jederzeit widerrufbar</li>
+</ul>
+<p>Anfragen bitte an: georges@pflegelearn.de (Antwort innerhalb 30 Tagen)</p>
+<p>Beschwerden können an die zuständige Aufsichtsbehörde gerichtet werden: Wolfsburger Beauftragte für Datenschutz und Informationsfreiheit.</p>
+
+<h1>§ 7 Speicherfristen</h1>
+<table class="table">
+  <tr><th>Datenart</th><th>Speicherdauer</th><th>Begründung</th></tr>
+  <tr><td>Kontodaten</td><td>Bis Kontolöschung + 30 Tage</td><td>Vertragserfüllung</td></tr>
+  <tr><td>Zahlungsbelege</td><td>10 Jahre</td><td>HGB/AO-Pflicht</td></tr>
+  <tr><td>Lernfortschritt</td><td>Bis Kontolöschung</td><td>Vertragserfüllung</td></tr>
+  <tr><td>Server-Logs</td><td>7 Tage (anonymisiert)</td><td>Sicherheit</td></tr>
+  <tr><td>Analytics-Daten</td><td>2 Jahre (anonym)</td><td>Berechtigtes Interesse</td></tr>
+</table>
+
+<h1>§ 8 Cookies und Tracking</h1>
+<div class="box warn">
+  <div class="box-title">Cookielose Analytics</div>
+  Wir verwenden Plausible Analytics – eine datenschutzfreundliche Lösung ohne Cookies, ohne persönliche Daten, ohne IP-Speicherung. Keine Einwilligung erforderlich.
+</div>
+<p>Wir verwenden ausschließlich technisch notwendige Cookies (Session-Token für Login). Keine Tracking-Cookies von Drittanbietern. Keine Werbecookies.</p>
+
+<h1>§ 9 Minderjährige</h1>
+<p>Unser Angebot richtet sich an Personen ab 16 Jahren. Für Nutzerinnen und Nutzer unter 16 Jahren ist die Einwilligung eines Erziehungsberechtigten erforderlich (Art. 8 DSGVO).</p>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="doc-sep"></div>
+
+<!-- DOKUMENT 2: IMPRESSUM -->
+<div class="doc-header">
+  <div class="doc-title">📋 Impressum</div>
+  <div class="doc-meta">PflegeLearn GmbH · Angaben gemäß § 5 TMG</div>
+</div>
+
+<h2>Angaben gemäß § 5 TMG</h2>
+<p><strong>PflegeLearn GmbH</strong><br>
+Schulstraße 7<br>
+38440 Wolfsburg<br>
+Deutschland</p>
+
+<p><strong>Kontakt:</strong><br>
+Telefon: +49 15563171257<br>
+E-Mail: georges@pflegelearn.de</p>
+
+<p><strong>Handelsregister:</strong><br>
+Amtsgericht Wolfsburg-Charlottenburg<br>
+HRB 000000 B (nach Eintragung ausfüllen)</p>
+
+<p><strong>USt-IdNr.:</strong> DE000000000 (nach Vergabe einfügen)</p>
+
+<p><strong>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV:</strong><br>
+Duplece Georges Pitchou<br>
+Schulstraße 7, 38440 Wolfsburg</p>
+
+<h2>Haftung für Inhalte</h2>
+<p>Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen. Die Informationen auf dieser Plattform ersetzen keine medizinische oder pflegerische Fachausbildung.</p>
+
+<h2>Urheberrecht</h2>
+<p>Die durch uns erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechts bedürfen der schriftlichen Zustimmung der PflegeLearn GmbH.</p>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="doc-sep"></div>
+
+<!-- DOKUMENT 3: AGB -->
+<div class="doc-header">
+  <div class="doc-title">📜 Allgemeine Geschäftsbedingungen (AGB)</div>
+  <div class="doc-meta">PflegeLearn GmbH · Stand: Januar 2025</div>
+</div>
+
+<h1>§ 1 Geltungsbereich</h1>
+<p>Diese AGB gelten für die Nutzung der PflegeLearn-Plattform (Web und App) der PflegeLearn GmbH. Mit der Registrierung erkennt der Nutzer diese AGB an.</p>
+
+<h1>§ 2 Leistungsbeschreibung</h1>
+<p>PflegeLearn bietet eine digitale Lernplattform für die Pflegeausbildung in Deutschland. Die Plattform umfasst QCM-Fragen, Lernkarten, Videos und Infografiken, die auf dem deutschen Pflegelehrplan basieren.</p>
+
+<h1>§ 3 Registrierung und Konto</h1>
+<ul>
+  <li>Zur Nutzung ist eine Registrierung mit gültiger E-Mail-Adresse erforderlich.</li>
+  <li>Zugangsdaten sind vertraulich zu behandeln.</li>
+  <li>Pro Person ist ein Konto erlaubt. Die Weitergabe von Zugangsdaten ist untersagt.</li>
+  <li>Bei missbräuchlicher Nutzung kann das Konto gesperrt werden.</li>
+</ul>
+
+<h1>§ 4 Abonnement und Zahlung</h1>
+<p><strong>Free-Plan:</strong> Kostenlos, dauerhaft, 2 Module.</p>
+<p><strong>Student-Plan:</strong> 9,00 € / Monat (inkl. MwSt.). Monatlich kündbar mit 30 Tagen Kündigungsfrist zum Monatsende. Automatische Verlängerung bis zur Kündigung.</p>
+<p><strong>B2B-Lizenzen:</strong> Jahreslizenzen gemäß Partnerschaftsvertrag. Zahlung nach Rechnungsstellung, 30 Tage Zahlungsziel.</p>
+
+<h1>§ 5 Widerrufsrecht (Verbraucher)</h1>
+<div class="box warn">
+  <div class="box-title">Widerrufsrecht</div>
+  Als Verbraucher haben Sie das Recht, diesen Vertrag innerhalb von 14 Tagen ohne Angabe von Gründen zu widerrufen. Der Widerruf kann per E-Mail an georges@pflegelearn.de erfolgen.
+  <br><br>
+  Mit der Nutzung des Dienstleistungsangebots vor Ablauf der Widerrufsfrist stimmen Sie zu, dass das Widerrufsrecht erlischt, sobald die Dienstleistung vollständig erbracht wurde.
+</div>
+
+<h1>§ 6 Nutzungsrechte</h1>
+<p>PflegeLearn räumt dem Nutzer ein nicht-übertragbares, nicht-exklusives Recht zur Nutzung der Plattform ein. Folgendes ist untersagt:</p>
+<ul>
+  <li>Weitergabe oder Verkauf von Inhalten</li>
+  <li>Automatisiertes Auslesen (Scraping)</li>
+  <li>Reverse Engineering der Plattform</li>
+  <li>Erstellung abgeleiteter Werke</li>
+</ul>
+
+<h1>§ 7 Haftungsausschluss</h1>
+<p>Die Inhalte der Plattform dienen ausschließlich der Prüfungsvorbereitung und ersetzen keine professionelle pflegerische Ausbildung. PflegeLearn übernimmt keine Haftung für Entscheidungen, die auf Basis der Plattforminhalte getroffen werden. Die Richtigkeit der Inhalte wird mit größter Sorgfalt geprüft, eine Vollständigkeitsgarantie besteht nicht.</p>
+
+<h1>§ 8 Kündigung</h1>
+<p>Der Student-Plan kann jederzeit zum Ende des laufenden Monats gekündigt werden (Mindestlaufzeit: 1 Monat). Nach Kündigung verbleibt der Zugang bis zum Ablauf des bezahlten Zeitraums.</p>
+
+<h1>§ 9 Anwendbares Recht</h1>
+<p>Es gilt deutsches Recht. Gerichtsstand ist Wolfsburg, soweit gesetzlich zulässig.</p>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="doc-sep"></div>
+
+<!-- DOKUMENT 4: AVV -->
+<div class="doc-header">
+  <div class="doc-title">🔐 Auftragsverarbeitungsvertrag (AVV)</div>
+  <div class="doc-meta">Gemäß Art. 28 DSGVO · Für B2B-Schulpartner</div>
+</div>
+
+<div class="box info">
+  <div class="box-title">Vertragsparteien</div>
+  <strong>Auftragsverarbeiter:</strong> PflegeLearn GmbH, Schulstraße 7, 38440 Wolfsburg<br>
+  <strong>Verantwortlicher:</strong> Die unter dem Schulpartnerschaftsvertrag bezeichnete Schule/Einrichtung
+</div>
+
+<h1>§ 1 Gegenstand und Dauer</h1>
+<p>Dieser Auftragsverarbeitungsvertrag (AVV) regelt die Verarbeitung personenbezogener Daten der Nutzerinnen und Nutzer der Schule durch PflegeLearn im Rahmen des Schulpartnerschaftsvertrages. Die Dauer entspricht der Laufzeit des Schulpartnerschaftsvertrages.</p>
+
+<h1>§ 2 Art und Zweck der Verarbeitung</h1>
+<table class="table">
+  <tr><th>Datenkategorie</th><th>Betroffene Personen</th><th>Verarbeitungszweck</th></tr>
+  <tr><td>Name, E-Mail</td><td>Schülerinnen und Schüler</td><td>Kontoanlegung, Login</td></tr>
+  <tr><td>Lernfortschritt</td><td>Schülerinnen und Schüler</td><td>Lernverfolgung, Dashboard</td></tr>
+  <tr><td>Nutzungsstatistiken</td><td>Schülerinnen und Schüler</td><td>Admin-Dashboard für Schule</td></tr>
+  <tr><td>Kontaktdaten</td><td>Lehrkräfte, Schulleitung</td><td>B2B-Vertragsverwaltung</td></tr>
+</table>
+
+<h1>§ 3 Pflichten von PflegeLearn</h1>
+<ul>
+  <li>Verarbeitung ausschließlich auf dokumentierte Weisung der Schule</li>
+  <li>Sicherstellung der Vertraulichkeit (Personal hat Verschwiegenheitspflicht)</li>
+  <li>Implementierung geeigneter technisch-organisatorischer Maßnahmen (TOM)</li>
+  <li>Keine Weitergabe an Unterauftragsverarbeiter ohne Zustimmung (Ausnahmen: s. Anlage)</li>
+  <li>Unterstützung bei der Erfüllung von Betroffenenrechten</li>
+  <li>Löschung oder Rückgabe aller Daten nach Vertragsende</li>
+  <li>Zur Verfügungsstellung aller Informationen zur Nachweisführung</li>
+</ul>
+
+<h1>§ 4 Technisch-Organisatorische Maßnahmen (TOM)</h1>
+<div class="box success">
+  <div class="box-title">Implementierte Sicherheitsmaßnahmen</div>
+  <ul>
+    <li>🔐 Verschlüsselung aller Daten in Übertragung (TLS 1.3) und Speicherung (AES-256)</li>
+    <li>🔑 Passwörter nur als gesaltete Bcrypt-Hashes gespeichert</li>
+    <li>🖥️ Server ausschließlich in Deutschland (Hetzner, ISO 27001 zertifiziert)</li>
+    <li>👤 Rollenbasierte Zugangskontrolle (RBAC)</li>
+    <li>📋 Logging aller Datenzugriffe</li>
+    <li>🔄 Tägliche Backups (7-Tage-Rotations)</li>
+    <li>🛡️ DDoS-Schutz via Cloudflare</li>
+    <li>🔍 Jährliche Sicherheitsaudits</li>
+    <li>📱 2FA für Admin-Zugänge</li>
+  </ul>
+</div>
+
+<h1>§ 5 Unterauftragsverarbeiter</h1>
+<p>Folgende Unterauftragsverarbeiter werden eingesetzt (Zustimmung mit Vertragsabschluss erteilt):</p>
+<table class="table">
+  <tr><th>Anbieter</th><th>Sitz</th><th>Zweck</th></tr>
+  <tr><td>Hetzner Online GmbH</td><td>Nürnberg, DE</td><td>Server-Hosting</td></tr>
+  <tr><td>Supabase Inc. (EU-Region)</td><td>Frankfurt, DE</td><td>Datenbank</td></tr>
+  <tr><td>Brevo SAS</td><td>Paris, FR</td><td>Transaktionale E-Mails</td></tr>
+</table>
+<p>Änderungen an Unterauftragsverarbeitern werden der Schule 30 Tage im Voraus mitgeteilt.</p>
+
+<h1>§ 6 Datenpannen (Art. 33/34 DSGVO)</h1>
+<p>PflegeLearn meldet Datenschutzverletzungen, die Daten der Schule betreffen, innerhalb von <strong>24 Stunden</strong> per E-Mail an den benannten Ansprechpartner der Schule.</p>
+
+<h1>§ 7 Rückgabe und Löschung</h1>
+<p>Nach Vertragsende werden alle Daten innerhalb von <strong>30 Tagen</strong> vollständig gelöscht oder auf Anfrage in maschinenlesbarem Format (CSV/JSON) zurückgegeben. Eine Bestätigung der Löschung wird schriftlich erteilt.</p>
+
+<h1>§ 8 Weisungsrecht</h1>
+<p>Die Schule ist zur Erteilung von Weisungen hinsichtlich der Verarbeitung berechtigt. Weisungen erfolgen schriftlich per E-Mail an georges@pflegelearn.de.</p>
+
+<!-- Unterschriften AVV -->
+<div style="margin-top:2.5rem;">
+  <p style="font-weight:600;margin-bottom:1.25rem;">Durch Unterzeichnung des Schulpartnerschaftsvertrages stimmen beide Parteien diesem AVV zu.</p>
+  <div class="sign-row">
+    <div class="sign-box">Für PflegeLearn GmbH<br><br>Ort, Datum, Unterschrift</div>
+    <div class="sign-box">Für die Schule / Einrichtung<br><br>Ort, Datum, Unterschrift</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="doc-sep"></div>
+
+<!-- DOKUMENT 5: NUTZUNGSBEDINGUNGEN APP -->
+<div class="doc-header">
+  <div class="doc-title">📱 App-Store-Beschreibungen</div>
+  <div class="doc-meta">Für Apple App Store & Google Play Store</div>
+</div>
+
+<h2>App Store (Apple) – Kurzbeschreibung (170 Zeichen)</h2>
+<div class="box">PflegeLearn – Die smarte Lernapp für die Pflegeausbildung. 500 QCM, 1100 Lernkarten, 58 Videos. PflBG-konform. 3 Niveaus.</div>
+
+<h2>App Store – Vollbeschreibung</h2>
+<div class="box">
+<strong>PflegeLearn – Smarter lernen für die Pflegeausbildung 🩺</strong><br><br>
+Die erste Lernapp, die vollständig auf den deutschen Pflegelehrplan (PflBG 2020) abgestimmt ist – basierend auf Icare und Pflege heute.<br><br>
+<strong>WAS DICH ERWARTET</strong><br>
+🎯 500+ QCM-Fragen mit ausführlichen Erklärungen in 3 Niveaus<br>
+📄 1.100 Lernkarten zum Umdrehen – alle 10 Module<br>
+🎬 58 Lehrvideos mit Storyboard und Skript<br>
+📊 300 interaktive Infografiken (Bradenskala, NYHA, WHO...)<br>
+📝 Prüfungssimulator mit 4 Formaten und Echtzeit-Timer<br><br>
+<strong>3 NIVEAUSTUFEN</strong><br>
+🌱 Anfänger: Definitionen und Grundlagen (+10 Punkte)<br>
+🔥 Fortgeschritten: Klinische Szenarien (+20 Punkte)<br>
+💎 Experte: Komplexe Fälle und Differenzialdiagnosen (+30 Punkte)<br><br>
+<strong>FÜR WEN?</strong><br>
+Auszubildende in der generalistischen Pflegeausbildung (1.–3. Jahr), Pflegestudierende, Praxisanleitende<br><br>
+DSGVO-konform · Hosting in Deutschland · Keine Werbung
+</div>
+
+<h2>Schlüsselwörter (App Store Optimization)</h2>
+<div class="box">Pflege Ausbildung, Pflegeexamen, PflBG, Lernkarten Pflege, QCM Pflege, Pflegeschule, Vitalzeichen, Krankenpflege lernen, Pflegeazubi, Pflegefachfrau, Pflegefachmann, Icare, Pflege heute</div>
+
+</div><!-- /container -->
+</body>
+</html>

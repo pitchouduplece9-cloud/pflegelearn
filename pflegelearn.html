@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PflegeLearn – Dein Lernbegleiter</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #0d9488;
+    --teal-light: #14b8a6;
+    --teal-dark: #0f766e;
+    --cream: #faf7f2;
+    --ink: #1a1a2e;
+    --ink-soft: #3d3d5c;
+    --gold: #f59e0b;
+    --rose: #e11d48;
+    --surface: #ffffff;
+    --border: #e5e7eb;
+    --shadow: 0 4px 24px rgba(13,148,136,0.10);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(250,247,242,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2.5rem;
+    height: 64px;
+  }
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem; font-weight: 900;
+    color: var(--teal-dark);
+    letter-spacing: -0.5px;
+  }
+  .logo span { color: var(--gold); }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a {
+    font-size: 0.875rem; font-weight: 500;
+    color: var(--ink-soft); text-decoration: none;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--teal); }
+  .nav-cta {
+    background: var(--teal); color: white;
+    padding: .5rem 1.25rem; border-radius: 999px;
+    font-size: 0.875rem; font-weight: 600;
+    border: none; cursor: pointer;
+    transition: background .2s, transform .15s;
+  }
+  .nav-cta:hover { background: var(--teal-dark); transform: scale(1.03); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 100px 2.5rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 80% 40%, rgba(13,148,136,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 70%, rgba(245,158,11,0.08) 0%, transparent 60%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0; z-index: 0; opacity: 0.04;
+    background-image: linear-gradient(var(--ink) 1px, transparent 1px),
+                      linear-gradient(90deg, var(--ink) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .hero-content { position: relative; z-index: 1; max-width: 640px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: .4rem;
+    background: rgba(13,148,136,0.1); border: 1px solid rgba(13,148,136,0.25);
+    color: var(--teal-dark); border-radius: 999px;
+    padding: .3rem 1rem; font-size: 0.78rem; font-weight: 600;
+    margin-bottom: 1.5rem;
+    animation: fadeDown .6s ease both;
+  }
+  .hero-badge::before { content: '●'; font-size: .5rem; color: var(--teal); }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 6vw, 4.2rem);
+    font-weight: 900; line-height: 1.1;
+    color: var(--ink);
+    animation: fadeUp .7s .1s ease both;
+  }
+  h1 em { color: var(--teal); font-style: normal; }
+  .hero-sub {
+    margin-top: 1.2rem; font-size: 1.05rem; line-height: 1.7;
+    color: var(--ink-soft); max-width: 520px;
+    animation: fadeUp .7s .2s ease both;
+  }
+  .hero-actions {
+    margin-top: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;
+    animation: fadeUp .7s .3s ease both;
+  }
+  .btn-primary {
+    background: var(--teal); color: white;
+    padding: .85rem 2rem; border-radius: 999px;
+    font-size: 0.95rem; font-weight: 600; border: none; cursor: pointer;
+    box-shadow: 0 4px 20px rgba(13,148,136,0.35);
+    transition: all .2s;
+  }
+  .btn-primary:hover { background: var(--teal-dark); transform: translateY(-2px); }
+  .btn-outline {
+    background: transparent; color: var(--ink);
+    padding: .85rem 2rem; border-radius: 999px;
+    font-size: 0.95rem; font-weight: 600;
+    border: 1.5px solid var(--border); cursor: pointer;
+    transition: all .2s;
+  }
+  .btn-outline:hover { border-color: var(--teal); color: var(--teal); }
+
+  .hero-stats {
+    margin-top: 3rem; display: flex; gap: 2.5rem;
+    animation: fadeUp .7s .4s ease both;
+  }
+  .stat-item { display: flex; flex-direction: column; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; font-weight: 700; color: var(--teal-dark);
+  }
+  .stat-label { font-size: 0.78rem; color: var(--ink-soft); font-weight: 500; margin-top: .1rem; }
+
+  /* ── FEATURES ── */
+  .section {
+    padding: 5rem 2.5rem;
+    max-width: 1100px; margin: 0 auto;
+  }
+  .section-label {
+    font-size: 0.78rem; font-weight: 700; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--teal);
+    margin-bottom: .75rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 900; line-height: 1.15;
+    color: var(--ink); margin-bottom: 3rem;
+  }
+  .section-title span { color: var(--teal); }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.75rem;
+    transition: transform .2s, box-shadow .2s;
+    position: relative; overflow: hidden;
+  }
+  .feature-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--teal), var(--teal-light));
+    opacity: 0; transition: opacity .2s;
+  }
+  .feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+  .feature-card:hover::before { opacity: 1; }
+  .feature-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: rgba(13,148,136,0.1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; margin-bottom: 1rem;
+  }
+  .feature-title { font-size: 1rem; font-weight: 600; margin-bottom: .4rem; }
+  .feature-desc { font-size: 0.875rem; color: var(--ink-soft); line-height: 1.6; }
+
+  /* ── MODULES ── */
+  .modules-section { background: var(--ink); color: white; padding: 5rem 2.5rem; }
+  .modules-inner { max-width: 1100px; margin: 0 auto; }
+  .modules-section .section-label { color: var(--teal-light); }
+  .modules-section .section-title { color: white; }
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem; margin-top: 2rem;
+  }
+  .module-pill {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px; padding: 1rem 1.25rem;
+    transition: background .2s;
+    cursor: pointer;
+  }
+  .module-pill:hover { background: rgba(13,148,136,0.25); border-color: var(--teal); }
+  .module-num { font-size: 0.7rem; color: var(--teal-light); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .3rem; }
+  .module-name { font-size: 0.9rem; font-weight: 500; line-height: 1.4; }
+
+  /* ── PREVIEW ── */
+  .preview-section { padding: 5rem 2.5rem; }
+  .preview-inner { max-width: 1100px; margin: 0 auto; }
+  .preview-wrapper {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+    margin-top: 2.5rem;
+  }
+  .preview-topbar {
+    background: var(--ink); padding: .75rem 1.25rem;
+    display: flex; align-items: center; gap: .5rem;
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot.r { background: #ff5f57; }
+  .dot.y { background: #febc2e; }
+  .dot.g { background: #28c840; }
+  .preview-url {
+    flex: 1; background: rgba(255,255,255,0.08);
+    border-radius: 6px; padding: .25rem .75rem;
+    color: rgba(255,255,255,0.5); font-size: 0.75rem; margin-left: .5rem;
+  }
+  .preview-body { padding: 2rem; }
+  .preview-tabs { display: flex; gap: .5rem; margin-bottom: 1.5rem; }
+  .tab {
+    padding: .4rem 1rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600;
+    cursor: pointer; border: none; transition: all .2s;
+  }
+  .tab.active { background: var(--teal); color: white; }
+  .tab:not(.active) { background: var(--cream); color: var(--ink-soft); }
+
+  .fiche-card {
+    background: var(--cream); border-radius: 12px; padding: 1.5rem;
+    border-left: 4px solid var(--teal);
+  }
+  .fiche-tag {
+    display: inline-block; background: rgba(13,148,136,0.15);
+    color: var(--teal-dark); font-size: 0.7rem; font-weight: 700;
+    padding: .2rem .6rem; border-radius: 999px; margin-bottom: .75rem; text-transform: uppercase;
+  }
+  .fiche-title { font-size: 1.1rem; font-weight: 700; margin-bottom: .5rem; }
+  .fiche-body { font-size: 0.875rem; color: var(--ink-soft); line-height: 1.7; }
+  .fiche-body strong { color: var(--ink); }
+
+  .qcm-card { background: var(--cream); border-radius: 12px; padding: 1.5rem; }
+  .qcm-q { font-size: 0.95rem; font-weight: 600; margin-bottom: 1rem; }
+  .qcm-options { display: flex; flex-direction: column; gap: .5rem; }
+  .qcm-opt {
+    padding: .65rem 1rem; border-radius: 8px; font-size: 0.875rem;
+    border: 1.5px solid var(--border); cursor: pointer; transition: all .15s;
+    display: flex; align-items: center; gap: .6rem;
+  }
+  .qcm-opt:hover { border-color: var(--teal); color: var(--teal); }
+  .qcm-opt.correct { border-color: #10b981; background: rgba(16,185,129,0.08); color: #065f46; }
+  .qcm-opt.wrong { border-color: var(--rose); background: rgba(225,29,72,0.07); color: var(--rose); }
+  .opt-letter {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--border); font-size: 0.7rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .qcm-opt.correct .opt-letter { background: #10b981; color: white; }
+  .qcm-opt.wrong .opt-letter { background: var(--rose); color: white; }
+
+  /* ── PRICING ── */
+  .pricing-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem; margin-top: 2.5rem;
+  }
+  .price-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 2rem;
+  }
+  .price-card.featured {
+    background: var(--teal); border-color: var(--teal); color: white;
+    transform: scale(1.03);
+    box-shadow: 0 8px 32px rgba(13,148,136,0.35);
+  }
+  .price-badge {
+    display: inline-block; background: var(--gold); color: var(--ink);
+    font-size: 0.7rem; font-weight: 700; padding: .2rem .7rem;
+    border-radius: 999px; margin-bottom: 1rem; text-transform: uppercase;
+  }
+  .price-name { font-size: 1rem; font-weight: 600; margin-bottom: .5rem; }
+  .price-amount {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem; font-weight: 900; line-height: 1;
+  }
+  .price-amount sup { font-size: 1rem; vertical-align: top; margin-top: .5rem; display: inline-block; }
+  .price-per { font-size: 0.8rem; opacity: .7; margin-top: .25rem; margin-bottom: 1.25rem; }
+  .price-features { list-style: none; display: flex; flex-direction: column; gap: .5rem; }
+  .price-features li { font-size: 0.875rem; display: flex; align-items: center; gap: .5rem; }
+  .price-features li::before { content: '✓'; font-weight: 700; color: var(--teal-light); flex-shrink: 0; }
+  .price-card.featured .price-features li::before { color: rgba(255,255,255,0.8); }
+  .price-btn {
+    width: 100%; margin-top: 1.75rem; padding: .75rem;
+    border-radius: 999px; font-size: 0.9rem; font-weight: 600;
+    border: none; cursor: pointer; transition: all .2s;
+  }
+  .price-btn.outline { background: transparent; border: 1.5px solid var(--border); color: var(--ink); }
+  .price-btn.outline:hover { border-color: var(--teal); color: var(--teal); }
+  .price-btn.white { background: white; color: var(--teal-dark); }
+  .price-btn.white:hover { background: var(--cream); }
+  .price-btn.dark { background: var(--ink); color: white; }
+  .price-btn.dark:hover { background: #2d2d4a; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink); color: rgba(255,255,255,0.5);
+    text-align: center; padding: 2rem;
+    font-size: 0.8rem;
+  }
+  footer strong { color: white; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .hero-stats { gap: 1.5rem; }
+    .price-card.featured { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Pflege<span>Learn</span></div>
+  <div class="nav-links">
+    <a href="#">Module</a>
+    <a href="#">QCM</a>
+    <a href="#">Fiches</a>
+    <a href="#">Preise</a>
+  </div>
+  <button class="nav-cta">Kostenlos starten</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Für Pflegestudierende in Deutschland</div>
+    <h1>Lern smarter.<br><em>Besteh besser.</em></h1>
+    <p class="hero-sub">
+      Alle Themen der Pflegeausbildung – kompakt erklärt, geübt und geprüft.
+      Basierend auf Icare, Pflege heute & dem offiziellen Lehrplan.
+    </p>
+    <div class="hero-actions">
+      <button class="btn-primary">Jetzt kostenlos testen</button>
+      <button class="btn-outline">Demo ansehen →</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-num">10</span>
+        <span class="stat-label">Lernmodule</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">500+</span>
+        <span class="stat-label">Übungsfragen</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">120</span>
+        <span class="stat-label">Lernkarten</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section">
+  <p class="section-label">Was dich erwartet</p>
+  <h2 class="section-title">Alles, was du für den<br><span>Examenerfolg</span> brauchst</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">📚</div>
+      <div class="feature-title">Kompakte Lernkarten</div>
+      <div class="feature-desc">Alle Themen aus Icare & Pflege heute auf das Wesentliche reduziert – ideal für unterwegs.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">❓</div>
+      <div class="feature-title">QCM mit Lösungen</div>
+      <div class="feature-desc">Über 500 praxisnahe Fragen im Prüfungsstil – mit ausführlichen Erklärungen zu jeder Antwort.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔁</div>
+      <div class="feature-title">Spaced Repetition</div>
+      <div class="feature-desc">Intelligentes Wiederholungssystem: Du lernst genau das, was du noch nicht beherrschst.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <div class="feature-title">Lernfortschritt</div>
+      <div class="feature-desc">Dein persönliches Dashboard zeigt dir deine Stärken, Schwächen und den nächsten Schritt.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🏥</div>
+      <div class="feature-title">Praxisnahe Fälle</div>
+      <div class="feature-desc">Fallstudien aus dem Pflegealltag – so wie sie wirklich in der Prüfung und am Bett vorkommen.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <div class="feature-title">Web & App</div>
+      <div class="feature-desc">Auf dem Smartphone in der Pause oder am Laptop zu Hause – dein Lernbegleiter ist immer dabei.</div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULES -->
+<section class="modules-section">
+  <div class="modules-inner">
+    <p class="section-label">Lehrplan</p>
+    <h2 class="section-title" style="color:white">10 Module · 60 Themen · <span style="color:var(--teal-light)">vollständig</span></h2>
+    <div class="modules-grid">
+      <div class="module-pill"><div class="module-num">Modul 01</div><div class="module-name">Grundlagen der Pflege</div></div>
+      <div class="module-pill"><div class="module-num">Modul 02</div><div class="module-name">Vitalzeichen & Beobachtung</div></div>
+      <div class="module-pill"><div class="module-num">Modul 03</div><div class="module-name">Medikamente & Injektionen</div></div>
+      <div class="module-pill"><div class="module-num">Modul 04</div><div class="module-name">Ernährung & Ausscheidung</div></div>
+      <div class="module-pill"><div class="module-num">Modul 05</div><div class="module-name">Mobilisation & Prävention</div></div>
+      <div class="module-pill"><div class="module-num">Modul 06</div><div class="module-name">Psychiatrie & Psychosoziales</div></div>
+      <div class="module-pill"><div class="module-num">Modul 07</div><div class="module-name">Pflegebereiche spezifisch</div></div>
+      <div class="module-pill"><div class="module-num">Modul 08</div><div class="module-name">Recht & Beruf</div></div>
+      <div class="module-pill"><div class="module-num">Modul 09</div><div class="module-name">Krankheitsbilder</div></div>
+      <div class="module-pill"><div class="module-num">Modul 10</div><div class="module-name">Wundversorgung</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PREVIEW -->
+<section class="preview-section">
+  <div class="preview-inner">
+    <p class="section-label">Vorschau</p>
+    <h2 class="section-title">So sieht<br><span>PflegeLearn</span> aus</h2>
+    <div class="preview-wrapper">
+      <div class="preview-topbar">
+        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+        <div class="preview-url">pflegelearn.de/module/vitalzeichen</div>
+      </div>
+      <div class="preview-body">
+        <div class="preview-tabs">
+          <button class="tab active" onclick="showTab('fiche',this)">📄 Lernkarte</button>
+          <button class="tab" onclick="showTab('qcm',this)">❓ QCM</button>
+        </div>
+
+        <!-- FICHE -->
+        <div id="tab-fiche">
+          <div class="fiche-card">
+            <span class="fiche-tag">Modul 02 · Vitalzeichen</span>
+            <div class="fiche-title">Blutdruckmessung – Zusammenfassung</div>
+            <div class="fiche-body">
+              <strong>Definition:</strong> Der Blutdruck beschreibt den Druck des Blutes auf die Gefäßwände.<br><br>
+              <strong>Normalwerte (RR):</strong> Systolisch 120 mmHg / Diastolisch 80 mmHg<br><br>
+              <strong>Hypertonie:</strong> &gt; 140/90 mmHg · <strong>Hypotonie:</strong> &lt; 100/60 mmHg<br><br>
+              <strong>Messung nach Riva-Rocci:</strong> Patient entspannt, Arm auf Herzhöhe, Manschette 2–3 cm über Ellenbeuge anlegen, langsam ablassen, Korotkoff-Geräusche beachten.<br><br>
+              <strong>Dokumentation:</strong> Datum, Uhrzeit, Wert, Arm (rechts/links), Lage, Besonderheiten.
+            </div>
+          </div>
+        </div>
+
+        <!-- QCM -->
+        <div id="tab-qcm" style="display:none">
+          <div class="qcm-card">
+            <div class="qcm-q">Ein Patient hat einen Blutdruck von 158/95 mmHg. Wie wird dieser Befund eingestuft?</div>
+            <div class="qcm-options">
+              <div class="qcm-opt wrong" id="optA">
+                <div class="opt-letter">A</div> Hypotonie Grad I
+              </div>
+              <div class="qcm-opt correct" id="optB">
+                <div class="opt-letter">B</div> Hypertonie Grad I
+              </div>
+              <div class="qcm-opt" id="optC" style="border-color:var(--border)">
+                <div class="opt-letter">C</div> Normaler Blutdruck
+              </div>
+              <div class="qcm-opt" id="optD" style="border-color:var(--border)">
+                <div class="opt-letter">D</div> Hypertonie Grad III
+              </div>
+            </div>
+            <div style="margin-top:1rem; padding:.75rem; background:rgba(16,185,129,0.08); border-radius:8px; font-size:0.82rem; color:#065f46; border-left:3px solid #10b981;">
+              <strong>✓ Richtig!</strong> Ab 140/90 mmHg spricht man von Hypertonie Grad I (leicht). Hypertonie Grad III beginnt erst ab 180/110 mmHg.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section">
+  <p class="section-label">Preise</p>
+  <h2 class="section-title">Einfach. <span>Transparent.</span></h2>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-name">Free</div>
+      <div class="price-amount">0<sup>€</sup></div>
+      <div class="price-per">für immer kostenlos</div>
+      <ul class="price-features">
+        <li>2 Module freigeschaltet</li>
+        <li>50 QCM-Fragen</li>
+        <li>20 Lernkarten</li>
+        <li>Basis-Fortschritt</li>
+      </ul>
+      <button class="price-btn outline">Kostenlos starten</button>
+    </div>
+    <div class="price-card featured">
+      <div class="price-badge">⭐ Beliebt</div>
+      <div class="price-name">Student</div>
+      <div class="price-amount">9<sup>€</sup></div>
+      <div class="price-per">pro Monat</div>
+      <ul class="price-features">
+        <li>Alle 10 Module</li>
+        <li>500+ QCM mit Lösungen</li>
+        <li>120 Lernkarten</li>
+        <li>Spaced Repetition</li>
+        <li>Lernfortschritt-Dashboard</li>
+        <li>App (iOS & Android)</li>
+      </ul>
+      <button class="price-btn white">Jetzt abonnieren</button>
+    </div>
+    <div class="price-card">
+      <div class="price-name">Schule / B2B</div>
+      <div class="price-amount" style="font-size:1.8rem">Auf Anfrage</div>
+      <div class="price-per">Lizenz für Schulen</div>
+      <ul class="price-features">
+        <li>Unbegrenzte Nutzer</li>
+        <li>Admin-Dashboard</li>
+        <li>Individuelle Anpassung</li>
+        <li>Dedizierter Support</li>
+      </ul>
+      <button class="price-btn dark">Kontakt aufnehmen</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <strong>PflegeLearn</strong> · Die smarte Art, Pflege zu lernen · © 2025
+</footer>
+
+<script>
+  function showTab(tab, btn) {
+    document.getElementById('tab-fiche').style.display = tab === 'fiche' ? '' : 'none';
+    document.getElementById('tab-qcm').style.display = tab === 'qcm' ? '' : 'none';
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+  }
+</script>
+</body>
+</html>

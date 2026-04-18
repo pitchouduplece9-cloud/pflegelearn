@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PflegeLearn – Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal:   #0d9488;
+  --tealD:  #0f766e;
+  --tealL:  #ccfbf1;
+  --tealM:  #14b8a6;
+  --gold:   #f59e0b;
+  --goldL:  #fef3c7;
+  --ink:    #1a1a2e;
+  --inkS:   #3d3d5c;
+  --white:  #ffffff;
+  --cream:  #faf7f2;
+  --border: #e5e7eb;
+  --green:  #10b981;
+  --greenL: #d1fae5;
+  --red:    #e11d48;
+  --redL:   #ffe4e6;
+  --amber:  #f59e0b;
+  --amberL: #fef3c7;
+  --sidebar-w: 240px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height: 100%; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  display: flex; min-height: 100vh;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--ink);
+  display: flex; flex-direction: column;
+  position: fixed; top: 0; left: 0; bottom: 0;
+  z-index: 100; padding: 0;
+  overflow-y: auto;
+}
+.sidebar-logo {
+  padding: 1.5rem 1.4rem 1.2rem;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.logo-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem; font-weight: 900;
+  color: var(--tealM);
+}
+.logo-text span { color: var(--gold); }
+.logo-sub { font-size: .7rem; color: rgba(255,255,255,0.3); margin-top: .15rem; letter-spacing: .05em; }
+
+.nav-section { padding: 1rem 0 .5rem; }
+.nav-label {
+  font-size: .65rem; font-weight: 700; letter-spacing: .12em;
+  text-transform: uppercase; color: rgba(255,255,255,0.25);
+  padding: 0 1.4rem; margin-bottom: .4rem;
+}
+.nav-item {
+  display: flex; align-items: center; gap: .75rem;
+  padding: .6rem 1.4rem; cursor: pointer;
+  font-size: .875rem; font-weight: 500;
+  color: rgba(255,255,255,0.5);
+  transition: all .15s; border-left: 3px solid transparent;
+  text-decoration: none;
+}
+.nav-item:hover { color: var(--white); background: rgba(255,255,255,0.04); }
+.nav-item.active {
+  color: var(--tealM); border-left-color: var(--tealM);
+  background: rgba(13,148,136,0.1);
+}
+.nav-icon { font-size: 1rem; width: 20px; text-align: center; }
+
+.sidebar-bottom {
+  margin-top: auto; padding: 1.2rem 1.4rem;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+.user-card {
+  display: flex; align-items: center; gap: .75rem;
+}
+.user-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal), var(--tealM));
+  display: flex; align-items: center; justify-content: center;
+  font-size: .9rem; font-weight: 700; color: white; flex-shrink: 0;
+}
+.user-name { font-size: .85rem; font-weight: 600; color: var(--white); }
+.user-plan { font-size: .7rem; color: var(--gold); }
+
+/* ── MAIN ── */
+.main {
+  margin-left: var(--sidebar-w);
+  flex: 1; padding: 2rem 2rem 3rem;
+  min-height: 100vh;
+}
+
+/* ── TOP BAR ── */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 2rem;
+}
+.page-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.75rem; font-weight: 900; color: var(--ink);
+}
+.page-sub { font-size: .875rem; color: var(--inkS); margin-top: .15rem; }
+.topbar-actions { display: flex; gap: .75rem; }
+.btn-sm {
+  padding: .5rem 1.1rem; border-radius: 999px;
+  font-size: .8rem; font-weight: 600; cursor: pointer;
+  border: none; transition: all .15s;
+}
+.btn-primary { background: var(--teal); color: white; }
+.btn-primary:hover { background: var(--tealD); }
+.btn-ghost { background: transparent; color: var(--inkS); border: 1.5px solid var(--border); }
+.btn-ghost:hover { border-color: var(--teal); color: var(--teal); }
+
+/* ── STAT CARDS ── */
+.stats-row {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1rem; margin-bottom: 1.75rem;
+}
+.stat-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 16px; padding: 1.25rem 1.4rem;
+  position: relative; overflow: hidden;
+  transition: transform .15s, box-shadow .15s;
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,0.07); }
+.stat-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+}
+.stat-card.teal::before { background: linear-gradient(90deg, var(--teal), var(--tealM)); }
+.stat-card.gold::before { background: linear-gradient(90deg, var(--gold), #fbbf24); }
+.stat-card.green::before { background: linear-gradient(90deg, var(--green), #34d399); }
+.stat-card.red::before { background: linear-gradient(90deg, var(--red), #fb7185); }
+.stat-icon { font-size: 1.5rem; margin-bottom: .6rem; }
+.stat-val {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem; font-weight: 900; color: var(--ink);
+  line-height: 1;
+}
+.stat-label { font-size: .78rem; color: var(--inkS); margin-top: .3rem; font-weight: 500; }
+.stat-delta {
+  font-size: .72rem; font-weight: 600; margin-top: .25rem;
+  display: inline-flex; align-items: center; gap: .25rem;
+}
+.delta-up { color: var(--green); }
+.delta-down { color: var(--red); }
+
+/* ── TWO COLUMNS ── */
+.two-col { display: grid; grid-template-columns: 1fr 340px; gap: 1.25rem; margin-bottom: 1.25rem; }
+.three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 1.25rem; }
+
+/* ── CARD ── */
+.card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 16px; padding: 1.4rem;
+}
+.card-title {
+  font-size: .95rem; font-weight: 700; color: var(--ink);
+  margin-bottom: 1.1rem; display: flex; align-items: center; gap: .5rem;
+}
+.card-title .badge {
+  font-size: .65rem; font-weight: 700; padding: .15rem .55rem;
+  border-radius: 999px; background: var(--tealL); color: var(--tealD);
+}
+
+/* ── MODULE PROGRESS ── */
+.module-row {
+  display: flex; align-items: center; gap: .75rem;
+  padding: .55rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.module-row:last-child { border-bottom: none; }
+.mod-icon { font-size: 1.1rem; width: 28px; text-align: center; flex-shrink: 0; }
+.mod-info { flex: 1; min-width: 0; }
+.mod-name-sm { font-size: .82rem; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mod-stats-sm { font-size: .7rem; color: var(--inkS); margin-top: .1rem; }
+.mod-bar-wrap { width: 90px; flex-shrink: 0; }
+.mod-bar { height: 6px; background: var(--border); border-radius: 999px; overflow: hidden; }
+.mod-bar-fill { height: 100%; border-radius: 999px; transition: width .6s cubic-bezier(.4,0,.2,1); }
+.mod-pct { font-size: .7rem; font-weight: 700; color: var(--inkS); text-align: right; margin-top: .2rem; }
+
+/* ── WEEKLY CHART ── */
+.chart-area { position: relative; height: 140px; }
+.chart-bars {
+  display: flex; align-items: flex-end; gap: .4rem;
+  height: 100%; padding-top: .5rem;
+}
+.chart-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: .35rem; }
+.chart-bar {
+  width: 100%; border-radius: 6px 6px 0 0;
+  background: linear-gradient(180deg, var(--tealM), var(--teal));
+  transition: height .5s cubic-bezier(.4,0,.2,1);
+  min-height: 4px; cursor: pointer; position: relative;
+}
+.chart-bar.today { background: linear-gradient(180deg, var(--gold), #d97706); }
+.chart-bar:hover::after {
+  content: attr(data-val);
+  position: absolute; top: -1.5rem; left: 50%; transform: translateX(-50%);
+  font-size: .65rem; font-weight: 700; color: var(--ink);
+  background: var(--white); padding: .1rem .4rem; border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.1); white-space: nowrap;
+}
+.chart-day { font-size: .65rem; color: var(--inkS); font-weight: 500; }
+.chart-legend { display: flex; gap: 1rem; margin-top: .75rem; }
+.legend-item { display: flex; align-items: center; gap: .35rem; font-size: .72rem; color: var(--inkS); }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* ── RECENT ACTIVITY ── */
+.activity-list { display: flex; flex-direction: column; gap: .6rem; }
+.activity-item {
+  display: flex; align-items: center; gap: .85rem;
+  padding: .65rem .85rem; border-radius: 10px;
+  background: var(--cream); border: 1px solid var(--border);
+}
+.activity-icon {
+  width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: .9rem;
+}
+.activity-icon.correct { background: var(--greenL); }
+.activity-icon.wrong { background: var(--redL); }
+.activity-icon.module { background: var(--tealL); }
+.activity-text { flex: 1; min-width: 0; }
+.activity-main { font-size: .82rem; font-weight: 500; color: var(--ink); }
+.activity-sub { font-size: .7rem; color: var(--inkS); margin-top: .1rem; }
+.activity-time { font-size: .68rem; color: rgba(99,99,130,0.5); flex-shrink: 0; }
+
+/* ── WEAK TOPICS ── */
+.weak-list { display: flex; flex-direction: column; gap: .55rem; }
+.weak-item {
+  display: flex; align-items: center; gap: .75rem;
+  padding: .6rem .85rem; border-radius: 10px;
+  background: var(--redL); border: 1px solid rgba(225,29,72,0.15);
+}
+.weak-mod { font-size: .8rem; font-weight: 600; color: var(--red); flex: 1; }
+.weak-pct { font-size: .78rem; font-weight: 700; color: var(--red); flex-shrink: 0; }
+.weak-bar { width: 60px; height: 5px; background: rgba(225,29,72,0.15); border-radius: 999px; overflow: hidden; }
+.weak-bar-fill { height: 100%; background: var(--red); border-radius: 999px; }
+
+/* ── STREAK ── */
+.streak-display {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 1rem 0; gap: .35rem;
+}
+.streak-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem; font-weight: 900; color: var(--gold);
+  line-height: 1;
+}
+.streak-label { font-size: .8rem; color: var(--inkS); font-weight: 500; }
+.streak-days { display: flex; gap: .3rem; margin-top: .6rem; }
+.streak-day {
+  width: 22px; height: 22px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .58rem; font-weight: 700;
+}
+.streak-day.done { background: var(--goldL); color: #92400e; }
+.streak-day.today { background: var(--gold); color: white; }
+.streak-day.miss { background: var(--border); color: var(--inkS); }
+
+/* ── ACHIEVEMENTS ── */
+.ach-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .65rem; }
+.ach-item {
+  display: flex; flex-direction: column; align-items: center; gap: .3rem;
+  padding: .75rem .5rem; border-radius: 12px;
+  border: 1px solid var(--border); text-align: center;
+  transition: all .15s; cursor: default;
+}
+.ach-item.unlocked { background: var(--goldL); border-color: #fcd34d; }
+.ach-item.locked { opacity: .4; filter: grayscale(1); }
+.ach-icon { font-size: 1.5rem; }
+.ach-name { font-size: .65rem; font-weight: 700; color: var(--ink); }
+.ach-desc { font-size: .58rem; color: var(--inkS); }
+
+/* ── NEXT UP ── */
+.next-list { display: flex; flex-direction: column; gap: .55rem; }
+.next-item {
+  display: flex; align-items: center; gap: .75rem;
+  padding: .7rem .9rem; border-radius: 12px;
+  border: 1px solid var(--border); background: var(--cream);
+  cursor: pointer; transition: all .15s;
+}
+.next-item:hover { border-color: var(--teal); background: var(--tealL); }
+.next-mod-icon { font-size: 1.2rem; }
+.next-info { flex: 1; }
+.next-name { font-size: .82rem; font-weight: 600; color: var(--ink); }
+.next-detail { font-size: .7rem; color: var(--inkS); margin-top: .1rem; }
+.next-arrow { color: var(--teal); font-size: .85rem; }
+
+/* ── EXAM COUNTDOWN ── */
+.exam-card {
+  background: linear-gradient(135deg, var(--tealD), var(--inkS));
+  border: none; color: var(--white);
+}
+.exam-title { color: var(--white); }
+.exam-title .badge { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.9); }
+.countdown-row {
+  display: flex; gap: .75rem; margin-bottom: 1rem;
+}
+.cd-block {
+  flex: 1; text-align: center; background: rgba(255,255,255,0.1);
+  border-radius: 10px; padding: .6rem .4rem;
+}
+.cd-num { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; color: var(--gold); }
+.cd-label { font-size: .6rem; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: .06em; }
+.exam-progress-label { font-size: .78rem; color: rgba(255,255,255,0.6); margin-bottom: .4rem; }
+.exam-bar { height: 8px; background: rgba(255,255,255,0.15); border-radius: 999px; overflow: hidden; }
+.exam-bar-fill { height: 100%; background: linear-gradient(90deg, var(--tealM), var(--gold)); border-radius: 999px; }
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .stats-row { grid-template-columns: repeat(2,1fr); }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; padding: 1rem; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-text">Pflege<span>Learn</span></div>
+    <div class="logo-sub">Dein Lernbegleiter</div>
+  </div>
+
+  <nav>
+    <div class="nav-section">
+      <div class="nav-label">Übersicht</div>
+      <a class="nav-item active">
+        <span class="nav-icon">📊</span> Dashboard
+      </a>
+      <a class="nav-item">
+        <span class="nav-icon">📚</span> Lernkarten
+      </a>
+      <a class="nav-item">
+        <span class="nav-icon">❓</span> QCM Training
+      </a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Module</div>
+      <a class="nav-item"><span class="nav-icon">📋</span> Grundlagen</a>
+      <a class="nav-item"><span class="nav-icon">🫀</span> Vitalzeichen</a>
+      <a class="nav-item"><span class="nav-icon">💊</span> Medikamente</a>
+      <a class="nav-item"><span class="nav-icon">🍽️</span> Ernährung</a>
+      <a class="nav-item"><span class="nav-icon">🦴</span> Mobilisation</a>
+      <a class="nav-item"><span class="nav-icon">🧠</span> Psychiatrie</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Konto</div>
+      <a class="nav-item"><span class="nav-icon">⚙️</span> Einstellungen</a>
+      <a class="nav-item"><span class="nav-icon">❓</span> Hilfe</a>
+    </div>
+  </nav>
+
+  <div class="sidebar-bottom">
+    <div class="user-card">
+      <div class="user-avatar">S</div>
+      <div>
+        <div class="user-name">Student</div>
+        <div class="user-plan">⭐ Student Plan</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div>
+      <div class="page-title">Mein Dashboard</div>
+      <div class="page-sub">Dienstag, 14. April 2026 · Woche 12 der Ausbildung</div>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn-sm btn-ghost">📅 Lernplan</button>
+      <button class="btn-sm btn-primary">🚀 Training starten</button>
+    </div>
+  </div>
+
+  <!-- Stats row -->
+  <div class="stats-row">
+    <div class="stat-card teal">
+      <div class="stat-icon">🎯</div>
+      <div class="stat-val">68%</div>
+      <div class="stat-label">Gesamtfortschritt</div>
+      <div class="stat-delta delta-up">↑ +4% diese Woche</div>
+    </div>
+    <div class="stat-card gold">
+      <div class="stat-icon">🔥</div>
+      <div class="stat-val">7</div>
+      <div class="stat-label">Tage Streak</div>
+      <div class="stat-delta delta-up">↑ Persönlicher Rekord!</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-icon">✅</div>
+      <div class="stat-val">342</div>
+      <div class="stat-label">Beantwortete Fragen</div>
+      <div class="stat-delta delta-up">↑ 28 heute</div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-icon">⚠️</div>
+      <div class="stat-val">3</div>
+      <div class="stat-label">Schwache Module</div>
+      <div class="stat-delta delta-down">↓ Benötigen Übung</div>
+    </div>
+  </div>
+
+  <!-- Row 1: Module progress + Streak -->
+  <div class="two-col">
+    <!-- Module progress -->
+    <div class="card">
+      <div class="card-title">📚 Modulfortschritt <span class="badge">7/10 gestartet</span></div>
+      <div id="module-progress-list"></div>
+    </div>
+
+    <!-- Right column -->
+    <div style="display:flex;flex-direction:column;gap:1.25rem;">
+      <!-- Streak -->
+      <div class="card">
+        <div class="card-title">🔥 Lernstreak</div>
+        <div class="streak-display">
+          <div class="streak-num">7</div>
+          <div class="streak-label">Tage in Folge</div>
+          <div class="streak-days" id="streak-days"></div>
+        </div>
+      </div>
+
+      <!-- Exam countdown -->
+      <div class="card exam-card">
+        <div class="card-title exam-title">📅 Prüfung <span class="badge">Schriftlich</span></div>
+        <div class="countdown-row" id="countdown-row"></div>
+        <div class="exam-progress-label">Prüfungsbereitschaft</div>
+        <div class="exam-bar">
+          <div class="exam-bar-fill" style="width:68%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 2: Weekly chart + Weak topics + Next up -->
+  <div class="three-col">
+    <!-- Weekly activity -->
+    <div class="card">
+      <div class="card-title">📈 Wochenaktivität <span class="badge">Fragen/Tag</span></div>
+      <div class="chart-area">
+        <div class="chart-bars" id="chart-bars"></div>
+      </div>
+      <div class="chart-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div>Diese Woche</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div>Heute</div>
+      </div>
+    </div>
+
+    <!-- Weak topics -->
+    <div class="card">
+      <div class="card-title">⚠️ Schwache Themen</div>
+      <div class="weak-list">
+        <div class="weak-item">
+          <span style="font-size:1rem">🦴</span>
+          <div class="weak-mod">Mobilisation &<br>Prävention</div>
+          <div style="flex:1"></div>
+          <div class="weak-bar"><div class="weak-bar-fill" style="width:38%"></div></div>
+          <div class="weak-pct">38%</div>
+        </div>
+        <div class="weak-item">
+          <span style="font-size:1rem">💊</span>
+          <div class="weak-mod">Medikamente &<br>Injektionen</div>
+          <div style="flex:1"></div>
+          <div class="weak-bar"><div class="weak-bar-fill" style="width:45%"></div></div>
+          <div class="weak-pct">45%</div>
+        </div>
+        <div class="weak-item">
+          <span style="font-size:1rem">⚖️</span>
+          <div class="weak-mod">Recht & Beruf</div>
+          <div style="flex:1"></div>
+          <div class="weak-bar"><div class="weak-bar-fill" style="width:52%"></div></div>
+          <div class="weak-pct">52%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Next up -->
+    <div class="card">
+      <div class="card-title">▶️ Als nächstes üben</div>
+      <div class="next-list">
+        <div class="next-item">
+          <div class="next-mod-icon">🦴</div>
+          <div class="next-info">
+            <div class="next-name">Mobilisation</div>
+            <div class="next-detail">10 Fragen · ~5 min</div>
+          </div>
+          <div class="next-arrow">→</div>
+        </div>
+        <div class="next-item">
+          <div class="next-mod-icon">💊</div>
+          <div class="next-info">
+            <div class="next-name">Dosierungsrechnung</div>
+            <div class="next-detail">Lernkarte wiederholen</div>
+          </div>
+          <div class="next-arrow">→</div>
+        </div>
+        <div class="next-item">
+          <div class="next-mod-icon">🩹</div>
+          <div class="next-info">
+            <div class="next-name">Wundversorgung</div>
+            <div class="next-detail">Noch nicht begonnen</div>
+          </div>
+          <div class="next-arrow">→</div>
+        </div>
+        <div class="next-item">
+          <div class="next-mod-icon">⚖️</div>
+          <div class="next-info">
+            <div class="next-name">Recht & Beruf</div>
+            <div class="next-detail">Schwacher Bereich – üben!</div>
+          </div>
+          <div class="next-arrow">→</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 3: Recent activity + Achievements -->
+  <div class="two-col">
+    <!-- Activity feed -->
+    <div class="card">
+      <div class="card-title">🕐 Letzte Aktivitäten</div>
+      <div class="activity-list">
+        <div class="activity-item">
+          <div class="activity-icon correct">✅</div>
+          <div class="activity-text">
+            <div class="activity-main">Modul 02 – Vitalzeichen: 9/10 richtig</div>
+            <div class="activity-sub">QCM Training · 90% Score</div>
+          </div>
+          <div class="activity-time">Heute 14:30</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon module">📖</div>
+          <div class="activity-text">
+            <div class="activity-main">Lernkarte gelesen: Schmerzassessment</div>
+            <div class="activity-sub">Modul 02 · Karte 5</div>
+          </div>
+          <div class="activity-time">Heute 13:15</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon wrong">❌</div>
+          <div class="activity-text">
+            <div class="activity-main">Modul 05 – Mobilisation: 5/10 richtig</div>
+            <div class="activity-sub">Schwacher Bereich erkannt · Wiederholung empfohlen</div>
+          </div>
+          <div class="activity-time">Gestern 20:45</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon correct">✅</div>
+          <div class="activity-text">
+            <div class="activity-main">Modul 01 – Grundlagen: 10/10 richtig</div>
+            <div class="activity-sub">Perfektes Ergebnis! 🏆</div>
+          </div>
+          <div class="activity-time">Gestern 19:00</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon module">📖</div>
+          <div class="activity-text">
+            <div class="activity-main">Modul 03 – Medikamente gestartet</div>
+            <div class="activity-sub">Alle 5 Lernkarten gelesen</div>
+          </div>
+          <div class="activity-time">Mo. 18:30</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Achievements -->
+    <div class="card">
+      <div class="card-title">🏆 Errungenschaften</div>
+      <div class="ach-grid">
+        <div class="ach-item unlocked">
+          <div class="ach-icon">🔥</div>
+          <div class="ach-name">7-Tage Streak</div>
+          <div class="ach-desc">Freigeschaltet!</div>
+        </div>
+        <div class="ach-item unlocked">
+          <div class="ach-icon">🎯</div>
+          <div class="ach-name">Perfekte Runde</div>
+          <div class="ach-desc">10/10 Richtig</div>
+        </div>
+        <div class="ach-item unlocked">
+          <div class="ach-icon">📚</div>
+          <div class="ach-name">Lernstarter</div>
+          <div class="ach-desc">3 Module</div>
+        </div>
+        <div class="ach-item unlocked">
+          <div class="ach-icon">💯</div>
+          <div class="ach-name">100 Fragen</div>
+          <div class="ach-desc">Freigeschaltet!</div>
+        </div>
+        <div class="ach-item locked">
+          <div class="ach-icon">🏅</div>
+          <div class="ach-name">Halbzeit</div>
+          <div class="ach-desc">5 Module 80%+</div>
+        </div>
+        <div class="ach-item locked">
+          <div class="ach-icon">👑</div>
+          <div class="ach-name">Pflege-Profi</div>
+          <div class="ach-desc">Alle 10 Module</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// Module data
+const modules = [
+  { icon:"📋", name:"Grundlagen der Pflege",       pct:92, color:"#10b981", done:true  },
+  { icon:"🫀", name:"Vitalzeichen & Beobachtung",   pct:85, color:"#10b981", done:true  },
+  { icon:"💊", name:"Medikamente & Injektionen",    pct:45, color:"#f59e0b", done:false },
+  { icon:"🍽️", name:"Ernährung & Ausscheidung",    pct:78, color:"#14b8a6", done:true  },
+  { icon:"🦴", name:"Mobilisation & Prävention",   pct:38, color:"#e11d48", done:false },
+  { icon:"🧠", name:"Psychiatrie & Psychosoziales", pct:70, color:"#14b8a6", done:true  },
+  { icon:"👶", name:"Pflegebereiche spezifisch",    pct:60, color:"#0d9488", done:false },
+  { icon:"⚖️", name:"Recht & Beruf",               pct:52, color:"#f59e0b", done:false },
+  { icon:"🏥", name:"Krankheitsbilder",             pct:0,  color:"#e5e7eb", done:false },
+  { icon:"🩹", name:"Wundversorgung",               pct:0,  color:"#e5e7eb", done:false },
+];
+
+// Build module list
+const list = document.getElementById('module-progress-list');
+modules.forEach(m => {
+  list.innerHTML += `
+    <div class="module-row">
+      <div class="mod-icon">${m.icon}</div>
+      <div class="mod-info">
+        <div class="mod-name-sm">${m.name}</div>
+        <div class="mod-stats-sm">${m.pct > 0 ? m.pct + '% abgeschlossen' : 'Noch nicht begonnen'}</div>
+      </div>
+      <div class="mod-bar-wrap">
+        <div class="mod-bar">
+          <div class="mod-bar-fill" style="width:${m.pct}%;background:${m.color}"></div>
+        </div>
+        <div class="mod-pct" style="color:${m.color}">${m.pct}%</div>
+      </div>
+    </div>`;
+});
+
+// Streak days
+const days = ['Mo','Di','Mi','Do','Fr','Sa','So'];
+const streakEl = document.getElementById('streak-days');
+const done = [true,true,true,true,true,true,false];
+days.forEach((d,i) => {
+  const cl = i === 5 ? 'today' : (done[i] ? 'done' : 'miss');
+  streakEl.innerHTML += `<div class="streak-day ${cl}">${d}</div>`;
+});
+
+// Exam countdown (target: 45 days from now)
+const cdData = [
+  { num: '45', label: 'Tage' },
+  { num: '06', label: 'Stunden' },
+  { num: '23', label: 'Minuten' },
+];
+const cdRow = document.getElementById('countdown-row');
+cdData.forEach(c => {
+  cdRow.innerHTML += `
+    <div class="cd-block">
+      <div class="cd-num">${c.num}</div>
+      <div class="cd-label">${c.label}</div>
+    </div>`;
+});
+
+// Weekly chart
+const chartData = [
+  { day:'Mo', val:22, today:false },
+  { day:'Di', val:35, today:false },
+  { day:'Mi', val:18, today:false },
+  { day:'Do', val:42, today:false },
+  { day:'Fr', val:30, today:false },
+  { day:'Sa', val:28, today:true  },
+  { day:'So', val:0,  today:false },
+];
+const maxVal = Math.max(...chartData.map(d => d.val), 1);
+const barsEl = document.getElementById('chart-bars');
+chartData.forEach(d => {
+  const h = d.val > 0 ? Math.max((d.val / maxVal) * 100, 6) : 6;
+  barsEl.innerHTML += `
+    <div class="chart-bar-wrap">
+      <div class="chart-bar${d.today ? ' today' : ''}"
+           style="height:${h}%" data-val="${d.val} Fragen"></div>
+      <div class="chart-day">${d.day}</div>
+    </div>`;
+});
+
+// Live countdown (updates every second)
+function updateCountdown() {
+  const target = new Date();
+  target.setDate(target.getDate() + 45);
+  const now = new Date();
+  const diff = target - now;
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor((diff % 86400000) / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const blocks = document.querySelectorAll('.cd-num');
+  if (blocks[0]) blocks[0].textContent = String(d).padStart(2,'0');
+  if (blocks[1]) blocks[1].textContent = String(h).padStart(2,'0');
+  if (blocks[2]) blocks[2].textContent = String(m).padStart(2,'0');
+}
+updateCountdown();
+setInterval(updateCountdown, 60000);
+</script>
+</body>
+</html>

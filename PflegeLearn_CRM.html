@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PflegeLearn CRM – B2B Prospects</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07090f;--bg2:#0e1320;--bg3:#141d2e;--bg4:#1a2540;
+--teal:#00e5c5;--teal2:rgba(0,229,197,.12);--teal3:rgba(0,229,197,.06);
+--gold:#f9c846;--gold2:rgba(249,200,70,.12);
+--ink:#dce8f7;--ink2:#8b9ab8;--ink3:#2c3a52;
+--border:rgba(255,255,255,.07);
+--green:#22d06e;--red:#ff4f72;--orange:#ff9f43;--blue:#5a8fff;--purple:#b06fff;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;display:flex;}
+
+/* SIDEBAR */
+.sidebar{width:220px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);padding:1.4rem 0;}
+.sb-logo{padding:0 1.25rem 1.75rem;font-size:1.2rem;font-weight:800;color:var(--teal);}
+.sb-logo span{color:var(--gold);}
+.sb-logo sub{font-size:.55rem;display:block;color:var(--ink2);font-weight:500;margin-top:.1rem;}
+.sb-nav{display:flex;flex-direction:column;gap:.2rem;}
+.sb-item{display:flex;align-items:center;gap:.65rem;padding:.6rem 1.25rem;font-size:.82rem;font-weight:600;color:var(--ink2);cursor:pointer;transition:.12s;border-left:2px solid transparent;}
+.sb-item:hover{color:var(--ink);background:rgba(255,255,255,.03);}
+.sb-item.active{color:var(--teal);background:var(--teal2);border-left-color:var(--teal);}
+.sb-badge{margin-left:auto;background:var(--red);color:#fff;font-size:.58rem;font-weight:800;padding:.1rem .4rem;border-radius:999px;}
+.sb-sep{height:1px;background:var(--border);margin:.75rem 1.25rem;}
+
+/* TOPBAR */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:.9rem 1.75rem;display:flex;align-items:center;gap:.85rem;}
+.topbar-title{font-size:.95rem;font-weight:800;flex:1;}
+.tb-search{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.4rem .85rem;font-size:.8rem;font-family:'Syne',sans-serif;color:var(--ink);outline:none;width:220px;}
+.tb-search::placeholder{color:var(--ink3);}
+.tb-btn{background:var(--teal);color:var(--bg);padding:.4rem 1rem;border-radius:7px;font-size:.78rem;font-weight:800;font-family:'Syne',sans-serif;border:none;cursor:pointer;transition:.15s;}
+.tb-btn:hover{opacity:.85;}
+.tb-btn.secondary{background:var(--bg3);color:var(--ink2);border:1px solid var(--border);}
+
+.content{flex:1;overflow-y:auto;padding:1.5rem 1.75rem;}
+
+/* KPIs */
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:.85rem;margin-bottom:1.75rem;}
+.kpi{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.1rem;position:relative;overflow:hidden;cursor:pointer;transition:.15s;}
+.kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent,var(--teal));}
+.kpi:hover{border-color:rgba(255,255,255,.12);}
+.kpi-val{font-size:1.8rem;font-weight:800;color:var(--ink);line-height:1;margin-bottom:.2rem;}
+.kpi-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink2);}
+.kpi-change{font-size:.7rem;font-weight:600;margin-top:.3rem;}
+.kpi-change.up{color:var(--green);}
+.kpi-change.down{color:var(--red);}
+
+/* PIPELINE */
+.pipeline{display:flex;gap:.85rem;margin-bottom:1.75rem;overflow-x:auto;padding-bottom:.5rem;}
+.pipe-col{flex-shrink:0;width:240px;}
+.pipe-header{display:flex;align-items:center;justify-content:space-between;padding:.55rem .85rem;border-radius:9px;margin-bottom:.65rem;}
+.pipe-label{font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;}
+.pipe-count{font-size:.68rem;font-weight:700;background:rgba(255,255,255,.1);padding:.12rem .45rem;border-radius:999px;}
+.pipe-card{background:var(--bg2);border:1px solid var(--border);border-radius:11px;padding:.9rem;margin-bottom:.5rem;cursor:pointer;transition:.15s;}
+.pipe-card:hover{border-color:rgba(255,255,255,.15);transform:translateY(-1px);}
+.pc-school{font-size:.85rem;font-weight:700;margin-bottom:.2rem;}
+.pc-meta{font-size:.7rem;color:var(--ink2);margin-bottom:.45rem;}
+.pc-tags{display:flex;gap:.3rem;flex-wrap:wrap;}
+.pc-tag{font-size:.6rem;font-weight:700;padding:.1rem .4rem;border-radius:999px;}
+.pt-students{background:var(--teal2);color:var(--teal);}
+.pt-pack{background:var(--gold2);color:var(--gold);}
+.pt-urgent{background:rgba(255,79,114,.15);color:var(--red);}
+.pt-warm{background:rgba(255,159,67,.15);color:var(--orange);}
+.pt-cold{background:rgba(90,143,255,.12);color:var(--blue);}
+.pc-date{font-size:.62rem;color:var(--ink3);margin-top:.4rem;}
+
+/* TABLE */
+.prospect-table{width:100%;border-collapse:collapse;font-size:.82rem;}
+.prospect-table th{font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);padding:.5rem .85rem;text-align:left;border-bottom:1px solid var(--border);}
+.prospect-table td{padding:.7rem .85rem;border-bottom:1px solid var(--border);}
+.prospect-table tr:hover td{background:rgba(255,255,255,.02);}
+.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:.4rem;}
+.stage-badge{font-size:.67rem;font-weight:800;padding:.15rem .55rem;border-radius:999px;display:inline-flex;align-items:center;gap:.25rem;}
+.sb-lead{background:rgba(90,143,255,.15);color:var(--blue);}
+.sb-contact{background:rgba(255,159,67,.15);color:var(--orange);}
+.sb-demo{background:var(--teal2);color:var(--teal);}
+.sb-proposal{background:var(--gold2);color:var(--gold);}
+.sb-signed{background:rgba(34,208,110,.15);color:var(--green);}
+.sb-lost{background:rgba(255,79,114,.12);color:var(--red);}
+.action-btns{display:flex;gap:.35rem;}
+.ab{background:var(--bg3);border:1px solid var(--border);color:var(--ink2);padding:.25rem .55rem;border-radius:6px;font-size:.68rem;font-weight:700;font-family:'Syne',sans-serif;cursor:pointer;transition:.12s;}
+.ab:hover{border-color:var(--teal);color:var(--teal);}
+.ab.primary{background:var(--teal2);border-color:rgba(0,229,197,.3);color:var(--teal);}
+.school-link{font-weight:700;color:var(--ink);cursor:pointer;}
+.school-link:hover{color:var(--teal);}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:2rem;max-width:580px;width:90%;max-height:85vh;overflow-y:auto;animation:fadeUp .3s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.modal-title{font-size:1.1rem;font-weight:800;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center;}
+.modal-close{background:none;border:none;cursor:pointer;color:var(--ink2);font-size:1.2rem;}
+.modal-field{margin-bottom:1rem;}
+.ml{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink2);display:block;margin-bottom:.35rem;}
+.mi{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.55rem .85rem;font-size:.88rem;font-family:'Syne',sans-serif;color:var(--ink);outline:none;transition:.15s;}
+.mi:focus{border-color:var(--teal);}
+select.mi option{background:var(--bg2);}
+.modal-2col{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;}
+.modal-footer{display:flex;gap:.65rem;margin-top:1.5rem;justify-content:flex-end;}
+
+/* NOTES */
+.note-list{display:flex;flex-direction:column;gap:.6rem;margin-top:.85rem;}
+.note-item{background:var(--bg3);border-radius:9px;padding:.75rem .9rem;border-left:2px solid var(--teal);}
+.note-date{font-size:.62rem;color:var(--ink3);margin-bottom:.2rem;font-family:'DM Mono',monospace;}
+.note-text{font-size:.8rem;color:var(--ink2);}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sb-logo">Pflege<span>Learn</span><sub>CRM · B2B</sub></div>
+  <nav class="sb-nav">
+    <div class="sb-item active" onclick="setView('pipeline',this)">📊 Pipeline</div>
+    <div class="sb-item" onclick="setView('prospects',this)">🏫 Alle Prospects<span class="sb-badge">28</span></div>
+    <div class="sb-item" onclick="setView('tasks',this)">✅ Aufgaben<span class="sb-badge">5</span></div>
+    <div class="sb-item" onclick="setView('emails',this)">📧 E-Mail-Vorlagen</div>
+    <div class="sb-sep"></div>
+    <div class="sb-item" onclick="setView('signed',this)">✅ Vertragspartner</div>
+    <div class="sb-item" onclick="setView('stats',this)">📈 Statistiken</div>
+  </nav>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="topbar-title">Pipeline – B2B Akquise</div>
+    <input class="tb-search" placeholder="🔍 Schule suchen...">
+    <button class="tb-btn secondary" onclick="exportCsv()">⬇ CSV Export</button>
+    <button class="tb-btn" onclick="openModal('new')">+ Prospect hinzufügen</button>
+  </div>
+
+  <div class="content">
+
+    <!-- KPIs -->
+    <div class="kpi-row">
+      <div class="kpi" style="--accent:var(--blue)"><div class="kpi-val">28</div><div class="kpi-label">Prospects total</div><div class="kpi-change up">↑ +4 diese Woche</div></div>
+      <div class="kpi" style="--accent:var(--teal)"><div class="kpi-val">8</div><div class="kpi-label">Demos geplant</div><div class="kpi-change up">↑ +2 neu</div></div>
+      <div class="kpi" style="--accent:var(--gold)"><div class="kpi-val">5</div><div class="kpi-label">Angebote raus</div><div class="kpi-change">2 ausstehend</div></div>
+      <div class="kpi" style="--accent:var(--green)"><div class="kpi-val">3</div><div class="kpi-label">Verträge signed</div><div class="kpi-change up">4 200 EUR ARR</div></div>
+      <div class="kpi" style="--accent:var(--orange)"><div class="kpi-val">21%</div><div class="kpi-label">Conversion Rate</div><div class="kpi-change up">↑ +3% vs Vormonat</div></div>
+    </div>
+
+    <!-- PIPELINE VIEW -->
+    <div id="view-pipeline">
+      <div style="font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);margin-bottom:1rem">Sales Pipeline</div>
+      <div class="pipeline">
+
+        <div class="pipe-col">
+          <div class="pipe-header" style="background:rgba(90,143,255,.12)"><span class="pipe-label" style="color:var(--blue)">Lead</span><span class="pipe-count">8</span></div>
+          <div class="pipe-card" onclick="openModal('detail','Pflegeschule Dresden')"><div class="pc-school">Pflegeschule Dresden</div><div class="pc-meta">120 Azubis · Sachsen</div><div class="pc-tags"><span class="pc-tag pt-students">120 Nutzer</span><span class="pc-tag pt-cold">Kaltkontakt</span></div><div class="pc-date">Hinzugefügt: 01. Apr 2025</div></div>
+          <div class="pipe-card" onclick="openModal('detail','Caritas Pflegeschule')"><div class="pc-school">Caritas Pflegeschule KA</div><div class="pc-meta">85 Azubis · BW</div><div class="pc-tags"><span class="pc-tag pt-students">85 Nutzer</span></div><div class="pc-date">10. Apr 2025</div></div>
+          <div class="pipe-card"><div class="pc-school">AWO Pflegeschule HH</div><div class="pc-meta">200 Azubis · Hamburg</div><div class="pc-tags"><span class="pc-tag pt-students">200 Nutzer</span><span class="pc-tag pt-pack" style="">Enterprise</span></div><div class="pc-date">12. Apr 2025</div></div>
+        </div>
+
+        <div class="pipe-col">
+          <div class="pipe-header" style="background:rgba(255,159,67,.12)"><span class="pipe-label" style="color:var(--orange)">Kontaktiert</span><span class="pipe-count">7</span></div>
+          <div class="pipe-card" onclick="openModal('detail','UKB Pflegeschule')"><div class="pc-school">UKB Pflegeschule Bonn</div><div class="pc-meta">150 Azubis · NRW</div><div class="pc-tags"><span class="pc-tag pt-warm">Warm</span><span class="pc-tag pt-students">150 Nutzer</span></div><div class="pc-date">Letzter Kontakt: 14. Apr</div></div>
+          <div class="pipe-card"><div class="pc-school">Akademie für Pflege</div><div class="pc-meta">60 Azubis · Bayern</div><div class="pc-tags"><span class="pc-tag pt-warm">Warm</span></div><div class="pc-date">11. Apr 2025</div></div>
+          <div class="pipe-card"><div class="pc-school">Pflege + Beruf e.V.</div><div class="pc-meta">95 Azubis · Hessen</div><div class="pc-tags"><span class="pc-tag pt-students">95 Nutzer</span></div><div class="pc-date">08. Apr 2025</div></div>
+        </div>
+
+        <div class="pipe-col">
+          <div class="pipe-header" style="background:var(--teal3)"><span class="pipe-label" style="color:var(--teal)">Demo</span><span class="pipe-count">5</span></div>
+          <div class="pipe-card" style="border-color:rgba(0,229,197,.2)"><div class="pc-school">Pflegeschule Nord GmbH</div><div class="pc-meta">87 Azubis · Wolfsburg</div><div class="pc-tags"><span class="pc-tag" style="background:rgba(0,229,197,.15);color:var(--teal)">Demo Mi 16h</span></div><div class="pc-date" style="color:var(--orange)">⚡ Morgen!</div></div>
+          <div class="pipe-card" style="border-color:rgba(0,229,197,.2)"><div class="pc-school">Evangelische PSchule</div><div class="pc-meta">110 Azubis · NRW</div><div class="pc-tags"><span class="pc-tag" style="background:rgba(0,229,197,.15);color:var(--teal)">Demo Fr 14h</span></div><div class="pc-date">18. Apr 2025</div></div>
+        </div>
+
+        <div class="pipe-col">
+          <div class="pipe-header" style="background:var(--gold2)"><span class="pipe-label" style="color:var(--gold)">Angebot</span><span class="pipe-count">5</span></div>
+          <div class="pipe-card" style="border-color:rgba(249,200,70,.2)"><div class="pc-school">Uni-Klinikum Leipzig</div><div class="pc-meta">250 Azubis · Sachsen</div><div class="pc-tags"><span class="pc-tag pt-pack">Enterprise</span><span class="pc-tag pt-urgent">Follow-up!</span></div><div class="pc-date" style="color:var(--red)">Angebot seit 8 Tagen</div></div>
+          <div class="pipe-card" style="border-color:rgba(249,200,70,.2)"><div class="pc-school">DRK Bildungszentrum</div><div class="pc-meta">70 Azubis · Bayern</div><div class="pc-tags"><span class="pc-tag pt-pack">Standard</span></div><div class="pc-date">Angebot: 10. Apr</div></div>
+        </div>
+
+        <div class="pipe-col">
+          <div class="pipe-header" style="background:rgba(34,208,110,.1)"><span class="pipe-label" style="color:var(--green)">✅ Signed</span><span class="pipe-count">3</span></div>
+          <div class="pipe-card" style="border-color:rgba(34,208,110,.25)"><div class="pc-school">Pflegeschule Wolfsburg Nord</div><div class="pc-meta">Standard · 87 Nutzer</div><div class="pc-tags"><span class="pc-tag" style="background:rgba(34,208,110,.15);color:var(--green)">1 200 EUR/Jahr</span></div><div class="pc-date" style="color:var(--green)">Unterschrieben 15. Apr</div></div>
+          <div class="pipe-card" style="border-color:rgba(34,208,110,.25)"><div class="pc-school">Marienhospital Köln</div><div class="pc-meta">Starter · 45 Nutzer</div><div class="pc-tags"><span class="pc-tag" style="background:rgba(34,208,110,.15);color:var(--green)">500 EUR/Jahr</span></div><div class="pc-date" style="color:var(--green)">Unterschrieben 08. Apr</div></div>
+          <div class="pipe-card" style="border-color:rgba(34,208,110,.25)"><div class="pc-school">Asklepios Pflegeschule</div><div class="pc-meta">Premium · 280 Nutzer</div><div class="pc-tags"><span class="pc-tag" style="background:rgba(34,208,110,.15);color:var(--green)">2 800 EUR/Jahr</span></div><div class="pc-date" style="color:var(--green)">Unterschrieben 01. Apr</div></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PROSPECTS TABLE VIEW -->
+    <div id="view-prospects" style="display:none">
+      <table class="prospect-table">
+        <tr><th>Schule</th><th>Stadt</th><th>Azubis</th><th>Status</th><th>Kontakt</th><th>Letzter Kontakt</th><th>Wert</th><th>Aktionen</th></tr>
+        <tr><td><span class="school-link" onclick="openModal('detail','Pflegeschule Wolfsburg Nord')">Pflegeschule Wolfsburg Nord</span></td><td>Wolfsburg</td><td>87</td><td><span class="stage-badge sb-signed">✅ Signed</span></td><td>Georges P.</td><td style="font-family:'DM Mono',monospace;font-size:.75rem">15. Apr 2025</td><td style="color:var(--green);font-family:'DM Mono',monospace">1 200€</td><td><div class="action-btns"><button class="ab">📧</button><button class="ab">📝</button></div></td></tr>
+        <tr><td><span class="school-link">Uni-Klinikum Leipzig</span></td><td>Leipzig</td><td>250</td><td><span class="stage-badge sb-proposal">📋 Angebot</span></td><td>Hr. Müller</td><td style="font-family:'DM Mono',monospace;font-size:.75rem">07. Apr 2025</td><td style="color:var(--gold);font-family:'DM Mono',monospace">2 800€</td><td><div class="action-btns"><button class="ab primary">Follow-up!</button><button class="ab">📝</button></div></td></tr>
+        <tr><td><span class="school-link">Pflegeschule Nord GmbH</span></td><td>Wolfsburg</td><td>87</td><td><span class="stage-badge sb-demo">🎯 Demo</span></td><td>Fr. Weber</td><td style="font-family:'DM Mono',monospace;font-size:.75rem">14. Apr 2025</td><td style="color:var(--blue);font-family:'DM Mono',monospace">1 200€</td><td><div class="action-btns"><button class="ab primary">Demo vorbereiten</button></div></td></tr>
+        <tr><td><span class="school-link">Caritas PSchule KA</span></td><td>Karlsruhe</td><td>85</td><td><span class="stage-badge sb-contact">📞 Kontakt</span></td><td>Hr. Berg</td><td style="font-family:'DM Mono',monospace;font-size:.75rem">10. Apr 2025</td><td style="font-family:'DM Mono',monospace;color:var(--ink2)">500€</td><td><div class="action-btns"><button class="ab">Demo anbieten</button></div></td></tr>
+        <tr><td><span class="school-link">AWO Pflegeschule HH</span></td><td>Hamburg</td><td>200</td><td><span class="stage-badge sb-lead">🔵 Lead</span></td><td>–</td><td style="font-family:'DM Mono',monospace;font-size:.75rem">12. Apr 2025</td><td style="font-family:'DM Mono',monospace;color:var(--ink2)">2 800€</td><td><div class="action-btns"><button class="ab">Kontaktieren</button></div></td></tr>
+        <tr><td><span class="school-link">Marienhospital Köln</span></td><td>Köln</td><td>45</td><td><span class="stage-badge sb-signed">✅ Signed</span></td><td>Fr. Schulz</td><td style="font-family:'DM Mono',monospace;font-size:.75rem">08. Apr 2025</td><td style="color:var(--green);font-family:'DM Mono',monospace">500€</td><td><div class="action-btns"><button class="ab">📧</button></div></td></tr>
+      </table>
+    </div>
+
+    <!-- TASKS VIEW -->
+    <div id="view-tasks" style="display:none">
+      <div style="display:flex;flex-direction:column;gap:.65rem;max-width:700px;">
+        <div style="background:var(--bg2);border:1px solid rgba(255,79,114,.3);border-radius:12px;padding:1rem 1.25rem;display:flex;align-items:center;gap:.85rem;">
+          <div style="width:18px;height:18px;border-radius:50%;border:2px solid var(--red);flex-shrink:0;cursor:pointer;"></div>
+          <div style="flex:1"><div style="font-size:.88rem;font-weight:700">Follow-up: Uni-Klinikum Leipzig</div><div style="font-size:.75rem;color:var(--ink2)">Angebot seit 8 Tagen offen – Hr. Müller anrufen</div></div>
+          <span style="font-size:.7rem;color:var(--red);font-family:'DM Mono',monospace">Heute!</span>
+        </div>
+        <div style="background:var(--bg2);border:1px solid rgba(249,200,70,.25);border-radius:12px;padding:1rem 1.25rem;display:flex;align-items:center;gap:.85rem;">
+          <div style="width:18px;height:18px;border-radius:50%;border:2px solid var(--gold);flex-shrink:0;cursor:pointer;"></div>
+          <div style="flex:1"><div style="font-size:.88rem;font-weight:700">Demo vorbereiten: Pflegeschule Nord (Mi 16h)</div><div style="font-size:.75rem;color:var(--ink2)">Präsentation + Admin-Dashboard Demo-Account anlegen</div></div>
+          <span style="font-size:.7rem;color:var(--gold);font-family:'DM Mono',monospace">Morgen</span>
+        </div>
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;display:flex;align-items:center;gap:.85rem;">
+          <div style="width:18px;height:18px;border-radius:50%;border:2px solid var(--ink3);flex-shrink:0;cursor:pointer;"></div>
+          <div style="flex:1"><div style="font-size:.88rem;font-weight:700">Vertrag schicken: DRK Bildungszentrum</div><div style="font-size:.75rem;color:var(--ink2)">Partnerschaftsvertrag Standard 500 EUR/Jahr</div></div>
+          <span style="font-size:.7rem;color:var(--ink2);font-family:'DM Mono',monospace">19. Apr</span>
+        </div>
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;display:flex;align-items:center;gap:.85rem;">
+          <div style="width:18px;height:18px;border-radius:50%;border:2px solid var(--ink3);flex-shrink:0;cursor:pointer;"></div>
+          <div style="flex:1"><div style="font-size:.88rem;font-weight:700">Onboarding: Marienhospital Köln</div><div style="font-size:.75rem;color:var(--ink2)">Admin-Account einrichten, Schulung 30 Min buchen</div></div>
+          <span style="font-size:.7rem;color:var(--ink2);font-family:'DM Mono',monospace">22. Apr</span>
+        </div>
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;display:flex;align-items:center;gap:.85rem;">
+          <div style="width:18px;height:18px;border-radius:50%;border:2px solid var(--ink3);flex-shrink:0;cursor:pointer;"></div>
+          <div style="flex:1"><div style="font-size:.88rem;font-weight:700">Neukontakt: 20 Pflegeschulen aus Leipzig/Dresden</div><div style="font-size:.75rem;color:var(--ink2)">Email-Kampagne Version 3 (ROI-Ansatz) vorbereiten</div></div>
+          <span style="font-size:.7rem;color:var(--ink2);font-family:'DM Mono',monospace">25. Apr</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="view-emails" style="display:none"><div style="padding:1rem;color:var(--ink2)">Email-Vorlagen: V1 Direkt · V2 Relational · V3 ROI (aus dem Email-Pack verfügbar)</div></div>
+    <div id="view-signed" style="display:none"><div style="padding:1rem;color:var(--green)">3 Vertragspartner · 4 200 EUR ARR · Ø Vertragswert: 1 400 EUR</div></div>
+    <div id="view-stats" style="display:none"><div style="padding:1rem;color:var(--ink2)">Conversion: 21% Lead→Demo · 60% Demo→Proposal · 40% Proposal→Signed</div></div>
+
+  </div>
+</main>
+
+<!-- ADD PROSPECT MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal-content">
+    <div class="modal-title"><span id="modal-title-text">Prospect hinzufügen</span><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// Navigation
+const views = ['pipeline','prospects','tasks','emails','signed','stats'];
+const titles = {pipeline:'Pipeline – B2B Akquise',prospects:'Alle Prospects',tasks:'Aufgaben',emails:'E-Mail-Vorlagen',signed:'Vertragspartner',stats:'Statistiken'};
+function setView(v, el){
+  views.forEach(id=>{ const el2=document.getElementById('view-'+id); if(el2) el2.style.display='none'; });
+  const t=document.getElementById('view-'+v); if(t) t.style.display='';
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
+  if(el) el.classList.add('active');
+  document.getElementById('topbar-title').textContent=titles[v]||v;
+}
+
+function openModal(type, school){
+  const overlay=document.getElementById('modal-overlay');
+  const body=document.getElementById('modal-body');
+  overlay.classList.add('open');
+  if(type==='new'){
+    document.getElementById('modal-title-text').textContent='Prospect hinzufügen';
+    body.innerHTML=`
+      <div class="modal-2col">
+        <div class="modal-field"><label class="ml">Schulname</label><input class="mi" placeholder="Pflegeschule Wolfsburg..."></div>
+        <div class="modal-field"><label class="ml">Stadt</label><input class="mi" placeholder="Wolfsburg"></div>
+      </div>
+      <div class="modal-2col">
+        <div class="modal-field"><label class="ml">Anzahl Azubis</label><input class="mi" type="number" placeholder="80"></div>
+        <div class="modal-field"><label class="ml">Status</label><select class="mi"><option>Lead</option><option>Kontaktiert</option><option>Demo</option><option>Angebot</option></select></div>
+      </div>
+      <div class="modal-field"><label class="ml">Ansprechpartner</label><input class="mi" placeholder="Fr. Müller (Schulleitung)"></div>
+      <div class="modal-field"><label class="ml">E-Mail</label><input class="mi" type="email" placeholder="mueller@schule.de"></div>
+      <div class="modal-field"><label class="ml">Notiz</label><textarea class="mi" rows="3" placeholder="Erstkontakt via LinkedIn..."></textarea></div>
+      <div class="modal-footer">
+        <button onclick="closeModal()" style="background:var(--bg3);border:1px solid var(--border);color:var(--ink2);padding:.5rem 1.1rem;border-radius:8px;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer">Abbrechen</button>
+        <button onclick="closeModal()" style="background:var(--teal);color:var(--bg);padding:.5rem 1.1rem;border-radius:8px;font-family:'Syne',sans-serif;font-weight:800;border:none;cursor:pointer">💾 Speichern</button>
+      </div>`;
+  } else if(type==='detail'){
+    document.getElementById('modal-title-text').textContent=school;
+    body.innerHTML=`
+      <div style="display:flex;gap:.6rem;margin-bottom:1.25rem;flex-wrap:wrap">
+        <span class="stage-badge sb-signed">✅ Signed</span>
+        <span style="font-size:.72rem;color:var(--ink2)">Standard-Plan · 87 Nutzer · 1 200 EUR/Jahr</span>
+      </div>
+      <div class="modal-2col" style="margin-bottom:1rem">
+        <div><div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink2);margin-bottom:.2rem">Ansprechpartner</div><div style="font-size:.88rem;font-weight:700">Georges P. (Schulleitung)</div><div style="font-size:.75rem;color:var(--teal)">s.klein@schule.de</div></div>
+        <div><div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink2);margin-bottom:.2rem">Vertrag</div><div style="font-size:.88rem;font-weight:700">15. Apr 2025 – 14. Apr 2026</div></div>
+      </div>
+      <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink2);margin-bottom:.5rem">Verlauf</div>
+      <div class="note-list">
+        <div class="note-item"><div class="note-date">15. Apr 2025 · Vertragsabschluss</div><div class="note-text">Partnerschaftsvertrag Standard unterschrieben. Onboarding für 22. Apr geplant.</div></div>
+        <div class="note-item"><div class="note-date">10. Apr 2025 · Demo</div><div class="note-text">20-Min-Demo sehr positiv. Admin-Dashboard hat überzeugt. Preisverhandlung: Starter vs. Standard.</div></div>
+        <div class="note-item"><div class="note-date">04. Apr 2025 · Erstkontakt</div><div class="note-text">Email V2 (relational) gesendet. Antwort innerhalb 2 Tage. Sehr interessiert.</div></div>
+      </div>
+      <div class="modal-footer">
+        <button onclick="closeModal()" style="background:var(--bg3);border:1px solid var(--border);color:var(--ink2);padding:.5rem 1.1rem;border-radius:8px;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer">Schließen</button>
+        <button style="background:var(--teal);color:var(--bg);padding:.5rem 1.1rem;border-radius:8px;font-family:'Syne',sans-serif;font-weight:800;border:none;cursor:pointer">✏️ Bearbeiten</button>
+      </div>`;
+  }
+}
+function closeModal(){ document.getElementById('modal-overlay').classList.remove('open'); }
+function exportCsv(){ alert('CSV-Export: 28 Prospects exportiert (prospect_export_2025-04-15.csv)'); }
+</script>
+</body>
+</html>

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PflegeLearn Admin – Schul-Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0f1e; --bg2:#111827; --bg3:#1a2235;
+  --teal:#00d4b4; --teal2:#00a896; --teal3:rgba(0,212,180,.12);
+  --gold:#f5c842; --gold2:rgba(245,200,66,.12);
+  --ink:#e8edf5; --ink2:#8b95a8; --ink3:#3d4a60;
+  --green:#22d06e; --red:#ff4d6d; --purple:#a78bfa; --blue:#60a5fa;
+  --border:rgba(255,255,255,.07); --glow:0 0 32px rgba(0,212,180,.18);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;display:flex;}
+
+/* ── SIDEBAR ── */
+.sidebar{width:240px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:1.5rem 0;}
+.sb-logo{padding:0 1.5rem 2rem;font-size:1.35rem;font-weight:800;color:var(--teal);letter-spacing:-.02em;}
+.sb-logo span{color:var(--gold);}
+.sb-school{padding:.65rem 1.5rem;margin:0 .75rem 1.5rem;background:var(--teal3);border:1px solid rgba(0,212,180,.2);border-radius:10px;}
+.sb-school-name{font-size:.78rem;font-weight:700;color:var(--teal);}
+.sb-school-meta{font-size:.68rem;color:var(--ink2);margin-top:.12rem;}
+.sb-section{font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);padding:.5rem 1.5rem .35rem;}
+.sb-item{display:flex;align-items:center;gap:.75rem;padding:.68rem 1.5rem;font-size:.85rem;font-weight:600;color:var(--ink2);cursor:pointer;transition:.15s;border-left:2px solid transparent;margin:0 0;}
+.sb-item:hover{color:var(--ink);background:rgba(255,255,255,.03);}
+.sb-item.active{color:var(--teal);background:var(--teal3);border-left-color:var(--teal);}
+.sb-item .icon{font-size:.95rem;width:20px;text-align:center;flex-shrink:0;}
+.sb-badge{margin-left:auto;background:var(--red);color:#fff;font-size:.62rem;font-weight:800;padding:.12rem .45rem;border-radius:999px;}
+.sb-footer{margin-top:auto;padding:1.25rem 1.5rem;border-top:1px solid var(--border);}
+.sb-user{display:flex;align-items:center;gap:.65rem;}
+.sb-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal2));display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:800;flex-shrink:0;}
+.sb-uname{font-size:.82rem;font-weight:700;}
+.sb-urole{font-size:.68rem;color:var(--ink2);}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 2rem;background:var(--bg2);border-bottom:1px solid var(--border);}
+.topbar-title{font-size:1.05rem;font-weight:800;}
+.topbar-right{display:flex;align-items:center;gap:.85rem;}
+.tb-search{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.42rem .85rem;font-size:.82rem;font-family:'Syne',sans-serif;color:var(--ink);outline:none;width:200px;}
+.tb-search::placeholder{color:var(--ink3);}
+.tb-btn{background:var(--teal);color:var(--bg);padding:.42rem 1rem;border-radius:8px;font-size:.8rem;font-weight:700;font-family:'Syne',sans-serif;border:none;cursor:pointer;transition:.15s;}
+.tb-btn:hover{background:var(--teal2);}
+.tb-notif{width:34px;height:34px;border-radius:8px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;}
+.tb-notif-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--red);}
+
+.content{flex:1;overflow-y:auto;padding:2rem;}
+
+/* ── KPI CARDS ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;}
+.kpi{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.35rem;position:relative;overflow:hidden;transition:.2s;}
+.kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent,var(--teal)),transparent);}
+.kpi:hover{border-color:rgba(255,255,255,.12);transform:translateY(-2px);}
+.kpi-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);margin-bottom:.75rem;}
+.kpi-val{font-size:2.2rem;font-weight:800;color:var(--ink);line-height:1;}
+.kpi-change{font-size:.75rem;font-weight:600;margin-top:.45rem;}
+.kpi-change.up{color:var(--green);}
+.kpi-change.down{color:var(--red);}
+.kpi-icon{position:absolute;right:1.1rem;top:1.1rem;font-size:1.5rem;opacity:.35;}
+
+/* ── TWO-COL ── */
+.two-col{display:grid;grid-template-columns:1.6fr 1fr;gap:1.25rem;margin-bottom:2rem;}
+
+/* ── PANEL ── */
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.4rem;}
+.panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;}
+.panel-title{font-size:.9rem;font-weight:800;}
+.panel-action{font-size:.75rem;font-weight:600;color:var(--teal);cursor:pointer;}
+
+/* MODULE PROGRESS TABLE */
+.mod-table{width:100%;border-collapse:collapse;}
+.mod-table th{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);padding:.4rem .65rem;text-align:left;}
+.mod-table td{padding:.6rem .65rem;border-top:1px solid var(--border);font-size:.82rem;}
+.mod-table tr:last-child td{border-bottom:none;}
+.mod-name{font-weight:600;color:var(--ink);}
+.mod-bar-wrap{width:120px;height:6px;background:var(--bg3);border-radius:999px;overflow:hidden;}
+.mod-bar{height:100%;border-radius:999px;transition:.5s;}
+.mod-stat{font-size:.75rem;font-family:'DM Mono',monospace;color:var(--ink2);}
+.niv-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:.3rem;}
+
+/* WEAK STUDENTS */
+.risk-list{display:flex;flex-direction:column;gap:.6rem;}
+.risk-item{display:flex;align-items:center;gap:.75rem;padding:.65rem .85rem;background:var(--bg3);border-radius:10px;border:1px solid var(--border);}
+.risk-av{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;color:#fff;}
+.risk-name{font-size:.82rem;font-weight:700;flex:1;}
+.risk-score{font-family:'DM Mono',monospace;font-size:.78rem;}
+.risk-badge{font-size:.65rem;font-weight:800;padding:.12rem .45rem;border-radius:999px;}
+.rb-red{background:rgba(255,77,109,.2);color:var(--red);}
+.rb-gold{background:var(--gold2);color:var(--gold);}
+
+/* ACTIVITY FEED */
+.act-list{display:flex;flex-direction:column;gap:.55rem;}
+.act-item{display:flex;align-items:flex-start;gap:.65rem;padding:.55rem 0;border-bottom:1px solid var(--border);}
+.act-item:last-child{border-bottom:none;}
+.act-dot{width:8px;height:8px;border-radius:50%;margin-top:.35rem;flex-shrink:0;}
+.act-text{font-size:.8rem;color:var(--ink2);flex:1;line-height:1.5;}
+.act-text strong{color:var(--ink);}
+.act-time{font-size:.68rem;font-family:'DM Mono',monospace;color:var(--ink3);flex-shrink:0;margin-top:.15rem;}
+
+/* EXAM RESULTS */
+.exam-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem;}
+.exam-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.ec-name{font-size:.82rem;font-weight:700;margin-bottom:.35rem;}
+.ec-score{font-size:2rem;font-weight:800;font-family:'DM Mono',monospace;}
+.ec-detail{font-size:.72rem;color:var(--ink2);margin-top:.25rem;}
+.ec-prog{margin-top:.75rem;height:5px;background:var(--bg3);border-radius:999px;overflow:hidden;}
+.ec-prog-f{height:100%;border-radius:999px;}
+
+/* STUDENT TABLE */
+.stud-table{width:100%;border-collapse:collapse;font-size:.82rem;}
+.stud-table th{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);padding:.5rem .85rem;text-align:left;border-bottom:1px solid var(--border);}
+.stud-table td{padding:.65rem .85rem;border-bottom:1px solid var(--border);}
+.stud-table tr:last-child td{border-bottom:none;}
+.stud-table tr:hover td{background:rgba(255,255,255,.02);}
+.stud-av2{width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:800;color:#fff;margin-right:.55rem;vertical-align:middle;}
+.progress-pill{display:inline-flex;align-items:center;gap:.35rem;font-size:.72rem;font-family:'DM Mono',monospace;background:var(--bg3);padding:.18rem .55rem;border-radius:999px;}
+.level-badge{font-size:.65rem;font-weight:800;padding:.12rem .45rem;border-radius:999px;}
+.lb-a{background:rgba(34,208,110,.2);color:var(--green);}
+.lb-f{background:var(--gold2);color:var(--gold);}
+.lb-e{background:rgba(167,139,250,.2);color:var(--purple);}
+
+/* Charts */
+.chart-bar-h{display:flex;flex-direction:column;gap:.55rem;}
+.cbh-row{display:flex;align-items:center;gap:.75rem;}
+.cbh-label{font-size:.75rem;color:var(--ink2);width:120px;flex-shrink:0;}
+.cbh-track{flex:1;height:8px;background:var(--bg3);border-radius:999px;overflow:hidden;}
+.cbh-fill{height:100%;border-radius:999px;}
+.cbh-val{font-size:.72rem;font-family:'DM Mono',monospace;color:var(--ink2);width:40px;text-align:right;flex-shrink:0;}
+
+/* Donut placeholder */
+.donut-wrap{display:flex;align-items:center;gap:1.5rem;}
+.donut{width:90px;height:90px;border-radius:50%;background:conic-gradient(var(--teal) 0% 68%,var(--gold) 68% 84%,var(--red) 84% 100%);position:relative;flex-shrink:0;}
+.donut::after{content:'';position:absolute;inset:16px;border-radius:50%;background:var(--bg2);}
+.donut-center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:800;color:var(--teal);z-index:1;}
+.donut-legend{display:flex;flex-direction:column;gap:.45rem;}
+.dl-item{display:flex;align-items:center;gap:.5rem;font-size:.75rem;}
+.dl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+/* Nav active state management */
+.nav-view{display:none;}
+.nav-view.active{display:block;}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-logo">Pflege<span>Learn</span><br><span style="font-size:.65rem;color:var(--ink3);font-weight:500">Admin-Dashboard</span></div>
+  <div class="sb-school">
+    <div class="sb-school-name">🏫 Pflegeschule Wolfsburg Nord</div>
+    <div class="sb-school-meta">Standard-Plan · 87 Nutzer</div>
+  </div>
+
+  <div class="sb-section">Übersicht</div>
+  <div class="sb-item active" onclick="nav('overview',this)"><span class="icon">📊</span>Dashboard</div>
+  <div class="sb-item" onclick="nav('students',this)"><span class="icon">👥</span>Schülerinnen<span class="sb-badge">3</span></div>
+  <div class="sb-item" onclick="nav('results',this)"><span class="icon">📝</span>Prüfungsergebnisse</div>
+  <div class="sb-item" onclick="nav('modules',this)"><span class="icon">📚</span>Modulfortschritt</div>
+
+  <div class="sb-section">Tools</div>
+  <div class="sb-item" onclick="nav('alerts',this)"><span class="icon">⚠️</span>Risiko-Alerts<span class="sb-badge">5</span></div>
+  <div class="sb-item" onclick="nav('reports',this)"><span class="icon">📄</span>Berichte</div>
+  <div class="sb-item" onclick="nav('settings',this)"><span class="icon">⚙️</span>Einstellungen</div>
+
+  <div class="sb-footer">
+    <div class="sb-user">
+      <div class="sb-av">GP</div>
+      <div><div class="sb-uname">Georges P.</div><div class="sb-urole">Pflegepädagoge</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="topbar-title">Dashboard Übersicht</div>
+    <div class="topbar-right">
+      <input class="tb-search" placeholder="🔍 Schüler suchen...">
+      <button class="tb-btn">+ Schüler einladen</button>
+      <div class="tb-notif">🔔<div class="tb-notif-dot"></div></div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ══ OVERVIEW ══ -->
+    <div class="nav-view active" id="view-overview">
+
+      <!-- KPIs -->
+      <div class="kpi-grid">
+        <div class="kpi" style="--accent:var(--teal)"><div class="kpi-icon">👥</div><div class="kpi-label">Aktive Nutzer</div><div class="kpi-val">87</div><div class="kpi-change up">↑ +12 diese Woche</div></div>
+        <div class="kpi" style="--accent:var(--gold)"><div class="kpi-icon">📝</div><div class="kpi-label">QCM beantwortet</div><div class="kpi-val">14 280</div><div class="kpi-change up">↑ +1 840 heute</div></div>
+        <div class="kpi" style="--accent:var(--green)"><div class="kpi-icon">🎯</div><div class="kpi-label">Ø Trefferquote</div><div class="kpi-val">72%</div><div class="kpi-change up">↑ +3% vs Vorwoche</div></div>
+        <div class="kpi" style="--accent:var(--red)"><div class="kpi-icon">⚠️</div><div class="kpi-label">Risiko-Schüler</div><div class="kpi-val">5</div><div class="kpi-change down">↓ Unter 50% Trefferquote</div></div>
+      </div>
+
+      <div class="two-col">
+        <!-- Module Progress -->
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Klassen-Fortschritt nach Modul</div><span class="panel-action">Exportieren →</span></div>
+          <table class="mod-table">
+            <tr><th>Modul</th><th>Fortschritt</th><th>Ø Score</th><th>Aktiv</th></tr>
+            <tr><td><span class="mod-name">📋 M01 Grundlagen</span></td><td><div class="mod-bar-wrap"><div class="mod-bar" style="width:84%;background:var(--green)"></div></div></td><td class="mod-stat">84%</td><td class="mod-stat">74/87</td></tr>
+            <tr><td><span class="mod-name">🫀 M02 Vitalzeichen</span></td><td><div class="mod-bar-wrap"><div class="mod-bar" style="width:79%;background:var(--teal)"></div></div></td><td class="mod-stat">79%</td><td class="mod-stat">71/87</td></tr>
+            <tr><td><span class="mod-name">💊 M03 Medikamente</span></td><td><div class="mod-bar-wrap"><div class="mod-bar" style="width:61%;background:var(--gold)"></div></div></td><td class="mod-stat">61%</td><td class="mod-stat">52/87</td></tr>
+            <tr><td><span class="mod-name">🍽️ M04 Ernährung</span></td><td><div class="mod-bar-wrap"><div class="mod-bar" style="width:55%;background:var(--gold)"></div></div></td><td class="mod-stat">55%</td><td class="mod-stat">44/87</td></tr>
+            <tr><td><span class="mod-name">🦴 M05 Mobilisation</span></td><td><div class="mod-bar-wrap"><div class="mod-bar" style="width:48%;background:var(--red)"></div></div></td><td class="mod-stat">48%</td><td class="mod-stat">38/87</td></tr>
+            <tr><td><span class="mod-name">🧠 M06 Psychiatrie</span></td><td><div class="mod-bar-wrap"><div class="mod-bar" style="width:42%;background:var(--red)"></div></div></td><td class="mod-stat">42%</td><td class="mod-stat">32/87</td></tr>
+          </table>
+        </div>
+
+        <!-- Niveau Distribution -->
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Niveau-Verteilung</div></div>
+          <div class="donut-wrap" style="margin-bottom:1.25rem;">
+            <div class="donut"><div class="donut-center">72%</div></div>
+            <div class="donut-legend">
+              <div class="dl-item"><div class="dl-dot" style="background:var(--teal)"></div><span style="font-size:.78rem">🌱 Anfänger: 59 Schüler (68%)</span></div>
+              <div class="dl-item"><div class="dl-dot" style="background:var(--gold)"></div><span style="font-size:.78rem">🔥 Fortgeschritten: 21 (24%)</span></div>
+              <div class="dl-item"><div class="dl-dot" style="background:var(--red)"></div><span style="font-size:.78rem">💎 Experte: 7 (8%)</span></div>
+            </div>
+          </div>
+          <div class="panel-head" style="margin-bottom:.75rem;"><div class="panel-title" style="font-size:.82rem;">Aktivität nach Wochentag</div></div>
+          <div class="chart-bar-h">
+            <div class="cbh-row"><span class="cbh-label">Montag</span><div class="cbh-track"><div class="cbh-fill" style="width:72%;background:var(--teal)"></div></div><span class="cbh-val">72%</span></div>
+            <div class="cbh-row"><span class="cbh-label">Dienstag</span><div class="cbh-track"><div class="cbh-fill" style="width:65%;background:var(--teal)"></div></div><span class="cbh-val">65%</span></div>
+            <div class="cbh-row"><span class="cbh-label">Mittwoch</span><div class="cbh-track"><div class="cbh-fill" style="width:88%;background:var(--green)"></div></div><span class="cbh-val">88%</span></div>
+            <div class="cbh-row"><span class="cbh-label">Donnerstag</span><div class="cbh-track"><div class="cbh-fill" style="width:81%;background:var(--teal)"></div></div><span class="cbh-val">81%</span></div>
+            <div class="cbh-row"><span class="cbh-label">Freitag</span><div class="cbh-track"><div class="cbh-fill" style="width:44%;background:var(--gold)"></div></div><span class="cbh-val">44%</span></div>
+            <div class="cbh-row"><span class="cbh-label">Wochenende</span><div class="cbh-track"><div class="cbh-fill" style="width:28%;background:var(--ink3)"></div></div><span class="cbh-val">28%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <!-- Risk alerts -->
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">⚠️ Risiko-Schüler – Handlungsbedarf</div><span class="panel-action">Alle anzeigen →</span></div>
+          <div class="risk-list">
+            <div class="risk-item"><div class="risk-av" style="background:var(--red)">LM</div><span class="risk-name">Leon M.</span><span class="risk-score" style="color:var(--red)">38%</span><span class="risk-badge rb-red">Kritisch</span></div>
+            <div class="risk-item"><div class="risk-av" style="background:var(--red)">AK</div><span class="risk-name">Alina K.</span><span class="risk-score" style="color:var(--red)">42%</span><span class="risk-badge rb-red">Kritisch</span></div>
+            <div class="risk-item"><div class="risk-av" style="background:var(--gold)">TR</div><span class="risk-name">Tim R.</span><span class="risk-score" style="color:var(--gold)">48%</span><span class="risk-badge rb-gold">Achtung</span></div>
+            <div class="risk-item"><div class="risk-av" style="background:var(--gold)">MN</div><span class="risk-name">Mia N.</span><span class="risk-score" style="color:var(--gold)">51%</span><span class="risk-badge rb-gold">Achtung</span></div>
+            <div class="risk-item"><div class="risk-av" style="background:var(--gold)">SL</div><span class="risk-name">Sophie L.</span><span class="risk-score" style="color:var(--gold)">53%</span><span class="risk-badge rb-gold">Achtung</span></div>
+          </div>
+        </div>
+        <!-- Activity feed -->
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Letzte Aktivitäten</div></div>
+          <div class="act-list">
+            <div class="act-item"><div class="act-dot" style="background:var(--green)"></div><div class="act-text"><strong>Laura S.</strong> hat Modul 03 auf 🔥 Fortgeschritten abgeschlossen (92%)</div><div class="act-time">vor 4min</div></div>
+            <div class="act-item"><div class="act-dot" style="background:var(--teal)"></div><div class="act-text"><strong>Kevin B.</strong> hat 50 QCM in M02 beantwortet · Score: 74%</div><div class="act-time">vor 12min</div></div>
+            <div class="act-item"><div class="act-dot" style="background:var(--red)"></div><div class="act-text"><strong>Leon M.</strong> war heute nicht aktiv (3. Tag in Folge)</div><div class="act-time">vor 1h</div></div>
+            <div class="act-item"><div class="act-dot" style="background:var(--purple)"></div><div class="act-text"><strong>Jana H.</strong> hat 💎 Experten-Level in M01 freigeschaltet!</div><div class="act-time">vor 2h</div></div>
+            <div class="act-item"><div class="act-dot" style="background:var(--gold)"></div><div class="act-text"><strong>7 Schüler</strong> haben den Prüfungssimulator heute gestartet</div><div class="act-time">vor 3h</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ STUDENTS ══ -->
+    <div class="nav-view" id="view-students">
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">Alle Schülerinnen und Schüler (87)</div><button class="tb-btn">CSV exportieren</button></div>
+        <table class="stud-table">
+          <tr><th>Name</th><th>Level</th><th>Ø Score</th><th>QCM heute</th><th>Streak</th><th>Letzter Login</th></tr>
+          <tr><td><div class="stud-av2" style="background:var(--teal)">JH</div>Jana H.</td><td><span class="level-badge lb-e">💎 Experte</span></td><td><span class="progress-pill">94%</span></td><td>42</td><td>🔥 14</td><td>vor 20min</td></tr>
+          <tr><td><div class="stud-av2" style="background:var(--purple)">LS</div>Laura S.</td><td><span class="level-badge lb-f">🔥 Fortgeschritten</span></td><td><span class="progress-pill">88%</span></td><td>38</td><td>🔥 9</td><td>vor 4min</td></tr>
+          <tr><td><div class="stud-av2" style="background:var(--blue)">KB</div>Kevin B.</td><td><span class="level-badge lb-f">🔥 Fortgeschritten</span></td><td><span class="progress-pill">74%</span></td><td>50</td><td>🔥 7</td><td>vor 12min</td></tr>
+          <tr><td><div class="stud-av2" style="background:var(--green)">MK</div>Maria K.</td><td><span class="level-badge lb-a">🌱 Anfänger</span></td><td><span class="progress-pill">68%</span></td><td>25</td><td>🔥 4</td><td>vor 1h</td></tr>
+          <tr><td><div class="stud-av2" style="background:var(--gold)">TR</div>Tim R.</td><td><span class="level-badge lb-a">🌱 Anfänger</span></td><td><span class="progress-pill" style="color:var(--gold)">48%</span></td><td>8</td><td>1</td><td>vor 2h</td></tr>
+          <tr><td><div class="stud-av2" style="background:var(--red)">LM</div>Leon M.</td><td><span class="level-badge lb-a">🌱 Anfänger</span></td><td><span class="progress-pill" style="color:var(--red)">38%</span></td><td>0</td><td>0</td><td>vor 3 Tagen</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══ RESULTS ══ -->
+    <div class="nav-view" id="view-results">
+      <div class="exam-grid">
+        <div class="exam-card"><div class="ec-name">Letzter Prüfungssimulator</div><div class="ec-score" style="color:var(--teal)">72%</div><div class="ec-detail">Ø aller 23 Teilnehmenden · Standard 30q</div><div class="ec-prog"><div class="ec-prog-f" style="width:72%;background:var(--teal)"></div></div></div>
+        <div class="exam-card"><div class="ec-name">Beste Trefferquote</div><div class="ec-score" style="color:var(--green)">94%</div><div class="ec-detail">Jana H. · 💎 Experten-Modus</div><div class="ec-prog"><div class="ec-prog-f" style="width:94%;background:var(--green)"></div></div></div>
+        <div class="exam-card"><div class="ec-name">Schwächstes Modul Klasse</div><div class="ec-score" style="color:var(--red)">42%</div><div class="ec-detail">M06 Psychiatrie · Handlungsbedarf!</div><div class="ec-prog"><div class="ec-prog-f" style="width:42%;background:var(--red)"></div></div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">Schwachstellen-Analyse – Welche Themen fehlt der Klasse?</div></div>
+        <div class="chart-bar-h">
+          <div class="cbh-row"><span class="cbh-label">M06 Psychiatrie</span><div class="cbh-track"><div class="cbh-fill" style="width:42%;background:var(--red)"></div></div><span class="cbh-val" style="color:var(--red)">42%</span></div>
+          <div class="cbh-row"><span class="cbh-label">M05 Mobilisation</span><div class="cbh-track"><div class="cbh-fill" style="width:48%;background:var(--red)"></div></div><span class="cbh-val" style="color:var(--red)">48%</span></div>
+          <div class="cbh-row"><span class="cbh-label">M04 Ernährung</span><div class="cbh-track"><div class="cbh-fill" style="width:55%;background:var(--gold)"></div></div><span class="cbh-val" style="color:var(--gold)">55%</span></div>
+          <div class="cbh-row"><span class="cbh-label">M03 Medikamente</span><div class="cbh-track"><div class="cbh-fill" style="width:61%;background:var(--gold)"></div></div><span class="cbh-val" style="color:var(--gold)">61%</span></div>
+          <div class="cbh-row"><span class="cbh-label">M02 Vitalzeichen</span><div class="cbh-track"><div class="cbh-fill" style="width:79%;background:var(--teal)"></div></div><span class="cbh-val">79%</span></div>
+          <div class="cbh-row"><span class="cbh-label">M01 Grundlagen</span><div class="cbh-track"><div class="cbh-fill" style="width:84%;background:var(--green)"></div></div><span class="cbh-val" style="color:var(--green)">84%</span></div>
+        </div>
+        <div style="margin-top:1.25rem;padding:.85rem;background:rgba(255,77,109,.08);border:1px solid rgba(255,77,109,.2);border-radius:10px;font-size:.82rem;color:var(--red);">
+          💡 Empfehlung: Modul 06 (Psychiatrie) und Modul 05 (Mobilisation) im nächsten Unterricht gezielt besprechen – über 50% der Klasse zeigen dort Schwächen.
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ MODULES, ALERTS, REPORTS, SETTINGS (simple placeholders) ══ -->
+    <div class="nav-view" id="view-modules"><div class="panel"><div class="panel-title" style="font-size:1.1rem;margin-bottom:1rem">📚 Modulfortschritt</div><p style="color:var(--ink2)">Detailansicht wird in Kürze geladen…</p></div></div>
+    <div class="nav-view" id="view-alerts"><div class="panel"><div class="panel-title" style="font-size:1.1rem;margin-bottom:1rem">⚠️ Risiko-Alerts</div><p style="color:var(--ink2)">5 Schüler unter 50% – Benachrichtigungen aktiv.</p></div></div>
+    <div class="nav-view" id="view-reports"><div class="panel"><div class="panel-title" style="font-size:1.1rem;margin-bottom:1rem">📄 Berichte</div><p style="color:var(--ink2)">Monatsberichte für den MDK-Export werden generiert…</p></div></div>
+    <div class="nav-view" id="view-settings"><div class="panel"><div class="panel-title" style="font-size:1.1rem;margin-bottom:1rem">⚙️ Einstellungen</div><p style="color:var(--ink2)">Lizenz: Standard-Plan · 87/150 Nutzer · Verlängerung: Jan 2026</p></div></div>
+
+  </div>
+</main>
+
+<script>
+const titles = { overview:'Dashboard Übersicht', students:'Schülerinnen und Schüler', results:'Prüfungsergebnisse', modules:'Modulfortschritt', alerts:'Risiko-Alerts', reports:'Berichte', settings:'Einstellungen' };
+function nav(view, el) {
+  document.querySelectorAll('.nav-view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+  document.getElementById('view-'+view).classList.add('active');
+  el.classList.add('active');
+  document.getElementById('topbar-title').textContent = titles[view];
+}
+// Animate bars on load
+setTimeout(() => {
+  document.querySelectorAll('.mod-bar, .cbh-fill, .ec-prog-f').forEach(b => {
+    const w = b.style.width; b.style.width = '0';
+    setTimeout(() => { b.style.transition = 'width .8s cubic-bezier(.4,0,.2,1)'; b.style.width = w; }, 100);
+  });
+}, 50);
+</script>
+</body>
+</html>

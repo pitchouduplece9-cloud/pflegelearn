@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PflegeLearn – QCM Training</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal:    #0d9488;
+  --tealD:   #0f766e;
+  --tealL:   #ccfbf1;
+  --tealM:   #14b8a6;
+  --gold:    #f59e0b;
+  --goldL:   #fef3c7;
+  --ink:     #1a1a2e;
+  --inkS:    #3d3d5c;
+  --white:   #ffffff;
+  --cream:   #faf7f2;
+  --border:  #e5e7eb;
+  --green:   #10b981;
+  --greenL:  #d1fae5;
+  --red:     #e11d48;
+  --redL:    #ffe4e6;
+  --shadow:  0 4px 24px rgba(13,148,136,0.12);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--ink);
+  color: var(--white);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── BACKGROUND ── */
+.bg-mesh {
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 20%, rgba(13,148,136,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(245,158,11,0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 60% at 70% 20%, rgba(13,148,136,0.06) 0%, transparent 50%);
+}
+.bg-grid {
+  position: fixed; inset: 0; z-index: 0; opacity: 0.04;
+  background-image: linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* ── LAYOUT ── */
+.app {
+  position: relative; z-index: 1;
+  max-width: 780px; margin: 0 auto;
+  padding: 0 1.25rem 4rem;
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.5rem 0 0;
+}
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem; font-weight: 900;
+  color: var(--tealM);
+}
+.logo span { color: var(--gold); }
+.score-badge {
+  display: flex; align-items: center; gap: .5rem;
+  background: rgba(13,148,136,0.15);
+  border: 1px solid rgba(13,148,136,0.3);
+  border-radius: 999px; padding: .35rem 1rem;
+  font-size: .85rem; font-weight: 600; color: var(--tealM);
+}
+
+/* ── MODULE SELECTOR ── */
+#screen-home { animation: fadeUp .5s ease both; }
+.home-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 900; line-height: 1.1;
+  margin: 2.5rem 0 .6rem;
+}
+.home-title em { color: var(--tealM); font-style: normal; }
+.home-sub { color: rgba(255,255,255,0.55); font-size: 1rem; margin-bottom: 2rem; }
+
+.modules-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: .9rem; margin-bottom: 2rem;
+}
+.module-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px; padding: 1.1rem 1.25rem;
+  cursor: pointer; transition: all .2s;
+  position: relative; overflow: hidden;
+}
+.module-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--teal), var(--tealM));
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .2s;
+}
+.module-card:hover { background: rgba(13,148,136,0.15); border-color: var(--teal); transform: translateY(-2px); }
+.module-card:hover::before { transform: scaleX(1); }
+.module-card.done { border-color: var(--green); background: rgba(16,185,129,0.08); }
+.module-card.done::before { transform: scaleX(1); background: var(--green); }
+.mod-num { font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--tealM); margin-bottom: .3rem; }
+.mod-name { font-size: .95rem; font-weight: 600; color: var(--white); margin-bottom: .4rem; }
+.mod-count { font-size: .75rem; color: rgba(255,255,255,0.4); }
+.mod-check { position: absolute; top: .8rem; right: .9rem; color: var(--green); font-size: 1rem; }
+
+.btn-all {
+  width: 100%; padding: .85rem; border-radius: 12px;
+  background: linear-gradient(135deg, var(--teal), var(--tealM));
+  color: var(--white); font-size: 1rem; font-weight: 700;
+  border: none; cursor: pointer;
+  box-shadow: 0 4px 20px rgba(13,148,136,0.35);
+  transition: all .2s; letter-spacing: .02em;
+}
+.btn-all:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(13,148,136,0.45); }
+
+/* ── QCM SCREEN ── */
+#screen-quiz { display: none; animation: fadeUp .4s ease both; }
+
+/* Progress */
+.progress-wrap { margin: 1.8rem 0 1.2rem; }
+.progress-meta {
+  display: flex; justify-content: space-between;
+  font-size: .8rem; color: rgba(255,255,255,0.45);
+  margin-bottom: .5rem;
+}
+.progress-bar {
+  height: 5px; background: rgba(255,255,255,0.1);
+  border-radius: 999px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; background: linear-gradient(90deg, var(--teal), var(--tealM));
+  border-radius: 999px; transition: width .4s cubic-bezier(.4,0,.2,1);
+}
+
+/* Question card */
+.q-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px; padding: 2rem;
+  margin-bottom: 1.25rem;
+  backdrop-filter: blur(8px);
+}
+.q-module-tag {
+  display: inline-flex; align-items: center; gap: .35rem;
+  background: rgba(13,148,136,0.2); border: 1px solid rgba(13,148,136,0.3);
+  color: var(--tealM); border-radius: 999px;
+  padding: .25rem .85rem; font-size: .72rem; font-weight: 700;
+  letter-spacing: .06em; text-transform: uppercase;
+  margin-bottom: 1.1rem;
+}
+.q-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem; font-weight: 700;
+  line-height: 1.4; color: var(--white);
+}
+
+/* Options */
+.options { display: flex; flex-direction: column; gap: .65rem; }
+.option {
+  display: flex; align-items: center; gap: .85rem;
+  padding: .9rem 1.1rem; border-radius: 12px;
+  border: 1.5px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  cursor: pointer; transition: all .15s;
+  font-size: .95rem; font-weight: 500;
+  color: rgba(255,255,255,0.85);
+}
+.option:hover:not(.disabled) {
+  border-color: var(--teal);
+  background: rgba(13,148,136,0.12);
+  color: var(--white);
+}
+.option.correct {
+  border-color: var(--green);
+  background: rgba(16,185,129,0.15);
+  color: #6ee7b7;
+  animation: popIn .25s ease;
+}
+.option.wrong {
+  border-color: var(--red);
+  background: rgba(225,29,72,0.12);
+  color: #fda4af;
+}
+.option.disabled { cursor: default; }
+.opt-letter {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .75rem; font-weight: 800; flex-shrink: 0;
+  transition: background .15s;
+}
+.option.correct .opt-letter { background: var(--green); color: white; }
+.option.wrong .opt-letter { background: var(--red); color: white; }
+.option:hover:not(.disabled) .opt-letter { background: rgba(13,148,136,0.4); }
+
+/* Explanation */
+.explanation {
+  margin-top: 1.1rem; padding: 1rem 1.25rem;
+  background: rgba(13,148,136,0.1);
+  border-left: 3px solid var(--tealM);
+  border-radius: 0 10px 10px 0;
+  font-size: .9rem; line-height: 1.6;
+  color: rgba(255,255,255,0.75);
+  display: none;
+}
+.explanation.show { display: block; animation: fadeUp .25s ease; }
+.explanation strong { color: var(--tealM); }
+
+/* Next button */
+.btn-next {
+  width: 100%; padding: .9rem; border-radius: 12px;
+  background: linear-gradient(135deg, var(--teal), var(--tealM));
+  color: white; font-size: 1rem; font-weight: 700;
+  border: none; cursor: pointer;
+  box-shadow: 0 4px 20px rgba(13,148,136,0.3);
+  transition: all .2s; display: none;
+  margin-top: .5rem;
+}
+.btn-next.show { display: block; animation: fadeUp .3s .1s ease both; }
+.btn-next:hover { transform: translateY(-2px); }
+
+/* ── RESULTS SCREEN ── */
+#screen-results { display: none; text-align: center; animation: fadeUp .5s ease both; }
+.result-icon { font-size: 4rem; margin: 2.5rem 0 1rem; }
+.result-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem; font-weight: 900;
+  margin-bottom: .5rem;
+}
+.result-score {
+  font-size: 1.1rem; color: rgba(255,255,255,0.55);
+  margin-bottom: 2rem;
+}
+.score-circle {
+  width: 140px; height: 140px; border-radius: 50%;
+  background: conic-gradient(var(--tealM) calc(var(--pct) * 1%), rgba(255,255,255,0.08) 0%);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 2rem;
+  position: relative;
+}
+.score-circle::before {
+  content: ''; position: absolute;
+  width: 112px; height: 112px; border-radius: 50%;
+  background: var(--ink);
+}
+.score-num {
+  position: relative; z-index: 1;
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem; font-weight: 900; color: var(--tealM);
+}
+.result-breakdown {
+  display: flex; gap: 1rem; justify-content: center;
+  margin-bottom: 2rem; flex-wrap: wrap;
+}
+.rb-item {
+  padding: .6rem 1.2rem; border-radius: 999px;
+  font-size: .85rem; font-weight: 600;
+}
+.rb-correct { background: rgba(16,185,129,0.15); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.3); }
+.rb-wrong { background: rgba(225,29,72,0.12); color: #fda4af; border: 1px solid rgba(225,29,72,0.2); }
+.result-btns { display: flex; gap: .85rem; justify-content: center; flex-wrap: wrap; }
+.btn-retry, .btn-home {
+  padding: .8rem 1.8rem; border-radius: 999px;
+  font-size: .95rem; font-weight: 700; cursor: pointer;
+  transition: all .2s; border: none;
+}
+.btn-retry { background: linear-gradient(135deg, var(--teal), var(--tealM)); color: white; }
+.btn-retry:hover { transform: translateY(-2px); }
+.btn-home { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.75); border: 1px solid rgba(255,255,255,0.15); }
+.btn-home:hover { background: rgba(255,255,255,0.14); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes popIn {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 500px) {
+  .q-text { font-size: 1.05rem; }
+  .option { font-size: .88rem; }
+}
+</style>
+</head>
+<body>
+<div class="bg-mesh"></div>
+<div class="bg-grid"></div>
+
+<div class="app">
+  <header>
+    <div class="logo">Pflege<span>Learn</span></div>
+    <div class="score-badge">🏆 <span id="total-score">0</span> pts</div>
+  </header>
+
+  <!-- HOME -->
+  <div id="screen-home">
+    <h1 class="home-title">Dein <em>QCM</em><br>Training</h1>
+    <p class="home-sub">Wähle ein Modul oder starte alle 100 Fragen auf einmal</p>
+
+    <div class="modules-grid" id="modules-grid"></div>
+    <button class="btn-all" onclick="startQuiz('all')">🚀 Alle Module starten (100 Fragen)</button>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="screen-quiz">
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span id="q-counter">Frage 1 / 10</span>
+        <span id="q-module-label">Modul 01</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-module-tag" id="q-tag">📋 Modul 01</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="explanation" id="q-explanation"></div>
+    </div>
+
+    <div class="options" id="options-container"></div>
+    <button class="btn-next" id="btn-next" onclick="nextQuestion()">Weiter →</button>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="screen-results" id="screen-results">
+    <div class="result-icon" id="result-icon">🎉</div>
+    <h2 class="result-title" id="result-title">Sehr gut!</h2>
+    <p class="result-score" id="result-score"></p>
+    <div class="score-circle" id="score-circle">
+      <div class="score-num" id="score-num"></div>
+    </div>
+    <div class="result-breakdown">
+      <div class="rb-item rb-correct" id="rb-correct">✓ 0 richtig</div>
+      <div class="rb-item rb-wrong" id="rb-wrong">✗ 0 falsch</div>
+    </div>
+    <div class="result-btns">
+      <button class="btn-retry" id="btn-retry" onclick="retryQuiz()">🔁 Nochmal</button>
+      <button class="btn-home" onclick="goHome()">🏠 Module wählen</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const MODULES = [
+  { id: 1, name: "Grundlagen der Pflege", icon: "📋" },
+  { id: 2, name: "Vitalzeichen & Beobachtung", icon: "🫀" },
+  { id: 3, name: "Medikamente & Injektionen", icon: "💊" },
+  { id: 4, name: "Ernährung & Ausscheidung", icon: "🍽️" },
+  { id: 5, name: "Mobilisation & Prävention", icon: "🦴" },
+  { id: 6, name: "Psychiatrie & Psychosoziales", icon: "🧠" },
+  { id: 7, name: "Pflegebereiche spezifisch", icon: "👶" },
+  { id: 8, name: "Recht & Beruf", icon: "⚖️" },
+  { id: 9, name: "Krankheitsbilder", icon: "🏥" },
+  { id: 10, name: "Wundversorgung", icon: "🩹" },
+];
+
+const ALL_QUESTIONS = [
+  // M01
+  { m:1, q:"Wie viele Schritte hat der Pflegeprozess?", opts:["4","5","6","8"], a:2, exp:"Der Pflegeprozess umfasst 6 Schritte: Informationssammlung, Pflegediagnose, Zielformulierung, Planung, Durchführung und Evaluation." },
+  { m:1, q:"Welches Pflegemodell wurde von Monika Krohwinkel entwickelt?", opts:["ATL-Modell","Selbstpflegemodell","ABEDL-Modell","Bedürfnismodell nach Maslow"], a:2, exp:"Krohwinkel entwickelte das ABEDL-Modell mit 13 Aktivitäten und existenziellen Erfahrungen." },
+  { m:1, q:"Wie lange muss eine Händedesinfektion mindestens einwirken?", opts:["10 Sekunden","20 Sekunden","30 Sekunden","60 Sekunden"], a:2, exp:"Die WHO empfiehlt mindestens 30 Sekunden für eine wirksame Händedesinfektion." },
+  { m:1, q:"Was bedeutet aktives Zuhören?", opts:["Schnell antworten","Paraphrasieren, offene Fragen, nicht unterbrechen","Nur schweigen","Notizen machen"], a:1, exp:"Aktives Zuhören beinhaltet Paraphrasieren, offene Fragen, Blickkontakt und Nicht-Unterbrechen." },
+  { m:1, q:"Was ist ein SMART-Ziel?", opts:["Spezifisch, Messbar, Akzeptiert, Realistisch, Terminiert","Schnell, Motivierend, Angepasst, Realistisch, Tolerant","Sicher, Medizinisch, Akut, Relevant, Testbar","Subjektiv, Methodisch, Angemessen, Reaktiv, Terminiert"], a:0, exp:"SMART steht für Spezifisch, Messbar, Akzeptiert, Realistisch, Terminiert – Kriterien für gute Pflegeziele." },
+  { m:1, q:"Das ATL-Modell wurde entwickelt von:", opts:["Dorothea Orem","Monika Krohwinkel","Roper, Logan & Tierney","Abraham Maslow"], a:2, exp:"Das ATL-Modell stammt von den Pflegewissenschaftlerinnen Roper, Logan und Tierney." },
+  { m:1, q:"Warum ist die Pflegedokumentation rechtlich wichtig?", opts:["Sie ersetzt das Arztgespräch","Nur für die Abrechnung","Was nicht dokumentiert ist, gilt als nicht getan","Nur in Krankenhäusern Pflicht"], a:2, exp:"Die Dokumentation dient als rechtlicher Nachweis der erbrachten Pflegeleistungen." },
+  { m:1, q:"Bei welchem Patienten besonders auf nonverbale Kommunikation achten?", opts:["Postoperativer Patient","Patient mit Hypertonie","Patient mit Demenz","Patient mit Diabetes"], a:2, exp:"Demente Patienten können sich verbal oft nicht mehr gut ausdrücken – nonverbale Signale sind entscheidend." },
+  { m:1, q:"Wann wird Händedesinfektion NICHT benötigt?", opts:["Vor Patientenkontakt","Nach Körperflüssigkeiten","Beim Betreten des Pausenraums","Nach Patientenumgebung"], a:2, exp:"Im Pausenraum ohne Patientenkontakt ist keine Händedesinfektion erforderlich." },
+  { m:1, q:"In welchem Schritt werden Pflegeziele überprüft?", opts:["Informationssammlung","Zielformulierung","Durchführung","Evaluation"], a:3, exp:"Die Evaluation (Schritt 6) überprüft den Erfolg der Pflegemaßnahmen." },
+  // M02
+  { m:2, q:"Ab welchem Wert spricht man von Hypertonie Grad I?", opts:["120/80 mmHg","130/85 mmHg","140/90 mmHg","160/100 mmHg"], a:2, exp:"Ab 140/90 mmHg beginnt die Hypertonie Grad I nach WHO-Klassifikation." },
+  { m:2, q:"Herzfrequenz unter 60 Schlägen pro Minute heißt:", opts:["Bradykardie","Tachykardie","Arrhythmie","Asystolie"], a:0, exp:"Bradykardie = < 60/min. Tachykardie = > 100/min." },
+  { m:2, q:"Welche Temperaturmessmethode gilt als Goldstandard?", opts:["Axillär","Oral","Rektal","Tympanal"], a:2, exp:"Die rektale Messung ist die genaueste Methode und gilt als Goldstandard." },
+  { m:2, q:"SpO₂ < 90% bedeutet:", opts:["Normalbefund","Leichte Hypoxämie","Sofort Arzt + O₂ vorbereiten","Patient stabil"], a:2, exp:"SpO₂ < 90% ist ein kritischer Wert – sofortiges Handeln ist erforderlich." },
+  { m:2, q:"Welche Schmerzskala bei dementen Patienten?", opts:["NRS","VAS","Smiley-Skala","BESD"], a:3, exp:"Die BESD-Skala bewertet das Verhalten bei nicht kommunizierbaren Patienten." },
+  { m:2, q:"Normale Atemfrequenz bei Erwachsenen:", opts:["8–12 /min","12–20 /min","20–30 /min","30–40 /min"], a:1, exp:"Bei Erwachsenen liegt die normale Atemfrequenz bei 12–20 Atemzügen pro Minute." },
+  { m:2, q:"Cheyne-Stokes-Atemmuster beschreibt:", opts:["Schnelle flache Atmung","Langsame tiefe Atmung","Crescendo-Decrescendo mit Apnoe","Einseitig vertieftes Atemgeräusch"], a:2, exp:"Cheyne-Stokes ist typisch für die Sterbephase oder schwere Hirnschäden." },
+  { m:2, q:"Puls wird am häufigsten gemessen an:", opts:["A. carotis","A. radialis","A. femoralis","A. brachialis"], a:1, exp:"Die A. radialis am Handgelenk ist der häufigste Messort im klinischen Alltag." },
+  { m:2, q:"Q im OPQRST-Schema bedeutet:", opts:["Quantität des Schmerzes","Qualität des Schmerzes","Quelle des Schmerzes","Quelldauer"], a:1, exp:"Q = Quality: Wie fühlt sich der Schmerz an? Brennend, stechend, drückend..." },
+  { m:2, q:"Axillär 38,6°C ist:", opts:["Normale Temperatur","Subfebrile Temperatur","Mäßiges Fieber","Hyperpyrexie"], a:2, exp:"38,1–39,0°C = mäßiges Fieber. Axillär 38,6°C entspricht rektal ca. 39,1°C." },
+  // M03
+  { m:3, q:"p.o. bedeutet:", opts:["Per Okular","Per Os (durch den Mund)","Per Ohr","Per Osmose"], a:1, exp:"p.o. = per os = oral, durch den Mund eingenommen." },
+  { m:3, q:"Injektionswinkel bei s.c. bei normalem BMI:", opts:["90°","30°","45°","15°"], a:2, exp:"Bei normalem BMI wird ein Winkel von 45° empfohlen. Bei Adipositas 90°." },
+  { m:3, q:"Paracetamol 1000mg, vorrätig 500mg/Tablette. Wie viele?", opts:["0,5 Tabletten","2 Tabletten","3 Tabletten","4 Tabletten"], a:1, exp:"1000 ÷ 500 = 2 Tabletten. Formel: Gewünschte Dosis ÷ Vorhandene Konzentration." },
+  { m:3, q:"Was prüft die 5-R-Regel NICHT?", opts:["Richtiger Patient","Richtige Dosis","Richtiger Hersteller","Richtiger Weg"], a:2, exp:"Die 5-R-Regel prüft: Patient, Medikament, Dosis, Weg und Zeit – nicht den Hersteller." },
+  { m:3, q:"Welche Gruppe kann Hypoglykämie verursachen?", opts:["Antibiotika","Diuretika","Insulin","Kortikosteroide"], a:2, exp:"Insulin senkt den Blutzucker – Überdosierung führt zur Hypoglykämie." },
+  { m:3, q:"Wie viele Personen bei BtM-Entnahme?", opts:["Eine Person","Zwei (Vier-Augen-Prinzip)","Drei Personen","Ein Arzt allein"], a:1, exp:"Das BtMG schreibt das Vier-Augen-Prinzip vor." },
+  { m:3, q:"Bevorzugter i.m.-Injektionsort:", opts:["M. gluteus maximus","M. deltoideus","M. vastus lateralis","M. rectus femoris"], a:2, exp:"M. vastus lateralis am Oberschenkel – keine großen Nerven oder Gefäße in der Nähe." },
+  { m:3, q:"Typische NW von Antikoagulanzien:", opts:["Hypertonie","Erhöhtes Blutungsrisiko","Hypoglykämie","Osteoporose"], a:1, exp:"Antikoagulanzien hemmen die Blutgerinnung – erhöhtes Blutungsrisiko ist die Haupt-NW." },
+  { m:3, q:"500ml über 2h, Tropffaktor 20. Tropfen/min:", opts:["25","83","42","60"], a:1, exp:"500 × 20 ÷ 120 min = 83,3 ≈ 83 Tropfen/min." },
+  { m:3, q:"Welches Medikament unterliegt dem BtMG?", opts:["Ibuprofen","Amoxicillin","Morphin","Paracetamol"], a:2, exp:"Morphin ist ein Opioid und unterliegt dem BtMG mit strenger Dokumentationspflicht." },
+  // M04
+  { m:4, q:"Screening-Instrument für Mangelernährung bei Senioren:", opts:["NRS 2002","MUST","MNA","BMI allein"], a:2, exp:"Der MNA (Mini Nutritional Assessment) ist das Standardinstrument für Senioren." },
+  { m:4, q:"Untergewicht beginnt ab BMI:", opts:["< 20","< 18,5","< 17","< 22"], a:1, exp:"Ein BMI unter 18,5 gilt als Untergewicht und ist ein Risikofaktor für Mangelernährung." },
+  { m:4, q:"Typisches Zeichen einer Dysphagie:", opts:["Husten beim Essen","Übermäßiger Appetit","Schnelles Schlucken","Gewichtszunahme"], a:0, exp:"Husten beim Essen ist ein Warnsignal für eine Aspiration bei Dysphagie." },
+  { m:4, q:"PEG-Sonde wird empfohlen ab:", opts:["1 Woche","2 Wochen","4 Wochen","3 Monaten"], a:2, exp:"Die PEG-Sonde wird bei voraussichtlicher Ernährungsdauer > 4 Wochen empfohlen." },
+  { m:4, q:"Parenterale Ernährung bedeutet:", opts:["Über Magensonde","Über den Darm","Direkt in die Blutbahn","Über den Mund"], a:2, exp:"Parenterale Ernährung umgeht den Magen-Darm-Trakt – Nährstoffe werden i.v. zugeführt." },
+  { m:4, q:"Harnbeutel muss positioniert werden:", opts:["Auf Höhe der Blase","Oberhalb der Blase","Unterhalb der Blase","Auf dem Boden"], a:2, exp:"Der Harnbeutel muss immer unterhalb des Blasenniveaus hängen (Rückfluss verhindern)." },
+  { m:4, q:"Urinverlust beim Husten = welche Inkontinenz?", opts:["Dranginkontinenz","Überlaufinkontinenz","Stressinkontinenz","Reflexinkontinenz"], a:2, exp:"Stressinkontinenz = Urinverlust bei Belastung (Husten, Niesen) durch Beckenbodenschwäche." },
+  { m:4, q:"Maßeinheit für Katheterstärke:", opts:["mm","French (Fr)","Charrière (Ch)","Gauge (G)"], a:2, exp:"Charrière (Ch) ist die Standardmaßeinheit. 1 Ch = 0,33 mm Durchmesser." },
+  { m:4, q:"Risikofaktor für Obstipation:", opts:["Hohe Flüssigkeitszufuhr","Ballaststoffreiche Ernährung","Immobilität und Opiatgabe","Regelmäßige Bewegung"], a:2, exp:"Immobilität und Opiate verlangsamen die Darmperistaltik → Obstipation." },
+  { m:4, q:"Normale Urinausscheidung pro Tag:", opts:["500–800 ml","1000–2000 ml","2500–3000 ml","3000–4000 ml"], a:1, exp:"Normale Urinausscheidung: 1000–2000 ml/Tag. < 500 ml = Oligurie." },
+  // M05 – M10: 10 each
+  { m:5, q:"Lagerung zur Dekubitusprophylaxe:", opts:["Rückenlage","30°-Seitenlage","Bauchlage","Trendelenburg"], a:1, exp:"Die 30°-Seitenlage reduziert den Druck auf gefährdete Stellen." },
+  { m:5, q:"Hohes Dekubitusrisiko bei Bradens-Wert:", opts:["<= 14","<= 13","<= 12","<= 9"], a:2, exp:"Bradenskala 10–12 Punkte = hohes Risiko. <= 9 = sehr hohes Risiko." },
+  { m:5, q:"Umlagerung bei Hochrisikopatienten:", opts:["Alle 4 Stunden","Einmal täglich","Alle 2 Stunden","Alle 6 Stunden"], a:2, exp:"Bei hohem Dekubitusrisiko wird Umlagerung alle 2 Stunden empfohlen." },
+  { m:5, q:"Typisches TVT-Zeichen:", opts:["Blässe und Kälte","Schwellung, Rötung, Überwärmung","Kribbeln im Fuß","Blutdruckabfall"], a:1, exp:"Schwellung, Rötung und Überwärmung sind klassische TVT-Zeichen." },
+  { m:5, q:"Grundprinzip der Kinästhetik:", opts:["Patient vollständig heben","Bewegung übernehmen","Eigenbewegung fördern","Wenig bewegen"], a:2, exp:"Kinästhetik fördert die Eigenbewegung des Patienten – Pflegende unterstützen nur." },
+  { m:5, q:"Nicht zur Pneumonieprophylaxe gehört:", opts:["Atemübungen","Oberkörperhochlagerung","Flachlagerung","Frühmobilisation"], a:2, exp:"Flachlagerung begünstigt Sekretansammlungen – Oberkörperhochlage ist korrekt." },
+  { m:5, q:"Medikament zur Thromboseprophylaxe:", opts:["Furosemid","Metoprolol","Enoxaparin","Paracetamol"], a:2, exp:"Niedermolekulares Heparin wie Enoxaparin wird s.c. zur Thromboseprophylaxe eingesetzt." },
+  { m:5, q:"Dekubitus Grad 2 zeigt:", opts:["Rötung intakt","Teilverlust mit Blasen","Vollständiger Hautverlust","Knochenverlust"], a:1, exp:"Dekubitus Grad 2 = Teilverlust der Haut mit Blasen oder Abschürfungen." },
+  { m:5, q:"Wirksame Kontrakturprophylaxe:", opts:["Dauerlagerung","Ruhigstellung","Bewegungsübungen","Keine Hilfsmittel"], a:2, exp:"Regelmäßige Bewegungsübungen erhalten die Gelenkbeweglichkeit." },
+  { m:5, q:"Zur Sturzprophylaxe gehört:", opts:["Bett hoch stellen","Klingel außer Reichweite","Rutschfeste Schuhe + Orientierungslicht","Sedativa geben"], a:2, exp:"Rutschfeste Schuhe und ausreichende Beleuchtung sind wichtige Sturzprophylaxemaßnahmen." },
+  { m:6, q:"Häufigste Form der Demenz:", opts:["Alzheimer","Vaskuläre Demenz","Lewy-Body","Frontotemporale"], a:0, exp:"Alzheimer macht ca. 65% aller Demenzen aus." },
+  { m:6, q:"Delir vs. Demenz – Hauptunterschied:", opts:["Delir irreversibel","Delir akut + reversibel, Demenz chronisch","Beide gleich","Demenz nur bei Alten"], a:1, exp:"Delir = akut, reversibel. Demenz = chronisch, progredient, irreversibel." },
+  { m:6, q:"Validation nach Naomi Feil bedeutet:", opts:["Fehler korrigieren","Gefühle bestätigen und akzeptieren","Realität aufzwingen","Medikamentöse Ruhigstellung"], a:1, exp:"Validation: die subjektive Realität des Patienten anerkennen statt zu korrigieren." },
+  { m:6, q:"Mindest-Kernsymptome für Depression-Diagnose:", opts:["1","2","3","4"], a:1, exp:"Für Diagnose: mind. 2 Kernsymptome + 2 Nebensymptome für > 2 Wochen." },
+  { m:6, q:"A im TALK-Schema bedeutet:", opts:["Abstand nehmen","Ask – direkt nach Suizid fragen","Arzt informieren","Aktivität anbieten"], a:1, exp:"A = Ask: Direkt und offen nach Suizidgedanken fragen." },
+  { m:6, q:"Alternative zu FEM:", opts:["Fixiergurt","Sedierung","Niedrigflurbett + Sensormatten","Bettgitter beidseitig"], a:2, exp:"Niedrigflurbetten und Sensormatten sind sicherere Alternativen zu FEM." },
+  { m:6, q:"Gesetzliche Grundlage für FEM in Deutschland:", opts:["§ 218 StGB","§ 1906 BGB","§ 323c StGB","PflBG"], a:1, exp:"§ 1906 BGB regelt, dass FEM richterlicher Genehmigung bedürfen." },
+  { m:6, q:"Patient bittet um geschlechtsspezifische Pflege. Was tun?", opts:["Ablehnen","Ignorieren","Respektieren und erfüllen","Arzt hinzuziehen"], a:2, exp:"Religiöse und kulturelle Wünsche sind zu respektieren." },
+  { m:6, q:"Warnsignal für Suizidalität:", opts:["Aggressives Verhalten","Sportliche Aktivität","Plötzliche Ruhe nach Agitation","Erhöhter Appetit"], a:2, exp:"Plötzliche Ruhe nach Agitation kann auf Entschlossenheit hinweisen." },
+  { m:6, q:"Nicht typisch für Delir:", opts:["Akute Verwirrtheit","Halluzinationen","Schleichender Beginn über Monate","Desorientierung"], a:2, exp:"Delir beginnt akut (Stunden bis Tage). Schleichender Beginn ist typisch für Demenz." },
+  { m:7, q:"Normale Herzfrequenz beim Neugeborenen:", opts:["60–100","80–120","120–160","160–200"], a:2, exp:"Neugeborene: 120–160 /min (höher als Erwachsene)." },
+  { m:7, q:"I in I'M SAFE bedeutet:", opts:["Infektionen","Immobilität","Inkontinenz","Insomnie"], a:1, exp:"I'M SAFE: Immobilität, Mangelernährung, Sturzgefahr, Arzneimittel, Funktionsverlust, Exsikkose." },
+  { m:7, q:"Polypharmazie = gleichzeitig:", opts:[">= 3 Medikamente",">= 5 Medikamente",">= 8 Medikamente",">= 10 Medikamente"], a:1, exp:"Polypharmazie = gleichzeitig 5 oder mehr Medikamente täglich." },
+  { m:7, q:"Total Pain nach Cicely Saunders:", opts:["Kübler-Ross-Modell","ABEDL-Modell","4 Dimensionen des Leidens","Bradenskala"], a:2, exp:"Total Pain: physisches, psychisches, soziales und spirituelles Leiden." },
+  { m:7, q:"Reihenfolge Kübler-Ross Sterbephasen:", opts:["Zorn, Verleugnung, Verhandeln...","Verleugnung, Zorn, Verhandeln, Depression, Akzeptanz","Depression, Verleugnung...","Akzeptanz zuerst"], a:1, exp:"Verleugnung → Zorn → Verhandeln → Depression → Akzeptanz." },
+  { m:7, q:"Mukositis wird gepflegt durch:", opts:["Perücken","Intensive Mundpflege","Antiemetika","Bettruhe"], a:1, exp:"Mukositis = Schleimhautentzündung → intensive Mundpflege ist entscheidend." },
+  { m:7, q:"Barthel-Index 0–30 zeigt:", opts:["Selbstständig","Teilabhängig","Hohe Pflegebedürftigkeit","Keine Einschränkung"], a:2, exp:"Barthel-Index 0–30 = hohe Abhängigkeit und Pflegebedürftigkeit." },
+  { m:7, q:"Ziel der Palliativpflege:", opts:["Lebensverlängerung","Heilung","Lebensqualität + Leidenslinderung","Sedierung bis Tod"], a:2, exp:"Palliativpflege: Lebensqualität erhalten, Leiden lindern – nicht Lebensverlängerung." },
+  { m:7, q:"Sterbzeichen in letzten Stunden:", opts:["Erhöhte HF","Stärkerer Appetit","Cheyne-Stokes + livide Extremitäten","Besseres Bewusstsein"], a:2, exp:"Cheyne-Stokes-Atmung und livide Extremitäten sind typische Sterbzeichen." },
+  { m:7, q:"Fatigue-Management in Onkologie:", opts:["Absolute Bettruhe","Intensiver Sport","Pacing – Aktivität/Ruhe balancieren","Mehr Medikamente"], a:2, exp:"Pacing: Aktivitäten und Ruhe bewusst ausbalancieren – Bettruhe verschlimmert Fatigue." },
+  { m:8, q:"PflBG trat in Kraft am:", opts:["1.1.2015","1.1.2018","1.1.2020","1.1.2022"], a:2, exp:"Das PflBG trat am 1. Januar 2020 in Kraft." },
+  { m:8, q:"Durchführungsverantwortung bedeutet:", opts:["Arzt trägt Verantwortung","Pflegeperson trägt Verantwortung für Ausführung","Leitung allein","Niemand"], a:1, exp:"Wer eine Aufgabe ausführt, trägt die Verantwortung für die korrekte Durchführung." },
+  { m:8, q:"Schweigepflicht geregelt in:", opts:["PflBG","BGB § 823","StGB § 203","SGB XI"], a:2, exp:"§ 203 StGB regelt die berufliche Schweigepflicht – Verletzung ist strafbar." },
+  { m:8, q:"Patientenrechtegesetz 2013 sichert:", opts:["Diagnosen durch Pflege","Aufklärung + informierte Einwilligung","Keine Akteneinsicht","Zweitmeinungen verboten"], a:1, exp:"Informationsrecht, Einwilligungsrecht und Recht auf Akteneinsicht sind gesichert." },
+  { m:8, q:"Non-Malefizienz bedeutet:", opts:["Autonomie","Fürsorge","Schadensvermeidung","Gerechtigkeit"], a:2, exp:"Non-Malefizienz = Schadensvermeidung (Beauchamp & Childress)." },
+  { m:8, q:"Strukturqualität nach Donabedian:", opts:["Patientenzufriedenheit","Pflegeprozess","Personal, Räume, Ausstattung","Dokumentation"], a:2, exp:"Strukturqualität = die Voraussetzungen für gute Pflege." },
+  { m:8, q:"Vorsorgevollmacht vs. Betreuungsverfügung:", opts:["Beide identisch","VV bevollmächtigt, BV äußert Wunsch","BV bindend, VV nicht","Nur Ärzte können ausstellen"], a:1, exp:"Vorsorgevollmacht = bindende Bevollmächtigung. Betreuungsverfügung = Wunsch." },
+  { m:8, q:"Wer prüft Pflegequalität in stationären Einrichtungen?", opts:["Bundesministerium","Landesgesundheitsamt","MDK","WHO"], a:2, exp:"Der MDK prüft Pflegequalität, Dokumentation und Hygiene." },
+  { m:8, q:"Im Notfall bezüglich Einwilligung:", opts:["Immer verboten","Nur Betreuer","Erlaubt nach mutmaßlichem Willen","Warten bis Einwilligung"], a:2, exp:"Im Notfall darf behandelt werden – mutmaßlicher Wille wird angenommen." },
+  { m:8, q:"DNQP-Expertenstandard gegen Druckgeschwüre:", opts:["Dekubitusprophylaxe","Sturzprophylaxe","Schmerzmanagement","Ernährungsmanagement"], a:0, exp:"Der DNQP-Expertenstandard Dekubitusprophylaxe definiert evidenzbasierte Maßnahmen." },
+  { m:9, q:"Typisch für Linksherzinsuffizienz:", opts:["Beinödeme + Aszites","Dyspnoe, Orthopnoe, Lungenödem","Hepatomegalie","Tachykardie"], a:1, exp:"Linksherzinsuffizienz → Rückstau in die Lunge → Dyspnoe, Lungenödem." },
+  { m:9, q:"AHA bei COPD bedeutet:", opts:["Atemstillstand, Hustenanfall, Atemnot","Auswurf, Husten, Atemnot","Arrhythmie, Hypertonie, Atemnot","Apnoe, Hypoxie, Azidose"], a:1, exp:"AHA = Auswurf, Husten, Atemnot – Leitsymptom-Trio der COPD." },
+  { m:9, q:"Asthma vs. COPD:", opts:["Asthma nur Kinder","COPD reversibel","Asthma reversibel, COPD irreversibel","Beide identisch"], a:2, exp:"Asthma = reversibel. COPD = irreversibel, chronisch progredient." },
+  { m:9, q:"Hypoglykämie beginnt ab BZ:", opts:["< 100 mg/dl","< 80 mg/dl","< 70 mg/dl","< 50 mg/dl"], a:2, exp:"Hypoglykämie = BZ < 70 mg/dl – sofortige Behandlung erforderlich." },
+  { m:9, q:"FAST-Test beim Schlaganfall:", opts:["Face, Arms, Speech, Time","Fieber, Atemnot, Schwindel, Tachykardie","Funktion, Augen, Sprache, Therapie","Frequenz, Arterien, Sensibilität, Test"], a:0, exp:"FAST = Face, Arms, Speech, Time to call 112." },
+  { m:9, q:"Parkinson-Ruhetremor wird beschrieben als:", opts:["Rigor","Akinese","Pillendreher","Posturale Instabilität"], a:2, exp:"Der Ruhetremor bei Parkinson wird als 'Pillendreher' beschrieben." },
+  { m:9, q:"Diabetes Typ 1 benötigt immer:", opts:["Nur Diät","Orale Antidiabetika","Insulin lebenslang","Keine Therapie"], a:2, exp:"Diabetes Typ 1 = absoluter Insulinmangel → lebenslange Insulintherapie." },
+  { m:9, q:"Morgensteifigkeit > 1h ist typisch für:", opts:["Arthrose","Rheumatoide Arthritis","Osteoporose","Gicht"], a:1, exp:"Rheumatoide Arthritis: Morgensteifigkeit > 1h. Arthrose: < 30 min." },
+  { m:9, q:"Dialyse bei GFR:", opts:["< 60 ml/min","< 45 ml/min","< 30 ml/min","< 15 ml/min"], a:3, exp:"Stadium 5 (GFR < 15 ml/min) = terminales Nierenversagen → Dialyse indiziert." },
+  { m:9, q:"Nicht typisch für Herzinfarkt:", opts:["Vernichtungsschmerz","Ausstrahlung linker Arm","Starker Kopfschmerz + Nackensteifigkeit","Kaltschweißigkeit"], a:2, exp:"Kopfschmerz + Nackensteifigkeit → Meningitis/Subarachnoidalblutung, nicht Infarkt." },
+  { m:10, q:"Granulationsgewebe bildet sich in:", opts:["Hämostase","Inflammationsphase","Proliferationsphase","Reparationsphase"], a:2, exp:"Proliferationsphase (5–21 Tage): Granulationsgewebe + Angiogenese." },
+  { m:10, q:"E im BIGE-Schema:", opts:["Entzündung","Epithelisierung","Exsudat","Erhebung"], a:2, exp:"E = Exsudat: Menge, Farbe und Konsistenz der Wundflüssigkeit." },
+  { m:10, q:"Wundauflage bei stark exsudierenden Wunden:", opts:["Transparentfolie","Hydrokolloid","Alginate","Hydrogel"], a:2, exp:"Alginate haben sehr hohe Absorptionskapazität – ideal bei stark exsudierend." },
+  { m:10, q:"Wunde gilt als chronisch ab:", opts:["2 Wochen","4 Wochen","8 Wochen","6 Monaten"], a:2, exp:"Chronisch = nach 8 Wochen trotz adäquater Therapie nicht abgeheilt." },
+  { m:10, q:"T im TIME-Prinzip:", opts:["Temperatur messen","Tissue – Débridement","Therapie dokumentieren","Tamponade"], a:1, exp:"T = Tissue Management: Wundgrund durch Débridement vorbereiten." },
+  { m:10, q:"Typischerweise schmerzlose Wunde:", opts:["Ulcus arteriosum","Ulcus venosum","Diabetisches Fußulkus","Dekubitus Grad 3"], a:2, exp:"Diabetisches Fußulkus: Neuropathie führt zur Schmerzlosigkeit." },
+  { m:10, q:"Goldstandard der Wundversorgung:", opts:["Trockene Versorgung","Alkohol","Feuchte Wundversorgung","Tägl. Wechsel mit Gaze"], a:2, exp:"Feuchte Wundversorgung fördert Zellmigration und beschleunigt Heilung." },
+  { m:10, q:"Wundreinigung erfolgt mit:", opts:["Wasserstoffperoxid","Alkohol 70%","NaCl 0,9% oder Ringerlösung","Jodlösung"], a:2, exp:"NaCl 0,9% oder Ringerlösung sind zellschonend und isoton." },
+  { m:10, q:"Biochirurgisches Débridement nutzt:", opts:["Enzymatische Salben","Skalpell","Fliegenmaden","Spülung"], a:2, exp:"Madentherapie: Fliegenlarven bauen Nekrosen selektiv ab." },
+  { m:10, q:"Ulcus cruris venosum – Lokalisation:", opts:["Fußsohle","Ferse","Innenknöchel","Zehen"], a:2, exp:"Ulcus cruris venosum entsteht am Innenknöchel durch venöse Insuffizienz." },
+];
+
+// State
+let currentQuestions = [];
+let currentIdx = 0;
+let score = 0;
+let totalScore = 0;
+let correct = 0;
+let wrong = 0;
+let answered = false;
+let currentModule = null;
+let completedModules = new Set();
+
+// Build module grid
+function buildModuleGrid() {
+  const grid = document.getElementById('modules-grid');
+  grid.innerHTML = '';
+  MODULES.forEach(mod => {
+    const count = ALL_QUESTIONS.filter(q => q.m === mod.id).length;
+    const done = completedModules.has(mod.id);
+    const card = document.createElement('div');
+    card.className = 'module-card' + (done ? ' done' : '');
+    card.innerHTML = `
+      ${done ? '<span class="mod-check">✓</span>' : ''}
+      <div class="mod-num">Modul ${String(mod.id).padStart(2,'0')}</div>
+      <div class="mod-name">${mod.icon} ${mod.name}</div>
+      <div class="mod-count">${count} Fragen</div>
+    `;
+    card.onclick = () => startQuiz(mod.id);
+    grid.appendChild(card);
+  });
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startQuiz(modId) {
+  currentModule = modId;
+  correct = 0; wrong = 0; answered = false;
+  currentQuestions = shuffle(modId === 'all'
+    ? ALL_QUESTIONS
+    : ALL_QUESTIONS.filter(q => q.m === modId)
+  );
+  currentIdx = 0;
+  show('screen-quiz');
+  showQuestion();
+}
+
+function showQuestion() {
+  const q = currentQuestions[currentIdx];
+  const total = currentQuestions.length;
+  answered = false;
+
+  document.getElementById('q-counter').textContent = `Frage ${currentIdx + 1} / ${total}`;
+  const mod = MODULES.find(m => m.id === q.m);
+  document.getElementById('q-module-label').textContent = mod ? mod.name : '';
+  document.getElementById('q-tag').textContent = mod ? `${mod.icon} Modul ${String(q.m).padStart(2,'0')}` : '';
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('progress-fill').style.width = `${(currentIdx / total) * 100}%`;
+
+  const exp = document.getElementById('q-explanation');
+  exp.classList.remove('show');
+  exp.innerHTML = '';
+
+  const container = document.getElementById('options-container');
+  container.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('div');
+    btn.className = 'option';
+    btn.innerHTML = `<div class="opt-letter">${letters[i]}</div><span>${opt}</span>`;
+    btn.onclick = () => selectAnswer(i, q.a, q.exp);
+    container.appendChild(btn);
+  });
+
+  const btnNext = document.getElementById('btn-next');
+  btnNext.classList.remove('show');
+  btnNext.textContent = currentIdx < currentQuestions.length - 1 ? 'Weiter →' : 'Ergebnis anzeigen 🎯';
+}
+
+function selectAnswer(chosen, correct_idx, explanation) {
+  if (answered) return;
+  answered = true;
+
+  const options = document.querySelectorAll('.option');
+  options.forEach((opt, i) => {
+    opt.classList.add('disabled');
+    if (i === correct_idx) opt.classList.add('correct');
+    else if (i === chosen) opt.classList.add('wrong');
+  });
+
+  const exp = document.getElementById('q-explanation');
+  exp.innerHTML = `<strong>✅ Erklärung:</strong> ${explanation}`;
+  exp.classList.add('show');
+
+  if (chosen === correct_idx) {
+    correct++;
+    totalScore += 10;
+    document.getElementById('total-score').textContent = totalScore;
+  } else {
+    wrong++;
+  }
+
+  document.getElementById('btn-next').classList.add('show');
+}
+
+function nextQuestion() {
+  currentIdx++;
+  if (currentIdx >= currentQuestions.length) {
+    showResults();
+  } else {
+    showQuestion();
+  }
+}
+
+function showResults() {
+  if (currentModule !== 'all') completedModules.add(currentModule);
+
+  const total = currentQuestions.length;
+  const pct = Math.round((correct / total) * 100);
+
+  let icon, title;
+  if (pct >= 90) { icon = '🏆'; title = 'Ausgezeichnet!'; }
+  else if (pct >= 75) { icon = '🎉'; title = 'Sehr gut!'; }
+  else if (pct >= 60) { icon = '👍'; title = 'Gut gemacht!'; }
+  else if (pct >= 40) { icon = '📚'; title = 'Weiter üben!'; }
+  else { icon = '💪'; title = 'Nicht aufgeben!'; }
+
+  document.getElementById('result-icon').textContent = icon;
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-score').textContent =
+    `Du hast ${correct} von ${total} Fragen richtig beantwortet`;
+  document.getElementById('score-num').textContent = pct + '%';
+  document.getElementById('score-circle').style.setProperty('--pct', pct);
+  document.getElementById('rb-correct').textContent = `✓ ${correct} richtig`;
+  document.getElementById('rb-wrong').textContent = `✗ ${wrong} falsch`;
+
+  const mod = currentModule === 'all' ? null : MODULES.find(m => m.id === currentModule);
+  document.getElementById('btn-retry').textContent = currentModule === 'all'
+    ? '🔁 Alle nochmal' : `🔁 ${mod?.icon || ''} Nochmal`;
+
+  show('screen-results');
+  buildModuleGrid();
+}
+
+function retryQuiz() { startQuiz(currentModule); }
+function goHome() { show('screen-home'); buildModuleGrid(); }
+
+function show(id) {
+  ['screen-home','screen-quiz','screen-results'].forEach(s => {
+    const el = document.getElementById(s);
+    el.style.display = 'none';
+  });
+  const target = document.getElementById(id);
+  target.style.display = 'block';
+  target.style.animation = 'none';
+  target.offsetHeight;
+  target.style.animation = '';
+}
+
+// Init
+buildModuleGrid();
+</script>
+</body>
+</html>
