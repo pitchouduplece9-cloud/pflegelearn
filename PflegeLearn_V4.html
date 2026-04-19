@@ -2,6 +2,39 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
+  <!-- ═══ PWA META TAGS ═══ -->
+  <meta name="application-name" content="PflegeLearn">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="PflegeLearn">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0d9488">
+  <meta name="msapplication-TileColor" content="#0f172a">
+  <meta name="msapplication-TileImage" content="icons/icon-144x144.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+  
+  <!-- Apple Touch Icons -->
+  <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192x192.png">
+  <link rel="apple-touch-icon" sizes="167x167" href="icons/icon-192x192.png">
+  
+  <!-- Splash screens iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/icon-72x72.png">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="PflegeLearn – Smarter lernen für die Pflege">
+  <meta property="og:description" content="1100 Lernkarten · 500 QCM · Videos · PflBG 2020">
+  <meta property="og:image" content="icons/icon-512x512.png">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PflegeLearn V4 – Vollständige Lernplattform</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -133,6 +166,68 @@ header{display:flex;align-items:center;justify-content:space-between;padding:1re
 .resval{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;}
 .reslbl{font-size:.68rem;color:rgba(255,255,255,.38);margin-top:.15rem;}
 @media(max-width:540px){.grid,.vgrid,.igrid{grid-template-columns:1fr;}}
+
+/* ═══ MOBILE PWA OPTIMIZATIONS ═══ */
+@media(max-width:480px){
+  body { -webkit-tap-highlight-color: transparent; }
+  .app { padding-bottom: 80px; } /* space for bottom nav */
+  .header { padding: env(safe-area-inset-top,0) 1rem .75rem; height:auto; }
+  .card { touch-action: manipulation; cursor: pointer; min-height: 160px; }
+  .nb { font-size:.72rem; padding:.55rem .5rem; flex:1; }
+  .nav { position:fixed; bottom:0; left:0; right:0; z-index:50;
+    background:rgba(15,23,42,.97); backdrop-filter:blur(20px);
+    border-top:1px solid rgba(255,255,255,.08);
+    padding: .5rem .5rem env(safe-area-inset-bottom,.5rem);
+    display:flex; gap:.25rem; }
+  .screen { padding-bottom: 100px !important; }
+  .sec-title { font-size:1.6rem; }
+  .pbtn { padding:.6rem 1rem; font-size:.82rem; }
+  .controls { gap:.5rem; }
+  .filt { font-size:.72rem; padding:.35rem .65rem; }
+  .search { font-size:.88rem; }
+  .grid { grid-template-columns: 1fr 1fr !important; gap:.65rem; }
+  .card .front, .card .back { padding:1rem; }
+  .ct { font-size:.62rem; }
+  .cq { font-size:.88rem; line-height:1.4; }
+  .ca { font-size:.8rem; }
+  .ck { font-size:.68rem; }
+  .igrid { grid-template-columns:1fr !important; }
+  .vgrid { grid-template-columns:1fr !important; }
+  .mod-filters { gap:.3rem !important; }
+  .mod-filters button { font-size:.68rem !important; padding:.25rem .55rem !important; }
+}
+@media(max-width:360px){
+  .grid { grid-template-columns: 1fr !important; }
+  .nb { font-size:.65rem; padding:.5rem .3rem; }
+}
+
+/* PWA standalone mode */
+.pwa-mode .nav {
+  padding-bottom: env(safe-area-inset-bottom, 8px);
+}
+.pwa-mode .app {
+  min-height: 100dvh;
+}
+
+/* Smooth scrolling + momentum on iOS */
+.screen {
+  -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
+}
+
+/* Prevent text selection on cards */
+.card { user-select: none; -webkit-user-select: none; }
+
+/* Haptic-like visual feedback */
+.card:active { transform: scale(0.97) !important; }
+.nb:active, .filt:active, .pbtn:active { opacity: 0.7; }
+
+/* Install banner animation */
+@keyframes slideUp {
+  from { transform: translateX(-50%) translateY(100px); opacity:0; }
+  to { transform: translateX(-50%) translateY(0); opacity:1; }
+}
+
 </style>
 </head>
 <body>
@@ -1406,5 +1501,141 @@ function resetExam(){clearInterval(st.tiv);document.getElementById('esetup').sty
 // INIT
 render();
 </script>
+
+  <!-- ═══ PWA SERVICE WORKER REGISTRATION ═══ -->
+  <script>
+  (function() {
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+          .then(function(reg) {
+            console.log('[PWA] SW registered:', reg.scope);
+            
+            // Check for updates
+            reg.addEventListener('updatefound', function() {
+              const newWorker = reg.installing;
+              newWorker.addEventListener('statechange', function() {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  showUpdateBanner();
+                }
+              });
+            });
+          })
+          .catch(function(err) { console.log('[PWA] SW registration failed:', err); });
+      });
+    }
+    
+    // Install prompt handling
+    let deferredPrompt;
+    let installBannerShown = false;
+    
+    window.addEventListener('beforeinstallprompt', function(e) {
+      e.preventDefault();
+      deferredPrompt = e;
+      
+      // Show install banner after 30 seconds if not installed
+      if (!installBannerShown && !localStorage.getItem('pwa-installed')) {
+        setTimeout(showInstallBanner, 30000);
+      }
+    });
+    
+    window.addEventListener('appinstalled', function() {
+      localStorage.setItem('pwa-installed', '1');
+      deferredPrompt = null;
+      hideInstallBanner();
+      showToast('✅ PflegeLearn erfolgreich installiert!');
+    });
+    
+    function showInstallBanner() {
+      if (installBannerShown || document.getElementById('install-banner')) return;
+      installBannerShown = true;
+      
+      const banner = document.createElement('div');
+      banner.id = 'install-banner';
+      banner.style.cssText = `
+        position:fixed; bottom:80px; left:50%; transform:translateX(-50%);
+        background:linear-gradient(135deg,#0f766e,#0d9488); color:white;
+        padding:.85rem 1.5rem; border-radius:16px; z-index:9999;
+        display:flex; align-items:center; gap:.85rem; max-width:340px; width:90%;
+        box-shadow:0 8px 32px rgba(13,148,136,.5); font-family:'DM Sans',sans-serif;
+        animation: slideUp .4s ease;
+      `;
+      banner.innerHTML = `
+        <div style="font-size:1.6rem">📱</div>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:.88rem">App installieren</div>
+          <div style="font-size:.75rem;opacity:.8">Schneller Zugriff & Offline-Lernen</div>
+        </div>
+        <button onclick="installPWA()" style="background:white;color:#0d9488;border:none;
+          padding:.4rem .85rem;border-radius:999px;font-weight:800;cursor:pointer;
+          font-size:.8rem;white-space:nowrap">Installieren</button>
+        <button onclick="hideInstallBanner()" style="background:rgba(255,255,255,.2);
+          color:white;border:none;padding:.3rem .5rem;border-radius:8px;cursor:pointer;
+          font-size:.9rem">✕</button>
+      `;
+      document.body.appendChild(banner);
+      
+      // Auto-hide after 10s
+      setTimeout(hideInstallBanner, 10000);
+    }
+    
+    window.installPWA = function() {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(function(result) {
+        if (result.outcome === 'accepted') {
+          showToast('✅ Installation gestartet...');
+        }
+        deferredPrompt = null;
+        hideInstallBanner();
+      });
+    };
+    
+    window.hideInstallBanner = function() {
+      const b = document.getElementById('install-banner');
+      if (b) { b.style.animation='slideDown .3s ease'; setTimeout(()=>b.remove(),300); }
+    };
+    
+    function showUpdateBanner() {
+      const banner = document.createElement('div');
+      banner.style.cssText = `position:fixed;top:0;left:0;right:0;background:#f59e0b;
+        color:#0f172a;padding:.6rem;text-align:center;z-index:9999;
+        font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:700;`;
+      banner.innerHTML = `🔄 Neue Version verfügbar! <button onclick="location.reload()" 
+        style="background:#0f172a;color:white;border:none;padding:.2rem .7rem;
+        border-radius:999px;cursor:pointer;margin-left:.5rem;font-weight:700">Aktualisieren</button>`;
+      document.body.prepend(banner);
+    }
+    
+    function showToast(msg) {
+      const t = document.createElement('div');
+      t.style.cssText = `position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+        background:rgba(15,23,42,.95);color:white;padding:.6rem 1.2rem;border-radius:999px;
+        z-index:9999;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;
+        border:1px solid rgba(13,148,136,.4);`;
+      t.textContent = msg;
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 3000);
+    }
+    
+    // Detect standalone mode
+    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+      document.documentElement.classList.add('pwa-mode');
+      console.log('[PWA] Running as installed app');
+    }
+    
+    // Add CSS animations
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideUp { from { transform:translateX(-50%) translateY(100px); opacity:0; } to { transform:translateX(-50%) translateY(0); opacity:1; } }
+      @keyframes slideDown { from { transform:translateX(-50%) translateY(0); opacity:1; } to { transform:translateX(-50%) translateY(100px); opacity:0; } }
+      .pwa-mode header { padding-top: env(safe-area-inset-top); }
+      .pwa-mode .app { padding-bottom: env(safe-area-inset-bottom); }
+    `;
+    document.head.appendChild(style);
+  })();
+  </script>
+
 </body>
 </html>
