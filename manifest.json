@@ -2,98 +2,82 @@
   "name": "PflegeLearn – Pflegeausbildung",
   "short_name": "PflegeLearn",
   "description": "Lernkarten · QCM · Videos · PflBG 2020",
-  "start_url": "/PflegeLearn_V4.html",
-  "scope": "/",
+  "start_url": "https://pflegelearn-woad.vercel.app/PflegeLearn_V4.html",
+  "scope": "https://pflegelearn-woad.vercel.app/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0f172a",
   "theme_color": "#0d9488",
   "lang": "de",
-  "categories": [
-    "education",
-    "medical"
-  ],
   "icons": [
     {
-      "src": "icons/icon-72x72.png",
+      "src": "https://pflegelearn-woad.vercel.app/icons/icon-72x72.png",
       "sizes": "72x72",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icons/icon-96x96.png",
+      "src": "https://pflegelearn-woad.vercel.app/icons/icon-96x96.png",
       "sizes": "96x96",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icons/icon-128x128.png",
+      "src": "https://pflegelearn-woad.vercel.app/icons/icon-128x128.png",
       "sizes": "128x128",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icons/icon-144x144.png",
+      "src": "https://pflegelearn-woad.vercel.app/icons/icon-144x144.png",
       "sizes": "144x144",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icons/icon-152x152.png",
+      "src": "https://pflegelearn-woad.vercel.app/icons/icon-152x152.png",
       "sizes": "152x152",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icons/icon-192x192.png",
+      "src": "https://pflegelearn-woad.vercel.app/icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
-      "src": "icons/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "icons/icon-384x384.png",
+      "src": "https://pflegelearn-woad.vercel.app/icons/icon-384x384.png",
       "sizes": "384x384",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icons/icon-512x512.png",
+      "src": "https://pflegelearn-woad.vercel.app/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icons/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     }
   ],
   "shortcuts": [
     {
       "name": "Lernkarten",
       "short_name": "Karten",
-      "url": "/PflegeLearn_V4.html",
+      "url": "https://pflegelearn-woad.vercel.app/PflegeLearn_V4.html",
       "icons": [
         {
-          "src": "icons/icon-96x96.png",
+          "src": "https://pflegelearn-woad.vercel.app/icons/icon-96x96.png",
           "sizes": "96x96"
         }
       ]
     },
     {
-      "name": "Prüfung starten",
+      "name": "Prüfung",
       "short_name": "Prüfung",
-      "url": "/PflegeLearn_V4.html#exam",
+      "url": "https://pflegelearn-woad.vercel.app/PflegeLearn_V4.html#exam",
       "icons": [
         {
-          "src": "icons/icon-96x96.png",
+          "src": "https://pflegelearn-woad.vercel.app/icons/icon-96x96.png",
           "sizes": "96x96"
         }
       ]
