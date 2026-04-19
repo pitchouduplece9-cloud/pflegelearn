@@ -165,6 +165,19 @@ header{display:flex;align-items:center;justify-content:space-between;padding:1re
       <button class="filt" data-f="f">🔥 Fortgeschritten</button>
       <button class="filt" data-f="e">💎 Experte</button>
     </div>
+    <div class="mod-filters" id="modfilt" style="display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.6rem;">
+      <button class="filt on" data-m="0" onclick="st.mod=0;document.querySelectorAll('.mod-filt-btn').forEach(function(x){x.classList.remove('on')});this.classList.add('on');st.page=0;render();" style="font-size:.72rem;padding:.3rem .7rem">📚 Alle Module</button>
+      <button class="filt mod-filt-btn" data-m="1" onclick="st.mod=1;document.querySelectorAll('[data-m]').forEach(function(x){x.classList.remove('on')});this.classList.add('on');st.page=0;render();" style="font-size:.72rem;padding:.3rem .7rem">📋 M01</button>
+      <button class="filt mod-filt-btn" data-m="2" onclick="st.mod=2;document.querySelectorAll('[data-m]').forEach(function(x){x.classList.remove('on')});this.classList.add('on');st.page=0;render();" style="font-size:.72rem;padding:.3rem .7rem">🫀 M02</button>
+      <button class="filt mod-filt-btn" data-m="3" onclick="st.mod=3;document.querySelectorAll('[data-m]').forEach(function(x){x.classList.remove('on')});this.classList.add('on');st.page=0;render();" style="font-size:.72rem;padding:.3rem .7rem">💊 M03</button>
+      <button class="filt mod-filt-btn" data-m="4" onclick="st.mod=4;document.querySelectorAll('[data-m]').forEach(function(x){x.classList.remove('on')});this.classList.add('on');st.page=0;render();" style="font-size:.72rem;padding:.3rem .7rem">🍽 M04</button>
+      <button class="filt mod-filt-btn" data-m="5" onclick="st.mod=5;document.querySelectorAll('[data-m]').forEach(function(x){x.classList.remove('on')});this.classList.add('on');st.page=0;render();" style="font-size:.72rem;padding:.3rem .7rem">🦴 M05</button>
+      <button class="filt mod-filt-btn" data-m="6" onclick="st.mod=6;document.querySelectorAll('[data-m]').forEach(function(x){x.classList.remove('on')});this.classList.add('on');st.page=0;render();" style="font-size:.72rem;padding:.3rem .7rem">🧠 M06</button>
+      <button class="filt mod-filt-btn" data-m="7" onclick="st.mod=7;document.querySelectorAll('[data-m]').forEach(function(x){x.classList.remove('on')});this.classList.add('on');st.page=0;render();" style="font-size:.72rem;padding:.3rem .7rem">👶 M07</button>
+      <button class="filt mod-filt-btn" data-m="8" onclick="st.mod=8;document.querySelectorAll('[data-m]').forEach(function(x){x.classList.remove('on')});this.classList.add('on');st.page=0;render();" style="font-size:.72rem;padding:.3rem .7rem">⚖ M08</button>
+      <button class="filt mod-filt-btn" data-m="9" onclick="st.mod=9;document.querySelectorAll('[data-m]').forEach(function(x){x.classList.remove('on')});this.classList.add('on');st.page=0;render();" style="font-size:.72rem;padding:.3rem .7rem">🏥 M09</button>
+      <button class="filt mod-filt-btn" data-m="10" onclick="st.mod=10;document.querySelectorAll('[data-m]').forEach(function(x){x.classList.remove('on')});this.classList.add('on');st.page=0;render();" style="font-size:.72rem;padding:.3rem .7rem">🩹 M10</button>
+    </div>
   </div>
   <div class="grid" id="lg"></div>
   <div class="pages">
@@ -426,7 +439,7 @@ var FMTS=[
 ];
 
 // ══════════ STATE ══════════
-var st={filter:'all',page:0,per:12,search:'',score:0,
+var st={filter:'all',mod:0,page:0,per:12,search:'',score:0,
   fmt:FMTS[0],eqs:[],eidx:0,escore:0,ecorrect:0,eans:[],tiv:null,tleft:0};
 
 // ══════════ NAVIGATION ══════════
@@ -490,6 +503,7 @@ function addLockToCard(cardEl, modId) {
 
 function filtered(){
   var c=CARDS;
+  if(st.mod>0) c=c.filter(function(x){return x.m===st.mod;});
   if(st.filter!=='all') c=c.filter(function(x){return x.n===st.filter;});
   if(st.search) c=c.filter(function(x){return x.t.toLowerCase().indexOf(st.search)>=0||x.q.toLowerCase().indexOf(st.search)>=0;});
   return c;
@@ -659,6 +673,29 @@ function showRes(){
     '<div class="resstat"><div class="resval" style="color:var(--gold)">'+Math.floor(el/60)+'min</div><div class="reslbl">Zeit</div></div>';
 }
 function resetExam(){clearInterval(st.tiv);document.getElementById('esetup').style.display='block';document.getElementById('erun').style.display='none';document.getElementById('eres').style.display='none';}
+
+
+// URL PARAMETER HANDLER — from landing page module clicks
+(function(){
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var modParam = params.get('mod');
+    if (modParam) {
+      var modId = parseInt(modParam);
+      if (modId >= 1 && modId <= 10) {
+        st.mod = modId;
+        // Highlight correct mod button
+        setTimeout(function(){
+          var btn = document.querySelector('[data-m="' + modId + '"]');
+          if (btn) {
+            document.querySelectorAll('[data-m]').forEach(function(x){x.classList.remove('on');});
+            btn.classList.add('on');
+          }
+        }, 100);
+      }
+    }
+  } catch(e) {}
+})();
 
 // INIT
 render();
