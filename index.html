@@ -53,7 +53,26 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,
 .hs-lbl{font-size:.72rem;color:rgba(255,255,255,.4);margin-top:.1rem;}
 
 /* Hero visual */
-.hero-visual{flex-shrink:0;width:340px;}
+.hero-visual{flex-shrink:0;width:360px;}
+/* NURSE ILLUSTRATION */
+.nurse-illus-wrap{position:relative;width:360px;height:430px;display:flex;align-items:center;justify-content:center;}
+.ni-orb{position:absolute;inset:8%;border-radius:50%;background:radial-gradient(circle at 40% 38%,rgba(13,148,136,.18) 0%,rgba(13,148,136,.06) 45%,transparent 70%);animation:niOrb 7s ease-in-out infinite;}
+@keyframes niOrb{0%,100%{transform:scale(1);}50%{transform:scale(1.04);}}
+.ni-ring{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(13,148,136,.14);animation:niSpin 30s linear infinite;}
+.ni-ring2{position:absolute;inset:5%;border-radius:50%;border:1px dashed rgba(245,158,11,.12);animation:niSpin 22s linear infinite reverse;}
+@keyframes niSpin{to{transform:rotate(360deg);}}
+.ni-svg{width:340px;height:400px;position:relative;z-index:2;}
+.ni-rot-badge{position:absolute;bottom:18%;right:2%;width:82px;height:82px;z-index:10;animation:niSpin 18s linear infinite;}
+.ni-rot-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1.9rem;}
+.ni-fc{position:absolute;background:rgba(15,23,42,.88);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:.6rem .85rem;display:flex;align-items:center;gap:.55rem;font-size:.72rem;font-weight:700;color:#fff;z-index:10;white-space:nowrap;box-shadow:0 6px 24px rgba(0,0,0,.3);}
+.ni-fc-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;}
+.ni-fc-main{font-size:.72rem;font-weight:700;}
+.ni-fc-sub{font-size:.62rem;color:rgba(255,255,255,.45);margin-top:.05rem;}
+.ni-fc1{top:12%;left:-10%;animation:niFloat1 4.5s ease-in-out infinite;}
+.ni-fc2{bottom:22%;left:-12%;animation:niFloat2 5.5s ease-in-out infinite;}
+@keyframes niFloat1{0%,100%{transform:translateY(0) rotate(-1deg);}50%{transform:translateY(-10px) rotate(1deg);}}
+@keyframes niFloat2{0%,100%{transform:translateY(0) rotate(1deg);}50%{transform:translateY(-8px) rotate(-1deg);}}
+
 .hv-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:1.25rem;backdrop-filter:blur(8px);}
 .hv-card+.hv-card{margin-top:.75rem;}
 .hv-tag{font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--tm);margin-bottom:.5rem;}
@@ -109,7 +128,7 @@ section{padding:5.5rem 6%;}
 .mod-sec .st{color:#fff;}
 .mod-sec .ss{color:rgba(255,255,255,.48);}
 .mod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(225px,1fr));gap:.85rem;margin-top:2.5rem;}
-.mod-pill{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:1rem 1.15rem;transition:.2s;cursor:pointer;color:inherit;}
+.mod-pill{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:1rem 1.15rem;transition:.2s;cursor:pointer;}
 .mod-pill:hover{background:rgba(13,148,136,.2);border-color:var(--t);}
 .mod-num{font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--tm);margin-bottom:.2rem;}
 .mod-name{font-size:.9rem;font-weight:600;color:#fff;margin-bottom:.3rem;}
@@ -257,7 +276,7 @@ footer{background:var(--ink);padding:3.5rem 6% 2rem;}
 
 <!-- NAV -->
 <nav>
-  <a class="nav-logo" href="index.html">Pflege<span>Learn</span></a>
+  <a class="nav-logo" href="#">Pflege<span>Learn</span></a>
   <div class="nav-links">
     <a href="#features">Funktionen</a>
     <a href="#module">Module</a>
@@ -265,7 +284,7 @@ footer{background:var(--ink);padding:3.5rem 6% 2rem;}
     <a href="#preise">Preise</a>
     <a href="#faq">FAQ</a>
   </div>
-  <a class="nav-cta" href="PflegeLearn_Auth.html">Kostenlos starten</a>
+  <a class="nav-cta" href="PflegeLearn_Auth.html">Jetzt starten</a>
   <button class="nav-mobile-btn" onclick="document.querySelector('.nav-links').style.display='flex';document.querySelector('.nav-links').style.flexDirection='column'">☰</button>
 </nav>
 
@@ -278,8 +297,8 @@ footer{background:var(--ink);padding:3.5rem 6% 2rem;}
       <h1>Lern smarter.<br>Besteh <em>besser.</em></h1>
       <p class="hero-sub">Die erste Lernplattform vollständig auf den deutschen Pflegelehrplan abgestimmt – 500 QCM, 1 100 Lernkarten, 58 Videos und 300 Infografiken.</p>
       <div class="hero-btns">
-        <a class="btn-hero-p" href="PflegeLearn_Auth.html">🚀 Kostenlos starten</a>
-        <a class="btn-hero-g" href="PflegeLearn_V4.html">Demo ansehen →</a>
+        <a class="btn-hero-p" href="#preise">🚀 Lernreise beginnen</a>
+        <a class="btn-hero-g" href="#demo">Demo ansehen →</a>
       </div>
       <div class="hero-stats">
         <div class="hs"><span class="hs-num">500+</span><span class="hs-lbl">QCM-Fragen</span></div>
@@ -289,16 +308,72 @@ footer{background:var(--ink);padding:3.5rem 6% 2rem;}
       </div>
     </div>
     <div class="hero-visual">
-      <div class="hv-card">
-        <div class="hv-tag">❓ Modul 02 · Vitalzeichen</div>
-        <div class="hv-q">Ab welchem Wert spricht man von Hypertonie Grad I?</div>
-        <div class="hv-opts">
-          <div class="hv-opt">A) 120/80 mmHg</div>
-          <div class="hv-opt ok">B) 140/90 mmHg ✓</div>
-          <div class="hv-opt">C) 160/100 mmHg</div>
+      <div class="nurse-illus-wrap">
+        <div class="ni-orb"></div><div class="ni-ring"></div><div class="ni-ring2"></div>
+        <svg class="ni-svg" viewBox="0 0 340 400" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="ng" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#14b8a6" stop-opacity="0.18"/><stop offset="100%" stop-color="#14b8a6" stop-opacity="0"/></radialGradient>
+            <filter id="nsh"><feDropShadow dx="0" dy="5" stdDeviation="8" flood-color="rgba(0,0,0,0.35)"/></filter>
+          </defs>
+          <circle cx="170" cy="200" r="160" fill="url(#ng)"/>
+          <ellipse cx="170" cy="375" rx="85" ry="13" fill="rgba(13,148,136,0.2)"/>
+          <rect x="132" y="318" width="30" height="55" rx="10" fill="#0f766e"/><rect x="178" y="318" width="30" height="55" rx="10" fill="#0f766e"/>
+          <ellipse cx="147" cy="374" rx="22" ry="9" fill="#0f172a"/><ellipse cx="193" cy="374" rx="22" ry="9" fill="#0f172a"/>
+          <path d="M100 192 Q100 183 110 181 L155 176 L185 176 L220 181 Q230 183 230 192 L230 332 Q230 342 220 342 L110 342 Q100 342 100 332Z" fill="#0d9488"/>
+          <rect x="116" y="200" width="46" height="26" rx="6" fill="white" opacity="0.96" filter="url(#nsh)"/>
+          <text x="139" y="218" text-anchor="middle" font-family="Georgia,serif" font-size="9" font-weight="bold" fill="#0d9488">PL</text>
+          <rect x="192" y="206" width="28" height="22" rx="4" fill="rgba(255,255,255,0.13)"/>
+          <rect x="198" y="210" width="2.5" height="13" rx="1.5" fill="rgba(255,255,255,0.6)"/>
+          <rect x="203" y="210" width="2.5" height="13" rx="1.5" fill="rgba(245,158,11,0.75)"/>
+          <rect x="208" y="210" width="2.5" height="13" rx="1.5" fill="rgba(255,255,255,0.4)"/>
+          <path d="M100 200 Q78 215 70 255 Q66 268 75 274 Q85 279 91 264 Q99 243 114 228" fill="#f0bf90"/>
+          <path d="M230 200 Q252 215 260 255 Q264 268 255 274 Q245 279 239 264 Q231 243 216 228" fill="#f0bf90"/>
+          <g transform="translate(250,252) rotate(-16)">
+            <rect x="-24" y="-34" width="48" height="40" rx="5" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.8" filter="url(#nsh)"/>
+            <rect x="-24" y="-34" width="48" height="10" rx="5" fill="#f59e0b"/>
+            <text x="0" y="-21" text-anchor="middle" font-size="5.5" font-weight="800" fill="white" font-family="sans-serif" letter-spacing="0.8">DIPLOMA</text>
+            <line x1="-16" y1="-14" x2="16" y2="-14" stroke="#f59e0b" stroke-width="1.2" opacity="0.4"/>
+            <line x1="-16" y1="-7" x2="12" y2="-7" stroke="#f59e0b" stroke-width="1.2" opacity="0.4"/>
+            <circle cx="10" cy="8" r="9" fill="#f59e0b"/>
+            <text x="10" y="12" text-anchor="middle" font-size="9" fill="white">&#x2713;</text>
+            <polygon points="-4,19 0,14 4,19" fill="#f59e0b"/>
+            <rect x="-2" y="19" width="4" height="11" fill="#f59e0b"/>
+          </g>
+          <path d="M114 215 Q96 232 94 258 Q92 270 101 274 Q110 278 116 265 Q122 250 118 236" stroke="#0f172a" stroke-width="3.8" fill="none" stroke-linecap="round"/>
+          <path d="M118 236 Q132 242 144 235" stroke="#0f172a" stroke-width="3.8" fill="none" stroke-linecap="round"/>
+          <circle cx="144" cy="233" r="10" fill="#0f172a"/><circle cx="144" cy="233" r="5.5" fill="#14b8a6"/>
+          <rect x="156" y="158" width="28" height="36" rx="9" fill="#f0bf90"/>
+          <ellipse cx="170" cy="130" rx="42" ry="46" fill="#f0bf90" filter="url(#nsh)"/>
+          <path d="M128 122 Q130 77 170 75 Q210 77 212 122 Q206 96 190 91 Q175 87 162 89 Q143 93 134 108Z" fill="#2c1a0e"/>
+          <path d="M128 122 Q121 148 123 161 Q127 134 134 128Z" fill="#2c1a0e"/>
+          <path d="M212 122 Q219 148 217 161 Q213 134 206 128Z" fill="#2c1a0e"/>
+          <rect x="142" y="90" width="56" height="8" rx="4" fill="white" filter="url(#nsh)"/>
+          <path d="M132 100 Q148 91 170 89 Q192 91 208 100" fill="white"/>
+          <rect x="164" y="81" width="9" height="3" rx="1.5" fill="#ef4444"/>
+          <rect x="167" y="78" width="3" height="9" rx="1.5" fill="#ef4444"/>
+          <ellipse cx="157" cy="131" rx="7" ry="8" fill="white"/><ellipse cx="183" cy="131" rx="7" ry="8" fill="white"/>
+          <ellipse cx="158.5" cy="132" rx="5" ry="5.5" fill="#2c1a0e"/><ellipse cx="184.5" cy="132" rx="5" ry="5.5" fill="#2c1a0e"/>
+          <circle cx="160" cy="130" r="1.6" fill="white"/><circle cx="186" cy="130" r="1.6" fill="white"/>
+          <path d="M151 122 Q158 118 165 121" stroke="#2c1a0e" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M175 121 Q182 118 189 122" stroke="#2c1a0e" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <ellipse cx="150" cy="144" rx="9" ry="5.5" fill="#ffb5a0" opacity="0.35"/>
+          <ellipse cx="190" cy="144" rx="9" ry="5.5" fill="#ffb5a0" opacity="0.35"/>
+          <path d="M159 152 Q170 163 181 152" stroke="#c2856a" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <text x="265" y="215" font-size="14" fill="#f59e0b" opacity="0.85">&#x2736;</text>
+          <text x="248" y="194" font-size="8" fill="#14b8a6" opacity="0.7">&#x2736;</text>
+        </svg>
+        <div class="ni-rot-badge">
+          <svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+            <defs><path id="nict" d="M45,12 A33,33 0 0,1 45,78 A33,33 0 0,1 45,12"/></defs>
+            <circle cx="45" cy="45" r="40" fill="rgba(245,158,11,0.08)" stroke="rgba(245,158,11,0.35)" stroke-width="1.5" stroke-dasharray="3,4"/>
+            <text font-family="DM Sans,sans-serif" font-size="6.5" font-weight="700" fill="#f59e0b" letter-spacing="2.5"><textPath href="#nict">PFLEGEFACHKRAFT EXAMEN 2025</textPath></text>
+          </svg>
+          <div class="ni-rot-inner">&#x1F393;</div>
         </div>
-        <div class="hv-prog"><div class="hv-prog-f" style="width:72%"></div></div>
+        <div class="ni-fc ni-fc1"><div class="ni-fc-icon" style="background:rgba(13,148,136,.18)">&#x1F3AF;</div><div><div class="ni-fc-main">78% Bestehensquote</div><div class="ni-fc-sub">Durchschnitt unserer Nutzer</div></div></div>
+        <div class="ni-fc ni-fc2"><div class="ni-fc-icon" style="background:rgba(245,158,11,.18)">&#x1F3C6;</div><div><div class="ni-fc-main">PflBG 2020 konform</div><div class="ni-fc-sub">Icare + Pflege heute</div></div></div>
       </div>
+      
       <div class="hv-card">
         <div class="hv-tag">📊 Dein Fortschritt</div>
         <div class="hv-stats">
@@ -372,16 +447,16 @@ footer{background:var(--ink);padding:3.5rem 6% 2rem;}
     <h2 class="st">10 Module · <span>PflBG-vollständig</span></h2>
     <p class="ss">Alle Inhalte basieren auf dem offiziellen Rahmenlehrplan und der deutschen Fachliteratur.</p>
     <div class="mod-grid">
-      <a href="PflegeLearn_V4.html" style="text-decoration:none;display:block"><div class="mod-pill reveal"><div class="mod-num">Modul 01</div><div class="mod-name">📋 Grundlagen der Pflege</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
-      <a href="PflegeLearn_V4.html" style="text-decoration:none;display:block"><div class="mod-pill reveal"><div class="mod-num">Modul 02</div><div class="mod-name">🫀 Vitalzeichen & Beobachtung</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
-      <a href="PflegeLearn_V4.html" style="text-decoration:none;display:block"><div class="mod-pill reveal"><div class="mod-num">Modul 03</div><div class="mod-name">💊 Medikamente & Injektionen</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
-      <a href="PflegeLearn_V4.html" style="text-decoration:none;display:block"><div class="mod-pill reveal"><div class="mod-num">Modul 04</div><div class="mod-name">🍽️ Ernährung & Ausscheidung</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
-      <a href="PflegeLearn_V4.html" style="text-decoration:none;display:block"><div class="mod-pill reveal"><div class="mod-num">Modul 05</div><div class="mod-name">🦴 Mobilisation & Prävention</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
-      <a href="PflegeLearn_V4.html" style="text-decoration:none;display:block"><div class="mod-pill reveal"><div class="mod-num">Modul 06</div><div class="mod-name">🧠 Psychiatrie & Psychosoziales</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
-      <a href="PflegeLearn_V4.html" style="text-decoration:none;display:block"><div class="mod-pill reveal"><div class="mod-num">Modul 07</div><div class="mod-name">👶 Pflegebereiche spezifisch</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
-      <a href="PflegeLearn_V4.html" style="text-decoration:none;display:block"><div class="mod-pill reveal"><div class="mod-num">Modul 08</div><div class="mod-name">⚖️ Recht & Beruf</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
-      <a href="PflegeLearn_V4.html" style="text-decoration:none;display:block"><div class="mod-pill reveal"><div class="mod-num">Modul 09</div><div class="mod-name">🏥 Krankheitsbilder</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
-      <a href="PflegeLearn_V4.html" style="text-decoration:none;display:block"><div class="mod-pill reveal"><div class="mod-num">Modul 10</div><div class="mod-name">🩹 Wundversorgung</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
+      <div class="mod-pill reveal"><div class="mod-num">Modul 01</div><div class="mod-name">📋 Grundlagen der Pflege</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
+      <div class="mod-pill reveal"><div class="mod-num">Modul 02</div><div class="mod-name">🫀 Vitalzeichen & Beobachtung</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
+      <div class="mod-pill reveal"><div class="mod-num">Modul 03</div><div class="mod-name">💊 Medikamente & Injektionen</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
+      <div class="mod-pill reveal"><div class="mod-num">Modul 04</div><div class="mod-name">🍽️ Ernährung & Ausscheidung</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
+      <div class="mod-pill reveal"><div class="mod-num">Modul 05</div><div class="mod-name">🦴 Mobilisation & Prävention</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
+      <div class="mod-pill reveal"><div class="mod-num">Modul 06</div><div class="mod-name">🧠 Psychiatrie & Psychosoziales</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
+      <div class="mod-pill reveal"><div class="mod-num">Modul 07</div><div class="mod-name">👶 Pflegebereiche spezifisch</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
+      <div class="mod-pill reveal"><div class="mod-num">Modul 08</div><div class="mod-name">⚖️ Recht & Beruf</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
+      <div class="mod-pill reveal"><div class="mod-num">Modul 09</div><div class="mod-name">🏥 Krankheitsbilder</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
+      <div class="mod-pill reveal"><div class="mod-num">Modul 10</div><div class="mod-name">🩹 Wundversorgung</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
     </div>
   </div>
 </section>
@@ -473,9 +548,11 @@ footer{background:var(--ink);padding:3.5rem 6% 2rem;}
     <div class="sl center">Stimmen</div>
     <h2 class="st center">Was <span>Pflegeschüler</span> sagen</h2>
     <div class="testi-grid">
-      <div class="testi-card reveal"><div class="tc-stars">★★★★★</div><div class="tc-q">"</div><div class="tc-text">Endlich eine Plattform, die wirklich auf unseren deutschen Lehrplan abgestimmt ist. Die Erklärungen bei den QCM sind Gold wert.</div><div class="tc-author"><div class="tc-av">L</div><div><div class="tc-name">Georges P.</div><div class="tc-role">3. Ausbildungsjahr, München</div></div></div></a></div>
-      <div class="testi-card reveal"><div class="tc-stars">★★★★★</div><div class="tc-q">"</div><div class="tc-text">20 Minuten täglich in der U-Bahn statt 3 Stunden am Wochenende. Meine Noten haben sich deutlich verbessert. Die 3 Niveaus sind genau richtig.</div><div class="tc-author"><div class="tc-av">K</div><div><div class="tc-name">Kevin S.</div><div class="tc-role">2. Ausbildungsjahr, Hamburg</div></div></div></div>
-      <div class="testi-card reveal"><div class="tc-stars">★★★★★</div><div class="tc-q">"</div><div class="tc-text">Als Lehrkraft bin ich begeistert. Das Admin-Dashboard zeigt mir exakt welche Themen meine Klasse noch nicht beherrscht.</div><div class="tc-author"><div class="tc-av">S</div><div><div class="tc-name">Georges P.</div><div class="tc-role">Lehrkraft, Pflegeschule Wolfsburg</div></div></div></div>
+      <div class="testi-card reveal"><div class="tc-stars">★★★★★</div><div class="tc-q">"</div><div class="tc-text">Endlich eine Plattform, die wirklich auf unseren deutschen Lehrplan abgestimmt ist. Die Erklärungen bei den QCM sind Gold wert.</div><div class="tc-author"><div class="tc-av" style="background:#0d9488">M</div><div><div class="tc-name">Manuella D.</div><div class="tc-role">3. Ausbildungsjahr · Berlin</div></div></div></div>
+      <div class="testi-card reveal"><div class="tc-stars">★★★★★</div><div class="tc-q">"</div><div class="tc-text">20 Minuten täglich in der U-Bahn statt 3 Stunden am Wochenende. Meine Noten haben sich deutlich verbessert — der Prüfungssimulator ist einfach genial!</div><div class="tc-author"><div class="tc-av" style="background:#8b5cf6">F</div><div><div class="tc-name">Felix K.</div><div class="tc-role">2. Ausbildungsjahr · Hamburg</div></div></div></div>
+      <div class="testi-card reveal"><div class="tc-stars">★★★★★</div><div class="tc-q">"</div><div class="tc-text">Als Lehrkraft bin ich begeistert. Die Inhalte basieren auf Icare und Pflege heute — das Admin-Dashboard zeigt mir genau, welche Themen meine Azubis noch üben müssen.</div><div class="tc-author"><div class="tc-av" style="background:#0ea5e9">S</div><div><div class="tc-name">Sabine M.</div><div class="tc-role">Pflegepädagogin · Pflegeschule Wolfsburg</div></div></div></div>
+      <div class="testi-card reveal"><div class="tc-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><div class="tc-q">&ldquo;</div><div class="tc-text">Ich habe die schriftliche Abschlusspruefung beim ersten Versuch bestanden. Der Streak hat mich motiviert, jeden Tag dranzubleiben - auch an stressigen Schichttagen.</div><div class="tc-author"><div class="tc-av" style="background:#10b981">T</div><div><div class="tc-name">Thomas B.</div><div class="tc-role">Examinierter Pflegefachmann &middot; Koeln</div></div></div></div>
+      <div class="testi-card reveal"><div class="tc-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><div class="tc-q">&ldquo;</div><div class="tc-text">Die Videos mit Storyboard haben mir geholfen, Injektionstechniken wirklich zu verstehen. Alles auf Deutsch und pruefungsrelevant - besser geht es nicht!</div><div class="tc-author"><div class="tc-av" style="background:#e11d48">J</div><div><div class="tc-name">Jana R.</div><div class="tc-role">2. Ausbildungsjahr &middot; Frankfurt</div></div></div></div>
     </div>
   </div>
 </section>
@@ -490,14 +567,14 @@ footer{background:var(--ink);padding:3.5rem 6% 2rem;}
       <div class="price-card reveal">
         <div class="pc-name">Free</div>
         <div class="pc-price">0€</div>
-        <div class="pc-per">für immer kostenlos</div>
+        <div class="pc-per">Einstieg &amp; Orientierung</div>
         <ul class="pc-feats">
           <li>2 Module freigeschaltet</li>
           <li>50 QCM-Fragen</li>
           <li>20 Lernkarten</li>
           <li>Basis-Dashboard</li>
         </ul>
-        <a class="pc-btn outline" href="PflegeLearn_Auth.html" style="display:block;text-align:center;text-decoration:none;">Kostenlos starten</a>
+        <button class="pc-btn outline">Kostenlos starten</button>
       </div>
       <div class="price-card featured reveal">
         <div class="pc-badge">⭐ Beliebt</div>
@@ -512,7 +589,7 @@ footer{background:var(--ink);padding:3.5rem 6% 2rem;}
           <li>Prüfungssimulator</li>
           <li>App iOS & Android</li>
         </ul>
-        <a class="pc-btn white" href="PflegeLearn_Auth.html" style="display:block;text-align:center;text-decoration:none;">Jetzt abonnieren</a>
+        <button class="pc-btn white">Jetzt abonnieren</button>
       </div>
       <div class="price-card reveal">
         <div class="pc-name">Schule / B2B</div>
@@ -525,7 +602,7 @@ footer{background:var(--ink);padding:3.5rem 6% 2rem;}
           <li>Dedizierter Support</li>
           <li>Onboarding inklusive</li>
         </ul>
-        <a class="pc-btn dark" href="mailto:georges@pflegelearn.de" style="display:block;text-align:center;text-decoration:none;">Kontakt aufnehmen</a>
+        <button class="pc-btn dark">Kontakt aufnehmen</button>
       </div>
     </div>
   </div>
@@ -552,10 +629,10 @@ footer{background:var(--ink);padding:3.5rem 6% 2rem;}
   <div class="cta-orb"></div>
   <div class="section-inner">
     <h2 class="st">Bereit, deine Prüfung<br>zu bestehen?</h2>
-    <p class="ss center">Schließ dich tausenden Pflegestudierenden an die smarter lernen.<br>Kostenlos starten – in weniger als 60 Sekunden.</p>
+    <p class="ss center">Schließ dich tausenden Pflegestudierenden an die smarter lernen.<br>Starte jetzt deine Lernreise – in weniger als 60 Sekunden.</p>
     <div class="cta-btns">
-      <a class="btn-cw" href="PflegeLearn_Auth.html" style="display:inline-block;text-decoration:none;">🚀 Kostenlos starten</a>
-      <a class="btn-cg" href="mailto:georges@pflegelearn.de" style="display:inline-block;text-decoration:none;">📅 Demo für Schulen buchen</a>
+      <a class="btn-cw" href="PflegeLearn_Auth.html" style="display:inline-block;text-decoration:none;">🚀 Lernreise beginnen</a>
+      <button class="btn-cg">📅 Demo für Schulen buchen</button>
     </div>
   </div>
 </section>
@@ -567,9 +644,9 @@ footer{background:var(--ink);padding:3.5rem 6% 2rem;}
       <div class="logo">Pflege<span>Learn</span></div>
       <p>Die smarte Lernplattform für die Pflegeausbildung. Basierend auf Icare, Pflege heute & PflBG 2020.</p>
     </div>
-    <div class="ft-col"><h4>Produkt</h4><a href="#features">Funktionen</a><a href="#module">Module</a><a href="#preise">Preise</a><a href="PflegeLearn_V4.html">App downloaden</a></div>
-    <div class="ft-col"><h4>Schulen</h4><a href="mailto:georges@pflegelearn.de">B2B Angebot</a><a href="mailto:georges@pflegelearn.de">Demo buchen</a><a href="PflegeLearn_Partnerschaftsvertrag.docx">Partnervertrag</a><a href="mailto:georges@pflegelearn.de">Fallstudien</a></div>
-    <div class="ft-col"><h4>Rechtliches</h4><a href="PflegeLearn_DSGVO_Pack.html">Datenschutz</a><a href="PflegeLearn_DSGVO_Pack.html">Impressum</a><a href="PflegeLearn_DSGVO_Pack.html">AGB</a><a href="PflegeLearn_DSGVO_Pack.html">DSGVO / AVV</a></div>
+    <div class="ft-col"><h4>Produkt</h4><a href="#">Funktionen</a><a href="#">Module</a><a href="#">Preise</a><a href="#">App downloaden</a></div>
+    <div class="ft-col"><h4>Schulen</h4><a href="#">B2B Angebot</a><a href="#">Demo buchen</a><a href="#">Partnervertrag</a><a href="#">Fallstudien</a></div>
+    <div class="ft-col"><h4>Rechtliches</h4><a href="#">Datenschutz</a><a href="#">Impressum</a><a href="#">AGB</a><a href="#">DSGVO / AVV</a></div>
   </div>
   <div class="ft-bottom">
     <span>© 2025 PflegeLearn GmbH · Alle Rechte vorbehalten</span>
