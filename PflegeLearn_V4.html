@@ -259,17 +259,17 @@ header{display:flex;align-items:center;justify-content:space-between;padding:1re
       <button class="filt" data-f="e">💎 Experte</button>
     </div>
     <div class="mod-filters" id="modfilt" style="display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.6rem;">
-      <button class="filt on" data-m="0" onclick="st.mod=0;document.querySelectorAll('.mod-filt-btn').forEach(function(x){x.classList.remove('on')});this.classList.add('on');st.page=0;render();" style="font-size:.72rem;padding:.3rem .7rem">📚 Alle Module</button>
-      <button class="filt mod-filt-btn" data-m="1" onclick="st.mod=1;document.querySelectorAll('[data-m]').forEach(function(x){x.classList.remove('on')});this.classList.add('on');st.page=0;render();" style="font-size:.72rem;padding:.3rem .7rem">📋 M01</button>
-      <button class="filt mod-filt-btn" data-m="2" onclick="st.mod=2;document.querySelectorAll('[data-m]').forEach(function(x){x.classList.remove('on')});this.classList.add('on');st.page=0;render();" style="font-size:.72rem;padding:.3rem .7rem">🫀 M02</button>
-      <button class="filt mod-filt-btn" data-m="3" onclick="st.mod=3;document.querySelectorAll('[data-m]').forEach(function(x){x.classList.remove('on')});this.classList.add('on');st.page=0;render();" style="font-size:.72rem;padding:.3rem .7rem">💊 M03</button>
-      <button class="filt mod-filt-btn" data-m="4" onclick="st.mod=4;document.querySelectorAll('[data-m]').forEach(function(x){x.classList.remove('on')});this.classList.add('on');st.page=0;render();" style="font-size:.72rem;padding:.3rem .7rem">🍽 M04</button>
-      <button class="filt mod-filt-btn" data-m="5" onclick="st.mod=5;document.querySelectorAll('[data-m]').forEach(function(x){x.classList.remove('on')});this.classList.add('on');st.page=0;render();" style="font-size:.72rem;padding:.3rem .7rem">🦴 M05</button>
-      <button class="filt mod-filt-btn" data-m="6" onclick="st.mod=6;document.querySelectorAll('[data-m]').forEach(function(x){x.classList.remove('on')});this.classList.add('on');st.page=0;render();" style="font-size:.72rem;padding:.3rem .7rem">🧠 M06</button>
-      <button class="filt mod-filt-btn" data-m="7" onclick="st.mod=7;document.querySelectorAll('[data-m]').forEach(function(x){x.classList.remove('on')});this.classList.add('on');st.page=0;render();" style="font-size:.72rem;padding:.3rem .7rem">👶 M07</button>
-      <button class="filt mod-filt-btn" data-m="8" onclick="st.mod=8;document.querySelectorAll('[data-m]').forEach(function(x){x.classList.remove('on')});this.classList.add('on');st.page=0;render();" style="font-size:.72rem;padding:.3rem .7rem">⚖ M08</button>
-      <button class="filt mod-filt-btn" data-m="9" onclick="st.mod=9;document.querySelectorAll('[data-m]').forEach(function(x){x.classList.remove('on')});this.classList.add('on');st.page=0;render();" style="font-size:.72rem;padding:.3rem .7rem">🏥 M09</button>
-      <button class="filt mod-filt-btn" data-m="10" onclick="st.mod=10;document.querySelectorAll('[data-m]').forEach(function(x){x.classList.remove('on')});this.classList.add('on');st.page=0;render();" style="font-size:.72rem;padding:.3rem .7rem">🩹 M10</button>
+      <button class="filt mfb on" id="mfb-0" onclick="setMod(0)">📚 Alle</button>
+      <button class="filt mfb" id="mfb-1" onclick="setMod(1)">📋 M01</button>
+      <button class="filt mfb" id="mfb-2" onclick="setMod(2)">🫀 M02</button>
+      <button class="filt mfb" id="mfb-3" onclick="setMod(3)">💊 M03</button>
+      <button class="filt mfb" id="mfb-4" onclick="setMod(4)">🍽 M04</button>
+      <button class="filt mfb" id="mfb-5" onclick="setMod(5)">🦴 M05</button>
+      <button class="filt mfb" id="mfb-6" onclick="setMod(6)">🧠 M06</button>
+      <button class="filt mfb" id="mfb-7" onclick="setMod(7)">👶 M07</button>
+      <button class="filt mfb" id="mfb-8" onclick="setMod(8)">⚖ M08</button>
+      <button class="filt mfb" id="mfb-9" onclick="setMod(9)">🏥 M09</button>
+      <button class="filt mfb" id="mfb-10" onclick="setMod(10)">🩹 M10</button>
     </div>
   </div>
   <div class="grid" id="lg"></div>
@@ -1300,6 +1300,17 @@ function addLockToCard(cardEl, modId) {
   cardEl.style.overflow = 'hidden';
   cardEl.appendChild(overlay);
   cardEl.onclick = null;
+}
+
+
+// ── Module filter ──
+function setMod(n){
+  st.mod = n;
+  st.page = 0;
+  document.querySelectorAll('.mfb').forEach(function(b){ b.classList.remove('on'); });
+  var btn = document.getElementById('mfb-' + n);
+  if(btn) btn.classList.add('on');
+  render();
 }
 
 function filtered(){
