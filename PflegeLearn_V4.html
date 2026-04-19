@@ -23,6 +23,20 @@ header{display:flex;align-items:center;justify-content:space-between;padding:1re
 .sec-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;margin:1.5rem 0 .25rem;}
 .sec-sub{font-size:.85rem;color:rgba(255,255,255,.45);margin-bottom:1rem;}
 /* LERNKARTEN */
+
+/* FREE/PREMIUM SYSTEM */
+.lock-overlay{position:absolute;inset:0;background:rgba(15,23,42,.85);border-radius:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5;backdrop-filter:blur(2px);}
+.lock-icon{font-size:2rem;margin-bottom:.5rem;}
+.lock-text{font-size:.78rem;font-weight:700;color:rgba(255,255,255,.7);text-align:center;}
+.lock-btn{margin-top:.6rem;background:var(--gold);color:var(--ink);padding:.3rem .85rem;border-radius:999px;font-size:.72rem;font-weight:800;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.lock-btn:hover{background:var(--g);}
+.card.locked{position:relative;overflow:hidden;pointer-events:none;}
+.card.locked-click{position:relative;overflow:hidden;}
+.plan-banner{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.25);border-radius:12px;padding:.85rem 1.1rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+.plan-badge{font-size:.7rem;font-weight:800;color:var(--gold);background:rgba(245,158,11,.15);padding:.2rem .65rem;border-radius:999px;border:1px solid rgba(245,158,11,.3);}
+.plan-text{font-size:.78rem;color:rgba(255,255,255,.6);}
+.plan-cta{background:var(--gold);color:var(--ink);padding:.35rem .9rem;border-radius:999px;font-size:.75rem;font-weight:800;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none;display:inline-block;}
+
 .controls{display:flex;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap;align-items:center;}
 .search{flex:1;min-width:150px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:.5rem .9rem;font-size:.88rem;color:#fff;outline:none;font-family:'DM Sans',sans-serif;}
 .search::placeholder{color:rgba(255,255,255,.3);}
@@ -120,6 +134,8 @@ header{display:flex;align-items:center;justify-content:space-between;padding:1re
 .reslbl{font-size:.68rem;color:rgba(255,255,255,.38);margin-top:.15rem;}
 @media(max-width:540px){.grid,.vgrid,.igrid{grid-template-columns:1fr;}}
 </style>
+<script src="pflegelearn_cards.js"></script>
+<script src="pflegelearn_qcm.js"></script>
 </head>
 <body>
 <div class="app">
@@ -140,7 +156,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:1re
 <!-- LERNKARTEN -->
 <div class="screen on" id="s-lk">
   <div class="sec-title">Lern<span style="color:var(--tealM)">karten</span></div>
-  <div class="sec-sub">180 Karten · 3 Niveaus · Klicken zum Umdrehen · Quellen: Icare, Pflege heute, PflBG 2020</div>
+  <div class="sec-sub">1100 Karten · 3 Niveaus · Klicken zum Umdrehen · Modul 01+02 kostenlos · Quellen: Icare, Pflege heute, PflBG 2020</div>
   <div class="controls">
     <input class="search" id="srch" placeholder="🔍 Thema suchen...">
     <div class="filters">
@@ -238,50 +254,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:1re
 // ═══════════════ DATEN – Icare / Pflege heute / PflBG 2020 ═══════════════
 var MODS=[{id:1,n:'📋',name:'Grundlagen'},{id:2,n:'🫀',name:'Vitalzeichen'},{id:3,n:'💊',name:'Medikamente'},{id:4,n:'🍽',name:'Ernährung'},{id:5,n:'🦴',name:'Mobilisation'},{id:6,n:'🧠',name:'Psychiatrie'},{id:7,n:'👶',name:'Pädiatrie/Palliativ'},{id:8,n:'⚖',name:'Recht & Beruf'},{id:9,n:'🏥',name:'Krankheitsbilder'},{id:10,n:'🩹',name:'Wundversorgung'}];
 
-var CARDS=[
-// ══ MODUL 1: GRUNDLAGEN ══
-{m:1,n:'a',t:'Der Pflegeprozess',q:'Wie viele Schritte hat der Pflegeprozess und wie lauten sie?',a:'Der Pflegeprozess hat 6 Schritte:\n1. Informationssammlung (Assessment)\n2. Pflegediagnose\n3. Pflegeziele festlegen\n4. Pflegemaßnahmen planen\n5. Pflegemaßnahmen durchführen\n6. Evaluierung (Wirksamkeitskontrolle)',k:'Merksatz: Info-Dia-Ziel-Plan-Tu-Eva',src:'Quelle: Icare Pflege, Band 1'},
-{m:1,n:'a',t:'SMART-Ziele',q:'Was bedeutet das Akronym SMART bei der Pflegezielformulierung?',a:'S – Spezifisch (klar und eindeutig formuliert)\nM – Messbar (Kriterien für Zielerreichung)\nA – Akzeptiert (vom Patienten mitgetragen)\nR – Realistisch (erreichbar und ressourcenorientiert)\nT – Terminiert (Datum der Evaluierung festgelegt)',k:'Beispiel: "Der Patient geht bis Freitag 10 m mit Rollator ohne Pause"',src:'Quelle: Icare Pflege, Pflegeprozess'},
-{m:1,n:'a',t:'Pflegemodell nach Krohwinkel',q:'Was sind die 13 ABEDL nach Krohwinkel?',a:'ABEDL = Aktivitäten, Beziehungen und existenzielle Erfahrungen des Lebens:\n1. Kommunizieren\n2. Sich bewegen\n3. Vitale Funktionen aufrechterhalten\n4. Sich pflegen\n5. Essen und trinken\n6. Ausscheiden\n7. Sich kleiden\n8. Ruhen und schlafen\n9. Sich beschäftigen\n10. Sich als Mann/Frau fühlen\n11. Für sichere Umgebung sorgen\n12. Soziale Bereiche sichern\n13. Mit existenziellen Erfahrungen umgehen',k:'Monika Krohwinkel – häufigstes Modell in DE',src:'Quelle: Pflege heute, Kapitel Pflegemodelle'},
-{m:1,n:'a',t:'Händehygiene WHO',q:'Wann muss laut WHO desinfiziert werden? (5 Indikationen)',a:'1. VOR dem Patientenkontakt\n2. VOR aseptischen Tätigkeiten (z.B. Katheterisierung, Injektionen)\n3. NACH Kontakt mit Blut/Körperflüssigkeiten\n4. NACH dem Patientenkontakt\n5. NACH Kontakt mit der Patientenumgebung',k:'WHO My 5 Moments for Hand Hygiene – obligatorisch!',src:'Quelle: WHO Guidelines Hand Hygiene, Icare Hygiene'},
-{m:1,n:'f',t:'Pflegedokumentation',q:'Was muss eine rechtssichere Pflegedokumentation enthalten?',a:'Pflichtinhalte laut § 113 SGB XI:\n- Datum und Uhrzeit der Maßnahmen\n- Art und Umfang der erbrachten Leistungen\n- Besonderheiten / Abweichungen vom Plan\n- Unterschrift der ausführenden Pflegeperson\n- Vitalzeichen und Beobachtungen\n- Reaktionen des Patienten\n\nGrundsatz: "Was nicht dokumentiert ist, ist nicht getan!"',k:'Pflegedokumentation = rechtliches Beweismittel',src:'Quelle: Pflege heute, SGB XI, Icare Recht'},
-{m:1,n:'e',t:'Pflegeethik – 4-Prinzipien',q:'Welche 4 bioethischen Prinzipien nach Beauchamp & Childress sind in der Pflege relevant?',a:'1. Autonomie: Selbstbestimmungsrecht des Patienten respektieren\n2. Benefizienz: Wohltun – aktiv zum Wohl des Patienten handeln\n3. Non-Malefizienz: Nicht schaden – Risiken minimieren\n4. Gerechtigkeit: Gleichbehandlung, gerechte Ressourcenverteilung\n\nBei Konflikten: Autonomie hat in der Regel Vorrang, außer bei Einwilligungsunfähigkeit!',k:'Beauchamp & Childress – Standardwerk Pflegeethik',src:'Quelle: Pflege heute, Kapitel Ethik'},
-// ══ MODUL 2: VITALZEICHEN ══
-{m:2,n:'a',t:'Blutdrucknormalwerte',q:'Wie lauten die Blutdrucknormalwerte und Grenzwerte nach WHO/ESH?',a:'OPTIMAL: < 120/80 mmHg\nNORMAL: 120–129 / 80–84 mmHg\nHOCHNORMAL: 130–139 / 85–89 mmHg\n\nHYPERTONIE:\nGrad I: 140–159 / 90–99 mmHg\nGrad II: 160–179 / 100–109 mmHg\nGrad III: ≥ 180 / ≥ 110 mmHg\n\nHYPOTONIE: systolisch < 100 mmHg (Frauen), < 110 mmHg (Männer)',k:'Messung nach Riva-Rocci: 5 Min Ruhe, Korotkoff-Töne',src:'Quelle: ESH/ESC Leitlinien, Icare Vitalzeichen'},
-{m:2,n:'a',t:'Herzfrequenz',q:'Herzfrequenz: Normalwerte, Bradykardie, Tachykardie?',a:'NORMOKARDIE: 60–100/min (Erwachsene)\nBRADYKARDIE: < 60/min\nTACHYKARDIE: > 100/min\n\nAltersspezifisch:\nNeugeborene: 120–160/min\nSäugling: 100–140/min\nKleinkind: 80–120/min\nSchulkind: 70–100/min',k:'Absolute Arrhythmie (vorhofflimmern): unregelmäßig + sofort Arzt!',src:'Quelle: Icare Vitalzeichen, Pflege heute'},
-{m:2,n:'a',t:'Körpertemperatur',q:'Temperaturmessung: Methoden, Normalwerte und Fiebergrade?',a:'MESSMETHODEN & NORMALWERTE:\nRektal (Goldstandard): 36,5–37,5 °C\nOral: 36,0–37,3 °C (ca. 0,3 °C niedriger)\nAxillär: 35,8–37,0 °C (ca. 0,5 °C niedriger)\nTympanal (Ohr): 36,5–37,5 °C\n\nFIEBERGRADE:\nSubfebril: 37,5–38,0 °C\nLeichtes Fieber: 38,1–38,5 °C\nMäßiges Fieber: 38,6–39,0 °C\nHohes Fieber: 39,1–40,0 °C\nHyperpyrexie: > 40,0 °C',k:'Rektal = genaueste Methode, vor allem bei Kindern',src:'Quelle: Icare, Pflege heute Kapitel Vitalzeichen'},
-{m:2,n:'a',t:'Atemfrequenz',q:'Atemfrequenz: Normalwerte und pathologische Veränderungen?',a:'ERWACHSENE: 12–18 Atemzüge/min\n(in Ruhephasen bis 20/min noch normal)\n\nKINDER:\nNeugeborene: 40–60/min\nSäuglinge: 30–40/min\nKleinkinder: 20–30/min\nSchulkinder: 18–25/min\n\nPATHOLOGISCH:\nBradypnoe: < 12/min\nTachypnoe: > 20/min\nApnoe: Atemstillstand',k:'Beobachtung: Rhythmus, Tiefe, Geräusche (Stridor, Rasselgeräusche)',src:'Quelle: Icare Pflege, Vitalzeichen'},
-{m:2,n:'f',t:'Schockzeichen erkennen',q:'Welche Vitalzeichen-Konstellation deutet auf einen Schock hin und was sind die Sofortmaßnahmen?',a:'SCHOCKZEICHEN (Classic Shock Triad):\n• Herzfrequenz ↑ > 100/min, fadenförmig, schwer tastbar\n• Blutdruck ↓ systolisch < 90 mmHg\n• SpO2 ↓ < 90%\n\nWEITERE ZEICHEN:\n• Blasse, kaltschweißige, marmorierte Haut\n• Bewusstseinstrübung, Unruhe\n• Oligurie (Urinausscheidung < 0,5 ml/kg/h)\n\nSOFORTMASSNAHMEN:\n1. Notarzt 112 rufen\n2. Flachlagerung, Beine erhöht (Schocklagerung)\n3. Wärmeerhalt (Decke)\n4. i.v.-Zugang legen (Arzt)\n5. O2-Gabe 4–6 L/min',k:'Schock = Notfall! Immer sofort Notarzt!',src:'Quelle: Pflege heute, Notfallpflege'},
-{m:2,n:'e',t:'O2-Therapie bei COPD',q:'Warum ist hochdosierte O2-Gabe bei COPD-Patienten gefährlich?',a:'PATHOPHYSIOLOGIE:\nCOPD-Patienten haben chronisch erhöhte CO2-Spiegel (Hyperkapnie).\n\nNormaler Atemantrieb: CO2-Anstieg → Atemstimulation\nBei COPD: CO2-Rezeptoren adaptiert → der HYPOXISCHE Atemantrieb (O2-Mangel) übernimmt die Atemregulation.\n\nFOLGE hoher O2-Gabe:\nO2-Sättigung steigt → hypoxischer Atemantrieb fällt weg → Atemantrieb sinkt → CO2 steigt → CO2-Narkose (Hyperkapnie-Koma)\n\nZIEL-SpO2 bei COPD: 88–92%\n(Nicht 95–99% wie bei anderen Patienten!)',k:'COPD: kontrollierte O2-Gabe, Lippenbremse, Kutschersitz',src:'Quelle: Icare Pneumologie, Pflege heute COPD'},
-// ══ MODUL 3: MEDIKAMENTE ══
-{m:3,n:'a',t:'10-R-Regel Medikamente',q:'Wie lautet die vollständige 10-R-Regel bei der Medikamentengabe?',a:'R1: Richtiger PATIENT (Name + Geburtsdatum prüfen)\nR2: Richtiges MEDIKAMENT (Bezeichnung genau lesen)\nR3: Richtige DOSIS (verordnete Dosis nachrechnen)\nR4: Richtiger APPLIKATIONSWEG (oral, i.v., s.c. etc.)\nR5: Richtige ZEIT (Zeitpunkt der Gabe beachten)\nR6: Richtige DOKUMENTATION (sofort nach Gabe)\nR7: Richtige AUFKLÄRUNG (Patient informiert?)\nR8: Richtiges VERFALLDATUM (abgelaufen?)\nR9: Richtige LAGERUNG (Lichtschutz, Kühlkette)\nR10: Richtige REAKTION (auf Unverträglichkeiten achten)',k:'Früher 5-R-Regel, heute Standard: 10 R!',src:'Quelle: Icare Medikamentenlehre, Pflege heute 2023'},
-{m:3,n:'a',t:'Applikationswege',q:'Nennen Sie die wichtigsten Applikationswege mit Beispielen',a:'p.o. (per os) = oral: Tabletten, Kapseln, Saft\ns.l. (sublingual): Nitroglyzerin bei Angina pectoris\nrektal: Suppositorien, Klysmen\ns.c. (subkutan): Insulin, Heparin, Morphin\ni.m. (intramuskulär): Impfungen, Diclofenac\ni.v. (intravenös): Antibiotika, Infusionen\ntransdermal: Fentanyl-Pflaster, Nitroglyzerin-Pflaster\ninhalativ: Bronchodilatatoren (COPD, Asthma)\nlokal/topisch: Salben, Augentropfen',k:'Bioverfügbarkeit i.v. = 100% (Goldstandard)',src:'Quelle: Icare Medikamentenlehre'},
-{m:3,n:'f',t:'Dosierungsberechnung',q:'Berechnen Sie: Patient soll 500 mg Amoxicillin erhalten, verfügbar sind Tabletten mit 250 mg. Wie viele Tabletten?',a:'FORMEL: Anzahl = Verschriebene Dosis / Dosis pro Einheit\n\nRECHNUNG: 500 mg / 250 mg = 2 Tabletten\n\nFÜR INFUSIONEN:\nFormel: Tropfen/min = (Volumen ml × Tropffaktor) / Zeit in Minuten\n\nBEISPIEL: 500 ml NaCl 0,9% über 4 Stunden, Tf = 20\n500 × 20 / 240 min = 41,7 ≈ 42 Tropfen/min\n\nStandard-Tropffaktoren:\n- Normaltropfer: 20 Tr/ml\n- Kindertropfer: 60 Tr/ml',k:'Immer doppelt nachrechnen und gegenlesen lassen!',src:'Quelle: Icare Medikamentenlehre, Pflege heute'},
-{m:3,n:'e',t:'Pharmakokinetik ADME',q:'Was bedeuten Absorption, Distribution, Metabolismus und Exkretion (ADME)?',a:'A = ABSORPTION: Aufnahme ins Blut\n- p.o.: Resorption im Dünndarm (first-pass-Effekt Leber!)\n- i.v.: 100% Bioverfügbarkeit, kein first-pass\n\nD = DISTRIBUTION: Verteilung im Körper\n- Lipophile Stoffe: ZNS-gängig\n- Plasmaproteinbindung beeinflusst Wirkung\n\nM = METABOLISMUS: Biotransformation\n- Leber (CYP450-Enzyme)\n- Wichtig: Wechselwirkungen!\n\nE = EXKRETION: Ausscheidung\n- Niere (renal) – Hauptweg\n- Galle (enterohepatischer Kreislauf)\n\nKLINISCH RELEVANT:\nNiereninsuffizienz → renale Medikamente kumulieren\nLeberinsuffizienz → hepatischer Abbau reduziert',k:'Halbwertszeit T1/2 = Zeit bis 50% des Wirkstoffs abgebaut',src:'Quelle: Icare Pharmakologie, Pflege heute'},
-// ══ MODUL 4: ERNÄHRUNG ══
-{m:4,n:'a',t:'Mangelernährung screening',q:'Welche Screening-Instrumente gibt es und wann werden sie eingesetzt?',a:'MNA (Mini Nutritional Assessment):\n→ Für Senioren ≥ 65 Jahre\n→ Ergebnis: 0–7 = Mangelernährung, 8–11 = Risiko, 12–14 = Normal\n\nNRS 2002 (Nutritional Risk Screening):\n→ Für Krankenhauspatienten\n→ Score ≥ 3 = Ernährungsrisiko → Diätassistenz!\n\nMUST (Malnutrition Universal Screening Tool):\n→ Allgemeinbevölkerung\n\nINDIKATOREN Mangelernährung:\n- BMI < 18,5 kg/m²\n- Unbeabsichtigter Gewichtsverlust > 5% in 3 Monaten\n- Verminderte Nahrungsaufnahme',k:'Screening bei Aufnahme + wöchentlich im Krankenhaus!',src:'Quelle: DGEM Leitlinien, Icare Ernährung'},
-{m:4,n:'f',t:'Enterale Ernährung',q:'Unterschied NGS vs. PEG: Indikationen, Vor- und Nachteile?',a:'NGS (Nasogastralsonde):\n+ Einfache Anlage, reversibel, kostengünstig\n+ Geeignet für Kurzzeit < 4 Wochen\n- Aspirationsrisiko\n- Diskomfort für Patient\nIndikation: postoperative Übergangslösung, Dysphagie\n\nPEG (Perkutane Endoskopische Gastrostomie):\n+ Komfortabler, Langzeit > 4 Wochen geeignet\n+ Geringeres Aspirationsrisiko\n- Operativer Eingriff, Komplikationen möglich\nIndikation: Tumor, Demenz, Schlaganfall, ALS\n\nPFLEGE BEIDER SONDEN:\n✓ Lageprüfung VOR jeder Gabe (pH-Wert < 5,5 = korrekte Lage)\n✓ Halbsitzende Position (30–45°) während + 30 Min nach Gabe\n✓ Spülen mit 20–30 ml Wasser vor und nach Gabe',k:'PH-Wert-Kontrolle = Goldstandard Lageprüfung!',src:'Quelle: Icare Ernährung, Pflege heute'},
-// ══ MODUL 5: MOBILISATION ══
-{m:5,n:'a',t:'Bradenskala',q:'Bradenskala: Bereiche, Punktwerte und Risikoeinteilung?',a:'6 BEWERTUNGSBEREICHE (je 1–4 Punkte, max. 23 Punkte):\n1. Sinneswahrnehmung\n2. Feuchtigkeit der Haut\n3. Aktivität\n4. Mobilität\n5. Ernährungszustand\n6. Reibung und Scherkräfte\n\nRISIKOSTUFEN:\n≥ 19 Punkte: Kein Risiko\n15–18 Punkte: Geringes Risiko\n13–14 Punkte: Mittleres Risiko\n10–12 Punkte: Hohes Risiko\n≤ 9 Punkte: Sehr hohes Risiko\n\nJe NIEDRIGER der Score, desto HÖHER das Risiko!',k:'Bradenskala = Pflichtassessment bei Aufnahme!',src:'Quelle: DNQP Expertenstandard Dekubitus, Icare'},
-{m:5,n:'a',t:'6 Pflege-Prophylaxen',q:'Welche 6 Hauptprophylaxen gibt es in der Pflege?',a:'1. DEKUBITUSPROPHYLAXE\n   Maßnahmen: Druckentlastung, Lagerungswechsel 2-stündlich, Hautpflege\n\n2. THROMBOSEPROPHYLAXE\n   Maßnahmen: Frühmobilisation, Kompressionsstrümpfe, NMH (Heparin s.c.)\n\n3. PNEUMONIEPROPHYLAXE\n   Maßnahmen: Atemübungen, Abhusten fördern, Oberkörperhochlagerung 30°\n\n4. KONTRAKTURPROPHYLAXE\n   Maßnahmen: Lagerung in Funktionsstellung, passive Bewegungsübungen\n\n5. STURZPROPHYLAXE\n   Maßnahmen: Morse Fall Scale, Hüftprotektor, sicheres Umfeld\n\n6. INTERTRIGOPROPHYLAXE\n   Maßnahmen: Hautfalten trocken halten, atmungsaktive Kleidung',k:'+ Parotitisprophylaxe (Mundpflege) als 7. Prophylaxe!',src:'Quelle: DNQP Expertenstandards, Icare Pflege'},
-{m:5,n:'e',t:'Virchow-Trias Thrombose',q:'Was ist die Virchow-Trias und wie beeinflusst sie die Thromboseprophylaxe?',a:'VIRCHOW-TRIAS (3 thrombosebegünstigende Faktoren):\n\n1. VERLANGSAMTER BLUTFLUSS (Hämodynamik)\n   → Ursachen: Immobilität, Herzinsuffizienz, Bettruhe\n   → Prophylaxe: Frühmobilisation, Beinübungen\n\n2. GEFÄßWANDVERÄNDERUNG (Gefäßendothel)\n   → Ursachen: Operationen, Traumata, Entzündungen\n   → Prophylaxe: Venentraining\n\n3. GERINNUNGSVERÄNDERUNG (Hyperkoagulabilität)\n   → Ursachen: Dehydratation, Tumoren, hormonelle Kontrazeptiva\n   → Prophylaxe: Niedermolekulares Heparin (NMH) s.c., Hydratation\n\nNMH (z.B. Enoxaparin/Clexane): hemmt Faktor Xa der Blutgerinnungskaskade',k:'Heparin wirkt auf Punkt 3 – Gerinnungshemmung!',src:'Quelle: Icare Chirurgie, Pflege heute Thrombose'},
-// ══ MODUL 6: PSYCHIATRIE ══
-{m:6,n:'a',t:'Demenzformen',q:'Welche 4 Hauptformen der Demenz gibt es mit Häufigkeit und Charakteristika?',a:'1. ALZHEIMER-DEMENZ: ~65%\n   Schleichender Beginn, zuerst Kurzzeitgedächtnis, später Sprache\n\n2. VASKULÄRE DEMENZ: ~15%\n   Stufenweiser Verlauf nach Schlaganfällen, fokale Ausfälle\n\n3. LEWY-KÖRPER-DEMENZ: ~10%\n   Visuelle Halluzinationen, Parkinson-Symptome, REM-Schlafstörung\n\n4. FRONTOTEMPORALE DEMENZ: ~5%\n   Persönlichkeitsveränderung, Enthemmung, früher Beginn (< 65 J.)\n\nDiagnostik: MMST (Mini-Mental-Status-Test), DemTect, Uhrentest\n\nMerke: Alzheimer + Vaskulär = 80% aller Demenzen!',k:'Wichtig: Delirium ≠ Demenz! Delirium ist akut und reversibel!',src:'Quelle: Icare Psychiatrie, Pflege heute Neurologie'},
-{m:6,n:'f',t:'Suizidalität – TALK',q:'Wie geht man bei Verdacht auf Suizidalität vor (TALK-Schema)?',a:'TALK-SCHEMA:\nT – TELL: Offen auf Suizidgedanken ansprechen\n   "Ich mache mir Sorgen um Sie. Denken Sie manchmal daran, sich das Leben zu nehmen?"\n\nA – ASK: Direkt und konkret fragen\n   "Haben Sie konkrete Pläne?"\n   WICHTIG: Direktes Fragen erhöht das Suizidrisiko NICHT!\n\nL – LISTEN: Aktiv zuhören, nicht bewerten\n   Keine Ratschläge, keine Bagatellisierung\n\nK – KEEP SAFE: Sicherheit herstellen\n   Sofort Arzt informieren, nicht allein lassen\n   Potenzielle Mittel entfernen (Medikamente, scharfe Gegenstände)\n\nMerke: Nie versprechen, nichts zu sagen!',k:'Direktes Fragen = kein erhöhtes Risiko – Mythos widerlegt!',src:'Quelle: Icare Psychiatrie, S3-Leitlinie Suizidalität'},
-// ══ MODUL 7: PÄDIATRIE / PALLIATIV ══
-{m:7,n:'a',t:'Pediatrische Normalwerte',q:'Wie lauten die altersabhängigen Normalwerte für HF und AF?',a:'HERZFREQUENZ (Schläge/min):\nFrühgeborene: 140–160\nNeugeborene (0–1 Monat): 120–160\nSäuglinge (1–12 Monate): 100–140\nKleinkinder (1–5 Jahre): 80–120\nSchulkinder (6–12 Jahre): 70–110\nJugendliche/Erwachsene: 60–100\n\nATEMFREQUENZ (Atemzüge/min):\nNeugeborene: 40–60\nSäuglinge: 30–40\nKleinkinder: 20–30\nSchulkinder: 18–25\nErwachsene: 12–18',k:'Merke: Je jünger das Kind, desto höher die Normalwerte!',src:'Quelle: Icare Pädiatrie, Pflege heute'},
-{m:7,n:'f',t:'Total Pain – Palliativ',q:'Was versteht man unter "Total Pain" nach Dame Cicely Saunders?',a:'Dame Cicely Saunders prägte den Begriff "Total Pain" (Totaler Schmerz):\nPalliativpflege adressiert 4 Dimensionen des Leidens:\n\n1. PHYSISCH: Schmerz, Atemnot, Übelkeit, Fatigue\n   → medikamentöse + pflegerische Maßnahmen\n\n2. PSYCHISCH: Angst, Depression, Würdeverlust, Hoffnungslosigkeit\n   → Psychosoziale Begleitung, Krisenintervention\n\n3. SOZIAL: Isolation, Rollenverlust, finanzielle Sorgen\n   → Sozialarbeit, Angehörigeneinbindung\n\n4. SPIRITUELL/EXISTENZIELL: Sinnfragen, Sterbensangst, religiöse Bedürfnisse\n   → Seelsorge, Biografiearbeit\n\nEchte Palliativpflege behandelt ALLE 4 Dimensionen!',k:'Cicely Saunders gründete 1967 das erste Hospiz (St. Christopher\'s, London)',src:'Quelle: Pflege heute Palliativ, Icare Palliativpflege'},
-// ══ MODUL 8: RECHT ══
-{m:8,n:'a',t:'PflBG 2020',q:'Was sind die wichtigsten Neuerungen des Pflegeberufegesetzes (PflBG) 2020?',a:'GENERALISTISCHE AUSBILDUNG:\nZusammenführung von 3 bisherigen Berufen:\n- Gesundheits- und Krankenpflege\n- Gesundheits- und Kinderkrankenpflege\n- Altenpflege\n→ Einheitlicher Abschluss: Pflegefachfrau / Pflegefachmann\n\nAUFBAU: 3 Jahre generalistische Ausbildung\n- 1. + 2. Jahr: gemeinsame Grundlagen\n- 3. Jahr: Vertiefung wählbar (Pädiatrie oder Langzeitpflege)\n\n5 KOMPETENZBEREICHE (PflBG Anlage 1):\nI. Pflegeprozesse gestalten\nII. Kommunikation und Beratung\nIII. Intra- und interprofessionelle Zusammenarbeit\nIV. Eigenverantwortung und Reflexion\nV. Qualitätssicherung und -entwicklung',k:'PflBG = Pflegeberufegesetz, in Kraft seit 01.01.2020',src:'Quelle: PflBG 2017, Pflege heute Berufsrecht'},
-{m:8,n:'f',t:'Haftungsrecht Pflege',q:'Welche drei Haftungsarten gelten in der Pflege?',a:'1. ZIVILRECHTLICHE HAFTUNG (BGB)\n   Grundlage: §§ 280, 823 BGB\n   → Schadensersatz bei Pflichtverletzung\n   Beispiel: Sturz durch mangelnde Prophylaxe\n\n2. STRAFRECHTLICHE HAFTUNG (StGB)\n   Grundlagen: §§ 222, 229, 323c StGB\n   → Fahrlässige Tötung, fahrlässige Körperverletzung\n   → Unterlassene Hilfeleistung\n\n3. BERUFSRECHTLICHE HAFTUNG\n   → Berufsgerichtliche Verfahren\n   → Aberkennung der Berufserlaubnis möglich\n\nDURCHFÜHRUNGSVERANTWORTUNG:\nJede Pflegeperson haftet persönlich für korrekte Durchführung, auch wenn ein Arzt angeordnet hat!',k:'Übernahmepflicht: Nur übernehmen, was man kompetent ausführen kann!',src:'Quelle: Icare Recht, Pflege heute Berufsrecht'},
-// ══ MODUL 9: KRANKHEITSBILDER ══
-{m:9,n:'a',t:'Herzinfarkt Symptome',q:'Typische und atypische Symptome des Myokardinfarkts?',a:'TYPISCHE SYMPTOME (klassisch, besonders Männer):\n• Vernichtungsschmerz hinter dem Brustbein (retrosternal)\n• Ausstrahlung: linker Arm, Kiefer, Rücken, linke Schulter\n• Kaltschweißigkeit, Blässe\n• Todesangst\n• Übelkeit, Erbrechen\n\nATYPISCHE SYMPTOME (häufig bei Frauen, Diabetikern, Älteren):\n• Rücken-, Bauch- oder Kieferschmerzen allein\n• Erschöpfung, allgemeines Unwohlsein\n• Atemnot ohne Brustschmerz\n• Übelkeit ohne weitere Symptome\n\nSOFORTMASSNAHMEN:\n1. Notruf 112\n2. Sitzend lagern (Herz entlasten)\n3. Enge Kleidung lockern\n4. Nitro (nur bei bekannter KHK + RR > 90 mmHg)',k:'ZEIT IST MYOKARD! PCI < 90 Min = Ziel!',src:'Quelle: Icare Kardiologie, Pflege heute'},
-{m:9,n:'f',t:'Diabetes mellitus Komplikationen',q:'Welche akuten Komplikationen gibt es bei Diabetes mellitus und wie unterscheidet man sie?',a:'HYPOGLYKÄMIE (BZ < 70 mg/dl / < 3,9 mmol/l):\nSymptome: Schwitzen, Zittern, Heißhunger, Verwirrtheit, Koma\nUrsache: Zu viel Insulin, zu wenig Essen, Sport\nBehandlung: 1 BE Traubenzucker (bewusst) / i.v. Glukose (bewusstlos)\n\nHYPERGLYKÄMIE / KETOAZIDOSE (BZ > 250 mg/dl):\nSymptome: Durst, Polyurie, Bauchschmerzen, Kussmaul-Atmung, Acetongeruch\nUrsache: Insulinmangel (meist Typ-1)\nBehandlung: Insulin, Volumenersatz, Elektrolytausgleich\n\nHYPEROSMOLARES KOMA (BZ > 600 mg/dl):\nOhne Ketoazidose, meist Typ-2-Diabetiker, ältere Patienten\nBehandlung: Intensive Rehydratation',k:'BZ-Messung bei Verwirrtheit immer als erstes!',src:'Quelle: Icare Endokrinologie, Pflege heute Diabetes'},
-// ══ MODUL 10: WUNDVERSORGUNG ══
-{m:10,n:'a',t:'Wundheilungsphasen',q:'Welche 4 Phasen der Wundheilung gibt es und wie lange dauern sie?',a:'1. HÄMOSTASE (Blutstillung): 0–10 Minuten\n   → Vasokonstriktion, Thrombozytenaggregation, Fibringerinnsel\n   → Wundverschluss durch Thrombus\n\n2. EXSUDATIONS-/INFLAMMATIONSPHASE (Reinigung): 1–4 Tage\n   → Vasodilatation, Einwanderung von Leukozyten (Granulozyten, Makrophagen)\n   → Wundreinigung von Nekrosen, Keimen, Debris\n   → Rötung, Schwellung, Wärme, Schmerz = NORMALE Entzündungszeichen!\n\n3. PROLIFERATIONS-/GRANULATIONSPHASE (Aufbau): 3–10 Tage\n   → Fibroblasten bilden Kollagen und Granulationsgewebe\n   → Angiogenese (Neubildung von Kapillaren)\n   → Wunde füllt sich von unten mit neuem Gewebe\n\n4. REPARATIONS-/EPITHELISIERUNGSPHASE (Narbe): ab Tag 8, Wochen bis Monate\n   → Epithelisierung von den Wundrändern her\n   → Kollagenumbau, Narbenbildung und -reifung\n   → Narbe hat nur ca. 80% der ursprünglichen Gewebefestigkeit',k:'Phasen überschneiden sich! Nicht streng sequenziell. Feuchte Wundversorgung fördert alle Phasen.',src:'Quelle: medi-karriere.de Wundheilungsphasen 2026, DocCheck Flexikon, Wikipedia Wundheilung'},
-{m:10,n:'a',t:'TIME-Prinzip',q:'Was bedeutet das TIME-Prinzip in der modernen Wundversorgung?',a:'T – TISSUE (Gewebe): Wundgrundvorbereitung\n   → Nekrotisches/fibrinöses Gewebe entfernen (Débridement)\n   → Mechanisch, enzymatisch, autolytisch oder chirurgisch\n\nI – INFECTION (Infektion): Infektionskontrolle\n   → Lokale Zeichen: Rötung, Schwellung, Wärme, Schmerz, Exsudat\n   → Biofilmmanagement! Antiseptika (Octenidin, PHMB)\n\nM – MOISTURE (Feuchte): Feuchtigkeitsbalance\n   → Optimale Feuchtigkeit beschleunigt Heilung (feuchtes Wundmilieu!)\n   → Zu trocken → Hydrogel, zu feucht → saugfähige Auflage + Hautschutz\n\nE – EDGE (Wundrand): Wundrandaktivierung\n   → Inaktive Wundränder callus-debridieren\n   → Bei Stagnation: Spezialtherapie (VAC, Wachstumsfaktoren)',k:'TIME = Goldstandard der modernen Wundversorgung!',src:'Quelle: DNQP Expertenstandard, Icare Wunde'},
-{m:10,n:'f',t:'Wundauflagen Auswahl',q:'Welche Wundauflage bei welchem Wundtyp nach modernem Standard?',a:'TROCKENE/NEKROTISCHE Wunde:\n→ Hydrogel (rehydriert, löst Nekrosen autolytisch)\n\nSAUBER, WENIG EXSUDAT:\n→ Hydrokolloide (z.B. Varihesive) – schafft feuchtes Milieu\n\nMITTEL BIS STARK EXSUDIEREND:\n→ Polyurethanschaumstoffe (z.B. Mepilex)\n\nSTARK EXSUDIEREND:\n→ Alginate (z.B. Sorbalgon) – hohe Saugkapazität\n\nINFIZIERT / BIOFILM:\n→ Silberhaltige Auflagen (antimikrobiell)\n→ + Octenidin/PHMB-Spülung\n\nGEROCH:\n→ Aktivkohle-Auflagen\n\nSUPERFIZIELL:\n→ Transparentfolie (Wundbeobachtung möglich)',k:'H2O2, Betaisodona, Rivanol = VERALTET – nicht mehr verwenden!',src:'Quelle: DNQP Expertenstandard, ICW Leitlinien'},
-];
+var CARDS=[];/* loaded from pflegelearn_cards.js */
 
 // ══════════ VIDEOS mit vollständigem Storyboard und Script ══════════
 var VIDS=[
@@ -445,20 +418,7 @@ var INFOS=[
 ];
 
 // ══════════ QCM – Klinisch korrekt nach Icare / Pflege heute ══════════
-var QCM=[
-{m:1,n:'a',q:'Wie viele Schritte hat der Pflegeprozess nach heutigem Standard?',o:['4','5','6','8'],a:2,e:'Der Pflegeprozess umfasst 6 Schritte: 1. Informationssammlung 2. Pflegediagnose 3. Ziele 4. Planung 5. Durchführung 6. Evaluation. (Quelle: Icare Bd.1)',p:10},
-{m:3,n:'a',q:'Wie viele Richtigkeiten umfasst die 10-R-Regel bei der Medikamentengabe und wer hat sie entwickelt?',o:['5 Richtigkeiten (5-R-Regel)','6 Richtigkeiten (6-R-Regel)','10 Richtigkeiten – Institut Averosa','12 Richtigkeiten'],a:2,e:'Die 10-R-Regel zur qualitätsgesicherten Medikamentengabe wurde vom Institut Averosa (www.averosa.de) entwickelt und ist heute der Standard in Deutschland. Sie umfasst: Patient, Medikament, Dosierung, Applikationsart, Zeitpunkt, Dokumentation, Aufklärung, Anwendungsdauer, Aufbewahrung, Entsorgung. (Quelle: ppm-online.org, medi-karriere.de 2025)',p:10},
-{m:2,n:'a',q:'Welcher Blutdruckwert entspricht nach ESH/ESC der optimalen Kategorie?',o:['130/85 mmHg','120/80 mmHg','140/90 mmHg','110/70 mmHg'],a:1,e:'Optimal ist systolisch < 120 mmHg und diastolisch < 80 mmHg. Ab 140/90 mmHg spricht man von Hypertonie Grad I. (Quelle: ESH/ESC Leitlinien 2023)',p:10},
-{m:2,n:'f',q:'Patient hat RR 85/50 mmHg, HF 118/min, SpO2 87%, kalte blasse Haut. Welche Diagnose und Sofortmaßnahme?',o:['Hypertensive Krise – Antihypertensivum','Hypovolämischer Schock – 112, Flachlagerung, Beine hoch','Bradykardie – Atropin','Normalbefund – beobachten'],a:1,e:'Die Schock-Trias (HF > 100, RR < 90, SpO2 < 90%) mit kalter Haut = hypovolämischer Schock. Sofort: 112 rufen, Schocklagerung (flach, Beine erhöht), Wärme, O2. (Quelle: Pflege heute Notfall)',p:20},
-{m:5,n:'a',q:'Ab welchem Bradenskala-Wert gilt ein Patient als "hohes Risiko" für Dekubitus?',o:['≤ 18 Punkte','≤ 14 Punkte','≤ 12 Punkte','≤ 9 Punkte'],a:2,e:'10–12 Punkte = hohes Risiko. ≤ 9 Punkte = sehr hohes Risiko. Je niedriger der Wert, desto höher das Risiko! (Quelle: DNQP Expertenstandard Dekubitus)',p:10},
-{m:2,n:'e',q:'Welchen SpO2-Zielwert hat ein COPD-Patient mit chronischer Hyperkapnie?',o:['95–99%','90–94%','88–92%','80–85%'],a:2,e:'Ziel-SpO2 bei COPD: 88–92%! Höhere Werte hemmen den hypoxischen Atemantrieb und können zur CO2-Narkose führen. (Quelle: Icare Pneumologie, BTS/NICE Leitlinie)',p:30},
-{m:9,n:'a',q:'Was bedeutet FAST beim Schlaganfall?',o:['Face, Arms, Speech, Time','Fieber, Atemnot, Schwindel, Tachykardie','Funktion, Augen, Sprache, Test','Fast Assessment Stroke Test'],a:0,e:'FAST: Face (Gesicht hängt?), Arms (Arm fällt?), Speech (Sprache undeutlich?), Time (sofort 112!). Zeit ist Hirngewebe! (Quelle: DSG Leitlinie Schlaganfall)',p:10},
-{m:10,n:'a',q:'Welche Phase der Wundheilung ist durch Granulationsgewebebildung und Neubildung von Kapillaren gekennzeichnet?',o:['Hämostase','Exsudationsphase','Proliferations-/Granulationsphase','Reparationsphase'],a:2,e:'Die Proliferations-/Granulationsphase (ca. Tag 3–10) ist durch Fibroblasten, Kollagensynthese, Angiogenese und Granulationsgewebe charakterisiert. (Quelle: medi-karriere.de, DocCheck Flexikon Wundheilungsphasen)',p:10},
-{m:8,n:'f',q:'Arzt ordnet eine Maßnahme an, die du für fehlerhaft hältst. Was ist korrekt?',o:['Ausführen – der Arzt trägt die Verantwortung','Bedenken äußern, dokumentieren, ggf. verweigern','Sofort die Aufsichtsbehörde informieren','Schweigen und abwarten'],a:1,e:'Durchführungsverantwortung: Jede Pflegeperson haftet für korrekte Ausführung. Bedenken äußern (mündlich + schriftlich), Pflege-/Arztkette informieren, ggf. verweigern. (Quelle: § 823 BGB, Icare Recht)',p:20},
-{m:3,n:'f',q:'500 ml NaCl 0,9% sollen über 4 Stunden laufen. Tropffaktor 20. Wie viele Tropfen/min?',o:['21 Tr/min','42 Tr/min','83 Tr/min','25 Tr/min'],a:1,e:'Formel: (Volumen × Tropffaktor) / Zeit in Min = (500 × 20) / 240 = 41,7 ≈ 42 Tr/min. (Quelle: Icare Medikamentenlehre)',p:20},
-{m:4,n:'f',q:'Wie wird die korrekte Lage einer nasogastralen Sonde am sichersten überprüft?',o:['Sonde in Wasser halten (Blubbern = falsch)','pH-Wert des Aspirats messen (< 5,5 = korrekt)','Patient soll sprechen','Röntgenkontrolle immer nötig'],a:1,e:'Goldstandard: pH-Wert des Magensekrets < 5,5 = korrekte gastrische Lage. Röntgen nur bei Unsicherheit. (Quelle: Icare Ernährung, ESPEN Leitlinie)',p:20},
-{m:6,n:'a',q:'Welche ist die häufigste Demenzform in Deutschland?',o:['Vaskuläre Demenz','Lewy-Körper-Demenz','Alzheimer-Demenz','Frontotemporale Demenz'],a:2,e:'Alzheimer-Demenz: ~65% aller Demenzen. Charakteristisch: schleichender Beginn, Kurzzeitgedächtnis zuerst betroffen. (Quelle: Deutsche Alzheimer Gesellschaft, Icare Psychiatrie)',p:10},
-];
+var QCM=[];/* loaded from pflegelearn_qcm.js */
 
 var FMTS=[
 {q:10,time:20,title:'⚡ Schnelltest',desc:'10 Fragen · 20 Min · Mix'},
@@ -491,6 +451,43 @@ document.getElementById('srch').oninput=function(){st.search=this.value.toLowerC
 document.getElementById('prev').onclick=function(){if(st.page>0){st.page--;render();}};
 document.getElementById('next').onclick=function(){var t=Math.ceil(filtered().length/st.per)||1;if(st.page<t-1){st.page++;render();}};
 
+
+// FREE/PREMIUM SYSTEM
+var IS_FREE = true; // Change to false after authentication
+var FREE_MODULES = [1, 2]; // M1 + M2 free
+
+function isPremium() { return !IS_FREE; }
+function isModuleFree(modId) { return FREE_MODULES.indexOf(modId) >= 0; }
+
+function showPlanBanner() {
+  var existing = document.getElementById('plan-banner');
+  if (!existing) {
+    var banner = document.createElement('div');
+    banner.id = 'plan-banner';
+    banner.className = 'plan-banner';
+    banner.innerHTML = '<span class="plan-badge">🆓 Free-Plan</span>' +
+      '<span class="plan-text">Du hast Zugang zu Modul 01 + 02 (220 Karten, 100 QCM). Für alle 1100 Karten & 500 QCM:</span>' +
+      '<a href="PflegeLearn_Auth.html" class="plan-cta">🔓 Student-Plan → 9€/Monat</a>';
+    var grid = document.getElementById('lg');
+    if (grid && grid.parentNode) {
+      grid.parentNode.insertBefore(banner, grid);
+    }
+  }
+}
+
+function addLockToCard(cardEl, modId) {
+  if (isPremium() || isModuleFree(modId)) return;
+  var overlay = document.createElement('div');
+  overlay.className = 'lock-overlay';
+  overlay.innerHTML = '<div class="lock-icon">🔒</div>' +
+    '<div class="lock-text">Modul ' + String(modId).padStart(2,'0') + ' ist im Student-Plan verfügbar</div>' +
+    '<a href="PflegeLearn_Auth.html" class="lock-btn">🔓 Freischalten</a>';
+  cardEl.style.position = 'relative';
+  cardEl.style.overflow = 'hidden';
+  cardEl.appendChild(overlay);
+  cardEl.onclick = null;
+}
+
 function filtered(){
   var c=CARDS;
   if(st.filter!=='all') c=c.filter(function(x){return x.n===st.filter;});
@@ -503,6 +500,7 @@ function render(){
   if(st.page>=total) st.page=total-1;
   var sl=c.slice(st.page*st.per,(st.page+1)*st.per);
   var NL={a:'🌱 Anfänger',f:'🔥 Fortgeschritten',e:'💎 Experte'};
+  if(IS_FREE) showPlanBanner();
   document.getElementById('lg').innerHTML=sl.map(function(c){
     var mod=MODS.find(function(m){return m.id===c.m;})||{n:'📋',name:'Modul'};
     return '<div class="card" onclick="this.classList.toggle(\'flipped\')">'
@@ -519,6 +517,7 @@ function render(){
       +'</div></div>';
   }).join('');
   document.getElementById('pi').textContent='Seite '+(st.page+1)+' / '+total+' ('+c.length+' Karten)';
+  if(IS_FREE){document.querySelectorAll('.card').forEach(function(el,i){var card=sl[i];if(card&&!isModuleFree(card.m)){addLockToCard(el,card.m);}});}
 }
 
 // ══════════ VIDEOS ══════════
@@ -608,8 +607,15 @@ document.getElementById('startbtn').onclick=function(){
     if(st.tleft<=0){clearInterval(st.tiv);showRes();}},1000);
   showQ();
 };
+function checkQAccess(q) {
+  if (isPremium() || isModuleFree(q.m)) return true;
+  document.getElementById('chlist').innerHTML = '<div style="text-align:center;padding:2rem"><div style="font-size:2rem">🔒</div><div style="font-size:.9rem;color:rgba(255,255,255,.6);margin:.5rem 0">Diese Fragen sind im Student-Plan verfügbar</div><a href="PflegeLearn_Auth.html" style="background:var(--gold);color:var(--ink);padding:.5rem 1.2rem;border-radius:999px;font-weight:800;text-decoration:none;font-size:.85rem">🔓 Jetzt freischalten – 9€/Monat</a></div>';
+  document.getElementById('nxtbtn').style.display = 'none';
+  return false;
+}
 function showQ(){
   var q=st.eqs[st.eidx];
+  if(!checkQAccess(q)) return;
   var mod=MODS.find(function(m){return m.id===q.m;})||{name:'Modul'};
   document.getElementById('ebar').style.width=((st.eidx/st.eqs.length)*100)+'%';
   document.getElementById('ectr').textContent='Frage '+(st.eidx+1)+' / '+st.eqs.length;
