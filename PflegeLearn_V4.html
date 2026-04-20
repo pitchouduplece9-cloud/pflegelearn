@@ -249,7 +249,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:1re
 <!-- LERNKARTEN -->
 <div class="screen on" id="s-lk">
   <div class="sec-title">Lern<span style="color:var(--tealM)">karten</span></div>
-  <div class="sec-sub">206 Karten · 500 QCM · v2.1 · 3 Niveaus · Klicken zum Umdrehen · Quellen: Icare, Pflege heute, PflBG 2020</div>
+  <div class="sec-sub">206 Karten · 500 QCM · v3.0 · 3 Niveaus · Klicken zum Umdrehen · Quellen: Icare, Pflege heute, PflBG 2020</div>
   <div class="controls">
     <input class="search" id="srch" placeholder="🔍 Thema suchen...">
     <div class="filters">
@@ -258,18 +258,18 @@ header{display:flex;align-items:center;justify-content:space-between;padding:1re
       <button class="filt" data-f="f">🔥 Fortgeschritten</button>
       <button class="filt" data-f="e">💎 Experte</button>
     </div>
-    <div class="mod-filters" id="modfilt" style="display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.6rem;">
-      <button class="filt mfb on" id="mfb-0" onclick="setMod(0)">📚 Alle</button>
-      <button class="filt mfb" id="mfb-1" onclick="setMod(1)">📋 M01</button>
-      <button class="filt mfb" id="mfb-2" onclick="setMod(2)">🫀 M02</button>
-      <button class="filt mfb" id="mfb-3" onclick="setMod(3)">💊 M03</button>
-      <button class="filt mfb" id="mfb-4" onclick="setMod(4)">🍽 M04</button>
-      <button class="filt mfb" id="mfb-5" onclick="setMod(5)">🦴 M05</button>
-      <button class="filt mfb" id="mfb-6" onclick="setMod(6)">🧠 M06</button>
-      <button class="filt mfb" id="mfb-7" onclick="setMod(7)">👶 M07</button>
-      <button class="filt mfb" id="mfb-8" onclick="setMod(8)">⚖ M08</button>
-      <button class="filt mfb" id="mfb-9" onclick="setMod(9)">🏥 M09</button>
-      <button class="filt mfb" id="mfb-10" onclick="setMod(10)">🩹 M10</button>
+    <div class="mod-filters" style="display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.6rem;">
+      <button class="filt mfb on" id="mfb-0" onclick="doMod(0)">📚 Alle</button>
+      <button class="filt mfb" id="mfb-1" onclick="doMod(1)">📋 M01</button>
+      <button class="filt mfb" id="mfb-2" onclick="doMod(2)">🫀 M02</button>
+      <button class="filt mfb" id="mfb-3" onclick="doMod(3)">💊 M03</button>
+      <button class="filt mfb" id="mfb-4" onclick="doMod(4)">🍽 M04</button>
+      <button class="filt mfb" id="mfb-5" onclick="doMod(5)">🦴 M05</button>
+      <button class="filt mfb" id="mfb-6" onclick="doMod(6)">🧠 M06</button>
+      <button class="filt mfb" id="mfb-7" onclick="doMod(7)">👶 M07</button>
+      <button class="filt mfb" id="mfb-8" onclick="doMod(8)">⚖ M08</button>
+      <button class="filt mfb" id="mfb-9" onclick="doMod(9)">🏥 M09</button>
+      <button class="filt mfb" id="mfb-10" onclick="doMod(10)">🩹 M10</button>
     </div>
   </div>
   <div class="grid" id="lg"></div>
@@ -1258,7 +1258,7 @@ document.querySelectorAll('.nb').forEach(function(b){
 document.querySelectorAll('.filt').forEach(function(b){
   b.onclick=function(){
     document.querySelectorAll('#s-lk .filt').forEach(function(x){x.classList.remove('on');});
-    b.classList.add('on'); st.filter=b.dataset.f; st.page=0; render();
+    b.classList.add('on'); st.filter=b.dataset.f; st.page=0; renderCards();
   };
 });
 document.getElementById('srch').oninput=function(){st.search=this.value.toLowerCase();st.page=0;render();};
@@ -1303,29 +1303,38 @@ function addLockToCard(cardEl, modId) {
 }
 
 
-// ── Module filter ──
-function setMod(n){
-  n = Number(n);
-  st.mod = n;
-  st.page = 0;
-  // Update button styles
-  var btns = document.querySelectorAll('.mfb');
-  for(var i=0; i<btns.length; i++){
-    btns[i].classList.remove('on');
+
+var CURMOD = 0;
+
+function doMod(n) {
+  CURMOD = parseInt(n);
+  // Boutons
+  var all = document.getElementsByClassName('mfb');
+  for (var i = 0; i < all.length; i++) {
+    all[i].className = all[i].className.replace(' on', '').replace('on ', '');
   }
-  var active = document.getElementById('mfb-'+n);
-  if(active){ active.classList.add('on'); }
-  render();
+  var btn = document.getElementById('mfb-' + CURMOD);
+  if (btn) btn.className += ' on';
+  // Reset page
+  st.page = 0;
+  // Render
+  renderCards();
 }
 
 function filtered(){
-  var c=CARDS;
-  if(st.mod>0) c=c.filter(function(x){return x.m==st.mod;});
-  if(st.filter!=='all') c=c.filter(function(x){return x.n===st.filter;});
-  if(st.search) c=c.filter(function(x){return x.t.toLowerCase().indexOf(st.search)>=0||x.q.toLowerCase().indexOf(st.search)>=0;});
-  return c;
+  var result = [];
+  for (var i = 0; i < CARDS.length; i++) {
+    var card = CARDS[i];
+    if (CURMOD > 0 && parseInt(card.m) !== CURMOD) continue;
+    if (st.filter !== 'all' && card.n !== st.filter) continue;
+    if (st.search && card.t.toLowerCase().indexOf(st.search) < 0 && card.q.toLowerCase().indexOf(st.search) < 0) continue;
+    result.push(card);
+  }
+  return result;
 }
-function render(){
+
+function render(){ renderCards(); }
+function renderCards(){
   var c=filtered();
   console.log("[PL] render: mod="+st.mod+" cards="+c.length);
   var total=Math.ceil(c.length/st.per)||1;
