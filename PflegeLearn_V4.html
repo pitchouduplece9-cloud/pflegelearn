@@ -1305,25 +1305,29 @@ function addLockToCard(cardEl, modId) {
 
 // ── Module filter ──
 function setMod(n){
-  n = parseInt(n) || 0;
+  n = Number(n);
   st.mod = n;
   st.page = 0;
-  document.querySelectorAll('.mfb').forEach(function(b){ b.classList.remove('on'); });
-  var btn = document.getElementById('mfb-' + n);
-  if(btn) btn.classList.add('on');
+  // Update button styles
+  var btns = document.querySelectorAll('.mfb');
+  for(var i=0; i<btns.length; i++){
+    btns[i].classList.remove('on');
+  }
+  var active = document.getElementById('mfb-'+n);
+  if(active){ active.classList.add('on'); }
   render();
-  console.log('[PL] setMod:', n, '→', filtered().length, 'Karten');
 }
 
 function filtered(){
   var c=CARDS;
-  if(st.mod>0) c=c.filter(function(x){return Number(x.m)===Number(st.mod);});
+  if(st.mod>0) c=c.filter(function(x){return x.m==st.mod;});
   if(st.filter!=='all') c=c.filter(function(x){return x.n===st.filter;});
   if(st.search) c=c.filter(function(x){return x.t.toLowerCase().indexOf(st.search)>=0||x.q.toLowerCase().indexOf(st.search)>=0;});
   return c;
 }
 function render(){
   var c=filtered();
+  console.log("[PL] render: mod="+st.mod+" cards="+c.length);
   var total=Math.ceil(c.length/st.per)||1;
   if(st.page>=total) st.page=total-1;
   var sl=c.slice(st.page*st.per,(st.page+1)*st.per);
@@ -1504,6 +1508,7 @@ function resetExam(){clearInterval(st.tiv);document.getElementById('esetup').sty
 })();
 
 // INIT
+console.log("[PL] CARDS loaded: "+CARDS.length+" QCM: "+QCM.length);
 render();
 </script>
 
