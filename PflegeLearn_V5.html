@@ -346,7 +346,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
   <div id="view-home">
     <div class="home-hero fade-up">
       <div class="home-title">Lern smarter.<br>Besteh besser.</div>
-      <div class="home-sub">672 Lernkarten · 161 Prüfungsfragen · KI-Tutor · 6 Lernbereiche</div>
+      <div class="home-sub">672 Lernkarten · 161 Prüfungsfragen · Lernassistent · 6 Lernbereiche</div>
       <div class="progress-bar"><div class="progress-bar-fill" id="global-prog" style="width:0%"></div></div>
     </div>
     <div class="domain-grid" id="domain-grid"></div>
@@ -377,18 +377,32 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 
   <!-- SCREEN: KI TUTOR -->
   <div id="view-ki" style="display:none;flex-direction:column;height:100%">
-    <div style="padding:.8rem 1rem .3rem;display:flex;align-items:center;justify-content:space-between">
-      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem">🤖 KI-Tutor Pflege</div>
-      <div id="ki-status" style="font-size:.65rem;color:var(--muted)">Verbinde...</div>
+    
+    <!-- Header -->
+    <div style="padding:.9rem 1.2rem .5rem;border-bottom:1px solid var(--border);flex-shrink:0">
+      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;margin-bottom:.15rem">🔍 Lernassistent</div>
+      <div style="font-size:.72rem;color:var(--muted)">Suche in 672 Karten & 161 Prüfungsfragen</div>
     </div>
-    <div class="ki-chips" id="ki-chips"></div>
-    <div class="ki-messages" id="ki-messages">
-      <div class="ki-msg ai">Hallo! Ich bin dein KI-Tutor. Frag mich zu Pflegethemen, lass dir QCM erstellen oder mach eine Prüfungssimulation! 💪</div>
+
+    <!-- Search bar -->
+    <div style="padding:.7rem 1rem;flex-shrink:0;border-bottom:1px solid var(--border)">
+      <div style="display:flex;gap:.5rem;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:999px;padding:.5rem .9rem">
+        <span style="font-size:1rem;flex-shrink:0">🔍</span>
+        <input id="ki-search" placeholder="Thema suchen... z.B. Dekubitus, Heparin, Sepsis"
+          style="flex:1;background:none;border:none;outline:none;font-size:.85rem;color:var(--text);font-family:'DM Sans',sans-serif"
+          oninput="kiSearch(this.value)" onkeydown="if(event.key==='Enter')kiSearch(this.value)">
+        <span id="ki-clear" style="cursor:pointer;color:var(--muted);display:none" onclick="clearKISearch()">✕</span>
+      </div>
     </div>
-    <div class="ki-input-row">
-      <input class="ki-input" id="ki-input" placeholder="Frage stellen..." onkeydown="if(event.key==='Enter')sendKI()">
-      <button class="ki-send" onclick="sendKI()">↑</button>
+
+    <!-- Quick topics -->
+    <div id="ki-topics" style="padding:.6rem 1rem;flex-shrink:0;overflow-x:auto;white-space:nowrap;scrollbar-width:none">
+      <span style="font-size:.7rem;color:var(--muted);margin-right:.4rem">Schnellthemen:</span>
     </div>
+
+    <!-- Results area -->
+    <div id="ki-results" style="flex:1;overflow-y:auto;padding:.5rem 1rem 1.5rem;-webkit-overflow-scrolling:touch"></div>
+
   </div>
 
   <!-- SCREEN: PROFIL -->
@@ -413,7 +427,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
     <span class="icon">📚</span>Lernen
   </button>
   <button class="nb" id="nb-ki" onclick="showView('ki')">
-    <span class="icon">🤖</span>KI-Tutor
+    <span class="icon">🔍</span>Suchen
   </button>
   <button class="nb" id="nb-profil" onclick="showView('profil')">
     <span class="icon">👤</span>Profil
@@ -1673,137 +1687,200 @@ function renderTheorie(mod, area){
   '</div>';
 }
 
-// ── KI TUTOR ──
-var KI_CHIPS = [
-  'Erkläre den Pflegeprozess',
-  'Was ist der Braden-Score?',
-  'Pneumonieprophylaxe – Maßnahmen',
-  'QCM zu Dekubitus erstellen',
-  '5 WHO-Indikationen Händedesinfektion',
-  'Unterschied Delir vs Demenz',
-  'Diabetes Typ 1 vs Typ 2',
-  'Simulation: Herzinfarkt-Patient',
-  'Erklär mir Sepsis',
-  'Thromboseprophylaxe – alles',
+
+// ════════════════════════════════
+//  LERNASSISTENT — Smart Search
+// ════════════════════════════════
+
+var QUICK_TOPICS = [
+  'Dekubitus','Heparin','Sepsis','Blutdruck','Herzinsuffizienz',
+  'Diabetes','Demenz','Wundheilung','Pflegeprozess','MRSA',
+  'Pneumonie','Schlaganfall','Schmerztherapie','Thrombose',
+  'Händedesinfektion','Medikamente','Ernährung','Reanimation',
+  'Braden-Skala','Lagerung','Insulin','Fieber','Palliativ'
 ];
 
-function showKISetup(){
-  var existing = document.getElementById('ki-setup-banner');
-  if(existing) return;
-  var banner = document.createElement('div');
-  banner.id = 'ki-setup-banner';
-  banner.style.cssText = 'background:rgba(220,38,38,.12);border:1px solid rgba(220,38,38,.2);border-radius:12px;padding:.8rem 1rem;margin:.5rem 1rem;font-size:.78rem;';
-  banner.innerHTML = '<div style="font-weight:700;margin-bottom:.4rem;color:#fca5a5">🔑 KI-Tutor Einrichtung</div>'+
-    '<div style="color:var(--muted);margin-bottom:.6rem">Anthropic API-Schlüssel eingeben um den KI-Tutor zu aktivieren:</div>'+
-    '<div style="display:flex;gap:.4rem">'+
-      '<input id="ki-key-input" placeholder="sk-ant-..." style="flex:1;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:.4rem .7rem;font-size:.78rem;color:var(--text);font-family:monospace">'+
-      '<button onclick="saveKIKey()" style="background:var(--d1);border:none;border-radius:8px;padding:.4rem .8rem;color:#fff;font-weight:700;cursor:pointer;font-size:.78rem">Speichern</button>'+
-    '</div>';
-  var msgs = $('ki-messages');
-  msgs.parentNode.insertBefore(banner, msgs);
-}
-
-function saveKIKey(){
-  var key = document.getElementById('ki-key-input').value.trim();
-  if(key.startsWith('sk-ant-')){
-    localStorage.setItem('pl-api-key', key);
-    document.getElementById('ki-setup-banner').remove();
-    if($('ki-status')) $('ki-status').textContent='✅ Verbunden';
-    addKIMessage('✅ API-Schlüssel gespeichert! Du kannst jetzt Fragen stellen.', 'ai');
-  } else {
-    alert('Ungültiger API-Schlüssel. Muss mit sk-ant- beginnen.');
-  }
-}
-
 function renderKIChips(){
-  var chips=$('ki-chips');
-  chips.innerHTML='';
-  KI_CHIPS.forEach(function(c){
-    var el=document.createElement('div');
-    el.className='ki-chip';
-    el.textContent=c;
-    el.onclick=function(){
-      $('ki-input').value=c;
-      sendKI();
+  var topics = document.getElementById('ki-topics');
+  if(!topics) return;
+  // Keep the "Schnellthemen:" label
+  var label = topics.querySelector('span');
+  topics.innerHTML = '';
+  if(label) topics.appendChild(label);
+  
+  QUICK_TOPICS.forEach(function(t){
+    var chip = document.createElement('span');
+    chip.style.cssText = 'display:inline-block;margin-right:.4rem;margin-bottom:.3rem;padding:.3rem .75rem;border-radius:999px;border:1px solid var(--border);background:var(--card);font-size:.72rem;cursor:pointer;transition:all .15s;white-space:nowrap';
+    chip.textContent = t;
+    chip.onclick = function(){
+      document.getElementById('ki-search').value = t;
+      kiSearch(t);
     };
-    chips.appendChild(el);
+    topics.appendChild(chip);
   });
+  
+  // Show welcome state
+  showKIWelcome();
 }
 
-function addKIMessage(text, type){
-  var msgs=$('ki-messages');
-  var el=document.createElement('div');
-  el.className='ki-msg '+type;
-  el.textContent=text;
-  msgs.appendChild(el);
-  msgs.scrollTop=msgs.scrollHeight;
-  return el;
+function showKIWelcome(){
+  var results = document.getElementById('ki-results');
+  results.innerHTML = 
+    '<div style="text-align:center;padding:2rem 1rem">' +
+      '<div style="font-size:2.5rem;margin-bottom:.75rem">🧠</div>' +
+      '<div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:.4rem">Was möchtest du lernen?</div>' +
+      '<div style="font-size:.78rem;color:var(--muted);line-height:1.6">Gib ein Thema ein oder wähle einen Schnellzugriff.<br>Du hast Zugriff auf <strong style="color:var(--d1)">672 Lernkarten</strong> und <strong style="color:var(--d1)">161 Prüfungsfragen</strong>.</div>' +
+    '</div>';
 }
 
-function addTyping(){
-  var msgs=$('ki-messages');
-  var el=document.createElement('div');
-  el.className='ki-msg ai';
-  el.innerHTML='<div class="ki-typing"><span></span><span></span><span></span></div>';
-  msgs.appendChild(el);
-  msgs.scrollTop=msgs.scrollHeight;
-  return el;
+function clearKISearch(){
+  document.getElementById('ki-search').value = '';
+  document.getElementById('ki-clear').style.display = 'none';
+  showKIWelcome();
 }
 
-function sendKI(){
-  var input=$('ki-input');
-  var msg=input.value.trim();
-  if(!msg) return;
-  input.value='';
+function kiSearch(query){
+  query = (query||'').trim();
+  var clear = document.getElementById('ki-clear');
+  if(clear) clear.style.display = query ? 'block' : 'none';
   
-  addKIMessage(msg, 'user');
-  var typing=addTyping();
+  if(query.length < 2){
+    showKIWelcome();
+    return;
+  }
   
-  // Build context from cards/QCM for better AI responses
-  var context = "Du bist ein professioneller KI-Tutor für Pflegeausbildung in Deutschland. " +
-    "Du hilfst Pflegestudenten, Prüfungswissen zu verstehen und zu üben. " +
-    "Antworte auf Deutsch, präzise, strukturiert. " +
-    "Wenn nach QCM gefragt: erstelle 3-5 Fragen mit 4 Antwortoptionen und markiere die richtige. " +
-    "Wenn nach Erklärung gefragt: gib eine strukturierte, klare Antwort mit Merksätzen. " +
-    "Nutze Emojis sparsam für Übersichtlichkeit.";
+  var q = query.toLowerCase();
+  var results = document.getElementById('ki-results');
   
-  var apiKey = localStorage.getItem('pl-api-key') || '';
+  // Search CARDS
+  var matchedCards = CARDS.filter(function(c){
+    return (c.t && c.t.toLowerCase().indexOf(q) >= 0) ||
+           (c.q && c.q.toLowerCase().indexOf(q) >= 0) ||
+           (c.a && c.a.toLowerCase().indexOf(q) >= 0);
+  });
   
-  fetch("https://api.anthropic.com/v1/messages", {
-    method:"POST",
-    headers:{
-      "Content-Type":"application/json",
-      "anthropic-dangerous-direct-browser-access":"true",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01"
-    },
-    body:JSON.stringify({
-      model:"claude-sonnet-4-5-20251001",
-      max_tokens:1000,
-      system: context,
-      messages:[{role:"user", content:msg}]
-    })
-  })
-  .then(function(r){ return r.json(); })
-  .then(function(data){
-    typing.remove();
-    if(data.error){
-      addKIMessage("⚠️ "+data.error.message, 'ai');
-      showKISetup();
-      return;
+  // Search QCM
+  var matchedQCM = QCM.filter(function(q_item){
+    return (q_item.q && q_item.q.toLowerCase().indexOf(q) >= 0) ||
+           (q_item.e && q_item.e.toLowerCase().indexOf(q) >= 0) ||
+           q_item.o.some(function(o){ return o.toLowerCase().indexOf(q) >= 0; });
+  });
+  
+  var total = matchedCards.length + matchedQCM.length;
+  
+  if(total === 0){
+    results.innerHTML = 
+      '<div style="text-align:center;padding:2rem 1rem">' +
+        '<div style="font-size:2rem;margin-bottom:.5rem">😕</div>' +
+        '<div style="font-weight:600;margin-bottom:.3rem">Keine Ergebnisse für "'+escHtml(query)+'"</div>' +
+        '<div style="font-size:.78rem;color:var(--muted)">Versuche andere Begriffe wie: Dekubitus, Heparin, Blutdruck...</div>' +
+      '</div>';
+    return;
+  }
+  
+  var html = '<div style="font-size:.72rem;color:var(--muted);margin-bottom:.75rem;font-weight:600">' +
+    total + ' Ergebnisse für "' + escHtml(query) + '"' +
+    (matchedCards.length ? ' · ' + matchedCards.length + ' Karten' : '') +
+    (matchedQCM.length ? ' · ' + matchedQCM.length + ' QCM' : '') +
+    '</div>';
+  
+  // Show matched cards (max 15)
+  if(matchedCards.length > 0){
+    html += '<div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.78rem;color:var(--d1);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.05em">🃏 Lernkarten (' + matchedCards.length + ')</div>';
+    
+    matchedCards.slice(0, 15).forEach(function(c){
+      var niv_color = c.n==='a'?'var(--d1)':c.n==='f'?'var(--d4)':'var(--d2)';
+      var niv_label = {a:'Anfänger',f:'Fortgeschritten',e:'Experte'}[c.n] || c.n;
+      
+      // Highlight matching text
+      var answer = c.a ? c.a.replace(/\n/g,' ').substring(0,300) : '';
+      var highlighted = answer.replace(new RegExp('('+escRegex(query)+')', 'gi'), '<mark style="background:rgba(13,148,136,.25);color:var(--d1);border-radius:3px;padding:0 2px">$1</mark>');
+      
+      html += '<div onclick="toggleKICard(this)" style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:.85rem;margin-bottom:.5rem;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='var(--d1)'" onmouseout="this.style.borderColor='var(--border)'">' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.4rem">' +
+          '<div style="font-weight:700;font-size:.85rem;flex:1;padding-right:.5rem">' + escHtml(c.t) + '</div>' +
+          '<span style="font-size:.6rem;font-weight:700;color:'+niv_color+';background:'+niv_color+'18;border-radius:999px;padding:.15rem .45rem;flex-shrink:0">' + niv_label + '</span>' +
+        '</div>' +
+        '<div style="font-size:.75rem;color:var(--muted);margin-bottom:.5rem">' + escHtml(c.q) + '</div>' +
+        '<div class="ki-card-answer" style="display:none;font-size:.78rem;line-height:1.55;padding-top:.5rem;border-top:1px solid var(--border);color:rgba(255,255,255,.85)">' + highlighted + '</div>' +
+        '<div style="font-size:.65rem;color:var(--d1);margin-top:.35rem">▼ Antwort anzeigen</div>' +
+      '</div>';
+    });
+    
+    if(matchedCards.length > 15){
+      html += '<div style="text-align:center;font-size:.75rem;color:var(--muted);padding:.5rem">... und ' + (matchedCards.length-15) + ' weitere Karten</div>';
     }
-    var text = (data.content&&data.content[0]&&data.content[0].text) || 
-               "Entschuldigung, ich konnte keine Antwort generieren.";
-    addKIMessage(text, 'ai');
-    if($('ki-status')) $('ki-status').textContent='✅ Verbunden';
-  })
-  .catch(function(err){
-    typing.remove();
-    addKIMessage("⚠️ Verbindungsfehler. API-Schlüssel prüfen.", 'ai');
-    showKISetup();
-    console.error('[KI-Tutor]', err);
-  });
+  }
+  
+  // Show matched QCM (max 8)
+  if(matchedQCM.length > 0){
+    html += '<div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.78rem;color:var(--d6);margin:.75rem 0 .5rem;text-transform:uppercase;letter-spacing:.05em">❓ Prüfungsfragen (' + matchedQCM.length + ')</div>';
+    
+    matchedQCM.slice(0, 8).forEach(function(q_item, qi){
+      var uid = 'ki-qcm-'+qi+'-'+Math.floor(Math.random()*9999);
+      html += '<div id="'+uid+'" style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:.85rem;margin-bottom:.5rem">' +
+        '<div style="font-weight:600;font-size:.84rem;margin-bottom:.65rem;line-height:1.4">' + escHtml(q_item.q) + '</div>';
+      
+      q_item.o.forEach(function(opt, oi){
+        var letter = String.fromCharCode(65+oi);
+        html += '<div onclick="answerKIQCM(this,'+oi+','+q_item.a+',''+uid+'')" style="display:flex;gap:.5rem;align-items:center;padding:.45rem .65rem;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);margin-bottom:.35rem;cursor:pointer;font-size:.8rem;transition:all .15s">' +
+          '<div style="width:22px;height:22px;border-radius:999px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;flex-shrink:0">' + letter + '</div>' +
+          '<div>' + escHtml(opt) + '</div>' +
+        '</div>';
+      });
+      
+      html += '<div id="expl-'+uid+'" style="display:none;background:rgba(255,255,255,.04);border-radius:10px;padding:.6rem .75rem;margin-top:.5rem;font-size:.76rem;color:var(--muted);line-height:1.5">' + escHtml(q_item.e) + '</div>';
+      html += '</div>';
+    });
+  }
+  
+  results.innerHTML = html;
 }
+
+function toggleKICard(el){
+  var answer = el.querySelector('.ki-card-answer');
+  var hint = el.querySelector('[style*="▼"]') || el.querySelector('[style*="▲"]');
+  if(!answer) return;
+  var isOpen = answer.style.display !== 'none';
+  answer.style.display = isOpen ? 'none' : 'block';
+  if(hint) hint.textContent = isOpen ? '▼ Antwort anzeigen' : '▲ Antwort schließen';
+  if(!isOpen){ addPoints(2); updateTopBar(); }
+}
+
+function answerKIQCM(el, oi, correct, uid){
+  var container = document.getElementById(uid);
+  if(!container || container.getAttribute('data-done')) return;
+  container.setAttribute('data-done','1');
+  
+  container.querySelectorAll('[onclick^="answerKIQCM"]').forEach(function(opt, i){
+    opt.style.pointerEvents = 'none';
+    opt.style.cursor = 'default';
+    if(i === correct){
+      opt.style.background = 'rgba(13,148,136,.15)';
+      opt.style.borderColor = 'var(--d1)';
+      opt.querySelector('div').style.background = 'var(--d1)';
+      opt.querySelector('div').style.color = '#fff';
+    } else if(i === oi && oi !== correct){
+      opt.style.background = 'rgba(220,38,38,.12)';
+      opt.style.borderColor = '#dc2626';
+      opt.querySelector('div').style.background = '#dc2626';
+      opt.querySelector('div').style.color = '#fff';
+    }
+  });
+  
+  var expl = document.getElementById('expl-'+uid);
+  if(expl) expl.style.display = 'block';
+  if(oi === correct){ addPoints(10); updateTopBar(); }
+}
+
+function escRegex(s){
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function showKISetup(){ /* disabled - no API needed */ }
+function saveKIKey_OLD(){ /* disabled */ }
+function sendKI(){ /* disabled */ }
+
 
 // ── PROFIL ──
 function renderProfil(){
