@@ -194,7 +194,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 .flip-niveau{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;opacity:.6;margin-bottom:.4rem}
 .flip-topic{font-size:.72rem;font-weight:600;opacity:.5;margin-bottom:.3rem}
 .flip-q{font-size:.8rem;font-weight:600;line-height:1.35;flex:1;display:flex;align-items:center}
-.flip-a{font-size:.72rem;line-height:1.45;flex:1;overflow-y:auto;color:rgba(255,255,255,.85)}
+.flip-a{font-size:.72rem;line-height:1.45;flex:1;overflow-y:auto;color:rgba(255,255,255,.85);max-height:120px;padding-right:2px}
 .flip-hint{font-size:.6rem;color:var(--muted);margin-top:auto;text-align:right}
 
 /* ─── QCM ─── */
@@ -346,7 +346,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
   <div id="view-home">
     <div class="home-hero fade-up">
       <div class="home-title">Lern smarter.<br>Besteh besser.</div>
-      <div class="home-sub">672 Lernkarten · 161 QCM · KI-Tutor · 6 Domänen</div>
+      <div class="home-sub">672 Lernkarten · 161 Prüfungsfragen · KI-Tutor · 6 Lernbereiche</div>
       <div class="progress-bar"><div class="progress-bar-fill" id="global-prog" style="width:0%"></div></div>
     </div>
     <div class="domain-grid" id="domain-grid"></div>
@@ -356,7 +356,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
   <div id="view-modules" style="display:none">
     <div class="module-list">
       <div class="module-header">
-        <div class="back-btn" onclick="goHome()">←</div>
+        <div class="back-btn" onclick="goStart()">←</div>
         <h2 id="domain-title">Domaine</h2>
       </div>
       <div id="module-list-items"></div>
@@ -377,8 +377,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 
   <!-- SCREEN: KI TUTOR -->
   <div id="view-ki" style="display:none;flex-direction:column;height:100%">
-    <div style="padding:.8rem 1rem .3rem;font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem">
-      🤖 KI-Tutor Pflege
+    <div style="padding:.8rem 1rem .3rem;display:flex;align-items:center;justify-content:space-between">
+      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem">🤖 KI-Tutor Pflege</div>
+      <div id="ki-status" style="font-size:.65rem;color:var(--muted)">Verbinde...</div>
     </div>
     <div class="ki-chips" id="ki-chips"></div>
     <div class="ki-messages" id="ki-messages">
@@ -406,7 +407,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 <!-- BOTTOM NAV -->
 <nav class="nav">
   <button class="nb on" id="nb-home" onclick="showView('home')">
-    <span class="icon">🏠</span>Home
+    <span class="icon">🏠</span>Start
   </button>
   <button class="nb" id="nb-lern" onclick="showView('modules-all')">
     <span class="icon">📚</span>Lernen
@@ -1280,63 +1281,63 @@ var st = {
 // ── DOMAINS ARCHITECTURE ──
 var DOMAINS = [
   {
-    id:'fondements', label:'Fondements', icon:'🧠', color:'#0d9488',
-    desc:'Bases de la pratique infirmière',
+    id:'fondements', label:'Grundlagen', icon:'🧠', color:'#0d9488',
+    desc:'Grundlagen der Pflegepraxis',
     mods: [
       {id:'grundlagen', label:'Grundlagen & Pflegeprozess', icon:'📋', card_m:[1]},
-      {id:'hygiene',    label:'Hygiène & Infektionslehre', icon:'🧼', card_m:[1]},
+      {id:'hygiene',    label:'Hygiene & Infektionslehre', icon:'🧼', card_m:[1]},
       {id:'mobilisation',label:'Mobilisation & Prophylaxen',icon:'🦴',card_m:[5]},
-      {id:'vitalzeichen',label:'Paramètres vitaux',         icon:'💓', card_m:[2]},
+      {id:'vitalzeichen',label:'Vitalzeichen',         icon:'💓', card_m:[2]},
       {id:'paediatrie',  label:'Pädiatrie & Entwicklung',   icon:'👶', card_m:[7]},
     ]
   },
   {
-    id:'pathologies', label:'Pathologies', icon:'🫁', color:'#7c3aed',
-    desc:'Reconnaître et comprendre la maladie',
+    id:'pathologies', label:'Krankheitsbilder', icon:'🫁', color:'#7c3aed',
+    desc:'Krankheiten erkennen und verstehen',
     mods: [
-      {id:'respiratoire', label:'Respiratoire',  icon:'🫁', card_m:[9], sub:['Pneumonie','BPCO','Asthme']},
-      {id:'cardiaque',    label:'Cardiaque',      icon:'❤️', card_m:[9], sub:['Herzinsuffizienz','Hypertonie','Herzinfarkt']},
-      {id:'metabolique',  label:'Métabolique',    icon:'🔬', card_m:[9], sub:['Diabetes','Schilddrüse']},
-      {id:'neurologique', label:'Neurologique',   icon:'🧠', card_m:[6,9], sub:['AVC','Demenz','Parkinson']},
-      {id:'infections',   label:'Infections',     icon:'🦠', card_m:[1,9], sub:['Sepsis','MRSA']},
+      {id:'respiratoire', label:'Atemwegerkrankungen',  icon:'🫁', card_m:[9], sub:['Pneumonie','COPD','Asthma']},
+      {id:'cardiaque',    label:'Herzerkrankungen',      icon:'❤️', card_m:[9], sub:['Herzinsuffizienz','Hypertonie','Herzinfarkt']},
+      {id:'metabolique',  label:'Stoffwechselerkrankungen',    icon:'🔬', card_m:[9], sub:['Diabetes mellitus','Schilddrüsenerkr.']},
+      {id:'neurologique', label:'Neurologische Erkrankungen',   icon:'🧠', card_m:[6,9], sub:['Schlaganfall','Demenz','Parkinson']},
+      {id:'infections',   label:'Infektionskrankheiten',     icon:'🦠', card_m:[1,9], sub:['Sepsis','MRSA/MRE']},
     ]
   },
   {
-    id:'soins', label:'Soins infirmiers', icon:'🩺', color:'#0ea5e9',
-    desc:'Maîtriser les gestes et techniques',
+    id:'soins', label:'Pflegehandlungen', icon:'🩺', color:'#0ea5e9',
+    desc:'Pflegetechniken beherrschen',
     mods: [
-      {id:'soins_base',   label:'Soins de base',     icon:'🛁', card_m:[1]},
-      {id:'medicaments',  label:'Médicaments',        icon:'💊', card_m:[3]},
-      {id:'perfusions',   label:'Perfusions & Injektionen', icon:'💉', card_m:[3]},
-      {id:'pansements',   label:'Pansements & Plaies', icon:'🩹', card_m:[10]},
+      {id:'soins_base',   label:'Grundpflege',     icon:'🛁', card_m:[1]},
+      {id:'medicaments',  label:'Medikamente',        icon:'💊', card_m:[3]},
+      {id:'perfusions',   label:'Infusionen & Injektionen', icon:'💉', card_m:[3]},
+      {id:'pansements',   label:'Wundversorgung', icon:'🩹', card_m:[10]},
       {id:'ernahrung',    label:'Ernährung',          icon:'🍽️', card_m:[4]},
     ]
   },
   {
-    id:'complexe', label:'Situations complexes', icon:'🧓', color:'#d97706',
-    desc:'Prioriser face à la complexité',
+    id:'complexe', label:'Komplexe Situationen', icon:'🧓', color:'#d97706',
+    desc:'Bei Komplexität priorisieren',
     mods: [
-      {id:'geriatrie',   label:'Gériatrie',        icon:'🧓', card_m:[1,9]},
-      {id:'demenz',      label:'Démence',           icon:'🌫️', card_m:[6]},
-      {id:'palliativ',   label:'Soins palliatifs',  icon:'🕊️', card_m:[7]},
-      {id:'douleur',     label:'Douleur',           icon:'⚡', card_m:[3,9]},
+      {id:'geriatrie',   label:'Geriatrie',        icon:'🧓', card_m:[1,9]},
+      {id:'demenz',      label:'Demenz',           icon:'🌫️', card_m:[6]},
+      {id:'palliativ',   label:'Palliativpflege',  icon:'🕊️', card_m:[7]},
+      {id:'douleur',     label:'Schmerzmanagement',           icon:'⚡', card_m:[3,9]},
     ]
   },
   {
-    id:'professionnel', label:'Cadre professionnel', icon:'⚖️', color:'#16a34a',
-    desc:'Connaître ses droits et devoirs',
+    id:'professionnel', label:'Beruflicher Rahmen', icon:'⚖️', color:'#16a34a',
+    desc:'Rechte und Pflichten kennen',
     mods: [
-      {id:'droit',       label:'Droit & PflBG',         icon:'⚖️', card_m:[8]},
-      {id:'ethique',     label:'Éthique',                icon:'🤝', card_m:[8]},
-      {id:'documentation',label:'Documentation',         icon:'📋', card_m:[1]},
+      {id:'droit',       label:'Recht & PflBG',         icon:'⚖️', card_m:[8]},
+      {id:'ethique',     label:'Ethik',                icon:'🤝', card_m:[8]},
+      {id:'documentation',label:'Dokumentation',         icon:'📋', card_m:[1]},
     ]
   },
   {
-    id:'examen', label:'Préparation examen', icon:'🧪', color:'#dc2626',
+    id:'examen', label:'Prüfungsvorbereitung', icon:'🧪', color:'#dc2626',
     desc:'S\'entraîner pour réussir',
     mods: [
-      {id:'qcm_all',    label:'QCM complets',     icon:'❓', card_m:[1,2,3,4,5,6,7,8,9,10]},
-      {id:'cas_cliniques',label:'Cas cliniques',  icon:'📊', card_m:[]},
+      {id:'qcm_all',    label:'Alle Prüfungsfragen',     icon:'❓', card_m:[1,2,3,4,5,6,7,8,9,10]},
+      {id:'cas_cliniques',label:'Fallstudien',  icon:'📊', card_m:[]},
     ]
   }
 ];
@@ -1356,6 +1357,11 @@ document.addEventListener('DOMContentLoaded', function(){
   renderDomainGrid();
   updateTopBar();
   renderProfil();
+  // Check KI status
+  var hasKey = localStorage.getItem('pl-api-key');
+  setTimeout(function(){
+    if($('ki-status')) $('ki-status').textContent = hasKey ? '✅ Verbunden' : '⚠️ Kein API-Schlüssel';
+  }, 500);
 });
 
 // ── STATE PERSISTENCE ──
@@ -1390,8 +1396,28 @@ function showView(view){
   if(view==='home'){
     show('view-home'); setNavActive('home');
   } else if(view==='modules-all'){
-    showDomainList(null, true);
+    show('view-modules'); hide('view-home'); hide('view-content');
     setNavActive('lern');
+    $('domain-title').textContent = '📚 Alle Lernbereiche';
+    var list=$('module-list-items');
+    list.innerHTML='';
+    DOMAINS.forEach(function(d){
+      var cards_count=CARDS.filter(function(c){
+        return d.mods.some(function(m){ return m.card_m.indexOf(c.m)>=0; });
+      }).length;
+      var el=document.createElement('div');
+      el.className='mod-item fade-up';
+      el.style.setProperty('--dc',d.color);
+      el.innerHTML='<div class="mi-icon" style="font-size:1.6rem">'+d.icon+'</div>'+
+        '<div class="mi-info">'+
+          '<div class="mi-title" style="font-size:.95rem;font-weight:700">'+d.label+'</div>'+
+          '<div style="font-size:.7rem;color:var(--muted);margin-top:.25rem">'+
+            d.mods.length+' Module · '+cards_count+' Lernkarten</div>'+
+        '</div>'+
+        '<div class="mi-arrow">→</div>';
+      el.onclick=function(){ openDomain(d); };
+      list.appendChild(el);
+    });
   } else if(view==='ki'){
     show('view-ki','flex'); setNavActive('ki');
     renderKIChips();
@@ -1403,7 +1429,7 @@ function showView(view){
   st.view=view;
 }
 
-function goHome(){
+function goStart(){
   show('view-home'); setNavActive('home');
   hide('view-modules'); hide('view-content');
 }
@@ -1472,9 +1498,9 @@ function openModule(mod, d){
   var nav=$('module-nav');
   nav.innerHTML='';
   var tabs=[
-    {id:'karten',label:'🃏 Karten'},
+    {id:'karten',label:'🃏 Lernkarten'},
     {id:'qcm',label:'❓ QCM'},
-    {id:'theorie',label:'📖 Théorie'},
+    {id:'theorie',label:'📖 Theorie'},
   ];
   tabs.forEach(function(t){
     var btn=document.createElement('div');
@@ -1531,7 +1557,7 @@ function renderKarten(mod, area){
           '<div class="flip-hint">← umdrehen</div>'+
         '</div>'+
         '<div class="flip-back">'+
-          '<div class="flip-topic">'+escHtml(c.q)+'</div>'+
+          '<div class="flip-topic">'+escHtml(c.t)+'</div>'+
           '<div class="flip-a">'+formatAnswer(c.a)+'</div>'+
         '</div>'+
       '</div>';
@@ -1661,6 +1687,34 @@ var KI_CHIPS = [
   'Thromboseprophylaxe – alles',
 ];
 
+function showKISetup(){
+  var existing = document.getElementById('ki-setup-banner');
+  if(existing) return;
+  var banner = document.createElement('div');
+  banner.id = 'ki-setup-banner';
+  banner.style.cssText = 'background:rgba(220,38,38,.12);border:1px solid rgba(220,38,38,.2);border-radius:12px;padding:.8rem 1rem;margin:.5rem 1rem;font-size:.78rem;';
+  banner.innerHTML = '<div style="font-weight:700;margin-bottom:.4rem;color:#fca5a5">🔑 KI-Tutor Einrichtung</div>'+
+    '<div style="color:var(--muted);margin-bottom:.6rem">Anthropic API-Schlüssel eingeben um den KI-Tutor zu aktivieren:</div>'+
+    '<div style="display:flex;gap:.4rem">'+
+      '<input id="ki-key-input" placeholder="sk-ant-..." style="flex:1;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:.4rem .7rem;font-size:.78rem;color:var(--text);font-family:monospace">'+
+      '<button onclick="saveKIKey()" style="background:var(--d1);border:none;border-radius:8px;padding:.4rem .8rem;color:#fff;font-weight:700;cursor:pointer;font-size:.78rem">Speichern</button>'+
+    '</div>';
+  var msgs = $('ki-messages');
+  msgs.parentNode.insertBefore(banner, msgs);
+}
+
+function saveKIKey(){
+  var key = document.getElementById('ki-key-input').value.trim();
+  if(key.startsWith('sk-ant-')){
+    localStorage.setItem('pl-api-key', key);
+    document.getElementById('ki-setup-banner').remove();
+    if($('ki-status')) $('ki-status').textContent='✅ Verbunden';
+    addKIMessage('✅ API-Schlüssel gespeichert! Du kannst jetzt Fragen stellen.', 'ai');
+  } else {
+    alert('Ungültiger API-Schlüssel. Muss mit sk-ant- beginnen.');
+  }
+}
+
 function renderKIChips(){
   var chips=$('ki-chips');
   chips.innerHTML='';
@@ -1713,11 +1767,18 @@ function sendKI(){
     "Wenn nach Erklärung gefragt: gib eine strukturierte, klare Antwort mit Merksätzen. " +
     "Nutze Emojis sparsam für Übersichtlichkeit.";
   
+  var apiKey = localStorage.getItem('pl-api-key') || '';
+  
   fetch("https://api.anthropic.com/v1/messages", {
     method:"POST",
-    headers:{"Content-Type":"application/json"},
+    headers:{
+      "Content-Type":"application/json",
+      "anthropic-dangerous-direct-browser-access":"true",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01"
+    },
     body:JSON.stringify({
-      model:"claude-sonnet-4-20250514",
+      model:"claude-sonnet-4-5-20251001",
       max_tokens:1000,
       system: context,
       messages:[{role:"user", content:msg}]
@@ -1726,13 +1787,21 @@ function sendKI(){
   .then(function(r){ return r.json(); })
   .then(function(data){
     typing.remove();
+    if(data.error){
+      addKIMessage("⚠️ "+data.error.message, 'ai');
+      showKISetup();
+      return;
+    }
     var text = (data.content&&data.content[0]&&data.content[0].text) || 
                "Entschuldigung, ich konnte keine Antwort generieren.";
     addKIMessage(text, 'ai');
+    if($('ki-status')) $('ki-status').textContent='✅ Verbunden';
   })
   .catch(function(err){
     typing.remove();
-    addKIMessage("Verbindungsfehler. Bitte versuche es erneut.", 'ai');
+    addKIMessage("⚠️ Verbindungsfehler. API-Schlüssel prüfen.", 'ai');
+    showKISetup();
+    console.error('[KI-Tutor]', err);
   });
 }
 
