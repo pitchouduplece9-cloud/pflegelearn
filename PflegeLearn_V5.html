@@ -29,7 +29,7 @@
   --radius:16px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow:hidden}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:DM Sans,sans-serif;overflow:hidden}
 
 /* ─── APP SHELL ─── */
 #app{display:flex;flex-direction:column;height:100dvh;height:100vh}
@@ -44,7 +44,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
   flex-shrink:0;z-index:100;
   padding-top:max(.8rem,env(safe-area-inset-top));
 }
-.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;letter-spacing:-.02em}
+.logo{font-family:Syne,sans-serif;font-weight:800;font-size:1.15rem;letter-spacing:-.02em}
 .logo span{color:var(--d1)}
 .topbar-right{display:flex;align-items:center;gap:.6rem}
 .streak-badge{
@@ -89,7 +89,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
   background:linear-gradient(180deg,rgba(13,148,136,.08) 0%,transparent 100%);
 }
 .home-title{
-  font-family:'Syne',sans-serif;font-weight:800;font-size:1.6rem;
+  font-family:Syne,sans-serif;font-weight:800;font-size:1.6rem;
   line-height:1.15;letter-spacing:-.03em;margin-bottom:.3rem;
 }
 .home-sub{color:var(--muted);font-size:.8rem;font-weight:400}
@@ -117,7 +117,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 .domain-card:active{transform:scale(.97)}
 .domain-card .dc-icon{font-size:1.6rem;margin-bottom:.5rem}
 .domain-card .dc-title{
-  font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;
+  font-family:Syne,sans-serif;font-weight:700;font-size:.82rem;
   letter-spacing:-.01em;line-height:1.3;color:var(--text);
 }
 .domain-card .dc-count{
@@ -140,7 +140,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
   background:var(--card);border:1px solid var(--border);
   cursor:pointer;font-size:1rem;flex-shrink:0;
 }
-.module-header h2{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem}
+.module-header h2{font-family:Syne,sans-serif;font-weight:800;font-size:1.1rem}
 
 .mod-item{
   display:flex;align-items:center;gap:.75rem;
@@ -261,7 +261,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 .ki-input{
   flex:1;background:var(--card);border:1px solid var(--border);
   border-radius:999px;padding:.6rem 1rem;font-size:.88rem;color:var(--text);
-  font-family:'DM Sans',sans-serif;outline:none;
+  font-family:DM Sans,sans-serif;outline:none;
 }
 .ki-input::placeholder{color:var(--muted)}
 .ki-send{
@@ -291,7 +291,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
   display:flex;align-items:center;justify-content:center;
   font-size:1.8rem;margin:0 auto .8rem;
 }
-.profil-name{text-align:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem}
+.profil-name{text-align:center;font-family:Syne,sans-serif;font-weight:800;font-size:1.2rem}
 .profil-stats{
   display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin:1rem 0;
 }
@@ -299,11 +299,11 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
   background:var(--card);border:1px solid var(--border);
   border-radius:12px;padding:.75rem;text-align:center;
 }
-.pstat-val{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:var(--d1)}
+.pstat-val{font-family:Syne,sans-serif;font-weight:800;font-size:1.3rem;color:var(--d1)}
 .pstat-lbl{font-size:.62rem;color:var(--muted);margin-top:.15rem}
 
 .section-title{
-  font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;
+  font-family:Syne,sans-serif;font-weight:700;font-size:.9rem;
   letter-spacing:.02em;color:var(--muted);text-transform:uppercase;
   margin:1rem 0 .5rem;
 }
@@ -380,7 +380,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
     
     <!-- Header -->
     <div style="padding:.9rem 1.2rem .5rem;border-bottom:1px solid var(--border);flex-shrink:0">
-      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;margin-bottom:.15rem">🔍 Lernassistent</div>
+      <div style="font-family:Syne,sans-serif;font-weight:800;font-size:1.15rem;margin-bottom:.15rem">🔍 Lernassistent</div>
       <div style="font-size:.72rem;color:var(--muted)">Suche in 672 Karten & 161 Prüfungsfragen</div>
     </div>
 
@@ -389,7 +389,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
       <div style="display:flex;gap:.5rem;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:999px;padding:.5rem .9rem">
         <span style="font-size:1rem;flex-shrink:0">🔍</span>
         <input id="ki-search" placeholder="Thema suchen... z.B. Dekubitus, Heparin, Sepsis"
-          style="flex:1;background:none;border:none;outline:none;font-size:.85rem;color:var(--text);font-family:'DM Sans',sans-serif"
+          style="flex:1;background:none;border:none;outline:none;font-size:.85rem;color:var(--text);font-family:DM Sans,sans-serif"
           oninput="kiSearch(this.value)" onkeydown="if(event.key==='Enter')kiSearch(this.value)">
         <span id="ki-clear" style="cursor:pointer;color:var(--muted);display:none" onclick="clearKISearch()">✕</span>
       </div>
@@ -1721,182 +1721,186 @@ var QUICK_TOPICS = [
   'Dekubitus','Heparin','Sepsis','Blutdruck','Herzinsuffizienz',
   'Diabetes','Demenz','Wundheilung','Pflegeprozess','MRSA',
   'Pneumonie','Schlaganfall','Schmerztherapie','Thrombose',
-  'Händedesinfektion','Medikamente','Ernährung','Reanimation',
-  'Braden-Skala','Lagerung','Insulin','Fieber','Palliativ'
+  'Haendedesinfektion','Medikamente','Ernaehrung','Reanimation',
+  'Braden','Lagerung','Insulin','Fieber','Palliativ'
 ];
 
 function renderKIChips(){
   var topics = document.getElementById('ki-topics');
   if(!topics) return;
-  // Keep the "Schnellthemen:" label
-  var label = topics.querySelector('span');
-  topics.innerHTML = '';
-  if(label) topics.appendChild(label);
-  
+  var label = '<span style="font-size:.7rem;color:var(--muted);margin-right:.4rem">Schnellthemen:</span>';
+  topics.innerHTML = label;
   QUICK_TOPICS.forEach(function(t){
     var chip = document.createElement('span');
     chip.style.cssText = 'display:inline-block;margin-right:.4rem;margin-bottom:.3rem;padding:.3rem .75rem;border-radius:999px;border:1px solid var(--border);background:var(--card);font-size:.72rem;cursor:pointer;transition:all .15s;white-space:nowrap';
     chip.textContent = t;
     chip.onclick = function(){
-      document.getElementById('ki-search').value = t;
-      kiSearch(t);
+      var inp = document.getElementById('ki-search');
+      if(inp){ inp.value = t; kiSearch(t); }
     };
     topics.appendChild(chip);
   });
-  
-  // Show welcome state
   showKIWelcome();
 }
 
 function showKIWelcome(){
   var results = document.getElementById('ki-results');
-  results.innerHTML = 
-    '<div style="text-align:center;padding:2rem 1rem">' +
-      '<div style="font-size:2.5rem;margin-bottom:.75rem">🧠</div>' +
-      '<div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:.4rem">Was möchtest du lernen?</div>' +
-      '<div style="font-size:.78rem;color:var(--muted);line-height:1.6">Gib ein Thema ein oder wähle einen Schnellzugriff.<br>Du hast Zugriff auf <strong style="color:var(--d1)">672 Lernkarten</strong> und <strong style="color:var(--d1)">161 Prüfungsfragen</strong>.</div>' +
+  if(!results) return;
+  results.innerHTML = '<div style="text-align:center;padding:2rem 1rem">' +
+    '<div style="font-size:2.5rem;margin-bottom:.75rem">&#x1F9E0;</div>' +
+    '<div style="font-family:Syne,sans-serif;font-weight:700;font-size:1rem;margin-bottom:.4rem">Was möchtest du lernen?</div>' +
+    '<div style="font-size:.78rem;color:var(--muted);line-height:1.6">Gib ein Thema ein oder wähle einen Schnellzugriff.<br>' +
+    'Du hast Zugriff auf <strong style="color:var(--d1)">' + CARDS.length + ' Lernkarten</strong> und ' +
+    '<strong style="color:var(--d1)">' + QCM.length + ' Prüfungsfragen</strong>.</div>' +
     '</div>';
 }
 
 function clearKISearch(){
-  document.getElementById('ki-search').value = '';
-  document.getElementById('ki-clear').style.display = 'none';
+  var inp = document.getElementById('ki-search');
+  var clr = document.getElementById('ki-clear');
+  if(inp) inp.value = '';
+  if(clr) clr.style.display = 'none';
   showKIWelcome();
 }
 
 function kiSearch(query){
-  query = (query||'').trim();
-  var clear = document.getElementById('ki-clear');
-  if(clear) clear.style.display = query ? 'block' : 'none';
-  
-  if(query.length < 2){
-    showKIWelcome();
-    return;
-  }
-  
+  query = (query || '').trim();
+  var clr = document.getElementById('ki-clear');
+  if(clr) clr.style.display = query ? 'block' : 'none';
+  if(query.length < 2){ showKIWelcome(); return; }
+
   var q = query.toLowerCase();
   var results = document.getElementById('ki-results');
-  
-  // Search CARDS
+  if(!results) return;
+
   var matchedCards = CARDS.filter(function(c){
     return (c.t && c.t.toLowerCase().indexOf(q) >= 0) ||
            (c.q && c.q.toLowerCase().indexOf(q) >= 0) ||
            (c.a && c.a.toLowerCase().indexOf(q) >= 0);
   });
-  
-  // Search QCM
-  var matchedQCM = QCM.filter(function(q_item){
-    return (q_item.q && q_item.q.toLowerCase().indexOf(q) >= 0) ||
-           (q_item.e && q_item.e.toLowerCase().indexOf(q) >= 0) ||
-           q_item.o.some(function(o){ return o.toLowerCase().indexOf(q) >= 0; });
+
+  var matchedQCM = QCM.filter(function(qi){
+    return (qi.q && qi.q.toLowerCase().indexOf(q) >= 0) ||
+           (qi.e && qi.e.toLowerCase().indexOf(q) >= 0) ||
+           qi.o.some(function(o){ return o.toLowerCase().indexOf(q) >= 0; });
   });
-  
+
   var total = matchedCards.length + matchedQCM.length;
-  
+  results.innerHTML = '';
+
   if(total === 0){
-    results.innerHTML = 
-      '<div style="text-align:center;padding:2rem 1rem">' +
-        '<div style="font-size:2rem;margin-bottom:.5rem">😕</div>' +
-        '<div style="font-weight:600;margin-bottom:.3rem">Keine Ergebnisse für "'+escHtml(query)+'"</div>' +
-        '<div style="font-size:.78rem;color:var(--muted)">Versuche andere Begriffe wie: Dekubitus, Heparin, Blutdruck...</div>' +
+    results.innerHTML = '<div style="text-align:center;padding:2rem 1rem">' +
+      '<div style="font-size:2rem;margin-bottom:.5rem">&#x1F615;</div>' +
+      '<div style="font-weight:600;margin-bottom:.3rem">Keine Ergebnisse</div>' +
+      '<div style="font-size:.78rem;color:var(--muted)">Versuche: Dekubitus, Heparin, Blutdruck...</div>' +
       '</div>';
     return;
   }
-  
-  var html = '<div style="font-size:.72rem;color:var(--muted);margin-bottom:.75rem;font-weight:600">' +
-    total + ' Ergebnisse für "' + escHtml(query) + '"' +
+
+  // Header
+  var hdr = document.createElement('div');
+  hdr.style.cssText = 'font-size:.72rem;color:var(--muted);margin-bottom:.75rem;font-weight:600';
+  hdr.textContent = total + ' Ergebnisse für "' + query + '"' +
     (matchedCards.length ? ' · ' + matchedCards.length + ' Karten' : '') +
-    (matchedQCM.length ? ' · ' + matchedQCM.length + ' QCM' : '') +
-    '</div>';
-  
-  // Show matched cards (max 15)
+    (matchedQCM.length ? ' · ' + matchedQCM.length + ' QCM' : '');
+  results.appendChild(hdr);
+
+  // Cards
   if(matchedCards.length > 0){
-    html += '<div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.78rem;color:var(--d1);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.05em">🃏 Lernkarten (' + matchedCards.length + ')</div>';
-    
+    var sec = document.createElement('div');
+    sec.style.cssText = 'font-family:Syne,sans-serif;font-weight:700;font-size:.78rem;color:var(--d1);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.05em';
+    sec.textContent = '&#x1F0CF; Lernkarten (' + matchedCards.length + ')';
+    sec.innerHTML = '&#x1F0CF; Lernkarten (' + matchedCards.length + ')';
+    results.appendChild(sec);
+
     matchedCards.slice(0, 15).forEach(function(c){
-      var niv_color = c.n==='a'?'var(--d1)':c.n==='f'?'var(--d4)':'var(--d2)';
-      var niv_label = {a:'Anfänger',f:'Fortgeschritten',e:'Experte'}[c.n] || c.n;
-      
-      // Highlight matching text
-      var answer = c.a ? c.a.replace(/\n/g,' ').substring(0,300) : '';
-      var highlighted = answer.replace(new RegExp('('+escRegex(query)+')', 'gi'), '<mark style="background:rgba(13,148,136,.25);color:var(--d1);border-radius:3px;padding:0 2px">$1</mark>');
-      
-      html += '<div onclick="toggleKICard(this)" style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:.85rem;margin-bottom:.5rem;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='var(--d1)'" onmouseout="this.style.borderColor='var(--border)'">' +
+      var niv_color = c.n==='a' ? 'var(--d1)' : c.n==='f' ? 'var(--d4)' : 'var(--d2)';
+      var niv_label = c.n==='a' ? 'Anfänger' : c.n==='f' ? 'Fortgeschritten' : 'Experte';
+
+      var card = document.createElement('div');
+      card.style.cssText = 'background:var(--card);border:1px solid var(--border);border-radius:14px;padding:.85rem;margin-bottom:.5rem;cursor:pointer';
+      card.innerHTML =
         '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.4rem">' +
           '<div style="font-weight:700;font-size:.85rem;flex:1;padding-right:.5rem">' + escHtml(c.t) + '</div>' +
-          '<span style="font-size:.6rem;font-weight:700;color:'+niv_color+';background:'+niv_color+'18;border-radius:999px;padding:.15rem .45rem;flex-shrink:0">' + niv_label + '</span>' +
+          '<span style="font-size:.6rem;font-weight:700;color:' + niv_color + ';background:rgba(0,0,0,.2);border-radius:999px;padding:.15rem .45rem;flex-shrink:0">' + niv_label + '</span>' +
         '</div>' +
-        '<div style="font-size:.75rem;color:var(--muted);margin-bottom:.5rem">' + escHtml(c.q) + '</div>' +
-        '<div class="ki-card-answer" style="display:none;font-size:.78rem;line-height:1.55;padding-top:.5rem;border-top:1px solid var(--border);color:rgba(255,255,255,.85)">' + highlighted + '</div>' +
-        '<div style="font-size:.65rem;color:var(--d1);margin-top:.35rem">▼ Antwort anzeigen</div>' +
-      '</div>';
+        '<div style="font-size:.75rem;color:var(--muted);margin-bottom:.4rem">' + escHtml(c.q) + '</div>' +
+        '<div class="ki-ans" style="display:none;font-size:.78rem;line-height:1.55;padding-top:.5rem;border-top:1px solid var(--border);color:rgba(255,255,255,.85)">' + formatAnswer(c.a) + '</div>' +
+        '<div class="ki-hint" style="font-size:.65rem;color:var(--d1);margin-top:.35rem">&#9660; Antwort anzeigen</div>';
+
+      card.onclick = function(){
+        var ans = card.querySelector('.ki-ans');
+        var hint = card.querySelector('.ki-hint');
+        if(!ans) return;
+        var open = ans.style.display !== 'none';
+        ans.style.display = open ? 'none' : 'block';
+        if(hint) hint.innerHTML = open ? '&#9660; Antwort anzeigen' : '&#9650; Antwort schließen';
+        if(!open){ addPoints(2); updateTopBar(); }
+      };
+      results.appendChild(card);
     });
-    
-    if(matchedCards.length > 15){
-      html += '<div style="text-align:center;font-size:.75rem;color:var(--muted);padding:.5rem">... und ' + (matchedCards.length-15) + ' weitere Karten</div>';
-    }
   }
-  
-  // Show matched QCM (max 8)
+
+  // QCM
   if(matchedQCM.length > 0){
-    html += '<div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.78rem;color:var(--d6);margin:.75rem 0 .5rem;text-transform:uppercase;letter-spacing:.05em">❓ Prüfungsfragen (' + matchedQCM.length + ')</div>';
-    
-    matchedQCM.slice(0, 8).forEach(function(q_item, qi){
-      var uid = 'ki-qcm-'+qi+'-'+Math.floor(Math.random()*9999);
-      html += '<div id="'+uid+'" style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:.85rem;margin-bottom:.5rem">' +
-        '<div style="font-weight:600;font-size:.84rem;margin-bottom:.65rem;line-height:1.4">' + escHtml(q_item.q) + '</div>';
-      
-      q_item.o.forEach(function(opt, oi){
-        var letter = String.fromCharCode(65+oi);
-        html += '<div onclick="answerKIQCM(this,'+oi+','+q_item.a+',''+uid+'')" style="display:flex;gap:.5rem;align-items:center;padding:.45rem .65rem;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);margin-bottom:.35rem;cursor:pointer;font-size:.8rem;transition:all .15s">' +
-          '<div style="width:22px;height:22px;border-radius:999px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;flex-shrink:0">' + letter + '</div>' +
-          '<div>' + escHtml(opt) + '</div>' +
-        '</div>';
+    var sec2 = document.createElement('div');
+    sec2.style.cssText = 'font-family:Syne,sans-serif;font-weight:700;font-size:.78rem;color:var(--d6);margin:.75rem 0 .5rem;text-transform:uppercase;letter-spacing:.05em';
+    sec2.innerHTML = '&#x2753; Prüfungsfragen (' + matchedQCM.length + ')';
+    results.appendChild(sec2);
+
+    matchedQCM.slice(0, 8).forEach(function(qi, idx){
+      var qcard = document.createElement('div');
+      qcard.style.cssText = 'background:var(--card);border:1px solid var(--border);border-radius:14px;padding:.85rem;margin-bottom:.5rem';
+      var done = false;
+
+      var qhtml = '<div style="font-weight:600;font-size:.84rem;margin-bottom:.65rem;line-height:1.4">' + escHtml(qi.q) + '</div>';
+      qcard.innerHTML = qhtml;
+
+      qi.o.forEach(function(opt, oi){
+        var letter = String.fromCharCode(65 + oi);
+        var optEl = document.createElement('div');
+        optEl.style.cssText = 'display:flex;gap:.5rem;align-items:center;padding:.45rem .65rem;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);margin-bottom:.35rem;cursor:pointer;font-size:.8rem';
+        optEl.innerHTML = '<div style="width:22px;height:22px;border-radius:999px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;flex-shrink:0">' + letter + '</div>' +
+          '<div>' + escHtml(opt) + '</div>';
+
+        // Capture correct and oi in closure
+        (function(correct, myOi){
+          optEl.onclick = function(){
+            if(done) return;
+            done = true;
+            qcard.querySelectorAll('[data-opt]').forEach(function(o){ o.style.pointerEvents = 'none'; });
+            // Mark all options
+            qcard.querySelectorAll('[data-opt]').forEach(function(o, i){
+              if(i === correct){ o.style.background = 'rgba(13,148,136,.15)'; o.style.borderColor = 'var(--d1)'; o.querySelector('div').style.background = 'var(--d1)'; o.querySelector('div').style.color = '#fff'; }
+              else if(i === myOi){ o.style.background = 'rgba(220,38,38,.12)'; o.style.borderColor = '#dc2626'; o.querySelector('div').style.background = '#dc2626'; o.querySelector('div').style.color = '#fff'; }
+            });
+            // Show explanation
+            var expl = qcard.querySelector('.qcm-expl');
+            if(expl) expl.style.display = 'block';
+            if(myOi === correct){ addPoints(qi.p || 10); updateTopBar(); }
+          };
+        })(qi.a, oi);
+
+        optEl.setAttribute('data-opt', oi);
+        qcard.appendChild(optEl);
       });
-      
-      html += '<div id="expl-'+uid+'" style="display:none;background:rgba(255,255,255,.04);border-radius:10px;padding:.6rem .75rem;margin-top:.5rem;font-size:.76rem;color:var(--muted);line-height:1.5">' + escHtml(q_item.e) + '</div>';
-      html += '</div>';
+
+      // Explanation (hidden)
+      var expl = document.createElement('div');
+      expl.className = 'qcm-expl';
+      expl.style.cssText = 'display:none;background:rgba(255,255,255,.04);border-radius:10px;padding:.6rem .75rem;margin-top:.5rem;font-size:.76rem;color:var(--muted);line-height:1.5';
+      expl.textContent = qi.e || '';
+      qcard.appendChild(expl);
+
+      results.appendChild(qcard);
     });
   }
-  
-  results.innerHTML = html;
 }
 
-function toggleKICard(el){
-  var answer = el.querySelector('.ki-card-answer');
-  var hint = el.querySelector('[style*="▼"]') || el.querySelector('[style*="▲"]');
-  if(!answer) return;
-  var isOpen = answer.style.display !== 'none';
-  answer.style.display = isOpen ? 'none' : 'block';
-  if(hint) hint.textContent = isOpen ? '▼ Antwort anzeigen' : '▲ Antwort schließen';
-  if(!isOpen){ addPoints(2); updateTopBar(); }
-}
+function showKISetup(){ }
+function saveKIKey(){ }
 
-function answerKIQCM(el, oi, correct, uid){
-  var container = document.getElementById(uid);
-  if(!container || container.getAttribute('data-done')) return;
-  container.setAttribute('data-done','1');
-  
-  container.querySelectorAll('[onclick^="answerKIQCM"]').forEach(function(opt, i){
-    opt.style.pointerEvents = 'none';
-    opt.style.cursor = 'default';
-    if(i === correct){
-      opt.style.background = 'rgba(13,148,136,.15)';
-      opt.style.borderColor = 'var(--d1)';
-      opt.querySelector('div').style.background = 'var(--d1)';
-      opt.querySelector('div').style.color = '#fff';
-    } else if(i === oi && oi !== correct){
-      opt.style.background = 'rgba(220,38,38,.12)';
-      opt.style.borderColor = '#dc2626';
-      opt.querySelector('div').style.background = '#dc2626';
-      opt.querySelector('div').style.color = '#fff';
-    }
-  });
-  
-  var expl = document.getElementById('expl-'+uid);
-  if(expl) expl.style.display = 'block';
-  if(oi === correct){ addPoints(10); updateTopBar(); }
-}
+
 
 function escRegex(s){
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
