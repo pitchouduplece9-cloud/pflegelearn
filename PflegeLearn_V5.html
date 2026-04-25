@@ -178,7 +178,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 
 /* ─── LERNKARTEN ─── */
 .cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;padding:.5rem 0}
-.flip-card{height:160px;perspective:800px;cursor:pointer}
+.flip-card{height:200px;perspective:800px;cursor:pointer}
 .flip-inner{
   position:relative;width:100%;height:100%;
   transform-style:preserve-3d;transition:transform .45s cubic-bezier(.4,0,.2,1);
@@ -194,7 +194,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 .flip-niveau{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;opacity:.6;margin-bottom:.4rem}
 .flip-topic{font-size:.72rem;font-weight:600;opacity:.5;margin-bottom:.3rem}
 .flip-q{font-size:.8rem;font-weight:600;line-height:1.35;flex:1;display:flex;align-items:center}
-.flip-a{font-size:.72rem;line-height:1.45;flex:1;overflow-y:auto;color:rgba(255,255,255,.85);max-height:120px;padding-right:2px}
+.flip-a{font-size:.7rem;line-height:1.45;flex:1;overflow-y:auto;color:rgba(255,255,255,.85);max-height:145px;padding-right:4px;scrollbar-width:thin}
 .flip-hint{font-size:.6rem;color:var(--muted);margin-top:auto;text-align:right}
 
 /* ─── QCM ─── */
@@ -346,7 +346,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
   <div id="view-home">
     <div class="home-hero fade-up">
       <div class="home-title">Lern smarter.<br>Besteh besser.</div>
-      <div class="home-sub">672 Lernkarten · 161 Prüfungsfragen · KI-Tutor · 6 Lernbereiche</div>
+      <div class="home-sub">697 Lernkarten · 161 Prüfungsfragen · Lernassistent · 6 Lernbereiche</div>
       <div class="progress-bar"><div class="progress-bar-fill" id="global-prog" style="width:0%"></div></div>
     </div>
     <div class="domain-grid" id="domain-grid"></div>
@@ -377,18 +377,32 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 
   <!-- SCREEN: KI TUTOR -->
   <div id="view-ki" style="display:none;flex-direction:column;height:100%">
-    <div style="padding:.8rem 1rem .3rem;display:flex;align-items:center;justify-content:space-between">
-      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem">🤖 KI-Tutor Pflege</div>
-      <div id="ki-status" style="font-size:.65rem;color:var(--muted)">Verbinde...</div>
+    
+    <!-- Header -->
+    <div style="padding:.9rem 1.2rem .5rem;border-bottom:1px solid var(--border);flex-shrink:0">
+      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;margin-bottom:.15rem">🔍 Lernassistent</div>
+      <div style="font-size:.72rem;color:var(--muted)">Suche in 672 Karten & 161 Prüfungsfragen</div>
     </div>
-    <div class="ki-chips" id="ki-chips"></div>
-    <div class="ki-messages" id="ki-messages">
-      <div class="ki-msg ai">Hallo! Ich bin dein KI-Tutor. Frag mich zu Pflegethemen, lass dir QCM erstellen oder mach eine Prüfungssimulation! 💪</div>
+
+    <!-- Search bar -->
+    <div style="padding:.7rem 1rem;flex-shrink:0;border-bottom:1px solid var(--border)">
+      <div style="display:flex;gap:.5rem;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:999px;padding:.5rem .9rem">
+        <span style="font-size:1rem;flex-shrink:0">🔍</span>
+        <input id="ki-search" placeholder="Thema suchen... z.B. Dekubitus, Heparin, Sepsis"
+          style="flex:1;background:none;border:none;outline:none;font-size:.85rem;color:var(--text);font-family:'DM Sans',sans-serif"
+          oninput="kiSearch(this.value)" onkeydown="if(event.key==='Enter')kiSearch(this.value)">
+        <span id="ki-clear" style="cursor:pointer;color:var(--muted);display:none" onclick="clearKISearch()">✕</span>
+      </div>
     </div>
-    <div class="ki-input-row">
-      <input class="ki-input" id="ki-input" placeholder="Frage stellen..." onkeydown="if(event.key==='Enter')sendKI()">
-      <button class="ki-send" onclick="sendKI()">↑</button>
+
+    <!-- Quick topics -->
+    <div id="ki-topics" style="padding:.6rem 1rem;flex-shrink:0;overflow-x:auto;white-space:nowrap;scrollbar-width:none">
+      <span style="font-size:.7rem;color:var(--muted);margin-right:.4rem">Schnellthemen:</span>
     </div>
+
+    <!-- Results area -->
+    <div id="ki-results" style="flex:1;overflow-y:auto;padding:.5rem 1rem 1.5rem;-webkit-overflow-scrolling:touch"></div>
+
   </div>
 
   <!-- SCREEN: PROFIL -->
@@ -413,7 +427,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
     <span class="icon">📚</span>Lernen
   </button>
   <button class="nb" id="nb-ki" onclick="showView('ki')">
-    <span class="icon">🤖</span>KI-Tutor
+    <span class="icon">🔍</span>Suchen
   </button>
   <button class="nb" id="nb-profil" onclick="showView('profil')">
     <span class="icon">👤</span>Profil
@@ -1096,7 +1110,32 @@ var CARDS=[
 {m:1,n:'a',t:'Gerinnungswerte',q:'Merke: Was ist wichtig zu wissen über: Gerinnungswerte?',a:'Pflegende sollten darauf achten, die Gerinnungswerte jeder Patientin zur gynäkologischen Untersuchung mitzubringen, damit\nder Arzt Gerinnungsanomalien ausschließen kann.',k:'Kapitel: Gerontologie'},
 {m:1,n:'f',t:'Bedeutung',q:'Merke: Was ist wichtig zu wissen über: Bedeutung?',a:'Die pflegerische Beobachtung hat in der Psychiatrie einen ganz\nbesonderen Stellenwert, da Beobachtungen, die Pflegende machen, sehr bedeutsam für den therapeutischen Prozess sein können. Einen sehr hohen Stellenwert hat in diesem Zusammenhang\nauch die schriftliche Pflegedokumentation und die Verlaufsberichterstellung.',k:'Kapitel: Palliativ'},
 {m:4,n:'f',t:'Beobachtungen weitergeben',q:'Merke: Was ist wichtig zu wissen über: Beobachtungen weitergeben?',a:'Wenn Ihnen im Alltag etwas auffällt, was dem behandelnden Arzt\nnoch nicht bekannt ist, ist es Ihre Aufgabe, die Information nicht\nnur zu dokumentieren, sondern auch an den behandelnden Arzt\nund Therapeuten weiterzugeben.',k:'Kapitel: Palliativ'},
-{m:1,n:'a',t:'Sturzprophylaxe',q:'Merke: Was ist wichtig zu wissen über: Sturzprophylaxe?',a:'Beachten Sie bei älteren Personen mit depressiven Störungen die\nSturzgefahr und führen Sie dementsprechend Prophylaxen durch.',k:'Kapitel: Palliativ'}
+{m:1,n:'a',t:'Sturzprophylaxe',q:'Merke: Was ist wichtig zu wissen über: Sturzprophylaxe?',a:'Beachten Sie bei älteren Personen mit depressiven Störungen die\nSturzgefahr und führen Sie dementsprechend Prophylaxen durch.',k:'Kapitel: Palliativ'},
+{m:9,n:'f',t:'Diabetes mellitus Typ 1',q:'Erkläre vollständig: Diabetes mellitus Typ 1',a:'DEFINITION: Autoimmunerkrankung → β-Zell-Zerstörung → absoluter Insulinmangel\n\nURSACHEN:\n• Autoimmunreaktion gegen Inselzellen der Bauchspeicheldrüse\n• Genetische Disposition (HLA-DR3, DR4)\n• Evtl. Virusinfektion als Trigger (Coxsackievirus)\n\nSYMPTOME (klassische 3 P):\n• Polyurie (viel Urin) → osmotische Diurese\n• Polydipsie (extremer Durst)\n• Polyphagie (Heißhunger) bei Gewichtsverlust\n• Ketoazidose: Übelkeit, Erbrechen, Acetongeruch, Kussmaul-Atmung, Bewusstlosigkeit\n\nRISIKOFAKTOREN:\n• Familienanamnese, HLA-Typen, Autoantikörper\n\nDIAGNOSE:\n• Nüchtern-BZ ≥ 126 mg/dl (7,0 mmol/l)\n• HbA1c ≥ 6,5% (48 mmol/mol)\n• Autoantikörper (GAD-AK, IA-2-AK)\n• C-Peptid erniedrigt/nicht nachweisbar\n\nTHERAPIE:\n• IMMER Insulin (Basis-Bolus-Schema oder Pumpe)\n• Insulinpumpe (CSII) bei instabilem Verlauf\n• HbA1c-Ziel: < 7% (individuell)\n• Kontinuierliches Glukosemonitoring (CGM)\n\nPFLEGERISCHE MASSNAHMEN:\n• BZ-Kontrolle vor Mahlzeiten + ggf. nachts\n• Insulin korrekt spritzen: Rotationsprinzip!\n• Hypoglykämie erkennen: Zittern, Schweiß, Blässe → sofort 20g KH\n• Hyperglykämie + Ketoazidose: sofort Arzt, i.v.-Zugang\n• Fußinspektion täglich (Neuropathie!)\n• Schulung: Selbstmanagement, Ernährung, Sport',k:''},
+{m:9,n:'f',t:'Diabetes mellitus Typ 2',q:'Erkläre vollständig: Diabetes mellitus Typ 2',a:'DEFINITION: Insulinresistenz + relativer Insulinmangel → schleichender Beginn\n\nURSACHEN:\n• Insulinresistenz der Zielzellen (Muskel, Leber, Fettgewebe)\n• Progressiver β-Zell-Funktionsverlust\n• Lebensstil: Übergewicht, Bewegungsmangel, Fehlernährung\n\nSYMPTOME (oft jahrelang symptomlos!):\n• Müdigkeit, Leistungsminderung\n• Häufige Infekte (Harnwegsinfekte, Pilzinfekte)\n• Wundheilungsstörungen\n• Sehstörungen (Retinopathie)\n• Erst spät: klassische Polyurie/Polydipsie\n\nRISIKOFAKTOREN:\n• Adipositas (BMI > 30), Bauchfettverteilung\n• Alter > 45 Jahre, Bewegungsmangel\n• Familienanamnese, Gestationsdiabetes\n• Bluthochdruck, Dyslipidämie (metabolisches Syndrom)\n\nDIAGNOSE:\n• Nüchtern-BZ ≥ 126 mg/dl (2x)\n• HbA1c ≥ 6,5% (48 mmol/mol)\n• Oraler Glukosetoleranztest (oGTT)\n\nTHERAPIE (Stufenschema):\n• Stufe 1: Lebensstilmodifikation (Gewicht ↓, Bewegung ↑)\n• Stufe 2: Metformin (1. Wahl, KI: GFR < 30)\n• Stufe 3: SGLT2-Hemmer, GLP-1-RA, DPP4-Hemmer\n• Stufe 4: Insulin (wenn HbA1c-Ziel nicht erreicht)\n• HbA1c-Ziel: individuell 6,5–8%\n\nPFLEGERISCHE MASSNAHMEN:\n• Medikamentencompliance überwachen\n• BZ-Kontrolle + Dokumentation\n• Fußpflege + tägliche Fußinspektion\n• Ernährungsberatung, Gewichtsreduktion fördern\n• Komplikationen erkennen: Retino-, Nephro-, Neuropathie\n• Hypoglykämie-Schulung (auch bei oralen Antidiabetika!)',k:''},
+{m:9,n:'a',t:'Hypoglykämie vs Hyperglykämie',q:'Erkläre vollständig: Hypoglykämie vs Hyperglykämie',a:'HYPOGLYKÄMIE (BZ < 70 mg/dl):\nSymptome: Zittern, Schweiß, Blässe, Tachykardie, Hunger, Verwirrtheit, Bewusstlosigkeit\nUrsachen: Zu viel Insulin, zu wenig Essen, Sport, Alkohol\nSOFORTMASSNAHME:\n• Bewusst: 20g schnelle KH (Traubenzucker, Saft)\n• Bewusstlos: Glucagon i.m. oder Glukose 40% i.v. → SOFORT Arzt!\n• Niemals: Oral bei Bewusstlosigkeit!\n\nHYPERGLYKÄMIE (BZ > 180 mg/dl):\nSymptome: Polyurie, Durst, Müdigkeit, Sehstörungen, Wundheilungsstörung\nUrsachen: Zu wenig Insulin, Infektion, Stress, falsche Ernährung\nMASSNAHMEN:\n• Mehr Trinken (Wasser)\n• BZ engmaschig kontrollieren\n• Arzt informieren → Insulinanpassung\n• Bei Ketoazidose (Acetongeruch, Kussmaul) → Notfall!',k:''},
+{m:9,n:'f',t:'Herzinsuffizienz',q:'Erkläre vollständig: Herzinsuffizienz',a:'DEFINITION: Herz kann Gewebe nicht ausreichend mit Blut versorgen\n\nFORMEN:\n• HFrEF: reduzierte EF (< 40%) = systolische Dysfunktion\n• HFpEF: erhaltene EF (≥ 50%) = diastolische Dysfunktion\n• Rechtsherzinsuffizienz, Linksherzinsuffizienz, Global\n\nURSACHEN:\n• KHK/Herzinfarkt (häufigste Ursache)\n• Hypertonie (Druckbelastung)\n• Kardiomyopathien, Herzklappenfehler\n• Rhythmusstörungen, Myokarditis\n\nSYMPTOME:\nLinksherz: Dyspnoe (Belastung→Ruhe), Orthopnoe, Lungenödem, Nykturie\nRechtsherz: Beinödeme, Aszites, Hepatomegalie, gestaute Halsvenen\nBeide: Fatigue, Leistungsminderung, Gewichtszunahme\n\nNYHA-KLASSIFIKATION:\n• I: Keine Beschwerden bei normaler Belastung\n• II: Leichte Einschränkung bei starker Belastung\n• III: Deutliche Einschränkung bei leichter Belastung\n• IV: Beschwerden in Ruhe\n\nDIAGNOSE:\n• Echokardiografie (EF-Messung), EKG\n• BNP/NT-proBNP erhöht\n• Röntgen Thorax: Kardiomegalie, Lungenstauung\n\nTHERAPIE:\n• ACE-Hemmer/ARNi (Sacubitril/Valsartan)\n• Betablocker (Bisoprolol, Carvedilol)\n• MRA (Spironolacton), SGLT2-Hemmer\n• Diuretika (symptomatisch: Furosemid)\n• CRT/ICD bei Indikation\n\nPFLEGERISCHE MASSNAHMEN:\n• Täglich wiegen (morgens nüchtern): +2 kg = Arzt!\n• Flüssigkeitsbilanz führen (Einfuhr/Ausfuhr)\n• Oberkörperhochlagerung 30-45°\n• O2-Gabe bei SpO2 < 90%\n• Beinödeme: Hochlagerung, Kompressionsstrümpfe\n• Medikamentencompliance: Diuretika, Betablocker nie abrupt absetzen!\n• Auf Schwindel achten (Hypotonie durch Diuretika)',k:''},
+{m:9,n:'a',t:'Arterielle Hypertonie',q:'Erkläre vollständig: Arterielle Hypertonie',a:'DEFINITION: Blutdruck ≥ 140/90 mmHg (wiederholt gemessen)\n\nEINTEILUNG (ESH/ESC 2023):\n• Normal: 120-129 / 80-84 mmHg\n• Hochnormal: 130-139 / 85-89\n• Grad I: 140-159 / 90-99\n• Grad II: 160-179 / 100-109\n• Grad III: ≥ 180 / ≥ 110\n• Hypertensiver Notfall: > 180/120 + Organschaden → sofort i.v.!\n\nURSACHEN:\n• Primär (essenziell): 90% – Genetik + Lebensstil\n• Sekundär: Nierenerkrankung, Phäochromozytom, Schlafapnoe, Medikamente\n\nSYMPTOME (meist symptomlos!):\n• Kopfschmerzen (okzipital, morgens)\n• Schwindel, Nasenbluten, Sehstörungen\n• \"Stiller Killer\" → jahrelang unbemerkt\n\nRISIKOFAKTOREN:\n• Übergewicht, Salzkonsum, Alkohol, Rauchen\n• Bewegungsmangel, Stress, Alter, Familienanamnese\n\nTHERAPIE:\n• Lebensstil: Gewicht ↓, Salz < 6g/Tag, Sport, Alkohol ↓\n• Medikamente: ACE-Hemmer, ARB, Kalziumantagonisten, Diuretika, Betablocker\n• Ziel: < 130/80 mmHg (unter 65 J.) / < 140/80 (über 65 J.)\n\nPFLEGERISCHE MASSNAHMEN:\n• RR korrekt messen: 5 Min Ruhe, sitzend, Arm auf Herzebene\n• Beide Arme vergleichen (1. Messung)\n• Medikamentencompliance: Betablocker NIE abrupt absetzen!\n• Lebensstilberatung\n• Hypertensiver Notfall: sofort Arzt, flache Lagerung, i.v.-Zugang',k:''},
+{m:9,n:'f',t:'Myokardinfarkt (Herzinfarkt)',q:'Erkläre vollständig: Myokardinfarkt (Herzinfarkt)',a:'DEFINITION: Irreversibles Absterben von Herzmuskelgewebe durch Koronarverschluss\n\nFORMEN:\n• STEMI: ST-Hebungsinfarkt → sofort PCI (< 90 Min!)\n• NSTEMI: Kein ST-Hebung → früh-invasiv < 24-72h\n\nURSACHEN:\n• Plaqueruptur + Thrombusbildung in Koronararterie\n• Grundlage: Arteriosklerose (KHK)\n\nSYMPTOME (klassisch):\n• Vernichtungsschmerz retrosternal, > 20 Min\n• Ausstrahlung: linker Arm, Kiefer, Rücken\n• Schweißausbruch, Übelkeit, Todesangst\nATYPISCH (Frauen, Diabetiker, Ältere):\n• Nur Rückenschmerz, Übelkeit, Atemnot, Erschöpfung\n• Keine Brustschmerzen möglich!\n\nDIAGNOSTIK:\n• EKG (ST-Hebung, Schenkelblock), Troponin I/T, CK-MB\n• Koronarangiografie\n\nTHERAPIE:\n• STEMI: PCI (Stent) < 90 Min \"door to balloon\"!\n• Antikoagulation: ASS + P2Y12-Hemmer (Ticagrelor/Clopidogrel)\n• O2 nur wenn SpO2 < 90%\n• Morphin bei starkem Schmerz, Nitro (KI: Hypotonie!)\n\nPFLEGERISCHE MASSNAHMEN:\n• Sofort 112 → Bettruhe → EKG → i.v.-Zugang\n• Monitoring: EKG, RR, SpO2, HF kontinuierlich\n• Schmerzerfassung (NRS 0-10)\n• Patienten beruhigen (Angst = Sympathikusaktivierung!)\n• Post-Infarkt: Frühmobilisation, Herzreha, Sekundärprophylaxe\n• Risikofaktoren: Rauchen, Gewicht, RR, Cholesterin',k:''},
+{m:9,n:'f',t:'Schlaganfall (Apoplex / Hirninfarkt)',q:'Erkläre vollständig: Schlaganfall (Apoplex / Hirninfarkt)',a:'DEFINITION: Plötzlicher Ausfall von Hirnfunktionen durch Ischämie (85%) oder Blutung (15%)\n\nFORMEN:\n• Ischämischer Infarkt (85%): Thrombose/Embolie → Lyse oder Thrombektomie\n• Hämorrhagischer Infarkt (15%): Blutung → keine Lyse!\n• TIA: Transiente ischämische Attacke – Warnsignal! < 24h, reversibel\n\nURSACHEN:\n• Vorhofflimmern (Embolie!), KHK, Karotisstenose\n• Hypertonie, Diabetes, Rauchen, Arteriosklerose\n\nSYMPTOME — FAST-Schema:\n• F – Face: Gesichtshälfte hängt (Zähne zeigen!)\n• A – Arms: Arm sinkt bei Augen-zu-Armheben\n• S – Speech: Undeutliche Sprache, Wortfindungsstörung\n• T – Time: Sofort 112! Zeit = Gehirn (1,9 Mio Neuronen/Min)\n\nWEITERE SYMPTOME:\n• Halbseitenlähmung, Sehstörung, Doppelbilder\n• Schluckstörung (Dysphagie!), Schwindel, Kopfschmerz\n\nDIAGNOSE:\n• CT ohne KM (Blutung ausschließen!), MRT, CTA\n• EKG (Vorhofflimmern?), Labor\n\nTHERAPIE:\n• Ischämisch: Lyse (tPA) < 4,5h oder Thrombektomie < 24h\n• Hämorrhagisch: Blutdruckkontrolle, neurochirurgisch\n• Sekundärprophylaxe: Antikoagulation (VHF), ASS, Statine, RR-Einstellung\n\nPFLEGERISCHE MASSNAHMEN:\n• Dysphagie: Logopädie sofort! Aspirationsgefahr → Oberkörper hoch 30°\n• Lagerung: alle 2h Umlagerung (Hemiplegie-Lagerung nach Bobath)\n• Mobilisation: Frühmobilisation ab Tag 1 (Physiotherapie)\n• Kommunikation: einfache kurze Sätze, Aphasie-Hilfsmittel\n• Emotionale Begleitung: Depression nach Schlaganfall häufig\n• Kontinenz: Blasenkatheter nur wenn nötig (Infektionsrisiko)\n• Sturzsicherung: Bettgitter, Begleitung, Orthesen',k:''},
+{m:9,n:'f',t:'COPD (Chronisch obstruktive Lungenerkrankung)',q:'Erkläre vollständig: COPD (Chronisch obstruktive Lungenerkrankung)',a:'DEFINITION: Chronische, progrediente Atemwegsobstruktion, nicht vollständig reversibel\n\nFORMEN:\n• Chronische Bronchitis: Husten + Auswurf > 3 Mo/J, 2 Jahre\n• Lungenemphysem: Überblähung, Alveolenzerstörung\n• Meist Mischbild\n\nGOLD-STADIEN (nach FEV1):\n• I: ≥ 80% → leicht\n• II: 50-79% → mittel\n• III: 30-49% → schwer\n• IV: < 30% → sehr schwer (Cor pulmonale)\n\nURSACHEN:\n• Rauchen (80-90%!) → Hauptursache\n• Passivrauchen, Luftverschmutzung, Berufsstoffe\n• α1-Antitrypsinmangel (genetisch, selten)\n\nSYMPTOME (AHA-Trias):\n• Auswurf (morgens, zäh, gelblich-grünlich bei Exazerbation)\n• Husten (chronisch, morgens)\n• Atemnot (Belastung → Ruhe)\n• Lippenbremse, Fassthorax, Uhrglasnägel\n\nDIAGNOSE:\n• Spirometrie: FEV1/FVC < 70% (nach Bronchodilatator)\n• Röntgen/CT Thorax, BGA (CO2 ↑, O2 ↓)\n\nTHERAPIE:\n• Nikotinabstinenz (wichtigste Maßnahme!)\n• Bronchodilatatoren: LAMA (Tiotropium), LABA (Salmeterol)\n• ICS nur bei häufigen Exazerbationen\n• O2-Langzeittherapie: > 15h/Tag bei pO2 < 55 mmHg\n• Atemphysiotherapie, Lungenreha\n\nEXAZERBATION:\n• Zunahme Dyspnoe + Auswurf + Husten\n• O2-ZIEL: 88-92% (nicht höher! Hypoxischer Atemantrieb!)\n• Systemische Kortikosteroide, Antibiotika, Bronchodilatatoren\n\nPFLEGERISCHE MASSNAHMEN:\n• O2-Gabe: ZIEL 88-92% bei COPD!\n• Atemerleichternde Lagerung: V-Sitz, Kutschersitz, Bett 30-45°\n• Lippenbremse anleiten\n• Inhalationstherapie: Technik kontrollieren, nach Kortison → Mundspülen!\n• Exazerbation früh erkennen: Zunahme Dyspnoe, Auswurf\n• Mobilitätsförderung trotz Atemnot\n• Ernährung: Hochkalorisch (Atemarbeit kostet Energie!)',k:''},
+{m:9,n:'a',t:'Pneumonie (Lungenentzündung)',q:'Erkläre vollständig: Pneumonie (Lungenentzündung)',a:'DEFINITION: Entzündung des Lungenparenchyms durch Erreger oder andere Ursachen\n\nFORMEN:\n• CAP (Community-Acquired): ambulant erworben → Pneumokokken, Mykoplasmen\n• HAP (Hospital-Acquired): > 48h nach Aufnahme → Pseudomonas, Staph. aureus\n• VAP: beatmungsassoziiert → schwerste Form\n• Aspirationspneumonie: nach Aspiration (Dysphagie!)\n\nURSACHEN/ERREGER:\n• Bakteriell: Streptococcus pneumoniae (häufigste), Haemophilus, Staphylococcus\n• Viral: Influenza, COVID-19, RSV\n• Atypisch: Mykoplasmen, Chlamydien, Legionellen\n\nSYMPTOME:\n• Fieber (> 38,5°C), Schüttelfrost\n• Produktiver Husten (rostbrauner Auswurf bei Pneumokokken)\n• Dyspnoe, Tachypnoe (> 20/min), Tachykardie\n• Pleuraschmerz (bei Pleuritis)\n• Ältere/Immungeschwächte: oft atypisch (Verwirrtheit, kein Fieber!)\n\nDIAGNOSE:\n• Röntgen Thorax (Infiltrat), CT\n• Labor: Leukozyten, CRP, PCT\n• Blutkultur, Sputum, Urin-Antigentest (Pneumokokken, Legionellen)\n• CRB-65-Score (ambulant) / PSI-Score\n\nTHERAPIE:\n• Antibiotika: Amoxicillin (CAP leicht), Ampicillin/Sulbactam + Makrolid (schwer)\n• O2-Gabe, Antipyretika, Flüssigkeit\n• Atemphysiotherapie, Frühmobilisation\n\nPFLEGERISCHE MASSNAHMEN:\n• O2-Gabe: SpO2 ≥ 92% (COPD: 88-92%)\n• Oberkörper hoch 30-45°, gesunde Seite unten (verbessert Ventilation)\n• Atemübungen: Incentive Spirometer, Lippenbremse\n• Flüssigkeitsförderung (sekretverflüssigend): 2-3 l/Tag\n• Mundpflege (Aspirationsprophylaxe!)\n• Fieber: Wadenwickel (nur warme Extremitäten!), Antipyretika\n• Frühzeitig mobilisieren\n• Isolation bei HAP/resistenten Erregern',k:''},
+{m:9,n:'e',t:'Sepsis',q:'Erkläre vollständig: Sepsis',a:'DEFINITION (Sepsis-3, 2016):\nLebensbedrohliche Organdysfunktion durch dysregulierte Immunantwort auf Infektion\nSOFA-Score: Anstieg ≥ 2 Punkte = Sepsis\nSeptischer Schock: Vasopressoren + Laktat > 2 mmol/l trotz Volumengabe\n\nURSACHEN:\n• Jede Infektion kann Sepsis auslösen\n• Häufig: Pneumonie (50%), Harnwege (25%), Bauch (10%), Katheter\n• Erreger: Gramnegative (E. coli), Grampositive (Staph.), Pilze\n\nSYMPTOME/ZEICHEN:\n• qSOFA (Screening): AF ≥ 22, GCS < 15, RR syst. ≤ 100 → ≥ 2 = Sepsiswarnung!\n• Fieber > 38,3°C oder Hypothermie < 36°C\n• Tachykardie > 90/min, Tachypnoe > 20/min\n• Verwirrtheit, Unruhe, Vigilanzminderung\n• Hautzeichen: marmorierte Haut, verlängerte KFZ > 3 Sek.\n• Oligurie (< 0,5 ml/kg/h)\n\nDIAGNOSE:\n• Laktat (> 2 = Sepsis, > 4 = septischer Schock)\n• Blutkulturen (2 Paare VOR Antibiotika!)\n• PCT, CRP, Leukozyten, Kreatinin, Bilirubin\n• Fokussuche: Röntgen, CT, Sono, Urin, Wundabstrich\n\nTHERAPIE — HOUR-1-BUNDLE (SSC 2021):\n1. Laktat messen\n2. Blutkulturen abnehmen (VOR Antibiotika!)\n3. Breitspektrum-Antibiotika innerhalb 1 Stunde!\n4. 30 ml/kg Kristalloide bei Hypotonie\n5. Vasopressoren (Noradrenalin) bei RR syst. < 65 mmHg\n\nPFLEGERISCHE MASSNAHMEN:\n• SOFORT Arzt bei Sepsiszeichen!\n• i.v.-Zugänge (2 großlumige), ZVK vorbereiten\n• Engmaschiges Monitoring: RR, HF, SpO2, Diurese, Temp alle 15-30 Min\n• Strenge Flüssigkeitsbilanz (stündlich!)\n• Blasenkatheter für exakte Diurese-Messung\n• Blutkulturen korrekt abnehmen (aseptisch, je 10 ml)\n• Antibiotika SOFORT bereitstellen + verabreichen\n• Delir-Monitoring, Angehörige informieren',k:''},
+{m:9,n:'f',t:'Lungenembolie (LE)',q:'Erkläre vollständig: Lungenembolie (LE)',a:'DEFINITION: Verschluss einer Pulmonalarterie durch Thrombus (meist aus TVT)\n\nRISIKOFAKTOREN (Virchow-Trias):\n• Verlangsamter Blutfluss: Bettlägerigkeit, Immobilisation, Herzinsuffizienz\n• Gefäßwandschaden: OP, Trauma, Katheter\n• Gerinnungsveränderung: Thrombophilie, Schwangerschaft, Pille, Tumor\n\nSYMPTOME (klassische Trias, nur 30%!):\n• Plötzliche Dyspnoe (häufigstes Symptom!)\n• Brustschmerz (atemabhängig)\n• Hämoptyse (Bluthusten)\nWEITERE:\n• Tachykardie, Tachypnoe, SpO2 ↓\n• Synkope, Schock, Rechtsherzversagen (massive LE)\n• Beinvenensymptome (TVT: Schwellung, Rötung, Schmerz)\n\nDIAGNOSE:\n• Wells-Score (Vortestwahrscheinlichkeit)\n• D-Dimere (negativ = LE ausgeschlossen bei niedrigem Score)\n• CT-Angiografie (Goldstandard)\n• Echokardiografie (Rechtsherzbelastung)\n\nEINTEILUNG:\n• Massive LE: Schock → sofort Lyse/Thrombektomie\n• Submassive LE: Rechtsherzbelastung ohne Schock\n• Periphere LE: hämodynamisch stabil\n\nTHERAPIE:\n• Antikoagulation: NMH oder Heparin sofort, dann DOAK (Rivaroxaban) für 3-12 Monate\n• Massive LE: Lyse (Alteplase), chirurgische Embolektomie\n• O2-Gabe, Monitoring\n\nPFLEGERISCHE MASSNAHMEN:\n• Sofort Bettruhe + Arzt rufen bei Verdacht\n• O2-Gabe, SpO2 ≥ 92%\n• i.v.-Zugang, Monitoring\n• Antikoagulation: NMH korrekt s.c. injizieren (periumbilikal, nicht entlüften, nicht reiben!)\n• Kompressionsstrümpfe anmessen\n• Thromboseprophylaxe konsequent (Frühmobilisation!)\n• Angst reduzieren: Patient beruhigen',k:''},
+{m:9,n:'f',t:'Niereninsuffizienz (chronisch + akut)',q:'Erkläre vollständig: Niereninsuffizienz (chronisch + akut)',a:'CHRONISCHE NIERENINSUFFIZIENZ (CKD):\nDEFINITION: GFR < 60 ml/min/1,73m² für > 3 Monate\n\nSTADIEN (GFR):\n• G1: > 90 (normal, mit Nierenschaden)\n• G2: 60-89 (leicht)\n• G3: 30-59 (mittelgradig) → Dosisanpassung!\n• G4: 15-29 (schwer)\n• G5: < 15 (Nierenversagen → Dialyse)\n\nURSACHEN:\n• Diabetische Nephropathie (häufigste Ursache)\n• Hypertensive Nephropathie\n• Glomerulonephritis, polyzystische Nieren\n\nSYMPTOME (oft lange symptomlos):\n• Ödeme, Hypertonie, Müdigkeit\n• Juckreiz (Urämie), Übelkeit, Schaumharn\n• Anämie (EPO-Mangel), Knochen (Vit.D-Mangel, Hyperparathyreoidismus)\n\nTHERAPIE:\n• Grunderkrankung behandeln (RR < 130/80, HbA1c < 7%)\n• Metformin KI bei GFR < 30!\n• SGLT2-Hemmer nephroprotektiv\n• Dialyse ab GFR < 10-15\n\nAKUTE NIERENINSUFFIZIENZ (AKI):\nUrsachen:\n• Prärenal: Volumenmangel, Schock\n• Renal: Glomerulonephritis, nephrotoxische Medikamente (NSAR, KM, Aminoglykoside!)\n• Postrenal: Harnabflussstörung (Prostata, Steine)\nSymptome: Oligurie/Anurie, Ödeme, Hyperkaliämie!\nTherapie: Ursache beseitigen, Volumen, evtl. Dialyse\n\nPFLEGERISCHE MASSNAHMEN:\n• Strenge Flüssigkeitsbilanz (Einfuhr = Ausfuhr + Perspiration)\n• Tägliches Wiegen\n• Ödeme: Hochlagerung, Kompression\n• Diät: Kalium ↓, Phosphat ↓, Protein moderat\n• Haut: Juckreiz → rückfettende Pflege, kurze Fingernägel\n• Medikamente prüfen: Nephrotoxika meiden!\n• Dialyse: AV-Fistel pflegen (kein RR, kein Blutabnehmen am Shunt-Arm!)',k:''},
+{m:9,n:'f',t:'Tumorerkrankungen – Pflegegrundlagen',q:'Erkläre vollständig: Tumorerkrankungen – Pflegegrundlagen',a:'HÄUFIGE TUMORE IN DER PFLEGE:\n• Lungenkrebs, Darmkrebs, Brustkrebs, Prostatakrebs, Magenkrebs\n\nALLGEMEINE SYMPTOME (B-Symptome):\n• Fieber (unklare Ursache, nachts)\n• Nachtschweiß (Wäschewechsel nötig)\n• Gewichtsverlust > 10% in 6 Monaten (ungewollt)\n→ IMMER abklären!\n\nWEITERE SYMPTOME je nach Lokalisation:\n• Lunge: Husten, Hämoptyse, Dyspnoe\n• Darm: Blut im Stuhl, Obstipation, Wechsel Stuhlgewohnheiten\n• Brust: Knoten, Hautveränderung, Sekretion\n• Magen: Appetitlosigkeit, frühe Sättigung, Oberbauchschmerz\n\nTUMORSCHMERZ (WHO-Stufenschema):\n• Stufe 1: Nicht-Opioide (Paracetamol, NSAR)\n• Stufe 2: Schwache Opioide (Tramadol, Tilidin)\n• Stufe 3: Starke Opioide (Morphin, Fentanyl-Pflaster)\n• Koanalgetika: Kortison, Antidepressiva, Antikonvulsiva\n\nTUMORKACHEXIE:\n• Definition: Gewichtsverlust + Muskelschwund + Appetitverlust\n• Pflege: Lieblingsessen, kleine Portionen, Trinknahrung, PEG erwägen\n\nNEBENWIRKUNGEN CHEMOTHERAPIE:\n• Übelkeit/Erbrechen → Antiemetika prophylaktisch\n• Mukositis → Mundpflege 6x täglich, alkoholfreie Lösung\n• Alopezie → psychologische Begleitung, Perücke\n• Knochenmarksuppression → Infektionsschutz, Blutungszeichen\n• Fatigue → Aktivitätsplanung, Energiesparen\n\nPFLEGERISCHE MASSNAHMEN:\n• Schmerzmanagement: regelmäßige NRS-Erhebung\n• Opioide: IMMER Laxans verordnen lassen!\n• Mundpflege intensiv (Mukositis, Pilzinfektionen)\n• Psychosoziale Begleitung: Angst, Trauer, Sinnfragen\n• Angehörige einbeziehen\n• Palliativ: Würde, Schmerzfreiheit, Selbstbestimmung',k:''},
+{m:10,n:'f',t:'Ulcus cruris (Unterschenkelgeschwür)',q:'Erkläre vollständig: Ulcus cruris (Unterschenkelgeschwür)',a:'FORMEN:\n1. ULCUS CRURIS VENOSUM (80%):\nUrsache: Chronisch venöse Insuffizienz (CVI), Varikosis, TVT-Folge\nLokalisierung: Innenknöchel (Gamasche)\nAussehen: Flach, nässend, Fibrinbeläge, unregelmäßige Ränder\nSchmerz: Wenig schmerzhaft\nTHERAPIE: Kompressionstherapie ist Grundlage! (KKL 2-4)\nWundversorgung: feuchte Wundauflage (Alginat, Schaumverband)\n\n2. ULCUS CRURIS ARTERIOSUM (10-15%):\nUrsache: Periphere arterielle Verschlusskrankheit (PAVK)\nLokalisierung: Akren (Zehen, Ferse, Außenknöchel)\nAussehen: Tief, Rand scharf ausgestanzt, Nekrosen, trocken\nSchmerz: STARK (auch nachts), Linderung durch Herabhängen\nABI (Knöchel-Arm-Index): < 0,9\nTHERAPIE: Keine Kompression! Revaskularisierung, Druckentlastung\n\n3. ULCUS MIXTUM:\nKombiniert venös + arteriell\nABI 0,5-0,8 → nur leichte Kompression möglich\n\nALLGEMEINE PFLEGE:\n• Wundassessment: Größe (L×B×T), Wundgrund, Exsudat, Rand, Schmerz\n• Fotodokumentation standardisiert\n• TIME-Prinzip anwenden\n• Schmerz vor Verbandwechsel behandeln (30 Min vorher!)\n• Kompressionsverband: korrekt von Zehen bis Knie (venös)\n• Ernährung: Protein ↑, Vitamin C + Zink für Wundheilung\n• Bewegung: Wadenpumpe aktivieren (Gehen, Zehenheben)',k:''},
+{m:5,n:'a',t:'Dekubitusprophylaxe',q:'Erkläre vollständig: Dekubitusprophylaxe',a:'DEFINITION: Dekubitus = druckbedingte Hautschädigung durch anhaltende Kompression\n\nRISIKOFAKTOREN (Braden-Skala):\n• Immobilität, Inkontinenz (Feuchtigkeit!), Mangelernährung\n• Sensibilitätsstörung, reduzierter Hautzustand\n• Braden ≤ 18 = Risiko; ≤ 9 = sehr hohes Risiko\n\nHÄUFIGE LOKALISATIONEN:\nSakrum, Fersen (ACHTUNG!), Trochanter, Malleolus, Schulterblatt, Hinterkopf\n\nMASSNAHMEN:\n• Umlagerung alle 2h (Risikopatient), Dokumentation!\n• 30°-Seitenlage (NICHT 90° → Trochanterdruck!)\n• Druckentlastende Matratze (Wechseldruck, Schaumstoff)\n• Fersen IMMER freilagerung (Kissen unter Waden)\n• Haut: täglich inspizieren, trocken und sauber halten\n• Inkontinenzversorgung sofort wechseln\n• Ernährung: ausreichend Protein, Flüssigkeit\n• Scherkräfte vermeiden (Nicht hochrutschen lassen!)\n• Mobilisation früh fördern\n\nDEKUBITUS GRADE (NPUAP/EPUAP):\n• Grad I: Rötung nicht wegdrückbar, Haut intakt\n• Grad II: Blasenbildung, oberflächlicher Hautverlust\n• Grad III: Vollhautverlust, bis Subkutis\n• Grad IV: Knochen/Sehnen sichtbar\n• Unstageable, Deep Tissue Injury (DTI)',k:''},
+{m:5,n:'a',t:'Thromboseprophylaxe',q:'Erkläre vollständig: Thromboseprophylaxe',a:'DEFINITION: Vorbeugung von Venenthrombosen und Lungenembolie\n\nRISIKOFAKTOREN (Virchow-Trias):\n• Verlangsamter Fluss: Immobilität, OP, Herzinsuffizienz, Dehydration\n• Gefäßwandschaden: OP, Trauma, Katheter, Entzündung\n• Gerinnungsveränderung: Thrombophilie, Schwangerschaft, Pille, Tumor, Alter\n\nMASSNAHMEN:\nPhysikalisch (immer!):\n• Frühmobilisation ab Tag 1 postoperativ\n• Beine hochlegen (Abfluss fördern)\n• Kompressionsstrümpfe (ATS, MTS): korrekte Größe messen!\n• Bewegungsübungen: Fußkreisen, Wadenpumpe (10x/h)\n• Ausreichend Trinken (Hämodilution)\n\nMedikamentös (nach Arztanordnung):\n• NMH (Clexane, Fraxiparin): 1-2x/Tag s.c., periumbilikal, NICHT reiben!\n• UFH: i.v. kontinuierlich, PTT-gesteuert\n• DOAK: Rivaroxaban, Apixaban (postoperativ)\n• Fondaparinux bei HIT\n\nZEICHEN tiefer Venenthrombose (TVT):\n• Einseitige Schwellung, Rötung, Überwärmung, Schmerz im Wade\n• Sofort Arzt → Doppler-Sono\n• Bettruhe + Antikoagulation sofort',k:''},
+{m:5,n:'a',t:'Pneumonieprophylaxe',q:'Erkläre vollständig: Pneumonieprophylaxe',a:'ZIEL: Verhinderung von Sekretansammlung und Atelektasen\n\nMASSNAHMEN:\nAtemübungen (10x/Stunde!):\n• Tiefes Einatmen, kurze Pause, langsam ausatmen\n• Incentive Spirometer\n• Gezielte Atemtherapie (Physiotherapie)\n\nLagerung:\n• Oberkörperhochlagerung 30° (verhindert Aspiration)\n• Atemstimulierenden Einreibung (ASE)\n• 135°-Lagerung / Bauchlagerung (bei ARDS)\n\nMobilisation:\n• Frühmobilisation: Sitzen, Stehen, Gehen (Tag 1!)\n• Schmerzkontrolle vor Mobilisation (sonst flache Atmung)\n\nAspirationsprophylaxe:\n• Oberkörper 30° beim Essen/Trinken\n• Angepasste Kostform bei Dysphagie (IDDSI-Standard)\n• Mundpflege vor Essen\n\nSekretlösung:\n• Inhalation (NaCl 0,9%), viel Trinken\n• Abhusten fördern: Kissen vor Bauch pressen\n• Absaugen wenn nötig (aseptisch!)',k:''},
+{m:5,n:'a',t:'Kontrakturprophylaxe',q:'Erkläre vollständig: Kontrakturprophylaxe',a:'DEFINITION: Kontraktur = dauerhafter Beweglichkeitsverlust durch Muskelverkürzung\n\nRISIKOPATIENTEN:\n• Bettlägerige, Schlaganfall, Parkinson, Demenz, OP-Patienten\n\nMASSNAHMEN:\n• Passive Mobilisation: 2x täglich alle Gelenke bewegen (vorsichtig, schmerzfrei)\n• Aktive Mobilisation: Patient so weit wie möglich selbst bewegen lassen\n• Korrekte Lagerung: physiologische Gelenkstellung\n  - Schulter: nicht adduziert, 30° abduziert\n  - Knie: leicht gebeugt (NICHT voll gestreckt auf langer Kissen!)\n  - Fuß: 90° (Spitzfuß-Prophylaxe: Fußbrett oder Schiene)\n• Kinästhetik: Bewegung mit minimalem Kraftaufwand\n• Ergotherapie: Schienen, Hilfsmittel\n• Frühmobilisation: täglich anstreben\n• Schmerzmessung: Bewegung darf nicht schmerzhaft sein!',k:''},
+{m:5,n:'a',t:'Sturzprophylaxe',q:'Erkläre vollständig: Sturzprophylaxe',a:'RISIKOFAKTOREN (Morse Fall Scale ≥ 45 = hohes Risiko):\n• Sturzanamnese, Gangstörung, Hilfsmittel nötig\n• i.v.-Zugang, kognitive Einschränkung, Medikamente (Sedativa, Diuretika, Blutdruckmittel)\n\nMASSNAHMEN:\nUmgebung:\n• Stolperfallen entfernen (Kabel, Schwellen, Teppiche)\n• Ausreichende Beleuchtung (auch nachts: Nachtlicht)\n• Bett in niedrigster Position, Bettgitter individuell abwägen\n• Rutschfeste Schuhe/Socken, Hilfsmittel griffbereit\n\nPatient:\n• Orientierung verbessern (Uhr, Kalender, Fenster)\n• Klingel erreichbar, Antwortzeit kurz\n• Toilettengänge planen (Drang = Sturzrisiko!)\n• Orthostaseprophylaxe: langsam aufstehen (3-Phasen-Aufstehen)\n• Gleichgewichts- und Krafttraining\n\nMedikamente:\n• Überprüfung auf sturzfördernde Medikamente\n• Polypharmazie ≥ 5 Medikamente prüfen\n• Schlafmittel, Benzodiazepine meiden\n\nNACH STURZ:\n• Vollständige Untersuchung (auch wenn keine sichtbaren Verletzungen)\n• Röntgen bei Verdacht, Schmerzmessung\n• Sturzdokumentation, Sturzanalyse, Präventionsplan anpassen',k:''},
+{m:5,n:'a',t:'Intertrigo-Prophylaxe',q:'Erkläre vollständig: Intertrigo-Prophylaxe',a:'DEFINITION: Intertrigo = Wundsein in Hautfalten durch Reibung, Feuchtigkeit, Wärme\n\nLOKALISATIONEN:\n• Unter Brüsten, Leisten, Achseln, Bauchfalten (Adipositas!), Zehenzwischenräume\n\nRISIKOFAKTOREN:\n• Adipositas, Inkontinenz, Schwitzen, Diabetes, Immobilität\n\nMASSNAHMEN:\n• Hautfalten täglich inspizieren und reinigen\n• TROCKEN halten: nach Waschen sorgfältig (sanft!) trockentupfen\n• Reibung reduzieren: Weiche Einlagen/Kompressen zwischen Falten\n• Feuchtigkeitspflege: leichte, nicht okklusive Creme (kein Puder! verklebt)\n• Inkontinenz: sofortige Versorgung, Hautschutzfilm\n• Kleidung: atmungsaktiv, nicht zu eng\n• Gewichtsreduktion langfristig fördern\n\nBEI MANIFESTER INTERTRIGO:\n• Reinigung mit NaCl 0,9% oder Ringelblumenpräparat\n• Zink-haltiger Schutzpaste oder Wundfolie\n• Pilzinfektion (Candida): Antimykotikum nach Arztanordnung\n• Regelmäßige Dokumentation und Verlaufskontrolle',k:''},
+{m:5,n:'a',t:'Obstipationsprophylaxe',q:'Erkläre vollständig: Obstipationsprophylaxe',a:'DEFINITION: Obstipation = < 3 Stuhlgänge/Woche, harter Stuhl, starkes Pressen\n\nRISIKOFAKTOREN:\n• Immobilität, Flüssigkeitsmangel, ballaststoffarme Ernährung\n• Opioide (IMMER Laxans!), Anticholinergika, Eisenpräparate\n• Schilddrüsenunterfunktion, Darmerkrankungen\n• Psychischer Stress, fehlende Intimsphäre\n\nMASSNAHMEN:\nErnährung:\n• Ballaststoffe: 30g/Tag (Vollkorn, Gemüse, Hülsenfrüchte, Leinsamen)\n• Flüssigkeit: 1,5-2 l/Tag (Wasser, Fruchtsäfte, warme Getränke)\n• Regelmäßige Mahlzeiten, Ruhe beim Essen\n\nAktivität:\n• Mobilisation fördern, Bauchdeckenmassage (kreisend im Uhrzeigersinn)\n• Auf Defäkationsreiz nicht zu lange warten\n\nToilette:\n• Intimsphäre wahren (Tür zu, kein Zeitdruck)\n• Hockstellung fördern (Fußschemel unter Füße)\n• Regelmäßige Toilettenzeiten (nach Frühstück)\n\nMedikamente (nach Arztanordnung):\n• Lactulose (osmotisch), Macrogol (PEG)\n• Bisacodyl, Natriumpicosulfat (stimulierend)\n• Opioide: IMMER prophylaktisch Laxans!\n\nDokumentation:\n• Stuhlprotokoll führen (Häufigkeit, Konsistenz, Bristol-Stool-Scale)',k:''},
+{m:5,n:'a',t:'Dehydrationsprophylaxe',q:'Erkläre vollständig: Dehydrationsprophylaxe',a:'DEFINITION: Exsikkose = Flüssigkeitsmangel → häufig bei älteren Patienten\n\nTAGESBEDARF: 30 ml/kg KG / Tag (ca. 1500-2000 ml)\nMEHR BEI: Fieber (+500 ml/°C), Schwitzen, Erbrechen, Diarrhö\n\nRISIKOPATIENTEN:\n• Ältere Menschen (vermindertes Durstgefühl!)\n• Dysphagie, Demenz, Schluckstörung\n• Diuretika-Einnahme, Inkontinenzangst (trinken weniger!)\n\nZEICHEN DER DEHYDRATION:\n• Trockene Schleimhäute, belegte Zunge\n• Stehende Hautfalten (Turgorreduktion)\n• Dunkler Urin (> 800 mosmol/kg), Oligurie\n• Tachykardie, Hypotonie, Verwirrtheit, Schwäche\n• Labor: Hämatokrit ↑, Harnstoff ↑, Natrium ↑\n\nMASSNAHMEN:\n• Trinkanamnese: Was mag der Patient? Wann trinkt er am liebsten?\n• Trinkplan erstellen (Lieblingsgetränke anbieten)\n• Getränke sichtbar und erreichbar bereitstellen\n• Regelmäßig anbieten (alle 1-2h!)\n• Trinkprotokoll führen\n• Speisen mit hohem Wassergehalt (Suppe, Joghurt, Obst)\n• Mundpflege (trockene Schleimhäute lindern)\n• Rücksprache Arzt bei > 500 ml Defizit → i.v.-Infusion',k:''},
+{m:5,n:'a',t:'Aspirationsprophylaxe',q:'Erkläre vollständig: Aspirationsprophylaxe',a:'DEFINITION: Aspiration = Eindringen von Fremdmaterial in Atemwege → Aspirationspneumonie!\n\nRISIKOPATIENTEN:\n• Dysphagie (Schlaganfall, Demenz, Parkinson, M. ALS)\n• Bewusstseinseinschränkung, Trachealkanüle\n• Sondernährung (NGS, PEG)\n• Erbrechen\n\nMASSNAHMEN:\nLagerung:\n• Oberkörper 30-45° beim Essen/Trinken und danach 30 Min\n• Aufrechte Sitzposition, Kopf leicht nach vorne\n\nEssen/Trinken:\n• Logopädie einschalten bei Verdacht auf Dysphagie!\n• IDDSI-Konsistenzgrade einhalten (Stufe 0-7)\n• Angepasste Kost: püriert, angedickt\n• Nicht hetzen! Ausreichend Zeit lassen\n• Kleine Bissen/Schlucke, Pausen einhalten\n• Ablenkungen vermeiden\n\nSonde:\n• Lage prüfen VOR JEDER Gabe: pH < 5,5 (gastrisch)\n• Applikationsgeschwindigkeit kontrollieren\n• Pause einhalten nach Gabe (weiterhin sitzen!)\n• Bei Erbrechen: sofort unterbrechen, Lagerung\n\nNach Aspiration:\n• Abhusten fördern, Absaugen wenn nötig\n• Arzt informieren, Beobachtung auf Pneumoniezeichen (Fieber, Dyspnoe)',k:''},
+{m:5,n:'a',t:'Soorprophylaxe (Mundpflege)',q:'Erkläre vollständig: Soorprophylaxe (Mundpflege)',a:'DEFINITION: Soor = Candida-Infektion der Mundschleimhaut durch Immunsuppression\n\nRISIKOFAKTOREN:\n• Antibiotikagabe (stört Mikrobiom!)\n• Kortison-Inhalation (lokal!)\n• Immunsuppression (Chemotherapie, HIV)\n• Trockenheit (Mundatmer, O2-Gabe)\n• Prothesenträger, schlechte Mundhygiene\n\nMASSNAHMEN (mind. 2x täglich, besser 4-6x):\n• Zähne/Zahnfleisch/Zunge reinigen (weiche Bürste)\n• Prothesen nachts herausnehmen und reinigen\n• Mundschleimhaut: Tupfer mit NaCl 0,9% oder Kamillentee\n• Lippen: Lippenpflegestift, Vaseline\n• Befeuchtung: häufiges Trinken, Mundspray\n• Nach Kortison-Inhalation: SOFORT Mund spülen!\n• Antifungale Therapie: Nystatin-Suspension (nach Arztanordnung)\n\nZEICHEN DES SOORS:\n• Weißliche, nicht abwischbare Beläge\n• Rötung, Brennen, Schluckbeschwerden\n• Metastasierung möglich (Ösophagus, Darm)',k:''},
+{m:5,n:'a',t:'Intertrigoprophylaxe nach Waschen',q:'Erkläre vollständig: Intertrigoprophylaxe nach Waschen',a:'HAUTPFLEGE-GRUNDREGELN:\n• Hautneutral (pH 5,5) reinigen → keine Seife!\n• Sorgfältig trockentupfen (NICHT reiben)\n• Feuchtigkeitspflege individuell abstimmen\n• Barriereschutz bei Inkontinenz: Zinkpaste, Schutzfilm\n\nPFLEGEPRODUKTE richtig einsetzen:\n• Trockene Haut: rückfettende Lotion/Creme (Urea 5-10%)\n• Fette Haut: leichte, wasserhaltige Emulsion\n• Faltenareale: Nichtokklusiv, keine fetthaltigen Pasten → Hitze-Stau!\n\nINKONTINENZASSOZIIERTE DERMATITIS (IAD):\n• Ursache: Urin/Stuhl → pH-Verschiebung → Hautschaden\n• Prävention: Sofortige Versorgung, Hautschutzfilm, Barrierecreme\n• Produkte: Cavilon, Sena, Comfifast',k:''}
 ];
 var QCM=[
 {m:1,n:'a',q:'Der Pflegeprozess hat wie viele Schritte?',o:['4','5','6','8'],a:2,e:'6 Schritte: Informationssammlung, Diagnose, Ziele, Planung, Durchführung, Evaluation. (Icare Bd.1)',p:10},
@@ -1673,137 +1712,200 @@ function renderTheorie(mod, area){
   '</div>';
 }
 
-// ── KI TUTOR ──
-var KI_CHIPS = [
-  'Erkläre den Pflegeprozess',
-  'Was ist der Braden-Score?',
-  'Pneumonieprophylaxe – Maßnahmen',
-  'QCM zu Dekubitus erstellen',
-  '5 WHO-Indikationen Händedesinfektion',
-  'Unterschied Delir vs Demenz',
-  'Diabetes Typ 1 vs Typ 2',
-  'Simulation: Herzinfarkt-Patient',
-  'Erklär mir Sepsis',
-  'Thromboseprophylaxe – alles',
+
+// ════════════════════════════════
+//  LERNASSISTENT — Smart Search
+// ════════════════════════════════
+
+var QUICK_TOPICS = [
+  'Dekubitus','Heparin','Sepsis','Blutdruck','Herzinsuffizienz',
+  'Diabetes','Demenz','Wundheilung','Pflegeprozess','MRSA',
+  'Pneumonie','Schlaganfall','Schmerztherapie','Thrombose',
+  'Händedesinfektion','Medikamente','Ernährung','Reanimation',
+  'Braden-Skala','Lagerung','Insulin','Fieber','Palliativ'
 ];
 
-function showKISetup(){
-  var existing = document.getElementById('ki-setup-banner');
-  if(existing) return;
-  var banner = document.createElement('div');
-  banner.id = 'ki-setup-banner';
-  banner.style.cssText = 'background:rgba(220,38,38,.12);border:1px solid rgba(220,38,38,.2);border-radius:12px;padding:.8rem 1rem;margin:.5rem 1rem;font-size:.78rem;';
-  banner.innerHTML = '<div style="font-weight:700;margin-bottom:.4rem;color:#fca5a5">🔑 KI-Tutor Einrichtung</div>'+
-    '<div style="color:var(--muted);margin-bottom:.6rem">Anthropic API-Schlüssel eingeben um den KI-Tutor zu aktivieren:</div>'+
-    '<div style="display:flex;gap:.4rem">'+
-      '<input id="ki-key-input" placeholder="sk-ant-..." style="flex:1;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:.4rem .7rem;font-size:.78rem;color:var(--text);font-family:monospace">'+
-      '<button onclick="saveKIKey()" style="background:var(--d1);border:none;border-radius:8px;padding:.4rem .8rem;color:#fff;font-weight:700;cursor:pointer;font-size:.78rem">Speichern</button>'+
-    '</div>';
-  var msgs = $('ki-messages');
-  msgs.parentNode.insertBefore(banner, msgs);
-}
-
-function saveKIKey(){
-  var key = document.getElementById('ki-key-input').value.trim();
-  if(key.startsWith('sk-ant-')){
-    localStorage.setItem('pl-api-key', key);
-    document.getElementById('ki-setup-banner').remove();
-    if($('ki-status')) $('ki-status').textContent='✅ Verbunden';
-    addKIMessage('✅ API-Schlüssel gespeichert! Du kannst jetzt Fragen stellen.', 'ai');
-  } else {
-    alert('Ungültiger API-Schlüssel. Muss mit sk-ant- beginnen.');
-  }
-}
-
 function renderKIChips(){
-  var chips=$('ki-chips');
-  chips.innerHTML='';
-  KI_CHIPS.forEach(function(c){
-    var el=document.createElement('div');
-    el.className='ki-chip';
-    el.textContent=c;
-    el.onclick=function(){
-      $('ki-input').value=c;
-      sendKI();
+  var topics = document.getElementById('ki-topics');
+  if(!topics) return;
+  // Keep the "Schnellthemen:" label
+  var label = topics.querySelector('span');
+  topics.innerHTML = '';
+  if(label) topics.appendChild(label);
+  
+  QUICK_TOPICS.forEach(function(t){
+    var chip = document.createElement('span');
+    chip.style.cssText = 'display:inline-block;margin-right:.4rem;margin-bottom:.3rem;padding:.3rem .75rem;border-radius:999px;border:1px solid var(--border);background:var(--card);font-size:.72rem;cursor:pointer;transition:all .15s;white-space:nowrap';
+    chip.textContent = t;
+    chip.onclick = function(){
+      document.getElementById('ki-search').value = t;
+      kiSearch(t);
     };
-    chips.appendChild(el);
+    topics.appendChild(chip);
   });
+  
+  // Show welcome state
+  showKIWelcome();
 }
 
-function addKIMessage(text, type){
-  var msgs=$('ki-messages');
-  var el=document.createElement('div');
-  el.className='ki-msg '+type;
-  el.textContent=text;
-  msgs.appendChild(el);
-  msgs.scrollTop=msgs.scrollHeight;
-  return el;
+function showKIWelcome(){
+  var results = document.getElementById('ki-results');
+  results.innerHTML = 
+    '<div style="text-align:center;padding:2rem 1rem">' +
+      '<div style="font-size:2.5rem;margin-bottom:.75rem">🧠</div>' +
+      '<div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:.4rem">Was möchtest du lernen?</div>' +
+      '<div style="font-size:.78rem;color:var(--muted);line-height:1.6">Gib ein Thema ein oder wähle einen Schnellzugriff.<br>Du hast Zugriff auf <strong style="color:var(--d1)">672 Lernkarten</strong> und <strong style="color:var(--d1)">161 Prüfungsfragen</strong>.</div>' +
+    '</div>';
 }
 
-function addTyping(){
-  var msgs=$('ki-messages');
-  var el=document.createElement('div');
-  el.className='ki-msg ai';
-  el.innerHTML='<div class="ki-typing"><span></span><span></span><span></span></div>';
-  msgs.appendChild(el);
-  msgs.scrollTop=msgs.scrollHeight;
-  return el;
+function clearKISearch(){
+  document.getElementById('ki-search').value = '';
+  document.getElementById('ki-clear').style.display = 'none';
+  showKIWelcome();
 }
 
-function sendKI(){
-  var input=$('ki-input');
-  var msg=input.value.trim();
-  if(!msg) return;
-  input.value='';
+function kiSearch(query){
+  query = (query||'').trim();
+  var clear = document.getElementById('ki-clear');
+  if(clear) clear.style.display = query ? 'block' : 'none';
   
-  addKIMessage(msg, 'user');
-  var typing=addTyping();
+  if(query.length < 2){
+    showKIWelcome();
+    return;
+  }
   
-  // Build context from cards/QCM for better AI responses
-  var context = "Du bist ein professioneller KI-Tutor für Pflegeausbildung in Deutschland. " +
-    "Du hilfst Pflegestudenten, Prüfungswissen zu verstehen und zu üben. " +
-    "Antworte auf Deutsch, präzise, strukturiert. " +
-    "Wenn nach QCM gefragt: erstelle 3-5 Fragen mit 4 Antwortoptionen und markiere die richtige. " +
-    "Wenn nach Erklärung gefragt: gib eine strukturierte, klare Antwort mit Merksätzen. " +
-    "Nutze Emojis sparsam für Übersichtlichkeit.";
+  var q = query.toLowerCase();
+  var results = document.getElementById('ki-results');
   
-  var apiKey = localStorage.getItem('pl-api-key') || '';
+  // Search CARDS
+  var matchedCards = CARDS.filter(function(c){
+    return (c.t && c.t.toLowerCase().indexOf(q) >= 0) ||
+           (c.q && c.q.toLowerCase().indexOf(q) >= 0) ||
+           (c.a && c.a.toLowerCase().indexOf(q) >= 0);
+  });
   
-  fetch("https://api.anthropic.com/v1/messages", {
-    method:"POST",
-    headers:{
-      "Content-Type":"application/json",
-      "anthropic-dangerous-direct-browser-access":"true",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01"
-    },
-    body:JSON.stringify({
-      model:"claude-sonnet-4-5-20251001",
-      max_tokens:1000,
-      system: context,
-      messages:[{role:"user", content:msg}]
-    })
-  })
-  .then(function(r){ return r.json(); })
-  .then(function(data){
-    typing.remove();
-    if(data.error){
-      addKIMessage("⚠️ "+data.error.message, 'ai');
-      showKISetup();
-      return;
+  // Search QCM
+  var matchedQCM = QCM.filter(function(q_item){
+    return (q_item.q && q_item.q.toLowerCase().indexOf(q) >= 0) ||
+           (q_item.e && q_item.e.toLowerCase().indexOf(q) >= 0) ||
+           q_item.o.some(function(o){ return o.toLowerCase().indexOf(q) >= 0; });
+  });
+  
+  var total = matchedCards.length + matchedQCM.length;
+  
+  if(total === 0){
+    results.innerHTML = 
+      '<div style="text-align:center;padding:2rem 1rem">' +
+        '<div style="font-size:2rem;margin-bottom:.5rem">😕</div>' +
+        '<div style="font-weight:600;margin-bottom:.3rem">Keine Ergebnisse für "'+escHtml(query)+'"</div>' +
+        '<div style="font-size:.78rem;color:var(--muted)">Versuche andere Begriffe wie: Dekubitus, Heparin, Blutdruck...</div>' +
+      '</div>';
+    return;
+  }
+  
+  var html = '<div style="font-size:.72rem;color:var(--muted);margin-bottom:.75rem;font-weight:600">' +
+    total + ' Ergebnisse für "' + escHtml(query) + '"' +
+    (matchedCards.length ? ' · ' + matchedCards.length + ' Karten' : '') +
+    (matchedQCM.length ? ' · ' + matchedQCM.length + ' QCM' : '') +
+    '</div>';
+  
+  // Show matched cards (max 15)
+  if(matchedCards.length > 0){
+    html += '<div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.78rem;color:var(--d1);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.05em">🃏 Lernkarten (' + matchedCards.length + ')</div>';
+    
+    matchedCards.slice(0, 15).forEach(function(c){
+      var niv_color = c.n==='a'?'var(--d1)':c.n==='f'?'var(--d4)':'var(--d2)';
+      var niv_label = {a:'Anfänger',f:'Fortgeschritten',e:'Experte'}[c.n] || c.n;
+      
+      // Highlight matching text
+      var answer = c.a ? c.a.replace(/\n/g,' ').substring(0,300) : '';
+      var highlighted = answer.replace(new RegExp('('+escRegex(query)+')', 'gi'), '<mark style="background:rgba(13,148,136,.25);color:var(--d1);border-radius:3px;padding:0 2px">$1</mark>');
+      
+      html += '<div onclick="toggleKICard(this)" style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:.85rem;margin-bottom:.5rem;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='var(--d1)'" onmouseout="this.style.borderColor='var(--border)'">' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.4rem">' +
+          '<div style="font-weight:700;font-size:.85rem;flex:1;padding-right:.5rem">' + escHtml(c.t) + '</div>' +
+          '<span style="font-size:.6rem;font-weight:700;color:'+niv_color+';background:'+niv_color+'18;border-radius:999px;padding:.15rem .45rem;flex-shrink:0">' + niv_label + '</span>' +
+        '</div>' +
+        '<div style="font-size:.75rem;color:var(--muted);margin-bottom:.5rem">' + escHtml(c.q) + '</div>' +
+        '<div class="ki-card-answer" style="display:none;font-size:.78rem;line-height:1.55;padding-top:.5rem;border-top:1px solid var(--border);color:rgba(255,255,255,.85)">' + highlighted + '</div>' +
+        '<div style="font-size:.65rem;color:var(--d1);margin-top:.35rem">▼ Antwort anzeigen</div>' +
+      '</div>';
+    });
+    
+    if(matchedCards.length > 15){
+      html += '<div style="text-align:center;font-size:.75rem;color:var(--muted);padding:.5rem">... und ' + (matchedCards.length-15) + ' weitere Karten</div>';
     }
-    var text = (data.content&&data.content[0]&&data.content[0].text) || 
-               "Entschuldigung, ich konnte keine Antwort generieren.";
-    addKIMessage(text, 'ai');
-    if($('ki-status')) $('ki-status').textContent='✅ Verbunden';
-  })
-  .catch(function(err){
-    typing.remove();
-    addKIMessage("⚠️ Verbindungsfehler. API-Schlüssel prüfen.", 'ai');
-    showKISetup();
-    console.error('[KI-Tutor]', err);
-  });
+  }
+  
+  // Show matched QCM (max 8)
+  if(matchedQCM.length > 0){
+    html += '<div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.78rem;color:var(--d6);margin:.75rem 0 .5rem;text-transform:uppercase;letter-spacing:.05em">❓ Prüfungsfragen (' + matchedQCM.length + ')</div>';
+    
+    matchedQCM.slice(0, 8).forEach(function(q_item, qi){
+      var uid = 'ki-qcm-'+qi+'-'+Math.floor(Math.random()*9999);
+      html += '<div id="'+uid+'" style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:.85rem;margin-bottom:.5rem">' +
+        '<div style="font-weight:600;font-size:.84rem;margin-bottom:.65rem;line-height:1.4">' + escHtml(q_item.q) + '</div>';
+      
+      q_item.o.forEach(function(opt, oi){
+        var letter = String.fromCharCode(65+oi);
+        html += '<div onclick="answerKIQCM(this,'+oi+','+q_item.a+',''+uid+'')" style="display:flex;gap:.5rem;align-items:center;padding:.45rem .65rem;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);margin-bottom:.35rem;cursor:pointer;font-size:.8rem;transition:all .15s">' +
+          '<div style="width:22px;height:22px;border-radius:999px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;flex-shrink:0">' + letter + '</div>' +
+          '<div>' + escHtml(opt) + '</div>' +
+        '</div>';
+      });
+      
+      html += '<div id="expl-'+uid+'" style="display:none;background:rgba(255,255,255,.04);border-radius:10px;padding:.6rem .75rem;margin-top:.5rem;font-size:.76rem;color:var(--muted);line-height:1.5">' + escHtml(q_item.e) + '</div>';
+      html += '</div>';
+    });
+  }
+  
+  results.innerHTML = html;
 }
+
+function toggleKICard(el){
+  var answer = el.querySelector('.ki-card-answer');
+  var hint = el.querySelector('[style*="▼"]') || el.querySelector('[style*="▲"]');
+  if(!answer) return;
+  var isOpen = answer.style.display !== 'none';
+  answer.style.display = isOpen ? 'none' : 'block';
+  if(hint) hint.textContent = isOpen ? '▼ Antwort anzeigen' : '▲ Antwort schließen';
+  if(!isOpen){ addPoints(2); updateTopBar(); }
+}
+
+function answerKIQCM(el, oi, correct, uid){
+  var container = document.getElementById(uid);
+  if(!container || container.getAttribute('data-done')) return;
+  container.setAttribute('data-done','1');
+  
+  container.querySelectorAll('[onclick^="answerKIQCM"]').forEach(function(opt, i){
+    opt.style.pointerEvents = 'none';
+    opt.style.cursor = 'default';
+    if(i === correct){
+      opt.style.background = 'rgba(13,148,136,.15)';
+      opt.style.borderColor = 'var(--d1)';
+      opt.querySelector('div').style.background = 'var(--d1)';
+      opt.querySelector('div').style.color = '#fff';
+    } else if(i === oi && oi !== correct){
+      opt.style.background = 'rgba(220,38,38,.12)';
+      opt.style.borderColor = '#dc2626';
+      opt.querySelector('div').style.background = '#dc2626';
+      opt.querySelector('div').style.color = '#fff';
+    }
+  });
+  
+  var expl = document.getElementById('expl-'+uid);
+  if(expl) expl.style.display = 'block';
+  if(oi === correct){ addPoints(10); updateTopBar(); }
+}
+
+function escRegex(s){
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function showKISetup(){ /* disabled - no API needed */ }
+function saveKIKey_OLD(){ /* disabled */ }
+function sendKI(){ /* disabled */ }
+
 
 // ── PROFIL ──
 function renderProfil(){
@@ -1846,10 +1948,11 @@ function escHtml(s){
 
 function formatAnswer(a){
   if(!a) return '';
-  return escHtml(a)
-    .replace(/\\n/g,'<br>')
-    .replace(/• /g,'<span style="color:var(--dc,var(--d1))">•</span> ')
-    .replace(/(\d+)\./g,'<strong>$1.</strong>');
+  var s = String(a);
+  s = s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  s = s.replace(/\\n/g,'<br>');
+  s = s.replace(/\u2022 /g,'<span style="color:var(--d1)">\u2022</span> ');
+  return s;
 }
 
 </script>
