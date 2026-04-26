@@ -232,6 +232,49 @@ header{display:flex;align-items:center;justify-content:space-between;padding:1re
   to { transform: translateX(-50%) translateY(0); opacity:1; }
 }
 
+
+/* ── AMELIORATIONS V4 ── */
+.nb { font-size: .78rem; font-weight: 700; letter-spacing: .01em; }
+.sec-title { font-size: 1.6rem; }
+.card { transition: transform .18s, box-shadow .18s; }
+.card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+#sit-preview .sit-card { 
+  background: rgba(245,158,11,.06); 
+  border: 1px solid rgba(245,158,11,.15); 
+  border-radius: 12px; 
+  padding: 1rem; 
+  margin-bottom: .8rem; 
+}
+#sit-preview .sit-card-num { 
+  font-size: .65rem; font-weight: 800; color: #f59e0b; 
+  margin-bottom: .3rem; letter-spacing: .5px; 
+}
+#sit-preview .sit-card-title { 
+  font-size: .9rem; font-weight: 700; margin-bottom: .3rem; 
+}
+#sit-preview .sit-card-sub { 
+  font-size: .75rem; color: rgba(255,255,255,.45); 
+}
+.upgrade-banner {
+  background: linear-gradient(135deg, rgba(13,148,136,.15), rgba(245,158,11,.1));
+  border: 1px solid rgba(13,148,136,.25);
+  border-radius: 14px;
+  padding: 1.2rem;
+  text-align: center;
+  margin-top: 1rem;
+}
+.upgrade-btn {
+  display: inline-block;
+  background: linear-gradient(135deg, #0d9488, #14b8a6);
+  color: #fff;
+  font-weight: 700;
+  font-size: .85rem;
+  padding: .6rem 1.4rem;
+  border-radius: 999px;
+  text-decoration: none;
+  margin-top: .7rem;
+  box-shadow: 0 4px 14px rgba(13,148,136,.35);
+}
 </style>
 </head>
 <body>
@@ -244,9 +287,8 @@ header{display:flex;align-items:center;justify-content:space-between;padding:1re
   </div>
 </header>
 <div class="nav">
-  <button class="nb on" data-t="lk">📄 Lernkarten</button>
-  <button class="nb" data-t="vid">🎬 Videos</button>
-  <button class="nb" data-t="info">📊 Infografiken</button>
+  <button class="nb on" data-t="lk">📚 Lernkarten</button>
+  <button class="nb" data-t="sit" style="position:relative">🧩 Situationen<span style="position:absolute;top:4px;right:3px;background:#f59e0b;color:#000;font-size:.42rem;font-weight:800;padding:1px 4px;border-radius:6px">NEU</span></button>
   <button class="nb" data-t="exam">📝 Prüfung</button>
 </div>
 
@@ -285,45 +327,16 @@ header{display:flex;align-items:center;justify-content:space-between;padding:1re
 </div>
 
 <!-- VIDEOS -->
-<div class="screen" id="s-vid">
-  <div class="sec-title">Video<span style="color:var(--tealM)">bibliothek</span></div>
-  <div class="sec-sub">20 Lehrvideos · Storyboard + Script · Klicken für Details</div>
-  <div class="vgrid" id="vg"></div>
-</div>
-
-<!-- VIDEO MODAL -->
-<div class="modal" id="vmodal">
-  <div class="mbox">
-    <button class="mclose" onclick="closeModal('vmodal')">✕</button>
-    <div class="mtitle" id="vm-title"></div>
-    <div class="mmeta" id="vm-meta"></div>
-    <div class="stag">🎬 Storyboard</div>
-    <div class="sboard" id="vm-board"></div>
-    <div class="script">
-      <div class="stitle">📜 Script (Auszug)</div>
-      <div id="vm-script"></div>
-    </div>
+<div class="screen" id="s-sit">
+  <div class="sec-title">Typische <span style="color:var(--tealM)">Situationen</span></div>
+  <div class="sec-sub">87 klinische Pflegesituationen · Theorie + Fall · nach I care Pflege</div>
+  <div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:12px;padding:.8rem 1rem;margin-bottom:1rem;font-size:.82rem;color:#f59e0b;font-weight:600">
+    🧩 Dieses Modul ist in PflegeLearn V5 vollständig verfügbar → <a href="PflegeLearn_V5.html" style="color:#f59e0b;text-decoration:underline">Zur Lernplattform</a>
   </div>
+  <!-- Preview: 3 situations -->
+  <div id="sit-preview"></div>
 </div>
 
-<!-- INFOGRAFIKEN -->
-<div class="screen" id="s-info">
-  <div class="sec-title">Info<span style="color:var(--tealM)">grafiken</span></div>
-  <div class="sec-sub">12 interaktive Infografiken · Klicken für Vollansicht · Quellen: Icare, NPUAP, WHO, NYHA</div>
-  <div class="filters" id="icats" style="margin:1rem 0;gap:.45rem;display:flex;flex-wrap:wrap;"></div>
-  <div class="igrid" id="ig"></div>
-</div>
-
-<!-- INFO MODAL -->
-<div class="modal" id="imodal">
-  <div class="mbox" style="max-width:720px;">
-    <button class="mclose" onclick="closeModal('imodal')">✕</button>
-    <div class="mtitle" id="im-title" style="margin-bottom:.75rem;"></div>
-    <div class="isvg" id="im-content"></div>
-  </div>
-</div>
-
-<!-- EXAM -->
 <div class="screen" id="s-exam">
   <div id="esetup">
     <div class="exambox">
@@ -1786,7 +1799,37 @@ render();
     `;
     document.head.appendChild(style);
   })();
-  </script>
+  
+// ══════════ SITUATIONS PREVIEW ══════════
+var SIT_PREVIEW = [
+  {n:1, titre:"Patient lehnt Körperpflege ab", kat:"Grundpflege", tag:"GP"},
+  {n:2, titre:"Akute Atemnot – Dyspnoe", kat:"Akutsituationen", tag:"AK"},
+  {n:3, titre:"Sturz – Akutversorgung & Prophylaxe", kat:"Grundpflege", tag:"GP"},
+  {n:4, titre:"Hypoglykämie erkennen und behandeln", kat:"Akutsituationen", tag:"AK"},
+  {n:5, titre:"Delir – Akuter Verwirrtheitszustand", kat:"Neurologisch", tag:"NR"},
+  {n:6, titre:"Dekubitus – Beurteilung & Versorgung", kat:"Haut & Wunden", tag:"WU"}
+];
+
+(function(){
+  var container = document.getElementById('sit-preview');
+  if(!container) return;
+  var html = '';
+  SIT_PREVIEW.forEach(function(s){
+    html += '<div class="sit-card">' +
+      '<div class="sit-card-num">SITUATION ' + s.n + ' · ' + s.kat + '</div>' +
+      '<div class="sit-card-title">' + s.titre + '</div>' +
+      '<div class="sit-card-sub">📘 Theorie-Karte + 🧩 Fall-Karte · 3 Fragen + Lösungen</div>' +
+    '</div>';
+  });
+  html += '<div class="upgrade-banner">' +
+    '<div style="font-size:.9rem;font-weight:700;margin-bottom:.3rem">87 Situationen vollständig in V5 🚀</div>' +
+    '<div style="font-size:.75rem;color:rgba(255,255,255,.5)">Alle Kategorien · Theorie + Fall · Lösungen · Filterfunktion</div>' +
+    '<a class="upgrade-btn" href="PflegeLearn_V5.html">▶ Zur Lernplattform</a>' +
+  '</div>';
+  container.innerHTML = html;
+})();
+
+</script>
 
 </body>
 </html>
