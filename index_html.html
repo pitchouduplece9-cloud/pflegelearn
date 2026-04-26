@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PflegeLearn – Die smarte Lernplattform für die Pflegeausbildung</title>
+<meta name="description" content="PflegeLearn – 500 QCM, 1100 Lernkarten und 58 Videos für die Pflegeausbildung in Deutschland. Basierend auf PflBG 2020.">
+<meta property="og:title" content="PflegeLearn – Smarter lernen für die Pflege">
+<meta property="og:description" content="Die erste Lernplattform die vollständig auf den deutschen Pflegelehrplan abgestimmt ist.">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --t:#0d9488;--td:#0f766e;--tl:#ccfbf1;--tm:#14b8a6;
+  --g:#f59e0b;--gl:#fef3c7;
+  --ink:#0f172a;--ins:#334155;
+  --w:#fff;--cr:#faf7f2;--br:#e2e8f0;
+  --gr:#10b981;--re:#ef4444;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--w);overflow-x:hidden;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--br);height:66px;display:flex;align-items:center;justify-content:space-between;padding:0 6%;}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:900;color:var(--td);text-decoration:none;}
+.nav-logo span{color:var(--g);}
+.nav-links{display:flex;gap:2rem;align-items:center;}
+.nav-links a{font-size:.875rem;font-weight:500;color:var(--ins);text-decoration:none;transition:color .15s;}
+.nav-links a:hover{color:var(--t);}
+.nav-cta{background:var(--t);color:#fff;padding:.5rem 1.35rem;border-radius:999px;font-size:.875rem;font-weight:700;border:none;cursor:pointer;transition:all .2s;box-shadow:0 3px 12px rgba(13,148,136,.3);text-decoration:none;}
+.nav-cta:hover{background:var(--td);transform:translateY(-1px);}
+.nav-mobile-btn{display:none;background:none;border:none;cursor:pointer;font-size:1.4rem;color:var(--ink);}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;align-items:center;background:var(--ink);position:relative;overflow:hidden;padding:80px 6% 4rem;}
+.hero-orb1{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(13,148,136,.22) 0%,transparent 70%);top:-100px;right:-100px;pointer-events:none;}
+.hero-orb2{position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(245,158,11,.1) 0%,transparent 70%);bottom:-50px;left:-80px;pointer-events:none;}
+.hero-grid{position:absolute;inset:0;opacity:.035;background-image:linear-gradient(rgba(255,255,255,.8) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.8) 1px,transparent 1px);background-size:52px 52px;}
+.hero-inner{position:relative;z-index:1;display:flex;align-items:center;gap:4rem;max-width:1200px;margin:0 auto;width:100%;}
+.hero-content{flex:1;}
+.hero-badge{display:inline-flex;align-items:center;gap:.4rem;background:rgba(13,148,136,.18);border:1px solid rgba(13,148,136,.32);color:var(--tm);border-radius:999px;padding:.3rem 1rem;font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:1.5rem;}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.6rem,5vw,4.2rem);font-weight:900;line-height:1.06;color:#fff;margin-bottom:1.25rem;}
+.hero h1 em{color:var(--tm);font-style:normal;}
+.hero-sub{font-size:1.05rem;line-height:1.75;color:rgba(255,255,255,.58);max-width:520px;margin-bottom:2rem;}
+.hero-btns{display:flex;gap:.9rem;flex-wrap:wrap;margin-bottom:2.5rem;}
+.btn-hero-p{background:linear-gradient(135deg,var(--t),var(--tm));color:#fff;padding:.85rem 2rem;border-radius:999px;font-size:.95rem;font-weight:700;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(13,148,136,.4);transition:all .2s;text-decoration:none;display:inline-block;}
+.btn-hero-p:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(13,148,136,.5);}
+.btn-hero-g{background:rgba(255,255,255,.08);color:rgba(255,255,255,.82);padding:.85rem 2rem;border-radius:999px;font-size:.95rem;font-weight:700;border:1.5px solid rgba(255,255,255,.2);cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block;}
+.btn-hero-g:hover{background:rgba(255,255,255,.14);}
+.hero-stats{display:flex;gap:2rem;flex-wrap:wrap;}
+.hs{display:flex;flex-direction:column;}
+.hs-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--tm);}
+.hs-lbl{font-size:.72rem;color:rgba(255,255,255,.4);margin-top:.1rem;}
+
+/* Hero visual */
+.hero-visual{flex-shrink:0;width:360px;}
+/* NURSE ILLUSTRATION */
+.nurse-illus-wrap{position:relative;width:360px;height:430px;display:flex;align-items:center;justify-content:center;}
+.ni-orb{position:absolute;inset:8%;border-radius:50%;background:radial-gradient(circle at 40% 38%,rgba(13,148,136,.18) 0%,rgba(13,148,136,.06) 45%,transparent 70%);animation:niOrb 7s ease-in-out infinite;}
+@keyframes niOrb{0%,100%{transform:scale(1);}50%{transform:scale(1.04);}}
+.ni-ring{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(13,148,136,.14);animation:niSpin 30s linear infinite;}
+.ni-ring2{position:absolute;inset:5%;border-radius:50%;border:1px dashed rgba(245,158,11,.12);animation:niSpin 22s linear infinite reverse;}
+@keyframes niSpin{to{transform:rotate(360deg);}}
+.ni-svg{width:340px;height:400px;position:relative;z-index:2;}
+.ni-rot-badge{position:absolute;bottom:18%;right:2%;width:82px;height:82px;z-index:10;animation:niSpin 18s linear infinite;}
+.ni-rot-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1.9rem;}
+.ni-fc{position:absolute;background:rgba(15,23,42,.88);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:.6rem .85rem;display:flex;align-items:center;gap:.55rem;font-size:.72rem;font-weight:700;color:#fff;z-index:10;white-space:nowrap;box-shadow:0 6px 24px rgba(0,0,0,.3);}
+.ni-fc-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;}
+.ni-fc-main{font-size:.72rem;font-weight:700;}
+.ni-fc-sub{font-size:.62rem;color:rgba(255,255,255,.45);margin-top:.05rem;}
+.ni-fc1{top:12%;left:-10%;animation:niFloat1 4.5s ease-in-out infinite;}
+.ni-fc2{bottom:22%;left:-12%;animation:niFloat2 5.5s ease-in-out infinite;}
+@keyframes niFloat1{0%,100%{transform:translateY(0) rotate(-1deg);}50%{transform:translateY(-10px) rotate(1deg);}}
+@keyframes niFloat2{0%,100%{transform:translateY(0) rotate(1deg);}50%{transform:translateY(-8px) rotate(-1deg);}}
+
+.hv-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:1.25rem;backdrop-filter:blur(8px);}
+.hv-card+.hv-card{margin-top:.75rem;}
+.hv-tag{font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--tm);margin-bottom:.5rem;}
+.hv-q{font-size:.88rem;font-weight:700;color:#fff;margin-bottom:.65rem;line-height:1.4;}
+.hv-opts{display:flex;flex-direction:column;gap:.3rem;}
+.hv-opt{padding:.32rem .65rem;border-radius:7px;font-size:.75rem;color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.1);}
+.hv-opt.ok{background:rgba(16,185,129,.18);border-color:var(--gr);color:#6ee7b7;}
+.hv-prog{margin-top:.65rem;height:4px;background:rgba(255,255,255,.1);border-radius:999px;overflow:hidden;}
+.hv-prog-f{height:100%;background:linear-gradient(90deg,var(--t),var(--tm));border-radius:999px;}
+.hv-stats{display:flex;gap:.5rem;margin-top:.6rem;}
+.hv-st{flex:1;background:rgba(255,255,255,.05);border-radius:8px;padding:.5rem;text-align:center;}
+.hv-st-n{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;}
+.hv-st-l{font-size:.62rem;color:rgba(255,255,255,.35);margin-top:.1rem;}
+
+/* ── TICKER ── */
+.ticker-wrap{background:var(--td);padding:.7rem 0;overflow:hidden;}
+.ticker{display:flex;gap:2.5rem;animation:ticker 28s linear infinite;white-space:nowrap;}
+.ti{font-size:.8rem;font-weight:600;color:rgba(255,255,255,.65);flex-shrink:0;}
+.ti strong{color:var(--g);}
+@keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* ── SECTIONS ── */
+section{padding:5.5rem 6%;}
+.section-inner{max-width:1200px;margin:0 auto;}
+.sl{font-size:.7rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--t);margin-bottom:.55rem;}
+.st{font-family:'Playfair Display',serif;font-size:clamp(1.85rem,3.2vw,2.6rem);font-weight:900;line-height:1.14;color:var(--ink);}
+.st span{color:var(--t);}
+.ss{font-size:1rem;color:var(--ins);line-height:1.72;margin-top:.8rem;max-width:560px;}
+.center{text-align:center;margin:0 auto;}
+.center .ss{margin-left:auto;margin-right:auto;}
+
+/* ── PROBLEM ── */
+.prob-sec{background:var(--cr);}
+.prob-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.1rem;margin-top:2.75rem;}
+.prob-card{background:#fff;border:1px solid var(--br);border-radius:16px;padding:1.5rem;border-left:4px solid var(--re);}
+.prob-icon{font-size:1.75rem;margin-bottom:.75rem;}
+.prob-title{font-size:1rem;font-weight:700;margin-bottom:.4rem;}
+.prob-desc{font-size:.875rem;color:var(--ins);line-height:1.65;}
+
+/* ── FEATURES ── */
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(275px,1fr));gap:1.1rem;margin-top:2.75rem;}
+.feat-card{background:#fff;border:1px solid var(--br);border-radius:16px;padding:1.6rem;transition:all .2s;position:relative;overflow:hidden;}
+.feat-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--t),var(--tm));transform:scaleX(0);transform-origin:left;transition:.25s;}
+.feat-card:hover{transform:translateY(-4px);box-shadow:0 8px 28px rgba(13,148,136,.1);}
+.feat-card:hover::after{transform:scaleX(1);}
+.feat-icon{width:46px;height:46px;border-radius:12px;background:var(--tl);display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:.95rem;}
+.feat-title{font-size:1rem;font-weight:700;margin-bottom:.4rem;}
+.feat-desc{font-size:.875rem;color:var(--ins);line-height:1.65;}
+
+/* ── MODULES ── */
+.mod-sec{background:var(--ink);}
+.mod-sec .sl{color:var(--tm);}
+.mod-sec .st{color:#fff;}
+.mod-sec .ss{color:rgba(255,255,255,.48);}
+.mod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(225px,1fr));gap:.85rem;margin-top:2.5rem;}
+.mod-pill{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:1rem 1.15rem;transition:.2s;cursor:pointer;}
+.mod-pill:hover{background:rgba(13,148,136,.2);border-color:var(--t);}
+.mod-num{font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--tm);margin-bottom:.2rem;}
+.mod-name{font-size:.9rem;font-weight:600;color:#fff;margin-bottom:.3rem;}
+.mod-meta{font-size:.7rem;color:rgba(255,255,255,.32);}
+.mod-niv{display:flex;gap:.3rem;margin-top:.45rem;}
+.mn{font-size:.58rem;font-weight:700;padding:.1rem .38rem;border-radius:999px;}
+.mn-a{background:rgba(16,185,129,.2);color:var(--gr);}
+.mn-f{background:rgba(245,158,11,.2);color:var(--g);}
+.mn-e{background:rgba(139,92,246,.2);color:#c4b5fd;}
+
+/* ── NIVEAUX ── */
+.niv-sec{background:var(--cr);}
+.niv-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.25rem;margin-top:2.5rem;}
+.niv-card{border-radius:18px;padding:1.75rem;transition:all .2s;}
+.niv-card.a{background:linear-gradient(135deg,#ecfdf5,#d1fae5);border:1px solid rgba(16,185,129,.25);}
+.niv-card.f{background:linear-gradient(135deg,#fffbeb,#fef3c7);border:1px solid rgba(245,158,11,.25);}
+.niv-card.e{background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:1px solid rgba(139,92,246,.25);}
+.niv-card:hover{transform:translateY(-3px);}
+.niv-em{font-size:2.2rem;margin-bottom:.75rem;}
+.niv-label{font-size:1.1rem;font-weight:800;margin-bottom:.3rem;}
+.niv-card.a .niv-label{color:#065f46;}
+.niv-card.f .niv-label{color:#92400e;}
+.niv-card.e .niv-label{color:#4c1d95;}
+.niv-desc{font-size:.875rem;line-height:1.65;margin-bottom:.85rem;}
+.niv-card.a .niv-desc{color:#064e3b;}
+.niv-card.f .niv-desc{color:#78350f;}
+.niv-card.e .niv-desc{color:#3b0764;}
+.niv-pts{display:inline-block;font-size:.78rem;font-weight:800;padding:.28rem .85rem;border-radius:999px;}
+.niv-card.a .niv-pts{background:#6ee7b7;color:#064e3b;}
+.niv-card.f .niv-pts{background:#fcd34d;color:#78350f;}
+.niv-card.e .niv-pts{background:#c4b5fd;color:#3b0764;}
+.niv-examples{margin-top:1rem;}
+.niv-ex{font-size:.78rem;padding:.35rem .65rem;border-radius:7px;margin-bottom:.35rem;line-height:1.45;}
+.niv-card.a .niv-ex{background:rgba(16,185,129,.12);color:#065f46;}
+.niv-card.f .niv-ex{background:rgba(245,158,11,.12);color:#78350f;}
+.niv-card.e .niv-ex{background:rgba(139,92,246,.12);color:#4c1d95;}
+
+/* ── DEMO ── */
+.demo-wrap{background:#fff;border:1px solid var(--br);border-radius:20px;overflow:hidden;box-shadow:0 8px 48px rgba(0,0,0,.07);margin-top:2.5rem;max-width:780px;margin-left:auto;margin-right:auto;}
+.demo-bar{background:var(--ink);padding:.65rem 1.1rem;display:flex;align-items:center;gap:.4rem;}
+.dd{width:9px;height:9px;border-radius:50%;}
+.dd.r{background:#ff5f57;}.dd.y{background:#febc2e;}.dd.g{background:#28c840;}
+.demo-url{flex:1;background:rgba(255,255,255,.07);border-radius:5px;padding:.2rem .7rem;color:rgba(255,255,255,.38);font-size:.7rem;margin-left:.4rem;}
+.demo-body{padding:1.75rem;}
+.demo-tabs{display:flex;gap:.45rem;margin-bottom:1.4rem;}
+.dtab{padding:.36rem .9rem;border-radius:999px;font-size:.78rem;font-weight:700;cursor:pointer;border:none;transition:.2s;}
+.dtab.active{background:var(--t);color:#fff;}
+.dtab:not(.active){background:var(--cr);color:var(--ins);}
+.demo-fiche{background:var(--cr);border-radius:12px;padding:1.4rem;border-left:4px solid var(--t);}
+.df-tag{display:inline-block;background:rgba(13,148,136,.15);color:var(--td);font-size:.65rem;font-weight:800;padding:.16rem .52rem;border-radius:999px;margin-bottom:.6rem;text-transform:uppercase;}
+.df-title{font-size:1.05rem;font-weight:700;margin-bottom:.5rem;}
+.df-body{font-size:.88rem;color:var(--ins);line-height:1.72;}
+.df-body strong{color:var(--ink);}
+.demo-qcm{background:var(--cr);border-radius:12px;padding:1.4rem;}
+.dq-q{font-size:.92rem;font-weight:700;margin-bottom:.85rem;}
+.dq-opts{display:flex;flex-direction:column;gap:.45rem;}
+.dq-opt{padding:.56rem .88rem;border-radius:8px;border:1.5px solid var(--br);font-size:.85rem;display:flex;align-items:center;gap:.52rem;cursor:pointer;transition:.15s;}
+.dq-opt:hover{border-color:var(--t);color:var(--t);}
+.dq-opt.ok{border-color:var(--gr);background:#ecfdf5;color:#065f46;}
+.dq-opt.no{border-color:var(--re);background:#fef2f2;color:var(--re);}
+.dq-letter{width:22px;height:22px;border-radius:50%;background:var(--br);font-size:.67rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.dq-opt.ok .dq-letter{background:var(--gr);color:#fff;}
+.dq-opt.no .dq-letter{background:var(--re);color:#fff;}
+.dq-expl{margin-top:.85rem;padding:.65rem .95rem;background:#ecfdf5;border-radius:8px;font-size:.82rem;color:#065f46;border-left:3px solid var(--gr);}
+
+/* ── TESTI ── */
+.testi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(275px,1fr));gap:1.1rem;margin-top:2.5rem;}
+.testi-card{background:var(--cr);border:1px solid var(--br);border-radius:16px;padding:1.5rem;}
+.tc-stars{color:var(--g);font-size:.85rem;margin-bottom:.45rem;}
+.tc-q{font-size:2.2rem;color:var(--tl);font-family:'Playfair Display',serif;line-height:1;}
+.tc-text{font-size:.9rem;color:var(--ins);line-height:1.7;font-style:italic;margin:0.3rem 0 1rem;}
+.tc-author{display:flex;align-items:center;gap:.65rem;}
+.tc-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--t),var(--tm));display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:700;color:#fff;flex-shrink:0;}
+.tc-name{font-size:.875rem;font-weight:700;}
+.tc-role{font-size:.73rem;color:var(--ins);}
+
+/* ── PRICING ── */
+.price-sec{background:var(--cr);}
+.price-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:1.35rem;margin-top:2.5rem;}
+.price-card{background:#fff;border:1px solid var(--br);border-radius:20px;padding:1.85rem;transition:.2s;}
+.price-card.featured{background:var(--td);border-color:var(--td);box-shadow:0 12px 36px rgba(13,148,136,.38);}
+.price-card:hover:not(.featured){transform:translateY(-3px);}
+.pc-badge{display:inline-block;background:var(--g);color:var(--ink);font-size:.65rem;font-weight:800;padding:.18rem .6rem;border-radius:999px;margin-bottom:.75rem;text-transform:uppercase;}
+.pc-name{font-size:1rem;font-weight:700;margin-bottom:.42rem;}
+.featured .pc-name{color:#fff;}
+.pc-price{font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:900;color:var(--td);}
+.featured .pc-price{color:var(--gl);}
+.pc-per{font-size:.78rem;color:var(--ins);margin-top:.18rem;margin-bottom:1.15rem;}
+.featured .pc-per{color:rgba(255,255,255,.58);}
+.pc-feats{list-style:none;display:flex;flex-direction:column;gap:.48rem;margin-bottom:1.65rem;}
+.pc-feats li{font-size:.875rem;display:flex;align-items:flex-start;gap:.48rem;color:var(--ins);}
+.pc-feats li::before{content:'✓';color:var(--t);font-weight:800;flex-shrink:0;margin-top:.04rem;}
+.featured .pc-feats li{color:rgba(255,255,255,.78);}
+.featured .pc-feats li::before{color:rgba(255,255,255,.6);}
+.pc-btn{width:100%;padding:.75rem;border-radius:999px;font-size:.9rem;font-weight:700;cursor:pointer;border:none;transition:.2s;}
+.pc-btn.outline{background:transparent;border:1.5px solid var(--br);color:var(--ink);}
+.pc-btn.outline:hover{border-color:var(--t);color:var(--t);}
+.pc-btn.white{background:#fff;color:var(--td);}
+.pc-btn.white:hover{background:var(--cr);}
+.pc-btn.dark{background:var(--ink);color:#fff;}
+.pc-btn.dark:hover{background:#1e293b;}
+
+/* ── FAQ ── */
+.faq-list{max-width:700px;margin:2.5rem auto 0;display:flex;flex-direction:column;gap:.7rem;}
+.faq-item{border:1px solid var(--br);border-radius:12px;overflow:hidden;}
+.faq-q{display:flex;align-items:center;justify-content:space-between;padding:1.05rem 1.35rem;cursor:pointer;font-weight:600;font-size:.95rem;background:#fff;user-select:none;}
+.faq-q:hover{background:var(--cr);}
+.faq-arr{font-size:.78rem;color:var(--t);transition:.2s;}
+.faq-item.open .faq-arr{transform:rotate(180deg);}
+.faq-a{padding:0 1.35rem;max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease;font-size:.875rem;color:var(--ins);line-height:1.7;}
+.faq-item.open .faq-a{max-height:220px;padding:.1rem 1.35rem 1.1rem;}
+
+/* ── CTA ── */
+.cta-sec{background:var(--td);padding:5.5rem 6%;text-align:center;position:relative;overflow:hidden;}
+.cta-orb{position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 50%,rgba(20,184,166,.25) 0%,transparent 70%);}
+.cta-sec .st{color:#fff;position:relative;z-index:1;}
+.cta-sec .ss{color:rgba(255,255,255,.62);position:relative;z-index:1;}
+.cta-btns{display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap;margin-top:2.25rem;position:relative;z-index:1;}
+.btn-cw{padding:.88rem 2.2rem;border-radius:999px;font-size:.95rem;font-weight:700;background:#fff;color:var(--td);border:none;cursor:pointer;transition:.2s;box-shadow:0 4px 18px rgba(0,0,0,.14);}
+.btn-cw:hover{transform:translateY(-2px);}
+.btn-cg{padding:.88rem 2.2rem;border-radius:999px;font-size:.95rem;font-weight:700;background:transparent;color:#fff;border:2px solid rgba(255,255,255,.38);cursor:pointer;transition:.2s;}
+.btn-cg:hover{border-color:#fff;background:rgba(255,255,255,.08);}
+
+/* ── FOOTER ── */
+footer{background:var(--ink);padding:3.5rem 6% 2rem;}
+.ft-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2.5rem;margin-bottom:2.75rem;max-width:1200px;margin-left:auto;margin-right:auto;}
+.ft-brand .logo{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:900;color:var(--tm);}
+.ft-brand .logo span{color:var(--g);}
+.ft-brand p{font-size:.84rem;color:rgba(255,255,255,.38);margin-top:.55rem;line-height:1.65;max-width:255px;}
+.ft-col h4{font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.95rem;}
+.ft-col a{display:block;font-size:.84rem;color:rgba(255,255,255,.52);text-decoration:none;margin-bottom:.48rem;transition:.15s;}
+.ft-col a:hover{color:var(--tm);}
+.ft-bottom{border-top:1px solid rgba(255,255,255,.08);padding-top:1.4rem;display:flex;justify-content:space-between;font-size:.77rem;color:rgba(255,255,255,.28);flex-wrap:wrap;gap:.65rem;max-width:1200px;margin:0 auto;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){.hero-visual{display:none;}.ft-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:768px){.nav-links{display:none;}.nav-mobile-btn{display:block;}.hero h1{font-size:2.2rem;}.ft-grid{grid-template-columns:1fr;}}
+
+/* Scroll reveal */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">Pflege<span>Learn</span></a>
+  <div class="nav-links">
+    <a href="#features">Funktionen</a>
+    <a href="#module">Module</a>
+    <a href="#niveaus">Niveaus</a>
+    <a href="#preise">Preise</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <a class="nav-cta" href="https://buy.stripe.com/test_cNibIVekWfPb4nW4S41B600">Jetzt starten</a>
+  <button class="nav-mobile-btn" onclick="document.querySelector('.nav-links').style.display='flex';document.querySelector('.nav-links').style.flexDirection='column'">☰</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-orb1"></div><div class="hero-orb2"></div><div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      
+      <h1>Lern smarter.<br>Besteh <em>besser.</em></h1>
+      <p class="hero-sub">Die erste Lernplattform vollständig auf den deutschen Pflegelehrplan abgestimmt – 500 QCM, 1 100 Lernkarten, 58 Videos und 300 Infografiken.</p>
+      <div class="hero-btns">
+        <a class="btn-hero-p" href="PflegeLearn_V5.html" style="background:linear-gradient(135deg,#0f766e,#0d9488);border:2px solid rgba(255,255,255,.15);">▶ Zur Lernplattform</a>
+        <a class="btn-hero-g" href="PflegeLearn_V5.html">▶ Demo ansehen</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hs"><span class="hs-num">500+</span><span class="hs-lbl">QCM-Fragen</span></div>
+        <div class="hs"><span class="hs-num">1 100</span><span class="hs-lbl">Lernkarten</span></div>
+        <div class="hs"><span class="hs-num">58</span><span class="hs-lbl">Lehrvideos</span></div>
+        <div class="hs"><span class="hs-num">3</span><span class="hs-lbl">Niveaustufen</span></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="nurse-illus-wrap">
+        <div class="ni-orb"></div><div class="ni-ring"></div><div class="ni-ring2"></div>
+        <svg class="ni-svg" viewBox="0 0 340 400" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="ng" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#14b8a6" stop-opacity="0.18"/><stop offset="100%" stop-color="#14b8a6" stop-opacity="0"/></radialGradient>
+            <filter id="nsh"><feDropShadow dx="0" dy="5" stdDeviation="8" flood-color="rgba(0,0,0,0.35)"/></filter>
+          </defs>
+          <circle cx="170" cy="200" r="160" fill="url(#ng)"/>
+          <ellipse cx="170" cy="375" rx="85" ry="13" fill="rgba(13,148,136,0.2)"/>
+          <rect x="132" y="318" width="30" height="55" rx="10" fill="#0f766e"/><rect x="178" y="318" width="30" height="55" rx="10" fill="#0f766e"/>
+          <ellipse cx="147" cy="374" rx="22" ry="9" fill="#0f172a"/><ellipse cx="193" cy="374" rx="22" ry="9" fill="#0f172a"/>
+          <path d="M100 192 Q100 183 110 181 L155 176 L185 176 L220 181 Q230 183 230 192 L230 332 Q230 342 220 342 L110 342 Q100 342 100 332Z" fill="#0d9488"/>
+          <rect x="116" y="200" width="46" height="26" rx="6" fill="white" opacity="0.96" filter="url(#nsh)"/>
+          <text x="139" y="218" text-anchor="middle" font-family="Georgia,serif" font-size="9" font-weight="bold" fill="#0d9488">PL</text>
+          <rect x="192" y="206" width="28" height="22" rx="4" fill="rgba(255,255,255,0.13)"/>
+          <rect x="198" y="210" width="2.5" height="13" rx="1.5" fill="rgba(255,255,255,0.6)"/>
+          <rect x="203" y="210" width="2.5" height="13" rx="1.5" fill="rgba(245,158,11,0.75)"/>
+          <rect x="208" y="210" width="2.5" height="13" rx="1.5" fill="rgba(255,255,255,0.4)"/>
+          <path d="M100 200 Q78 215 70 255 Q66 268 75 274 Q85 279 91 264 Q99 243 114 228" fill="#f0bf90"/>
+          <path d="M230 200 Q252 215 260 255 Q264 268 255 274 Q245 279 239 264 Q231 243 216 228" fill="#f0bf90"/>
+          <g transform="translate(250,252) rotate(-16)">
+            <rect x="-24" y="-34" width="48" height="40" rx="5" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.8" filter="url(#nsh)"/>
+            <rect x="-24" y="-34" width="48" height="10" rx="5" fill="#f59e0b"/>
+            <text x="0" y="-21" text-anchor="middle" font-size="5.5" font-weight="800" fill="white" font-family="sans-serif" letter-spacing="0.8">DIPLOMA</text>
+            <line x1="-16" y1="-14" x2="16" y2="-14" stroke="#f59e0b" stroke-width="1.2" opacity="0.4"/>
+            <line x1="-16" y1="-7" x2="12" y2="-7" stroke="#f59e0b" stroke-width="1.2" opacity="0.4"/>
+            <circle cx="10" cy="8" r="9" fill="#f59e0b"/>
+            <text x="10" y="12" text-anchor="middle" font-size="9" fill="white">&#x2713;</text>
+            <polygon points="-4,19 0,14 4,19" fill="#f59e0b"/>
+            <rect x="-2" y="19" width="4" height="11" fill="#f59e0b"/>
+          </g>
+          <path d="M114 215 Q96 232 94 258 Q92 270 101 274 Q110 278 116 265 Q122 250 118 236" stroke="#0f172a" stroke-width="3.8" fill="none" stroke-linecap="round"/>
+          <path d="M118 236 Q132 242 144 235" stroke="#0f172a" stroke-width="3.8" fill="none" stroke-linecap="round"/>
+          <circle cx="144" cy="233" r="10" fill="#0f172a"/><circle cx="144" cy="233" r="5.5" fill="#14b8a6"/>
+          <rect x="156" y="158" width="28" height="36" rx="9" fill="#f0bf90"/>
+          <ellipse cx="170" cy="130" rx="42" ry="46" fill="#f0bf90" filter="url(#nsh)"/>
+          <path d="M128 122 Q130 77 170 75 Q210 77 212 122 Q206 96 190 91 Q175 87 162 89 Q143 93 134 108Z" fill="#2c1a0e"/>
+          <path d="M128 122 Q121 148 123 161 Q127 134 134 128Z" fill="#2c1a0e"/>
+          <path d="M212 122 Q219 148 217 161 Q213 134 206 128Z" fill="#2c1a0e"/>
+          <rect x="142" y="90" width="56" height="8" rx="4" fill="white" filter="url(#nsh)"/>
+          <path d="M132 100 Q148 91 170 89 Q192 91 208 100" fill="white"/>
+          <rect x="164" y="81" width="9" height="3" rx="1.5" fill="#ef4444"/>
+          <rect x="167" y="78" width="3" height="9" rx="1.5" fill="#ef4444"/>
+          <ellipse cx="157" cy="131" rx="7" ry="8" fill="white"/><ellipse cx="183" cy="131" rx="7" ry="8" fill="white"/>
+          <ellipse cx="158.5" cy="132" rx="5" ry="5.5" fill="#2c1a0e"/><ellipse cx="184.5" cy="132" rx="5" ry="5.5" fill="#2c1a0e"/>
+          <circle cx="160" cy="130" r="1.6" fill="white"/><circle cx="186" cy="130" r="1.6" fill="white"/>
+          <path d="M151 122 Q158 118 165 121" stroke="#2c1a0e" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M175 121 Q182 118 189 122" stroke="#2c1a0e" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <ellipse cx="150" cy="144" rx="9" ry="5.5" fill="#ffb5a0" opacity="0.35"/>
+          <ellipse cx="190" cy="144" rx="9" ry="5.5" fill="#ffb5a0" opacity="0.35"/>
+          <path d="M159 152 Q170 163 181 152" stroke="#c2856a" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <text x="265" y="215" font-size="14" fill="#f59e0b" opacity="0.85">&#x2736;</text>
+          <text x="248" y="194" font-size="8" fill="#14b8a6" opacity="0.7">&#x2736;</text>
+        </svg>
+        <div class="ni-rot-badge">
+          <svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+            <defs><path id="nict" d="M45,12 A33,33 0 0,1 45,78 A33,33 0 0,1 45,12"/></defs>
+            <circle cx="45" cy="45" r="40" fill="rgba(245,158,11,0.08)" stroke="rgba(245,158,11,0.35)" stroke-width="1.5" stroke-dasharray="3,4"/>
+            <text font-family="DM Sans,sans-serif" font-size="6.5" font-weight="700" fill="#f59e0b" letter-spacing="2.5"><textPath href="#nict">PFLEGEFACHKRAFT EXAMEN 2025</textPath></text>
+          </svg>
+          <div class="ni-rot-inner">&#x1F393;</div>
+        </div>
+        <div class="ni-fc ni-fc1"><div class="ni-fc-icon" style="background:rgba(13,148,136,.18)">&#x1F3AF;</div><div><div class="ni-fc-main">78% Bestehensquote</div><div class="ni-fc-sub">Durchschnitt unserer Nutzer</div></div></div>
+        <div class="ni-fc ni-fc2"><div class="ni-fc-icon" style="background:rgba(245,158,11,.18)">&#x1F3C6;</div><div><div class="ni-fc-main">PflBG 2020 konform</div><div class="ni-fc-sub">PflBG 2020</div></div></div>
+      </div>
+      
+      <div class="hv-card">
+        <div class="hv-tag">📊 Dein Fortschritt</div>
+        <div class="hv-stats">
+          <div class="hv-st"><div class="hv-st-n" style="color:var(--tm)">72%</div><div class="hv-st-l">Gesamt</div></div>
+          <div class="hv-st"><div class="hv-st-n" style="color:var(--g)">🔥 9</div><div class="hv-st-l">Streak</div></div>
+          <div class="hv-st"><div class="hv-st-n" style="color:var(--gr)">420</div><div class="hv-st-l">Fragen</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span class="ti">✓ Wissenschaftlich geprüft</span>
+    <span class="ti">✓ Prüfungsrelevant 2024/25</span>
+    <span class="ti">✓ <strong>PflBG-konform 2020</strong></span>
+    <span class="ti">✓ <strong>DSGVO-konform</strong></span>
+    <span class="ti">✓ <strong>Web + App</strong></span>
+    <span class="ti">✓ <strong>500 QCM</strong> mit Erklärungen</span>
+    <span class="ti">✓ <strong>3 Niveaustufen</strong></span>
+    <span class="ti">✓ <strong>Spaced Repetition</strong></span>
+    <span class="ti">✓ Wissenschaftlich geprüft</span>
+    <span class="ti">✓ Prüfungsrelevant 2024/25</span>
+    <span class="ti">✓ <strong>PflBG-konform 2020</strong></span>
+    <span class="ti">✓ <strong>DSGVO-konform</strong></span>
+    <span class="ti">✓ <strong>Web + App</strong></span>
+    <span class="ti">✓ <strong>500 QCM</strong> mit Erklärungen</span>
+    <span class="ti">✓ <strong>3 Niveaustufen</strong></span>
+    <span class="ti">✓ <strong>Spaced Repetition</strong></span>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="prob-sec" id="problem">
+  <div class="section-inner">
+    <div class="sl">Das Problem</div>
+    <h2 class="st">Warum scheitern so viele<br>Pflegeauszubildende?</h2>
+    <p class="ss">Bis zu 30% fallen beim ersten Prüfungsversuch durch – nicht wegen Faulheit, sondern wegen fehlender Struktur.</p>
+    <div class="prob-grid">
+      <div class="prob-card reveal"><div class="prob-icon">📚</div><div class="prob-title">Zu viel unstrukturierter Stoff</div><div class="prob-desc">Hunderte Seiten Lehrstoff – ohne roten Faden für die Prüfung.</div></div>
+      <div class="prob-card reveal"><div class="prob-icon">❌</div><div class="prob-title">Kein passendes Tool</div><div class="prob-desc">Quizlet und Anki sind generisch. Keine Plattform ist auf den deutschen Pflegelehrplan spezialisiert.</div></div>
+      <div class="prob-card reveal"><div class="prob-icon">⏱️</div><div class="prob-title">Zu wenig Zeit</div><div class="prob-desc">Vollzeit-Ausbildung + Praxis + Schule = kaum Zeit für strukturiertes Wiederholen.</div></div>
+      <div class="prob-card reveal"><div class="prob-icon">😰</div><div class="prob-title">Prüfungsangst</div><div class="prob-desc">Ohne regelmäßiges Üben wächst die Unsicherheit. Ohne Feedback weiß man nicht wo man steht.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<section style="background:#fff;border-bottom:1px solid #e2e8f0;padding:.9rem 6%;overflow:hidden">
+  <div style="display:flex;align-items:center;justify-content:center;gap:2.5rem;flex-wrap:wrap;max-width:1100px;margin:0 auto">
+    <div style="display:flex;align-items:center;gap:.5rem;font-size:.82rem;font-weight:600;color:#334155">
+      <span style="font-size:1.1rem">🏆</span> #1 Pflegelernplattform Deutschland
+    </div>
+    <div style="width:1px;height:20px;background:#e2e8f0;"></div>
+    <div style="display:flex;align-items:center;gap:.5rem;font-size:.82rem;font-weight:600;color:#334155">
+      <span style="font-size:1.1rem">⭐</span> 4,9/5 · 1.200+ Bewertungen
+    </div>
+    <div style="width:1px;height:20px;background:#e2e8f0;"></div>
+    <div style="display:flex;align-items:center;gap:.5rem;font-size:.82rem;font-weight:600;color:#334155">
+      <span style="font-size:1.1rem">🎓</span> 12.000+ Pflegestudierende
+    </div>
+    <div style="width:1px;height:20px;background:#e2e8f0;"></div>
+    <div style="display:flex;align-items:center;gap:.5rem;font-size:.82rem;font-weight:600;color:#334155">
+      <span style="font-size:1.1rem">🔒</span> DSGVO-konform · 100% Deutschland
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-inner">
+    <div class="sl center">Die Lösung</div>
+    <h2 class="st center">Alles für deinen <span>Examenerfolg</span></h2>
+    <p class="ss center">PflegeLearn kombiniert strukturierte Inhalte, intelligentes Üben und messbaren Fortschritt.</p>
+    <div class="feat-grid">
+      <div class="feat-card reveal"><div class="feat-icon">❓</div><div class="feat-title">500 QCM mit Erklärungen</div><div class="feat-desc">Prüfungsnahe Fragen in 3 Niveaus. Jede Antwort enthält eine ausführliche Begründung – nicht nur richtig/falsch.</div></div>
+      <div class="feat-card reveal"><div class="feat-icon">📄</div><div class="feat-title">1 100 Lernkarten</div><div class="feat-desc">Alle Module kompakt zusammengefasst. Flip-Karten für unterwegs – ideal für die Kaffeepause oder die U-Bahn.</div></div>
+      <div class="feat-card reveal"><div class="feat-icon">🎬</div><div class="feat-title">58 Lehrvideos</div><div class="feat-desc">Praxisnahe Videos mit Storyboard und Skript zu allen 10 Modulen – von der Blutdruckmessung bis zur Palliativpflege.</div></div>
+      <div class="feat-card reveal"><div class="feat-icon">📊</div><div class="feat-title">300 Infografiken</div><div class="feat-desc">Interaktive SVG-Infografiken: Bradenskala, WHO-Hypertonie, NYHA, Wundheilungsphasen und vieles mehr.</div></div>
+      <div class="feat-card reveal"><div class="feat-icon">📝</div><div class="feat-title">Prüfungssimulator</div><div class="feat-desc">4 Formate: Standard, Intensiv, Schnelltest, Expertenmodus. Chronomètre en temps réel, Ergebnisanalyse je Modul.</div></div>
+      <div class="feat-card reveal"><div class="feat-icon">🏫</div><div class="feat-title">B2B für Schulen</div><div class="feat-desc">Admin-Dashboard für Lehrkräfte, Klassenlizenz ab 500€/Jahr, DSGVO-konformer AVV inklusive.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULES -->
+<section class="mod-sec" id="module">
+  <div class="section-inner">
+    <div class="sl">Lehrplan</div>
+    <h2 class="st">10 Module · <span>PflBG-vollständig</span></h2>
+    <p class="ss">Alle Inhalte basieren auf dem offiziellen Rahmenlehrplan und der deutschen Fachliteratur.</p>
+    <div class="mod-grid">
+      <div class="mod-pill reveal" onclick="window.location='PflegeLearn_V4.html?mod=1'" style="cursor:pointer;transition:transform .2s,box-shadow .2s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(13,148,136,.25)'" onmouseout="this.style.transform='';this.style.boxShadow=''"><div class="mod-num">Modul 01</div><div class="mod-name">📋 Grundlagen der Pflege</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
+      <div class="mod-pill reveal" onclick="window.location='PflegeLearn_V4.html?mod=2'" style="cursor:pointer;transition:transform .2s,box-shadow .2s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(13,148,136,.25)'" onmouseout="this.style.transform='';this.style.boxShadow=''"><div class="mod-num">Modul 02</div><div class="mod-name">🫀 Vitalzeichen & Beobachtung</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
+      <div class="mod-pill reveal" onclick="window.location='PflegeLearn_V4.html?mod=3'" style="cursor:pointer;transition:transform .2s,box-shadow .2s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(13,148,136,.25)'" onmouseout="this.style.transform='';this.style.boxShadow=''"><div class="mod-num">Modul 03</div><div class="mod-name">💊 Medikamente & Injektionen</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
+      <div class="mod-pill reveal" onclick="window.location='PflegeLearn_V4.html?mod=4'" style="cursor:pointer;transition:transform .2s,box-shadow .2s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(13,148,136,.25)'" onmouseout="this.style.transform='';this.style.boxShadow=''"><div class="mod-num">Modul 04</div><div class="mod-name">🍽️ Ernährung & Ausscheidung</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
+      <div class="mod-pill reveal" onclick="window.location='PflegeLearn_V4.html?mod=5'" style="cursor:pointer;transition:transform .2s,box-shadow .2s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(13,148,136,.25)'" onmouseout="this.style.transform='';this.style.boxShadow=''"><div class="mod-num">Modul 05</div><div class="mod-name">🦴 Mobilisation & Prävention</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
+      <div class="mod-pill reveal" onclick="window.location='PflegeLearn_V4.html?mod=6'" style="cursor:pointer;transition:transform .2s,box-shadow .2s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(13,148,136,.25)'" onmouseout="this.style.transform='';this.style.boxShadow=''"><div class="mod-num">Modul 06</div><div class="mod-name">🧠 Psychiatrie & Psychosoziales</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
+      <div class="mod-pill reveal" onclick="window.location='PflegeLearn_V4.html?mod=7'" style="cursor:pointer;transition:transform .2s,box-shadow .2s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(13,148,136,.25)'" onmouseout="this.style.transform='';this.style.boxShadow=''"><div class="mod-num">Modul 07</div><div class="mod-name">👶 Pflegebereiche spezifisch</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
+      <div class="mod-pill reveal" onclick="window.location='PflegeLearn_V4.html?mod=8'" style="cursor:pointer;transition:transform .2s,box-shadow .2s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(13,148,136,.25)'" onmouseout="this.style.transform='';this.style.boxShadow=''"><div class="mod-num">Modul 08</div><div class="mod-name">⚖️ Recht & Beruf</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
+      <div class="mod-pill reveal" onclick="window.location='PflegeLearn_V4.html?mod=9'" style="cursor:pointer;transition:transform .2s,box-shadow .2s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(13,148,136,.25)'" onmouseout="this.style.transform='';this.style.boxShadow=''"><div class="mod-num">Modul 09</div><div class="mod-name">🏥 Krankheitsbilder</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
+      <div class="mod-pill reveal" onclick="window.location='PflegeLearn_V4.html?mod=10'" style="cursor:pointer;transition:transform .2s,box-shadow .2s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(13,148,136,.25)'" onmouseout="this.style.transform='';this.style.boxShadow=''"><div class="mod-num">Modul 10</div><div class="mod-name">🩹 Wundversorgung</div><div class="mod-meta">110 Karten · 50 QCM</div><div class="mod-niv"><span class="mn mn-a">🌱 10</span><span class="mn mn-f">🔥 8</span><span class="mn mn-e">💎 5</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- NIVEAUS -->
+<section class="niv-sec" id="niveaus">
+  <div class="section-inner">
+    <div class="sl center">Schwierigkeitsstufen</div>
+    <h2 class="st center">Lerne auf <span>deinem Niveau</span></h2>
+    <p class="ss center">3 aufeinander aufbauende Stufen. Schalte die nächste Stufe durch ≥ 75% frei.</p>
+    <div class="niv-cards">
+      <div class="niv-card a reveal">
+        <div class="niv-em">🌱</div>
+        <div class="niv-label">Anfänger</div>
+        <p class="niv-desc">Grundbegriffe, Definitionen, direkte Fakten. Perfekt für den Einstieg ins erste Lehrjahr.</p>
+        <span class="niv-pts">+10 Punkte/Frage</span>
+        <div class="niv-examples">
+          <div class="niv-ex">Wie viele Schritte hat der Pflegeprozess?</div>
+          <div class="niv-ex">Was ist Bradykardie?</div>
+          <div class="niv-ex">Normaler Blutdruck Erwachsener?</div>
+        </div>
+      </div>
+      <div class="niv-card f reveal">
+        <div class="niv-em">🔥</div>
+        <div class="niv-label">Fortgeschritten</div>
+        <p class="niv-desc">Klinische Szenarien, Zusammenhänge, Anwendung im Pflegealltag. Für das 2. Lehrjahr.</p>
+        <span class="niv-pts">+20 Punkte/Frage</span>
+        <div class="niv-examples">
+          <div class="niv-ex">Patient hat RR 88/52 mmHg nach dem Aufstehen – was tun?</div>
+          <div class="niv-ex">Tropfrate berechnen: 500ml über 4h, Tf 20</div>
+        </div>
+      </div>
+      <div class="niv-card e reveal">
+        <div class="niv-em">💎</div>
+        <div class="niv-label">Experte</div>
+        <p class="niv-desc">Komplexe Fälle, Differenzialdiagnosen, ethische Dilemmata. Prüfungsniveau im 3. Jahr.</p>
+        <span class="niv-pts">+30 Punkte/Frage</span>
+        <div class="niv-examples">
+          <div class="niv-ex">STEMI: Zeitfenster für Lyse vs. PCI – klinische Konsequenz?</div>
+          <div class="niv-ex">Biofilm auf chronischer Wunde – warum Antibiotika versagen?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO -->
+<section id="demo">
+  <div class="section-inner">
+    <div class="sl center">Vorschau</div>
+    <h2 class="st center">So sieht <span>PflegeLearn</span> aus</h2>
+    <div class="demo-wrap">
+      <div class="demo-bar">
+        <div class="dd r"></div><div class="dd y"></div><div class="dd g"></div>
+        <div class="demo-url">pflegelearn.de/module/vitalzeichen</div>
+      </div>
+      <div class="demo-body">
+        <div class="demo-tabs">
+          <button class="dtab active" onclick="demoTab('fiche',this)">📄 Lernkarte</button>
+          <button class="dtab" onclick="demoTab('qcm',this)">❓ QCM</button>
+        </div>
+        <div id="demo-fiche">
+          <div class="demo-fiche">
+            <span class="df-tag">Modul 02 · 🔥 Fortgeschritten</span>
+            <div class="df-title">Schock – Vitalzeichen-Konstellation</div>
+            <div class="df-body"><strong>Classic Shock Triad:</strong><br>• HF ↑ &gt; 100/min, fadenförmig<br>• RR ↓ systolisch &lt; 90 mmHg<br>• SpO₂ ↓ &lt; 90%<br><br><strong>Dazu:</strong> Kalte, blasse Haut · Bewusstseinsveränderung<br><br><strong>Sofortmaßnahme:</strong> Flachlagerung + Beine hoch + Notarzt</div>
+          </div>
+        </div>
+        <div id="demo-qcm" style="display:none">
+          <div class="demo-qcm">
+            <div class="dq-q">Patient hat HF 130/min, RR 80/50 mmHg, SpO₂ 87%, kalte Haut. Welche Diagnose?</div>
+            <div class="dq-opts">
+              <div class="dq-opt no"><div class="dq-letter">A</div>Hypertensive Krise</div>
+              <div class="dq-opt ok"><div class="dq-letter">B</div>Hypovolämischer Schock ✓</div>
+              <div class="dq-opt"><div class="dq-letter">C</div>Bradykardie</div>
+              <div class="dq-opt"><div class="dq-letter">D</div>Normalbefund</div>
+            </div>
+            <div class="dq-expl"><strong>✅ Richtig!</strong> Schock-Trias: Tachykardie + Hypotonie + Hypoxämie = klassischer Schock. Sofort: Flachlagerung, i.v.-Zugang, Notarzt.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section style="background:var(--w);">
+  <div class="section-inner">
+    <div class="sl center">Stimmen</div>
+    <h2 class="st center">Was <span>Pflegeschüler</span> sagen</h2>
+    <div class="testi-grid">
+      <div class="testi-card reveal"><div class="tc-stars">★★★★★</div><div class="tc-q">"</div><div class="tc-text">Endlich eine Lernplattform, die wirklich auf den deutschen Pflegelehrplan zugeschnitten ist. Die Karten zu Dekubitus und Wundversorgung haben mir bei der praktischen Prüfung enorm geholfen.</div><div class="tc-author"><div class="tc-av" style="background:#0d9488">A</div><div><div class="tc-name">Athalie K.</div><div class="tc-role">2. Ausbildungsjahr · Wolfsburg</div></div></div></div>
+      <div class="testi-card reveal"><div class="tc-stars">★★★★★</div><div class="tc-q">"</div><div class="tc-text">Der Prüfungssimulator ist unschlagbar. 20 Minuten täglich in der Bahn reichen aus – meine Noten haben sich deutlich verbessert. Besonders die QCM zu Medikamenten sind sehr praxisnah.</div><div class="tc-author"><div class="tc-av" style="background:#7c3aed">L</div><div><div class="tc-name">Leon M.</div><div class="tc-role">3. Ausbildungsjahr · Hannover</div></div></div></div>
+      <div class="testi-card reveal"><div class="tc-stars">★★★★★</div><div class="tc-q">"</div><div class="tc-text">Ich lerne gleichzeitig für Theorie und Praxis. Der KI-Tutor erklärt mir schwierige Themen wie Herzinsuffizienz oder Sepsis in wenigen Minuten verständlich. Das spart mir so viel Zeit.</div><div class="tc-author"><div class="tc-av" style="background:#0ea5e9">S</div><div><div class="tc-name">Sophie W.</div><div class="tc-role">1. Ausbildungsjahr · Hamburg</div></div></div></div>
+      <div class="testi-card reveal"><div class="tc-stars">★★★★★</div><div class="tc-q">"</div><div class="tc-text">Als Quereinsteigerin war ich anfangs überfordert. PflegeLearn hat mir geholfen, die Grundlagen Schritt für Schritt aufzubauen. Die 6 Domänen-Struktur macht alles viel übersichtlicher.</div><div class="tc-author"><div class="tc-av" style="background:#d97706">K</div><div><div class="tc-name">Katharina B.</div><div class="tc-role">1. Ausbildungsjahr · Dortmund</div></div></div></div>
+      <div class="testi-card reveal"><div class="tc-stars">★★★★★</div><div class="tc-q">"</div><div class="tc-text">Die Lernkarten zur Pharmakologie und zu den 10-R-Regel sind perfekt für die Zwischenprüfung. Ich empfehle PflegeLearn jedem in meinem Jahrgang.</div><div class="tc-author"><div class="tc-av" style="background:#16a34a">T</div><div><div class="tc-name">Tim S.</div><div class="tc-role">2. Ausbildungsjahr · München</div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="price-sec" id="preise">
+  <div class="section-inner">
+    <div class="sl center">Preise</div>
+    <h2 class="st center">Einfach. <span>Transparent.</span></h2>
+    <p class="ss center">Für Einzelpersonen und Schulen. Kein verstecktes Kleingedrucktes.</p>
+    <div class="price-grid">
+      <div class="price-card reveal">
+        <div class="pc-name">Free</div>
+        <div class="pc-price">0€</div>
+        <div class="pc-per">Einstieg &amp; Orientierung</div>
+        <ul class="pc-feats">
+          <li>2 Module freigeschaltet</li>
+          <li>50 QCM-Fragen</li>
+          <li>20 Lernkarten</li>
+          <li>Basis-Dashboard</li>
+        </ul>
+        <a class="pc-btn outline" href="https://buy.stripe.com/test_cNibIVekWfPb4nW4S41B600" style="display:inline-block;text-decoration:none;text-align:center;">Jetzt starten</a>
+      </div>
+      <div class="price-card featured reveal">
+        <div class="pc-badge">⭐ Beliebt · 3× günstiger als Konkurrenz</div>
+        <div class="pc-name">Student</div>
+        <div class="pc-price">9€</div>
+        <div class="pc-per">pro Monat · jederzeit kündbar · kein Abo-Trick</div>
+        <ul class="pc-feats">
+          <li>Alle 10 Module</li>
+          <li>500+ QCM mit Erklärungen</li>
+          <li>1 100 Lernkarten (3 Niveaus)</li>
+          <li>58 Videos + 300 Infografiken</li>
+          <li>Prüfungssimulator</li>
+          <li>App iOS & Android</li>
+        </ul>
+        <a class="pc-btn white" href="https://buy.stripe.com/test_cNibIVekWfPb4nW4S41B600" style="display:inline-block;text-decoration:none;text-align:center;">Jetzt starten</a>
+      </div>
+      <div class="price-card reveal">
+        <div class="pc-name">Schule / B2B</div>
+        <div class="pc-price" style="font-size:1.8rem">ab 500€</div>
+        <div class="pc-per">pro Jahr · ab 50 Nutzer</div>
+        <ul class="pc-feats">
+          <li>Unbegrenzte Nutzer</li>
+          <li>Admin-Dashboard Lehrkräfte</li>
+          <li>DSGVO-AVV inklusive</li>
+          <li>Dedizierter Support</li>
+          <li>Onboarding inklusive</li>
+        </ul>
+        <a class="pc-btn dark" href="mailto:georges@pflegelearn.de" style="display:inline-block;text-decoration:none;text-align:center;">Kontakt aufnehmen</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="section-inner">
+    <div class="sl center">FAQ</div>
+    <h2 class="st center">Häufige Fragen</h2>
+    <div class="faq-list">
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Für welche Ausbildungen ist PflegeLearn geeignet? <span class="faq-arr">▼</span></div><div class="faq-a">PflegeLearn ist für alle Auszubildenden zur Pflegefachfrau/zum Pflegefachmann (3-jährige generalistische Ausbildung nach PflBG 2020) entwickelt. Die Inhalte sind auch für Pflegestudierende geeignet.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Welche Bücher sind die Grundlage der Inhalte? <span class="faq-arr">▼</span></div><div class="faq-a">Alle Inhalte basieren auf dem aktuellen Rahmenlehrplan nach PflBG 2020 und werden regelmäßig von Pflegefachpersonen geprüft. Inhalte werden regelmäßig aktualisiert.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Kann ich kostenlos testen? <span class="faq-arr">▼</span></div><div class="faq-a">Ja! Mit dem Free-Plan hast du dauerhaft kostenlosen Zugang zu 2 Modulen, 50 Fragen und 20 Lernkarten – ohne Kreditkarte, ohne Zeitlimit. Schulen erhalten auf Anfrage eine kostenlose 30-tägige Pilotphase.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Ist PflegeLearn DSGVO-konform? <span class="faq-arr">▼</span></div><div class="faq-a">Ja. Alle Daten werden auf deutschen Servern gespeichert. Mit Schulen wird ein AVV gemäß Art. 28 DSGVO abgeschlossen. Daten werden niemals an Dritte weitergegeben.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Was sind die 3 Niveaustufen? <span class="faq-arr">▼</span></div><div class="faq-a">🌱 Anfänger (+10 Pkt): Definitionen, direkte Fakten. 🔥 Fortgeschritten (+20 Pkt): Klinische Szenarien, Anwendung. 💎 Experte (+30 Pkt): Komplexe Fälle, Differenzialdiagnosen. Jedes Niveau wird durch ≥ 75% im vorherigen freigeschaltet.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Kann ich jederzeit kündigen? <span class="faq-arr">▼</span></div><div class="faq-a">Ja, der Student-Plan ist monatlich kündbar. Du behältst den Zugang bis Ende des bezahlten Monats. Keine Kündigungsfristen, keine versteckten Gebühren.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-sec">
+  <div class="cta-orb"></div>
+  <div class="section-inner">
+    <h2 class="st">Bereit, deine Prüfung<br>zu bestehen?</h2>
+    <p class="ss center">Schließ dich tausenden Pflegestudierenden an die smarter lernen.<br>Starte jetzt deine Lernreise – in weniger als 60 Sekunden.</p>
+    <div class="cta-btns">
+      <a class="btn-cw" href="PflegeLearn_V5.html" style="display:inline-block;text-decoration:none;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.4);color:#fff;">▶ Zur Lernplattform</a>
+      <a class="btn-cg" href="mailto:georges@pflegelearn.de?subject=Demo PflegeLearn" style="display:inline-block;text-decoration:none;text-align:center;">📅 Demo für Schulen buchen</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-grid">
+    <div class="ft-brand">
+      <div class="logo">Pflege<span>Learn</span></div>
+      <p>Die smarte Lernplattform für die Pflegeausbildung. Die smarte Lernplattform für die Pflegeausbildung nach PflBG 2020.</p>
+    </div>
+    <div class="ft-col"><h4>Produkt</h4><a href="#">Funktionen</a><a href="#">Module</a><a href="#preise">Preise</a><a href="PflegeLearn_V5.html">App downloaden</a></div>
+    <div class="ft-col"><h4>Schulen</h4><a href="mailto:georges@pflegelearn.de?subject=B2B PflegeLearn">B2B Angebot</a><a href="mailto:georges@pflegelearn.de?subject=Demo PflegeLearn">Demo buchen</a><a href="PflegeLearn_Partnerschaftsvertrag.docx">Partnervertrag</a><a href="mailto:georges@pflegelearn.de?subject=Fallstudien">Fallstudien</a></div>
+    <div class="ft-col"><h4>Rechtliches</h4><a href="PflegeLearn_DSGVO_Pack.html">Datenschutz</a><a href="PflegeLearn_DSGVO_Pack.html#impressum">Impressum</a><a href="PflegeLearn_DSGVO_Pack.html#agb">AGB</a><a href="#">DSGVO / AVV</a></div>
+  </div>
+  <div class="ft-bottom">
+    <span>© 2025 PflegeLearn GmbH · Alle Rechte vorbehalten</span>
+    <span>georges@pflegelearn.de · pflegelearn.de</span>
+  </div>
+</footer>
+
+<script>
+function demoTab(tab,btn){
+  document.getElementById('demo-fiche').style.display=tab==='fiche'?'':'none';
+  document.getElementById('demo-qcm').style.display=tab==='qcm'?'':'none';
+  document.querySelectorAll('.dtab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+}
+function toggleFaq(el){
+  const item=el.closest('.faq-item');
+  const was=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+  if(!was)item.classList.add('open');
+}
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');}});
+},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
