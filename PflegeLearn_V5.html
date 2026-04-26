@@ -416,6 +416,24 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:DM Sans
     </div>
   </div>
 
+
+  <!-- SCREEN: TYPISCHE SITUATIONEN -->
+  <div id="view-situationen" style="display:none">
+    <div style="padding:1rem 1rem .5rem">
+      <div style="background:linear-gradient(135deg,#0e1420 0%,#141a0e 100%);border:1px solid rgba(245,200,66,.15);border-radius:16px;padding:1.2rem;margin-bottom:1rem;position:relative;overflow:hidden">
+        <div style="font-family:Syne,sans-serif;font-weight:800;font-size:1.25rem;letter-spacing:-.03em;line-height:1.2;margin-bottom:.3rem">Praxisnah entscheiden <span style="color:#f5c842">Theorie &amp; Fall</span></div>
+        <div style="color:rgba(255,255,255,.38);font-size:.75rem;margin-bottom:.7rem">87 Pflegesituationen nach I care Pflege</div>
+        <div style="display:flex;gap:1.5rem">
+          <div><div style="font-family:Syne,sans-serif;font-size:1.1rem;font-weight:800;color:#f5c842">87</div><div style="font-size:.62rem;color:rgba(255,255,255,.38)">Situationen</div></div>
+          <div><div style="font-family:Syne,sans-serif;font-size:1.1rem;font-weight:800;color:#f5c842">14</div><div style="font-size:.62rem;color:rgba(255,255,255,.38)">Kategorien</div></div>
+          <div><div style="font-family:Syne,sans-serif;font-size:1.1rem;font-weight:800;color:#f5c842">I care</div><div style="font-size:.62rem;color:rgba(255,255,255,.38)">Quelle</div></div>
+        </div>
+      </div>
+      <div id="sit-cat-filters" style="display:flex;gap:.4rem;overflow-x:auto;padding:.2rem 0 .8rem;scrollbar-width:none"></div>
+      <div id="sit-list"></div>
+    </div>
+  </div>
+
 </div><!-- /screen -->
 
 <!-- BOTTOM NAV -->
@@ -425,6 +443,10 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:DM Sans
   </button>
   <button class="nb" id="nb-lern" onclick="showView('modules-all')">
     <span class="icon">📚</span>Lernen
+  </button>
+  <button class="nb" id="nb-sit" onclick="showView('situationen')" style="position:relative">
+    <span class="icon">🧩</span>Situationen
+    <span style="position:absolute;top:5px;right:4px;background:#f5c842;color:#1a1200;font-size:.48rem;font-weight:800;padding:1px 4px;border-radius:6px">NEU</span>
   </button>
   <button class="nb" id="nb-ki" onclick="showView('ki')">
     <span class="icon">🔍</span>Suchen
@@ -1432,15 +1454,16 @@ function updateTopBar(){
 
 // ── NAV ──
 function setNavActive(key){
-  ['home','lern','ki','profil'].forEach(function(k){
-    $('nb-'+k).classList[k===key?'add':'remove']('on');
+  ['home','lern','sit','ki','profil'].forEach(function(k){
+    var el=$('nb-'+k);
+    if(el) el.classList[k===key?'add':'remove']('on');
   });
 }
 
 // ── VIEWS ──
 function showView(view){
   hide('view-home'); hide('view-modules'); hide('view-content');
-  hide('view-ki'); hide('view-profil');
+  hide('view-ki'); hide('view-profil'); hide('view-situationen');
   
   if(view==='home'){
     show('view-home'); setNavActive('home');
@@ -1470,6 +1493,9 @@ function showView(view){
   } else if(view==='ki'){
     show('view-ki','flex'); setNavActive('ki');
     renderKIChips();
+  } else if(view==='situationen'){
+    show('view-situationen'); setNavActive('sit');
+    if(!window._sitRendered){ renderSituationen(); window._sitRendered=true; }
   } else if(view==='profil'){
     show('view-profil'); setNavActive('profil');
     renderProfil();
@@ -1910,6 +1936,1052 @@ function kiSearch(query){
 function showKISetup(){ }
 function saveKIKey(){ }
 
+
+
+
+// ================================================================
+//  TYPISCHE SITUATIONEN - 87 Pflegesituationen nach I care Pflege
+// ================================================================
+
+var SIT_KATS = [
+  {id:'all',label:'Alle',icon:'All'},
+  {id:'gp',label:'Grundpflege',icon:'GP'},
+  {id:'ak',label:'Akut',icon:'AK'},
+  {id:'nr',label:'Neuro/Psych',icon:'NR'},
+  {id:'el',label:'Ausscheidung',icon:'EL'},
+  {id:'er',label:'Ernahrung',icon:'ER'},
+  {id:'wu',label:'Wunden',icon:'WU'},
+  {id:'at',label:'Atmung',icon:'AT'},
+  {id:'mo',label:'Mobilitat',icon:'MO'},
+  {id:'me',label:'Medikamente',icon:'ME'},
+  {id:'ko',label:'Kommunikation',icon:'KO'},
+  {id:'pa',label:'Padiatrie',icon:'PA'},
+  {id:'ge',label:'Geriatrie',icon:'GE'},
+  {id:'no',label:'Notfalle',icon:'NO'},
+  {id:'or',label:'Organisation',icon:'OR'}
+];
+
+var SITS = [
+{k:'gp',n:'Patient lehnt Koerperpflege ab',
+ tu:['Keine Erzwingung','Alternativen anbieten: Teilwaschung, Bett statt Dusche','Atmosphaere anpassen (warm, Musik)','Ursache klaeren (Schmerz? Scham? Kaelte?)','Vertrauen aufbauen schrittweise'],
+ uc:['Scham und Angst vor Beruehrung','Schmerzen bei Bewegung','Kognitive Stoerung (Demenz)','Depression','Negative Vorerfahrungen'],
+ km:'"Ich respektiere das. Darf ich nur Ihre Haende waschen?"',
+ al:'Wiederholte Ablehnung + Hautkomplikationen: Pflegeleitung + Arzt',
+ ft:'Herr K., 79 J. - lehnt Ganzwaschung ab',
+ fs:'Herr K., 79 J., leichte Demenz. Dreht sich weg: Ich bin doch nicht dreckig! Riecht nach Urin. War bisher kooperativ.',
+ fq:['Was sagen Sie als Erstes (wortlich)?','Nennen Sie 2 konkrete Alternativen.','Was dokumentieren Sie (mind. 4 Punkte)?'],
+ fa:['Herr K., ist es die Kaelte? Tut etwas weh? - Validierende Einstiegsfrage, kein Vorwurf.','1. Ich wasche nur den Intimbereich - den Rest machen Sie selbst. 2. Darf ich Ihnen zum Bad helfen? Sie sitzen, ich helfe nur wo Sie es erlauben.','Ablehnung mit Uhrzeit, Hautzustand, angebotene Alternativen, erneuter Versuch geplant'],
+ mk:'Ablehnung ist kein Trotz. Immer Ursache suchen und Alternativen anbieten.'},
+
+{k:'gp',n:'Patient lehnt Essen und Trinken ab',
+ tu:['Ursache klaeren (Schmerz, Depression, Dysphagie)','Lieblingsgerichte erfragen','Kleine Portionen, haeufig anbieten','Soziales Essen foerdern','Trinkprotokoll fuehren'],
+ uc:['Uebelkeit oder Schmerzen','Depression','Schluckstorungen','Kulturelle Gruende','Demenz: Essen nicht erkannt'],
+ km:'"Was haben Sie frueher besonders gern gegessen?"',
+ al:'< 500 ml Trinken/Tag + Verwirrtheit: sofort Arzt',
+ ft:'Frau S., 76 J. - isst seit 2 Tagen kaum',
+ fs:'Frau S., 76 J., nach Hueft-OP. Isst < 20% der Mahlzeit. Trinkt kaum. Sagt: Das Essen schmeckt mir hier nicht.',
+ fq:['Welche 3 Sofortmassnahmen treffen Sie?','Wie sprechen Sie das Thema wuerdevoll an?','Wann informieren Sie den Arzt?'],
+ fa:['Lieblingsessen erfragen + bestellen. Trinkprotokoll starten. Mahlzeiten in Gesellschaft anbieten.','Frau S., ich mache mir Sorgen. Darf ich fragen, was Ihnen beim Essen fehlt? - Offen, nicht vorwurfsvoll.','< 500 ml Trinken + Gewichtsverlust > 1 kg in 2 Tagen + Dehydratationszeichen: Arzt informieren.'],
+ mk:'Ernahrung ist Medizin - nie als Kleinigkeit abtun!'},
+
+{k:'gp',n:'Inkontinenz neu aufgetreten',
+ tu:['Urinuntersuchung (Stix) - HWI ausschliessen!','Toilettentraining planen','Passende Versorgung waehlen','Hautpflege (pH-neutral, Barrierecreme)','Wurde wahren'],
+ uc:['Harnwegsinfekt (haufigste Ursache!)','Medikamente (Diuretika)','Neurologische Ursache','Uberlaufinkontinenz','Demenz: Toilette nicht gefunden'],
+ km:'"Das kann passieren. Ich helfe Ihnen - das kriegen wir in den Griff."',
+ al:'Neue Stuhlinkontinenz + Durchfall: Isolationsmassnahmen erwagen (C. diff?)',
+ ft:'Herr M., 71 J. - plotzliche Harninkontinenz nach OP',
+ fs:'Herr M., 71 J., Tag 2 nach Prostata-OP. Nasstet ins Bett, klingelt nicht mehr rechtzeitig. Schaemt sich sehr.',
+ fq:['Was ist die wahrscheinlichste Ursache?','Wie gehen Sie wuerdevoll vor?','Welche Hilfsmittel planen Sie?'],
+ fa:['Post-operative Sphinkterschwache + HWI ausschliessen (Urin-Stix). Auch: Schmerzen beim Aufstehen - Patient wartet zu lang.','Ruhig und sachlich: Das ist nach dieser OP normal und vorubergehend. Privatsphare sichern, Klingel erreichbar.','Blasentraining (alle 2h Toilette), Einmaleinlage, Nachtststuhl, Barrierecreme.'],
+ mk:'Inkontinenz ist behandelbar - nie als normal abtun!'},
+
+{k:'gp',n:'Dauerkatheter - Pflege und Probleme',
+ tu:['Katheter taglich mit Wasser reinigen (kein Desinfektionsmittel!)','Ablaufschlauch immer unter Blasenniveau','Urin taglich beurteilen','Flussigkeit sichern (mind. 2L/Tag)','Indikation taglich pruefen - so frueh wie moglich entfernen!'],
+ uc:['Harnverhalt, Inkontinenz, perioperativ','Komplikationen: HWI, Urosepsis, Verstopfung'],
+ km:'"Ich reinige jetzt den Katheter. Das dauert kurz."',
+ al:'Truber Urin + Fieber + Flankenschmerz: HWI/Urosepsis - sofort Arzt',
+ ft:'Frau T., 68 J. - kein Urin seit 4 Stunden',
+ fs:'Frau T., 68 J., DK seit 3 Tagen nach Becken-OP. Seit 4h kein Urin (vorher 80 ml/h). Kein Fieber.',
+ fq:['Was pruefen Sie als Erstes?','3 mogliche Ursachen fuer fehlenden Urinfluss?','Wann informieren Sie den Arzt?'],
+ fa:['System-Check: Schlauchknick? Beutel korrekt unter Blasenniveau? Katheter verdreht?','1. Schlauchknick. 2. Verstopfung (Koagel). 3. Echte Oligurie (Nierenproblem).','Nach Ausschluss mechanischer Ursachen - sofort Arzt. Anurie = Notfall!'],
+ mk:'Kein Urin ist nicht gleich leere Blase. Zuerst mechanisch ausschliessen!'},
+
+{k:'gp',n:'Sturz - Akutversorgung und Prophylaxe',
+ tu:['NACH STURZ: Ruhe bewahren, nicht sofort aufheben, Verletzungen pruefen','Arzt informieren, Neurologie pruefen','Incident-Bericht ausfuellen','PROPHYLAXE: Morse-Scale, Umgebungsanpassung, rutschfeste Schuhe'],
+ uc:['Sturzanamnese, Gangstorung, Medikamente (Sedativa, Diuretika)','Rutschige Boden, Stolperfallen, falsches Schuhwerk'],
+ km:'"Ich bin bei Ihnen. Koennen Sie mich horen? Haben Sie Schmerzen?"',
+ al:'Kopfverletzung, Bewusstlosigkeit, Deformitat: sofort Arzt + Notarzt',
+ ft:'Frau B., 82 J. - gestarzt auf dem Weg zur Toilette',
+ fs:'Frau B., 82 J. auf dem Boden. Wach, orientiert, Hueftschmerzen links. Bein verkuerzt und aussenrotiert.',
+ fq:['Was tun Sie in den ersten 2 Minuten?','Was deutet auf eine Fraktur hin?','Welche Massnahmen nach dem Sturz?'],
+ fa:['Patientin ansprechen, Verletzungen pruefen (NICHT sofort aufheben!), Arzt rufen, beruhigen, warm halten.','Verkürztes, aussenrotiertes Bein + starke Hueftschmerzen = klassisches Zeichen der Schenkelhalsfraktur.','Arzt + Notarzt, Rontgen, Schmerztherapie, Incident-Bericht, Sturzursachenanalyse, Prophylaxe anpassen.'],
+ mk:'Bei Sturz: NICHT sofort aufheben, immer vollstandig untersuchen lassen!'},
+
+{k:'ak',n:'Akute Schmerzen - postoperativ',
+ tu:['NRS 0-10 erheben (bei Demenz: BESD)','Analgesie nach AO','Nicht-medikamentose Massnahmen: Lagerung, Kuhlung','Wirkungskontrolle nach 30 Min!','WHO-Stufenschema beachten'],
+ uc:['Postoperative Wundschmerzen','Traumatisch (Fraktur)','Kolikartig (Niere, Gallenblase)','Ischamisch (Herzinfarkt)'],
+ km:'"Auf einer Skala von 0-10 - wie stark sind Ihre Schmerzen?"',
+ al:'NRS >= 7 oder unzureichende Analgesie: sofort Arzt',
+ ft:'Herr P., 58 J. - starke Schmerzen nach Appendektomie',
+ fs:'Herr P., 58 J., 6h nach Appendektomie. NRS 8. Verkrampft, schwitzt. Metamizol 500mg nicht ausreichend.',
+ fq:['Was tun Sie sofort?','Welche Informationen braucht der Arzt?','Welche nicht-medikamentosen Massnahmen?'],
+ fa:['Patienten aufsuchen, NRS erheben, Arzt informieren, beruhigen, Lagerung optimieren.','ISBAR: Herr P., NRS 8, 6h nach Appendektomie, Metamizol 500mg nicht ausreichend. Bitte staerkere Analgesie.','Schonende Lagerung (leichte Knie-Beugung), Kuhlung der Wundregion, Ablenkung, Anwesenheit zeigen.'],
+ mk:'Schmerz ist was der Patient sagt - niemals bagatellisieren!'},
+
+{k:'ak',n:'Akute Atemnot - Dyspnoe',
+ tu:['Oberkoperhochlagerung 30-45°','O2-Gabe nach AO (Cave COPD: 88-92%!)','Arzt sofort informieren','Vitalzeichen messen (SpO2, AF, HF, RR)','Atemwege freihalten'],
+ uc:['Herzinsuffizienz (Lungenodem)','COPD-Exazerbation','Lungenembolie','Pneumonie','Anaphylaxie'],
+ km:'"Ich bin bei Ihnen. Atmen Sie langsam durch die Nase ein."',
+ al:'SpO2 < 90% + Zyanose + Tachykardie: NOTFALL, Notarzt',
+ ft:'Frau W., 71 J. - plotzliche Luftnot nachts',
+ fs:'Frau W., 71 J., Herzinsuffizienz NYHA III. SpO2 88%, HF 112, schaumiger Auswurf, orthopnoisch.',
+ fq:['3 Sofortmassnahmen?','Welche Diagnose vermuten Sie?','Was teilen Sie dem Arzt mit (ISBAR)?'],
+ fa:['1. Oberkoperhochlagerung (aufsetzen, Beine runterhangen). 2. O2 nach AO (Ziel 92-96%). 3. Arzt sofort.','Akutes Lungenodem bei dekompensierter Herzinsuffizienz (schaumiger Auswurf ist pathognomonisch).','ISBAR: Frau W., 71J., HI NYHA III. SpO2 88%, HF 112, schaumiger Auswurf, Orthopnoe. Verdacht Lungenodem. Bitte Furosemid i.v. und O2-Anordnung.'],
+ mk:'Schaumiger Auswurf + Orthopnoe = Lungenodem bis Beweis des Gegenteils. SOFORT Arzt!'},
+
+{k:'ak',n:'Verdacht auf Herzinfarkt',
+ tu:['SOFORT: Arzt + Notarzt (112!)','Ruhe, Oberkoperhochlagerung','O2 nur bei SpO2 < 90%','IV-Zugang legen','EKG','Aspirin 300mg nach AO','NICHT: alleine lassen'],
+ uc:['Koronare Herzkrankheit','Arteriosklerose, Thrombose'],
+ km:'"Bleiben Sie ruhig, ich rufe sofort den Arzt. Wir helfen Ihnen."',
+ al:'Brustschmerz + Ausstrahlung + Schweis: IMMER Herzinfarkt ausschliessen - 112!',
+ ft:'Herr G., 62 J. - Brustschmerz beim Fruhstuck',
+ fs:'Herr G., 62 J., Typ-2-Diabetes. Druck auf Brust, Uebelkeit, Ausstrahlung linker Arm. Schwitzt stark. HF 96.',
+ fq:['Welche Symptome deuten auf Herzinfarkt?','Was tun Sie in den nachsten 3 Minuten?','Warum Vorsicht bei Diabetikern?'],
+ fa:['Brustdruck + Ausstrahlung + Uebelkeit + Schweis = klassische Symptome. Atypisch bei Diabetikern moglich!','1. Arzt sofort. 2. Notarzt 112. 3. Patient beruhigen, Lagerung. 4. O2 bereitstellen. 5. IV-Zugang. 6. EKG.','Diabetiker haben Neuropathie - kein oder atypischer Schmerz. Auf Allgemeinsymptome achten!'],
+ mk:'Bei Diabetikern und Frauen: atypische Infarktzeichen! Immer an Herzinfarkt denken.'},
+
+{k:'ak',n:'Hypoglykamie',
+ tu:['BEWUSST: 20g schnelle KH sofort (Traubenzucker, Saft)','BZ nach 15 Min messen','Arzt informieren','BEWUSSTLOS: sofort Arzt, Glucagon i.m. oder Glukose 40% i.v.','NIEMALS oral bei Bewusstlosigkeit!'],
+ uc:['Zu viel Insulin','Zu wenig Essen','Sport ohne Anpassung','Alkohol'],
+ km:'"Trinken Sie das bitte sofort - das hilft schnell."',
+ al:'Bewusstlosigkeit bei Hypoglykamie: NOTFALL - Notarzt 112',
+ ft:'Herr D., 67 J. - zittert und schwitzt vor dem Mittagessen',
+ fs:'Herr D., 67 J., Typ-1-Diabetes. Morgens Insulin, kaum Fruhstuck gegessen. BZ: 52 mg/dl. Zittert, schwitzt, verwirrt.',
+ fq:['Was geben Sie sofort und wie viel?','Wann und wie pruefen Sie die Wirkung?','Was tun Sie danach?'],
+ fa:['Sofort 20g schnelle KH: 200ml Apfelsaft ODER 4 Traubenzucker ODER 150ml Cola (nicht Light!).','BZ nach 15 Minuten. Wenn > 80: langsame KH geben. Wenn weiterhin < 70: nochmals 20g + Arzt.','Arzt informieren, Insulindosierung pruefen lassen, Essverhalten dokumentieren, Schulung anpassen.'],
+ mk:'15-15-Regel: 15g KH - 15 Minuten warten - BZ messen.'},
+
+{k:'ak',n:'Allergische Reaktion und Anaphylaxie',
+ tu:['Grad 1 (Haut): Arzt, Antihistaminikum','Grad 2 (Urtikaria, Dyspnoe leicht): Arzt sofort, O2, i.v.-Zugang','Grad 3-4 (Schock): NOTARZT 112! Adrenalin i.m. nach AO','Ausloster stoppen sofort!'],
+ uc:['Medikamente (Penicillin, NSAR)','Nahrungsmittel (Nuss, Meersfruechte)','Insektenstiche','Latex'],
+ km:'"Ich bin bei Ihnen. Hilfe kommt sofort."',
+ al:'Angio-Odem + Bronchospasmus + Schock: NOTARZT 112',
+ ft:'Frau L., 45 J. - Urtikaria nach Antibiotikagabe',
+ fs:'Frau L., 45 J., 20 Min nach Penicillin. Urtikaria, Juckreiz, leichte Schluckbeschwerden. SpO2 96%, HF 102.',
+ fq:['Welchen Schweregrad schätzen Sie ein?','Was tun Sie sofort (Reihenfolge)?','Wie verhindern Sie eine Wiederholung?'],
+ fa:['Grad 2 - kann schnell zu Grad 3 werden, engmaschig beobachten!','1. Penicillin stoppen. 2. Arzt rufen. 3. O2. 4. i.v.-Zugang. 5. Vitalzeichen alle 5 Min.','Allergie dokumentieren, rotes Armband, kein Penicillin/Cephalosporin mehr (Kreuzallergie!).'],
+ mk:'Jede Reaktion kann eskalieren. Ausloster stoppen + Arzt ist IMMER Schritt 1+2.'},
+
+{k:'ak',n:'Fieber uber 39 Grad',
+ tu:['Temperatur korrekt messen und dokumentieren','Kuhlung: feuchte Waschlappen, kuehle Raumtemperatur','Flussigkeit foerdern (Infektionsfieber: +500ml je Grad)','Antipyretikum nach AO','Ursache klaeren (Blutkultur vor Antibiotika!)'],
+ uc:['Infektion (Bakterien, Viren)','Pneumonie, HWI, Sepsis','Postoperativer Infekt','Medikamentenfiebers'],
+ km:'"Ich kuhle Sie jetzt. Wir schauen, woher das Fieber kommt."',
+ al:'Fieber > 39 + Schuttelfrost + Tachykardie + Hypotonie: Sepsiszeichen - Arzt SOFORT',
+ ft:'Frau Y., 66 J. - plotzliches Fieber auf Station',
+ fs:'Frau Y., 66 J., Tag 3 nach Darmop. Plotzlich 39.8°C, Schuttelfrost, HF 118, RR 95/60. Wunde gerot.',
+ fq:['Welche Massnahmen treffen Sie sofort?','Welche Sepsiszeichen sehen Sie?','Was braucht der Arzt von Ihnen (ISBAR)?'],
+ fa:['Vitalzeichen messen, Arzt sofort, Blutkultur vor Antibiotika abnehmen, IV-Zugang sichern, Flussigkeit, Wunde beurteilen.','qSOFA: Fieber + Tachykardie + Hypotonie = 3 Punkte - Sepsisverdacht! Verwirrtheit pruefen.','ISBAR: Frau Y., Tag 3 post-OP, 39.8°C, HF 118, RR 95/60, Schuttelfrost, gerotetel Wunde. Verdacht Sepsis. Bitte Blutkultur-Anordnung + Antibiotika + Flussigkeit.'],
+ mk:'Fieber + Tachykardie + Hypotonie = Sepsis bis Beweis des Gegenteils!'},
+
+{k:'ak',n:'Blutdruckabfall und orthostatische Dysregulation',
+ tu:['3-Phasen-Aufstehen: Sitzen - warten - aufstehen','Vitalzeichen liegend und stehend messen','Flussigkeit foerdern','Kompressionsstrumpfe','Ursache klaeren (Medikamente? Dehydratation?)'],
+ uc:['Medikamente: Antihypertensiva, Diuretika, Opioide','Dehydratation','Lange Bettruhe','Autonome Neuropathie (Diabetes)'],
+ km:'"Setzen Sie sich erst kurz - warten Sie 30 Sekunden - dann stehen wir auf."',
+ al:'RR syst. < 90 + Synkope + Bewusstseinsverlust: sofort Arzt + Schocklagerung',
+ ft:'Herr Q., 73 J. - wird schwarz vor den Augen beim Aufstehen',
+ fs:'Herr Q., 73 J., Furosemid 40mg/Tag. Beim Aufstehen: Schwindel, fast Sturz. RR liegend 130/80, stehend 95/60.',
+ fq:['Was ist eine orthostatische Hypotonie?','Welche Sofortmassnahmen treffen Sie?','Was melden Sie dem Arzt?'],
+ fa:['Blutdruckabfall > 20 mmHg systolisch beim Aufstehen nach 1-3 Min. Schwindel, Schwarzwerden, Synkope.','Hinsetzen/hinlegen, Beine hochlagern, Flussigkeit, 3-Phasen-Aufstehen trainieren, Arzt informieren.','Orthostatische Hypotonie dokumentiert, RR-Differenz, Sturzrisiko erhoeht, Furosemid-Dosis pruefen?'],
+ mk:'3-Phasen-Aufstehen: Sitzen - 30 Sek warten - langsam aufstehen. Immer!'},
+
+{k:'nr',n:'Delirium - Akuter Verwirrtheitszustand',
+ tu:['Ursache suchen: HWI, Schmerz, Dehydratation, Medikamente','CAM-Tool anwenden','Reorientierung: Name, Datum, Ort','Vertraute Umgebung, Brille/Horgerät anlegen','Nicht fixieren! (verlangt Delirium)'],
+ uc:['Infektionen (HWI, Pneumonie)','Medikamente (Anticholinergika, Opioide)','Dehydratation','Schlafentzug','Postoperativ bei alten Menschen'],
+ km:'"Herr M., Sie sind im Krankenhaus. Ich bin Ihre Pflegerin. Es ist Dienstag."',
+ al:'Eigen- oder Fremdgefährdung: Arzt + Sicherheitsmassnahmen (KEIN Fixieren ohne Richter!)',
+ ft:'Herr F., 78 J. - verwirrt nach Hueft-OP',
+ fs:'Herr F., 78 J., 2. Tag nach Hueft-TEP. Nachts unruhig, erkennt niemanden, reist an IV-Leitungen. War praeoperativ geistig fit.',
+ fq:['Was unterscheidet Delir von Demenz?','3 Sofortmassnahmen?','Welche Massnahmen lindern das Delir?'],
+ fa:['Delir: akut (Stunden), schwankend, reversibel. Demenz: schleichend, chronisch, progredient.','1. Arzt (Ursache: Infektion? Schmerz? Elektrolyte?). 2. Licht anlassen, beruhigen. 3. IV sichern ohne fixieren.','Helles Zimmer, Reorientierungsgespraeche, bekannte Gegenstaende, Mobilisation, Schlaf-Wach-Rhythmus.'],
+ mk:'Delir bei alten Menschen nach OP: Ursache suchen! Schmerz, HWI, Dehydratation zuerst.'},
+
+{k:'nr',n:'Schlaganfall - Frueherkennung und Akutversorgung',
+ tu:['FAST-Schema: Face-Arms-Speech-Time','Notarzt 112 SOFORT','Kein Essen/Trinken (Schluckstorung!)','Zeit dokumentieren (Symptombeginn exakt!)','Blutdruck NICHT senken (ausser nach AO)'],
+ uc:['Ischamischer Schlaganfall (80%): Thrombus, Embolie','Hamorrhagischer Schlaganfall (20%): Blutung'],
+ km:'"Ich rufe sofort den Notarzt. Behalten Sie Ruhe."',
+ al:'FAST positiv: SOFORT 112 - Zeit ist Gehirn! (10% Ueberleben weniger pro Min ohne Lyse)',
+ ft:'Frau X., 68 J. - plotzliche Sprachstorung beim Frahstuck',
+ fs:'Frau X., 68 J. Plotzlich: Mund haengt links, Arm faellt bei Halteversuch, Sprache verwaschen. Beginn exakt 08:15.',
+ fq:['Wie testen Sie FAST?','Was tun Sie sofort?','Was darf Frau X. NICHT bekommen?'],
+ fa:['F: Mund haengen? A: Arm halten (10 Sek) - faellt einer? S: Satz sagen - verwaschen? T: Zeit stoppen, 112!','FAST positiv: 112 sofort. Zeitpunkt dokumentieren. Patientin beruhigen. NICHTS essen/trinken geben. Arzt informieren.','KEIN Essen/Trinken (Dysphagie-Gefahr!). Blutdruck NICHT eigenmachtig senken. Keine ASS ohne Arztanordnung.'],
+ mk:'Zeit ist Gehirn! FAST positiv = 112. Zeitpunkt exakt dokumentieren.'},
+
+{k:'nr',n:'Demenzpatient - Aggression bei Pflege',
+ tu:['Somatische Ursachen ausschliessen (Schmerz, Obstipation, HWI!)','Deeskalation: langsame Stimme, Abstand, Ruhe','Pflege pausieren, nach 10 Min wiederkommen','Zu zweit arbeiten','Validation nach Feil anwenden'],
+ uc:['Schmerzen (haufigste Ursache!)','Angst, Desorientierung','Scham bei Intimpflege','Uberforderung','Obstipation'],
+ km:'"Ich sehe, Sie mochten das gerade nicht. Ich komme spater wieder."',
+ al:'Eigen- oder Fremdgefährdung: Team + Arzt, ggf. psychiatrisches Konsil',
+ ft:'Frau K., 84 J. - schlagt bei der Morgentoilette',
+ fs:'Frau K., 84 J., Alzheimer Stadium 2. Schlagt beim Waschen. War gestern ruhig. Kein Stuhlgang seit 2 Tagen.',
+ fq:['Was ist wahrscheinlich die Ursache?','Wie deeskalieren Sie sofort?','Was planen Sie fuer nachste Pflege?'],
+ fa:['Obstipation - Bauchschmerzen - Aggression als Schmerzausdruck. Somatische Ursachen IMMER zuerst!','Pflege stoppen. Abstand. Ruhige Stimme: Ich lasse Sie jetzt in Ruhe. Raum verlassen, nach 10 Min zuruck.','Obstipation behandeln (Arzt). Optimale Tageszeit. Zu zweit. Schrittweise. Bekannte Bezugspflegekraft.'],
+ mk:'Aggression bei Demenz = Was will mir die Person sagen? Ursache suchen, nicht Verhalten bekampfen.'},
+
+{k:'nr',n:'Patient mit Angst vor Untersuchung',
+ tu:['Ursache der Angst erfragen (schlechte Erfahrungen?)','Informationen geben (was passiert genau?)','Ablenkung anbieten','Bezugsperson einbeziehen','Entspannungstechniken (tiefes Atmen)'],
+ uc:['Schlechte Vorerfahrungen','Unklare Informationen','Kontrollverlust','Klaustrophobie (MRT)','Spritzenphobie'],
+ km:'"Ich erklare Ihnen alles genau. Sie konnen jederzeit stopp sagen."',
+ al:'Panikattacke + Hyperventilation: Arzt, beruhigen, Plastikbeutel atmen lassen',
+ ft:'Herr N., 45 J. - weigert sich fur MRT',
+ fs:'Herr N., 45 J., Klaustrophobie. Sagt: Ich gehe da nicht rein, das schaffe ich nicht. MRT fur Diagnose dringend notig.',
+ fq:['Wie gehen Sie mit der Angst um?','Welche Alternativen gibt es?','Was wenn er weiterhin ablehnt?'],
+ fa:['Angst ernst nehmen, nicht minimieren. Zuhoeren, Ursache verstehen. Informationen geben: Was passiert genau, wie lange, Klingel vorhanden.','Offenes MRT anfragen. Sedierung nach Arztanordnung. Bezugsperson mitgehen lassen. Schritt-fur-Schritt: zuerst Geraat ansehen.','Autonomie respektieren. Arzt informieren. Alternativen dokumentieren. Nie zwingen.'],
+ mk:'Angst ist real. Zuhoren, informieren, Kontrolle geben.'},
+
+{k:'nr',n:'Suizidales Verhalten erkennen',
+ tu:['Direkt ansprechen: Haben Sie Gedanken, sich etwas anzutun?','Zuhoeren ohne zu werten','Arzt sofort informieren','Patienten nicht alleine lassen','Gefahrliche Gegenstaende entfernen'],
+ uc:['Depression (haufigste Ursache)','Schwere korperliche Erkrankung','Soziale Isolation','Unheilbare Diagnose'],
+ km:'"Ich nehme das sehr ernst. Sie sind mir wichtig. Ich hole jetzt den Arzt."',
+ al:'Konkrete Planeoder Selbstverletzung: SOFORT Arzt + Psychiater + nicht allein lassen',
+ ft:'Herr A., 55 J. - Ich will nicht mehr',
+ fs:'Herr A., 55 J., neu diagnostiziertes Kolonkarzinom. Sagt: Wozu das alles noch. Ich will nicht mehr. Schaut auf Tabletten.',
+ fq:['Wie reagieren Sie auf diese Aussage?','Was fragen Sie direkt?','Welche Sofortmassnahmen?'],
+ fa:['Ruhig bleiben, hinsetzen: Das klingt sehr schwer. Ich bin jetzt bei Ihnen. Nicht bagatellisieren.','Herr A., haben Sie Gedanken, sich selbst etwas anzutun? - Direkte Frage ist richtig und wichtig!','Tabletten sichern. NICHT allein lassen. Arzt sofort. Psychiater anfordern. Engmaschige Beobachtung.'],
+ mk:'Suizidalitat direkt ansprechen ist kein Risiko - es ist lebensrettend!'},
+
+{k:'el',n:'Harnverhalt',
+ tu:['Mobilisieren + Toilette','Warmflasche auf Unterbauch','Fliessendes Wasser horen lassen','Intimsphare sichern','Bei Erfolglosigkeit: Einmalkatheter nach AO'],
+ uc:['Benigne Prostatahyperplasie (BPH)','Postoperativer Harnverhalt','Medikamente (Anticholinergika)','Nervenschaden'],
+ km:'"Versuchen Sie es ohne Druck. Ich mache die Tur zu und lasse das Wasser laufen."',
+ al:'> 600 ml Restharn + Schmerzen: Katheter nach Arztanordnung',
+ ft:'Herr B., 68 J. - kein Urin seit 8 Stunden post-OP',
+ fs:'Herr B., 68 J., 8h nach Darmop. Kein Spontanurin. Druckgefuhl Unterbauch. Blasenultraschall: 550 ml.',
+ fq:['Welche Massnahmen vor dem Katheter?','Wann wird Katheter unumganglich?','Was dokumentieren Sie?'],
+ fa:['1. Mobilisation zur Toilette. 2. Warmflasche Unterbauch. 3. Fliessendes Wasser. 4. Intimsphare, Zeit lassen.','> 600 ml + Schmerzen + erfolglose Konservativtherapie: Einmalkatheter nach AO.','Zeitpunkt letzter Miktion, Blasenvolumen, alle Massnahmen mit Zeitangaben, Arztinformation.'],
+ mk:'Immer konservativ zuerst! Katheter nur wenn wirklich noetig (Infektionsrisiko).'},
+
+{k:'el',n:'Durchfall - Hygienemassnahmen',
+ tu:['Flussigkeit und Elektrolyte ersetzen','Stuhlprobe (bei C. diff: anaerob!)','BEI INFEKTIOESER DIARRHOE: Kontaktisolierung, Kittel+Handschuhe','Hautschutz (Barrierecreme Perineum)','WICHTIG: Alkohol-Handgel reicht NICHT bei C. diff!'],
+ uc:['C. difficile nach Antibiotika!','Norovirus, Rotavirus','Sondenernährung','Medikamente'],
+ km:'"Wir untersuchen die Ursache. Ich schutze Sie und die anderen Patienten."',
+ al:'Blut im Stuhl + Fieber: C. diff oder Colitis - Arzt sofort',
+ ft:'Frau R., 72 J. - Durchfall nach Antibiotika',
+ fs:'Frau R., 72 J., seit 3 Tagen Amoxicillin. Heute 5x flussiger Stuhl, Bauchkrampfe, 37.9°C. Stuhl riecht suesslich.',
+ fq:['Welche Diagnose vermuten Sie?','Welche Isolationsmassnahmen?','Wie schutzen Sie die Haut?'],
+ fa:['C.-difficile-Infektion (suesslicher Geruch + Diarrhoe nach Antibiotika = klassisch). Stuhlprobe anaerob einsenden.','Kontaktisolierung: eigenes Zimmer, Kittel+Handschuhe bei JEDEM Kontakt. Desinfektionsmittel mit sporozider Wirkung (Chlor, nicht Alkohol!).','Gruendliche Reinigung nach jedem Stuhl, pH-neutrale Waschlotio, Barrierecreme (Zink, Vaseline).'],
+ mk:'C. difficile: Alkohol-Handgel NICHT ausreichend! Wasser + Seife waschen (Sporen).'},
+
+{k:'el',n:'Obstipation und Faekalurie',
+ tu:['Flussigkeit steigern (min. 2L/Tag)','Mobilisation foerdern','Ballaststoffreiche Ernahrung','Abfuhrmittel nach AO (Macrogol, Bisacodyl)','Bei Faekalom: rektale Ausraumung nach AO'],
+ uc:['Immobilitat','Unzureichende Flussigkeitszufuhr','Opioide (Morphin, Codein)','Ernahrungsumstellung im Krankenhaus','Psychogene Ursachen'],
+ km:'"Wann hatten Sie zuletzt Stuhlgang? Haben Sie Bauchschmerzen?"',
+ al:'Faekalom + starke Bauchschmerzen + kein Stuhlgang > 5 Tage: Arzt',
+ ft:'Herr W., 71 J. - kein Stuhlgang seit 5 Tagen unter Morphin',
+ fs:'Herr W., 71 J., Palliativpatient, Morphin seit 2 Wochen. Kein Stuhlgang 5 Tage. Bauchschmerzen, Blahungen, hart im Unterbauch.',
+ fq:['Was ist bei Opioiden zwingend notwendig?','Welche Massnahmen treffen Sie?','Wann wird es zum Notfall?'],
+ fa:['Bei Opioiden IMMER Laxans von Beginn an verordnen lassen (Morphin = sichere Obstipation)!','Massnahmen: Macrogol nach AO, Flussigkeit, vorsichtige Bauchdeckenmassage, Mobilisation wenn moglich.','Faekalom + Ileus-Zeichen (Aufgeblahter Bauch, fehlende Darmgerausche, Erbrechen): Notfall - Arzt sofort.'],
+ mk:'Opioide + Laxans = immer zusammen! Obstipation unter Morphin ist keine Option.'},
+
+{k:'er',n:'Schluckstorungen - Dysphagie',
+ tu:['Logopaedie einschalten!','Konsistenz anpassen (IDDSI-Standard 0-7)','90°-Sitzposition beim Essen','Kleine Portionen, langsam','KEIN flussiges Wasser (Aspirationsgefahr!)','30 Min nach Essen sitzen bleiben'],
+ uc:['Schlaganfall (haufigste Ursache!)','Demenz fortgeschritten','Parkinson','Tumor Mund/Rachen'],
+ km:'"Nehmen Sie eine kleine Portion und essen Sie langsam. Ich bin bei Ihnen."',
+ al:'Husten + Wurgen + Fieber danach: Aspirationspneumonie - Arzt',
+ ft:'Herr V., 75 J. - hustet beim Trinken nach Schlaganfall',
+ fs:'Herr V., 75 J., 5 Tage nach Schlaganfall. Beim Wasser trinken hustet er stark. Verschluckt sich auch bei Suppe.',
+ fq:['Was ist das Hauptrisiko?','Welche Sofortmassnahmen?','Wie sieht eine sichere Mahlzeit aus?'],
+ fa:['Aspiration - Aspirationspneumonie (haufige Todesursache nach Schlaganfall!). Immer Logopaedie!','Logopaedie SOFORT anfordern. Bis Ergebnis: nichts per os. Arzt informieren.','90°-Sitzposition. Angedickte Flussigkeiten (IDDSI 3-4). Weiche/puerierte Kost. Kleine Bissen. Nicht hetzen.'],
+ mk:'Nie Wasser bei Dysphagie! Verdicken, anpassen, Logopaedie.'},
+
+{k:'er',n:'Magensonde und PEG - Pflege',
+ tu:['Lage pruefen vor jeder Gabe (pH-Test)','Oberkoperhochlagerung 30° IMMER bei Ernahrung!','Sondennahrung Raumtemperatur, langsam','Mundpflege 4-6x taeglich','PEG-Stoma taeglich reinigen'],
+ uc:['Schluckstorung, Koma, Anorexie','PEG: wenn NGS > 4 Wochen notig'],
+ km:'"Ich ueberpruefe die Sonde, dann gebe ich Ihnen die Nahrung."',
+ al:'Husten + Dyspnoe nach Sondennahrung: Fehllage! Sonde stoppen + Arzt',
+ ft:'Frau N., 79 J. - PEG-Stoma gerotet',
+ fs:'Frau N., 79 J., PEG seit 2 Monaten. Heute: Rotung um Stoma, leichter Eiter, 37.8°C.',
+ fq:['Was vermuten Sie?','Wie versorgen Sie das Stoma?','Was dokumentieren und wer wird informiert?'],
+ fa:['Peristomale Infektion (haufige PEG-Komplikation). Abstrich noetig. Kann zu Peritonitis eskalieren!','Stoma mit NaCl 0,9% reinigen, Abstrich entnehmen, sterile Kompresse, Arzt fuer Antibiotika.','Rotungsausmas (cm), Eitermerkmale, Temperatur, Massnahmen, Arztinformation. Gastroenterologie ggf.'],
+ mk:'PEG-Stoma taeglich inspizieren - kleine Rotung kann zur Peritonitis werden!'},
+
+{k:'er',n:'Mangelernährung erkennen',
+ tu:['MNA-Screening (bei Senioren)','Gewicht 2x/Woche messen','Essprotokoll fuehren','Diataessistenz einschalten','Hochkalorische Trinknahrung'],
+ uc:['Schluckstorungen','Appetitverlust durch Medikamente','Depression','Zahnprobleme','Soziale Isolation beim Essen'],
+ km:'"Wie war das Essen heute? Hat es Ihnen geschmeckt?"',
+ al:'MNA < 17 + Gewichtsverlust > 3kg/Monat: Ernahrungsberatung + Arzt',
+ ft:'Frau M., 76 J. - isst nur noch wenig',
+ fs:'Frau M., 76 J., nach Tod des Ehemanns. 5 kg Gewichtsverlust in 6 Wochen. Isst maximal 30%. MNA: 14.',
+ fq:['Welche 3 Massnahmen treffen Sie sofort?','Wie sprechen Sie das Thema an?','Welche Fachpersonen?'],
+ fa:['Essprotokoll starten. Lieblingsspeisen erfragen + bestellen. Mahlzeiten in Gesellschaft.','Frau M., ich mache mir Sorgen. Was fehlt Ihnen beim Essen? - Offen, nicht vorwurfsvoll.','Diataessistentin, Logopaedie (Schlucken), Psychologin (Trauer), Arzt (Supplementation).'],
+ mk:'Gewichtsabnahme beim alten Menschen ist nie normal - immer Ursache suchen.'},
+
+{k:'wu',n:'Dekubitus - Beurteilung und Versorgung',
+ tu:['GRAD 1 (Rotung, nicht wegdruckbar): Druck sofort entfernen, NICHT massieren!','GRAD 2 (Blase): feuchte Wundauflage, Arzt','GRAD 3-4 (tief, Nekrose): Wundmanagement-Experte','Umlagerung alle 2h, 30-Grad-Seitenlage','Ernahrung: Protein + Vitamin C + Zink'],
+ uc:['Immobilitat','Scherkrafte','Feuchtigkeit (Inkontinenz)','Mangelernährung'],
+ km:'"Ich schaue jetzt Ihre Haut an. Das ist wichtig um Druckstellen frueh zu erkennen."',
+ al:'Dekubitus Grad 3-4: Arzt + Wundmanagement + ggf. Chirurgie',
+ ft:'Herr O., 83 J. - Druckstelle an der Ferse',
+ fs:'Herr O., 83 J., 5 Tage bettlaegrig nach Pneumonie. Linke Ferse: 3x3cm nicht wegdruckbare Rotung. Braden: 13.',
+ fq:['Welcher Dekubitus-Grad?','Welche Sofortmassnahmen?','Wie dokumentieren Sie?'],
+ fa:['Grad 1: nicht wegdruckbare Rotung, intakte Haut. Sofortiger Handlungsbedarf!','1. Ferse SOFORT freilagern (Heel-Boot, Kissen unter Wade!). 2. Braden dokumentieren. 3. Umlagerungsplan anpassen. 4. Arzt. 5. Fotodokumentation.','Datum, Lokalisation, Masse (cm), Grad 1, Hautzustand, Massnahmen, naechste Kontrolle in 2h.'],
+ mk:'Fersen IMMER freilegen - Heel-Boot verhindert Amputationen!'},
+
+{k:'wu',n:'Wundinfektion',
+ tu:['Wundabstrich VOR Antibiotika!','Wunde aseptisch reinigen (NaCl 0,9%)','Antiseptische Auflage (PHMB, Silber)','Arzt informieren','Hygienemassnahmen (Handschuhe, ggf. Isolation)'],
+ uc:['Kontamination','Fremdkorper','Minderdurchblutung','MRSA'],
+ km:'"Ich nehme einen Abstrich, damit wir wissen welchen Keim wir behandeln mussen."',
+ al:'Fieber > 38.5 + Schuttelfrost + Tachykardie: Sepsisverdacht - Notfall!',
+ ft:'Frau E., 61 J. - postoperative Wunde entzendet',
+ fs:'Frau E., 61 J., 7. Tag nach Laparotomie. Wunde: 2cm Rotungshof, warm, leichter Eiter, 38.1°C.',
+ fq:['Welche Infektionszeichen sehen Sie?','Was tun Sie beim Verbandwechsel?','Wann ist Sepsisgefahr?'],
+ fa:['Rotungshof, Warme, Eiter, Fieber - lokale Wundinfektion Grad 2-3. Abstrich SOFORT entnehmen!','Aseptisch (sterile Handschuhe), Abstrich entnehmen, NaCl 0,9% reinigen, PHMB-Auflage, Arzt, Schmerzmittel.','qSOFA: Fieber + HF > 100 + AF > 20 + Verwirrtheit = Sepsis. Sofort Arzt + Blutkultur.'],
+ mk:'Abstrich VOR Antibiotika - sonst falsches Ergebnis!'},
+
+{k:'wu',n:'Akute Wunden - Versorgung',
+ tu:['Blutung stoppen (Kompression)','Wunde reinigen (NaCl 0,9%, keine H2O2!)','Steriler Verband','Tetanusschutz pruefen','Arzt informieren bei tiefen Wunden'],
+ uc:['Schnitt, Sturz, Verbrennung','Injektion, Biss'],
+ km:'"Ich versorge jetzt Ihre Wunde. Das blutet noch kurz, dann wird es besser."',
+ al:'Stark blutende Wunde + kein Stoppen: Notfall, Druck + Arzt sofort',
+ ft:'Frau C., 55 J. - schnittwunde beim Kochen',
+ fs:'Frau C., 55 J., auf Station. Schnitt mit Messer beim Fruhstuck vorbereiten: 3 cm tief, blutet stark.',
+ fq:['Was sind Ihre Sofortmassnahmen?','Was pruefen Sie beim Wundverschluss?','Was darf NICHT in die Wunde?'],
+ fa:['1. Kompressionsverband direkt auf Wunde. 2. Hochlagern. 3. Arzt. 4. NaCl 0,9% reinigen. 5. Tetanusschutz erfragen.','Tiefe, Breite, Verschmutzung, Fremdkorper. Ggf. Nahte notig (Arzt!).','H2O2 (zytotoxisch!), Betaisodona (veraltete), Wattebausch (Fasern bleiben).'],
+ mk:'H2O2 und Betaisodona sind VERALTET und schaden dem Heilungsprozess!'},
+
+{k:'at',n:'Herzinsuffizienz - Dekompensation',
+ tu:['TAEGLICH WIEGEN: +2 kg in 2 Tagen: Arzt sofort!','Flussigkeitsbilanz fuehren','Oberkoperhochlagerung 30-45°','O2-Gabe bei SpO2 < 92%','Diuretika nach AO','Salz- und Flussigkeitsrestriktion'],
+ uc:['KHK, Hypertonie, Arrhythmien','Ausloster: Infekt, zu viel Salz, Medikamente abgesetzt'],
+ km:'"Wie viel haben Sie heute getrunken? Haben Sie heute gewogen?"',
+ al:'+2 kg in 2 Tagen ODER akute Dyspnoe + Orthopnoe: sofort Arzt',
+ ft:'Frau H., 78 J. - Atemnot und Beinodeme',
+ fs:'Frau H., 78 J., HI NYHA II. Heute +3 kg. Beinodeme bis Knie. SpO2 90%, leichte Orthopnoe.',
+ fq:['Was ist passiert?','3 Sofortmassnahmen?','Was teilen Sie dem Arzt mit (ISBAR)?'],
+ fa:['Dekompensation der Herzinsuffizienz (Flussigkeitsretention - Lungenodem beginnt).','1. Oberkoperhochlagerung. 2. O2 nach AO. 3. Arzt sofort informieren.','ISBAR: Frau H., 78J., HI NYHA II. +3 kg, SpO2 90%, Beinodeme bis Knie. Verdacht Dekompensation. Furosemid i.v. und O2-Anordnung bitte.'],
+ mk:'Taegliches Wiegen rettet Leben bei Herzinsuffizienz!'},
+
+{k:'at',n:'COPD-Exazerbation',
+ tu:['SpO2 messen: ZIEL 88-92% (nicht 95-99%!)','Bronchodilatatoren nach AO (Salbutamol)','Kutschersitz zur Atemerleichterung','Lippenbremse anleiten','O2 vorsichtig (Gefahr: CO2-Narkose!)'],
+ uc:['Atemwegsinfekt (haufigste Ursache)','Luftverschmutzung','Unregelmassige Medikamenteneinnahme'],
+ km:'"Atmen Sie durch die Nase ein, dann langsam durch die Lippen aus - wie durchs Stroh."',
+ al:'SpO2 < 85% + Verwirrtheit + Erschopfung: Intubationsgefahr - Notarzt',
+ ft:'Herr C., 69 J. - schwere Atemnot, Lippen blau',
+ fs:'Herr C., 69 J., COPD GOLD 3. SpO2 84%, HF 112, AF 28, Zyanose. Auswurf gelblich.',
+ fq:['Warum ist zu viel O2 gefahrlich bei COPD?','3 Sofortmassnahmen?','Wie erkennen Sie CO2-Narkose?'],
+ fa:['COPD: chronisch erhohtes CO2. Atemantrieb kommt vom sinkenden O2. Zu viel O2: Atemantrieb erlischt, CO2 steigt weiter - CO2-Narkose!','1. Kutschersitz. 2. O2 starten: 1-2 L/min Nasensonde, Ziel 88-92%. 3. Salbutamol nach AO. 4. Arzt sofort.','Zunehmendes Schlafen, Desorientierung, dann Bewusstlosigkeit. Atemfrequenz sinkt.'],
+ mk:'COPD + O2: weniger ist mehr! Ziel 88-92%, nie unkontrolliert O2 geben.'},
+
+{k:'at',n:'Pneumonie - Pflege und Mobilisation',
+ tu:['Fruhzeitige Mobilisation ab Tag 1!','Atemubungen (10x pro Stunde tiefes Atmen)','Oberkoperhochlagerung 30°','Ausreichend Flussigkeit','Mundpflege (Aspirationsprophylaxe!)'],
+ uc:['Aspiration (haufigste Ursache im Pflegebereich)','Immobilditat','Bettruhe','Schlechte Mundpflege'],
+ km:'"Jetzt machen wir Atemubungen. Atmen Sie so tief ein wie Sie konnen."',
+ al:'SpO2 < 90% + HF > 100 + Fieber + Auswurf: Arzt sofort',
+ ft:'Herr L., 77 J. - Pneumonie Tag 3, hustet kaum',
+ fs:'Herr L., 77 J., Pneumonie. Tag 3: liegt flach im Bett, hustet kaum, Sekret horbar. SpO2 91%.',
+ fq:['Warum hustet er nicht effektiv?','3 Massnahmen zur Atemforderung?','Wann alarmieren Sie den Arzt?'],
+ fa:['Schwache Atemmuskulatur, Schmerzen beim Husten, Dehydratation (Sekret zaeh). Auch: Angst.','1. Mobilisation (aufsetzen, Bettrand). 2. Atemubungen (Incentive-Spirometer). 3. Klopfmassage. 4. Flussigkeit. 5. Mundpflege.','SpO2 sinkend < 90% + Erschopfung + fehlende Besserung nach 48h: Arzt.'],
+ mk:'Bettruhe bei Pneumonie = Todesursache. Mobilisation rettet!'},
+
+{k:'mo',n:'Patient nach Hueft-TEP - Mobilisation',
+ tu:['Luxationsprophylaxe: Beugung < 90°, kein Uberkreuzen, keine Innenrotation','Aufstehen zur operierten Seite','Thromboseprophylaxe: Strumpfe + NMH s.c.','Physiotherapie ab Tag 1','Schmerztherapie vor Ubungen'],
+ uc:['Fraktur, Koxarthrose - Hueftprothese'],
+ km:'"Heute uben wir das Aufstehen. Ich erklare Ihnen alles."',
+ al:'Plotzlicher starker Schmerz + Verkurzung + Aussenrotation: Prothesenluxation - Notfall!',
+ ft:'Herr I., 72 J. - Tag 1 nach Hueft-TEP, will nicht aufstehen',
+ fs:'Herr I., 72 J., 1. Tag nach Hueft-TEP rechts. Sagt: Das tut weh, ich bleibe liegen. Physio um 10h.',
+ fq:['Warum ist Fruhzeitige Mobilisation so wichtig?','Wie motivieren Sie Herrn I.?','Welche Luxationsverbote erklaren Sie?'],
+ fa:['Ohne Mobilisation: Thrombose, Lungenembolie, Pneumonie, Dekubitus. Jeder Bettruhetag = 1 Woche Reha mehr!','Schmerztherapie 30 Min vorher. Erklaren: Bewegung macht es langfristig besser. Schrittweise: erst sitzen, dann Bettkante, dann aufstehen.','Nie > 90° Huftbeugung. Nie Beine uberkreuzen. Nie nach innen drehen. Kissen zwischen Knie im Liegen.'],
+ mk:'Fruhzeitige Mobilisation verhindert lebensbedrohliche Komplikationen!'},
+
+{k:'mo',n:'Bettlagiger Patient - Positionierung und Prophylaxen',
+ tu:['Umlagerung alle 2h + Protokoll','30-Grad-Seitenlage (nicht 90°!)','Fersen IMMER freilegen (Kissen unter Wade)','Passive Bewegungsubungen der Extremitaten','Atemubungen'],
+ uc:['Immobilitat durch Krankheit oder OP','Bewusstlosigkeit','Schwache, Erschopfung'],
+ km:'"Ich lagere Sie jetzt um. Das tut Ihrem Rucken gut."',
+ al:'Dekubitus Grad 1 nicht verbessert nach 24h: Arzt + Wundmanagement',
+ ft:'Frau P., 85 J. - seit 1 Woche bettlagrig, Rotung Sakrum',
+ fs:'Frau P., 85 J., Herzinsuffizienz, bettlagrig seit 7 Tagen. Sakrum: wegdruckbare Rotung 4x5 cm. Braden: 12.',
+ fq:['Welcher Grad liegt vor?','Welchen Umlagerungsplan erstellen Sie?','Welche Hilfsmittel beantragen Sie?'],
+ fa:['Reaktive Hyperamie (Grad 0 / Vorstufe). Wegdruckbar = noch reversibel. Sofort handeln!','Alle 2h: Rechts-Rucken-Links-Rucken. 30-Grad-Seitenlage. Fersen freilegen. Dokumentationsprotokoll anlegen.','Wechseldruckmatratze beantragen (Arztanordnung). Heel-Boots fur Fersen. Spezialkissen Rollstuhl.'],
+ mk:'Wegdruckbare Rotung = letzte Warnung vor Dekubitus. Jetzt handeln!'},
+
+{k:'me',n:'Patient verweigert Medikament',
+ tu:['Ursache klaeren (Angst, Schluckprobleme, Verstandnis)','Arzt informieren fuer Alternative','Aufklarung: Wozu ist das Medikament?','Verweigerung dokumentieren','Nie zwingen!'],
+ uc:['Angst vor Nebenwirkungen','Tablette zu gross','Patient versteht Sinn nicht','Demenz'],
+ km:'"Darf ich fragen, warum Sie die Tablette nicht nehmen mochten?"',
+ al:'Vitales Medikament verweigert (Insulin, Antikoagulans): sofort Arzt',
+ ft:'Herr U., 75 J. - verweigert Heparin-Spritze',
+ fs:'Herr U., 75 J., post-OP, Thromboserisiko hoch. Verweigert tagliche Heparin-Spritze: Das tut weh und ich brauche das nicht.',
+ fq:['Wie reagieren Sie?','Was erklaren Sie ihm einfach?','Was wenn er trotzdem ablehnt?'],
+ fa:['Darf ich Ihnen erklaren warum das wichtig ist? - Nicht drangen, nicht zwingen. Zuhoeren.','Nach einer OP bilden sich Blutgerinnsel in den Beinvenen - das kann lebensgefahrlich werden. Die Spritze schutzt Sie.','Autonomie respektieren. Arzt informieren. Alternativen (Tablette? Strumpfe?). Aufklarung + Unterschrift dokumentieren.'],
+ mk:'Autonomie respektieren, informieren, Alternativen suchen, dokumentieren.'},
+
+{k:'me',n:'Medikamentenfehler erkennen und melden',
+ tu:['10-R-Regel einhalten','Nie unterbrechen lassen beim Richten','Unklare Anordnung: Arzt fragen BEVOR man gibt!','Bei Fehler: SOFORT Arzt informieren','NIEMALS vertuschen - Incident-Bericht'],
+ uc:['Verwechslung ahnlicher Namen','Ablenkung beim Stellen','Unklare Verordnung','Falsches Patientenzimmer'],
+ km:'"Ich habe einen Fehler bemerkt und informiere sofort den Arzt."',
+ al:'Falsches Medikament gegeben: Vitalzeichen sofort + Arzt + keine weiteren Medikamente bis AO',
+ ft:'Falscher Patient, richtige Tablette',
+ fs:'Sie bemerken nach Medikamentenausgabe: Zimmer 12 hat die Tabletten von Zimmer 21 bekommen. Beide haben Metoprolol, aber verschiedene Dosen.',
+ fq:['Was tun Sie in 2 Minuten?','Wie informieren Sie den Arzt?','Was lernen Sie/das Team?'],
+ fa:['Ruhig. Sofort pruefen was gegeben. Patient beobachten. Arzt sofort anrufen.','Herr Dr. X, Herr A. hat die Dosis von Herrn B. bekommen: [Medikament], [Dosen], vor ca. 5 Min. Wach, stabil. Bitte Anweisungen.','Incident-Bericht. Teamgesprach ohne Schuldzuweisung. Namensband vor JEDER Gabe pruefen. Fehler melden = Professionalitat!'],
+ mk:'Fehler melden rettet Patientenleben. Vertuschen ist das eigentliche Problem.'},
+
+{k:'me',n:'Antikoagulantien - Uberwachung auf Blutung',
+ tu:['Gerinnungswerte uberwachen (INR, aPTT)','Auf Blutungszeichen achten: blauer Fleck, Blut im Urin/Stuhl','Sturzrisiko minimieren!','Patient uber Blutungszeichen schulen','Bei Eingriff: Arzt informieren (Pausierung notig?)'],
+ uc:['Marcumar, Heparin, NOAK (Eliquis, Xarelto, Lixiana)'],
+ km:'"Achten Sie auf ungewohnliche blaue Flecken oder Blut im Urin. Das mussen Sie sofort melden."',
+ al:'Starke Blutung + Bewusstseinsverlust + neurologische Zeichen: Notfall - 112',
+ ft:'Frau O., 68 J. - blauer Fleck nach Sturz unter Marcumar',
+ fs:'Frau O., 68 J., Marcumar wegen Vorhofflimmern. Sturz auf die Schulter. Grosser blauer Fleck, kein Knochenbruch. INR gestern: 3.8.',
+ fq:['Was beunruhigt Sie bei diesem INR?','Welche Beobachtungen sind jetzt wichtig?','Was informieren Sie den Arzt?'],
+ fa:['INR 3.8 ist zu hoch! Ziel bei VHF: 2.0-3.0. Erhohtes Blutungsrisiko. Arzt informieren wegen Dosisanpassung.','Hamatom: Grosse, Ausdehnung. Neurologischer Status (Kopf?). Bauchschmerzen (innere Blutung?). Blut in Urin/Stuhl.','INR 3.8, Sturz, grosses Hamatom, kein Knochenbruch. Bitte Dosisanpassung Marcumar und engmaschige Beobachtung.'],
+ mk:'INR > 3.5 = Blutungsalarm. Immer Arzt informieren.'},
+
+{k:'ko',n:'Patient will gegen arztlichen Rat gehen',
+ tu:['Ruhig zuhoren, Grunde verstehen','Arzt informieren','Risiken erklaren ohne zu drohen','AMA-Formular unterschreiben lassen','NIEMALS festhalten (ausser akute Fremdgefahr)'],
+ uc:['Unzufriedenheit','Heimweh, Angst','Familiare Grunde','Psychische Erkrankung'],
+ km:'"Ich respektiere Ihren Wunsch. Darf ich Ihnen noch kurz erklaren, was das bedeuten konnte?"',
+ al:'Patient nicht einwilligungsfahig (Delir): Arzt sofort + ggf. rechtlicher Betreuer',
+ ft:'Herr J., 54 J. - will nach Herzinfarkt nach Hause',
+ fs:'Herr J., 54 J., Tag 2 nach Herzinfarkt. Sagt: Ich gehe jetzt nach Hause, meine Frau braucht mich. Orientiert, entschieden.',
+ fq:['Darf er gehen?','Was sind Ihre Schritte?','Was wenn er trotzdem geht?'],
+ fa:['Ja - einwilligungsfahiger Patient hat Recht zu gehen, auch wenn medizinisch riskant. Nicht festhalten.','1. Zuhoeren, Grunde verstehen. 2. Arzt informieren. 3. Risiken erklaren (Reinfarkt in 48h!). 4. AMA-Formular.','Dokumentation: Zeitpunkt, Aussage, Aufklarung. Notfallkontakte mitgeben. Arztbrief wenn moglich.'],
+ mk:'Autonomie bedeutet auch das Recht, schwierige Entscheidungen zu treffen.'},
+
+{k:'ko',n:'Angehorige sind wutend oder besorgt',
+ tu:['Ruhiger Ort fur Gesprach','Aktiv zuhoren, nicht verteidigen','Empathie zeigen','Fakten sachlich erklaren','Arzt einschalten bei medizinischen Fragen'],
+ uc:['Angst um Patient','Mangelnde Information','Gefuhl der Hilflosigkeit','Schlechte Vorerfahrungen'],
+ km:'"Ich sehe, dass Sie sehr besorgt sind. Lassen Sie uns einen ruhigen Moment finden."',
+ al:'Bedrohung oder Korperverletzung: Sicherheitsdienst + Stationsleitung + Polizei',
+ ft:'Tochter tobt am Stationstresen',
+ fs:'Tochter der Patientin tobt am Tresen: Meine Mutter liegt in ihrem Urin! Sie kummern sich nicht um sie! Sie schreit und weint.',
+ fq:['Wie reagieren Sie sofort?','Wie fuhren Sie das Gesprach?','Was klaren Sie danach?'],
+ fa:['Ruhe bewahren. Nicht verteidigen. Zur Seite bitten: Kommen Sie, wir gehen kurz in den Aufenthaltsraum.','Ich hore dass Sie sehr aufgewuhlt sind und das verstehe ich. Erzhlen Sie mir was Sie gesehen haben. Zuhoren ohne unterbrechen.','Situation bei Patient sofort pruefen. Falls Fehler: offen zugeben, Verbesserung zusagen. Dokumentieren.'],
+ mk:'Wutende Angehorige wollen zuerst gehort werden - dann konnen sie zuhoeren.'},
+
+{k:'ko',n:'Patient versteht seine Diagnose nicht',
+ tu:['Einfache Sprache (kein Fachjargon)','Schriftliche Informationen mitgeben','Nachfragen: Haben Sie noch Fragen?','Dolmetscher bei Sprachbarriere','Arzt fur ausfuhrliche Aufklarung einschalten'],
+ uc:['Kognitive Einschrankung','Sprachbarriere','Schock nach Diagnose','Zu viel Information auf einmal'],
+ km:'"Ich erklare das nochmal auf einfachere Weise. Unterbrechen Sie mich jederzeit."',
+ al:'Patient trifft Entscheidungen auf Basis falscher Information: Arzt sofort',
+ ft:'Herr K., 62 J. - versteht die OP-Aufklarung nicht',
+ fs:'Herr K., 62 J., morgen OP. Sagt nach dem Arztgesprach: Ich weiss immer noch nicht was die genau machen. Unterschrieben habe ich trotzdem.',
+ fq:['Was ist das Problem?','Wie gehen Sie vor?','Wer muss informiert werden?'],
+ fa:['Informed Consent ohne echtes Verstandnis ist ungultig! Das ist ein rechtliches und ethisches Problem.','Ruhig erklaren: Was wird genau gemacht? Warum? Risiken einfach beschreiben. Fragen stellen: Was haben Sie verstanden? Schriftlich mitgeben.','Arzt informieren: Patient hat OP nicht vollstandig verstanden, Aufklarung muss wiederholt werden.'],
+ mk:'Unterschrift ohne Verstandnis = kein Informed Consent. Immer Verstandnis prufen!'},
+
+{k:'pa',n:'Fieberkrampf beim Kind',
+ tu:['WAHREND KRAMPF: Kind sichern (nicht festhalten!), stabile Seitenlage','Arzt sofort rufen','Zeit messen (> 5 Min = Notfall!)','O2 bereitstellen','KEINE Gegenstande in Mund!'],
+ uc:['Rasch steigendes Fieber > 38°C','Genetische Disposition'],
+ km:'"Ihr Kind ist jetzt sicher. Der Krampf ist vorbei. Wir beobachten es genau."',
+ al:'Krampf > 5 Min ODER fokaler Krampf ODER keine Erholung: Notarzt 112',
+ ft:'Lena, 2 J. - Krampf auf der Kinderstation',
+ fs:'Lena, 2 J., stationar wegen Otitis media. Temp 39.2°C. Plotzlich Augen verdrehen, Muskelzucken, Bewusstlosigkeit. Dauer ca. 2 Min.',
+ fq:['Was tun Sie wahrend des Krampfs?','Was NICHT tun?','Was nach dem Krampf?'],
+ fa:['Ruhe bewahren. Zeit messen. Kind sichern (Sturz verhindern), NICHT festhalten. Auf Seite drehen. Arzt klingeln.','NICHT festhalten. KEIN Gegenstand in Mund. Kein Wasser ins Gesicht. Nicht erschrecken. Nicht alleine lassen.','Neurologischer Status. Temperatur messen. Antipyretikum nach AO. Eltern beruhigen und aufklaren.'],
+ mk:'Fieberkrampf: Zeit messen, sichern, Arzt rufen. Niemals festhalten!'},
+
+{k:'pa',n:'Kind mit Asthmaanfall',
+ tu:['Aufrechte Sitzposition','Salbutamol-Dosieraerosol mit Spacer nach AO','O2 nach AO','Ruhige Atmosphare schaffen','Eltern einbeziehen (Kind beruhigt wenn Eltern ruhig)'],
+ uc:['Allergen (Pollen, Tier)','Infektion','Kalte Luft','Sport','Stress'],
+ km:'"Sitz gerade. Atme langsam. Du schaffst das. Der Spray hilft gleich."',
+ al:'SpO2 < 92% + kein Ansprechen auf Spray: Notarzt sofort',
+ ft:'Tim, 8 J. - Asthmaanfall auf der Kinderstation',
+ fs:'Tim, 8 J., bekanntes Asthma. Plotzlich Atemnot, pfeifende Ausatmung, SpO2 93%. Wird panisch.',
+ fq:['3 Sofortmassnahmen?','Wie handhaben Sie den Spacer korrekt?','Wann ist Notarzt notig?'],
+ fa:['1. Aufrecht setzen (Kutschersitz). 2. Salbutamol mit Spacer nach AO (4-8 Hube). 3. Ruhig bleiben + Eltern einbeziehen + O2 bereitstellen.','Mundstuck dicht um Lippen. Spray einmal druecken. 4-5 tiefe Atemzuge durch Spacer. Danach 30 Sek warten, wiederholen.','SpO2 < 92% + kein Ansprechen auf Bronchodilatator nach 15 Min + Erschopfung: 112.'],
+ mk:'Kinder mit Asthma: Spacer immer parat! Ruhe ist die halbe Therapie.'},
+
+{k:'pa',n:'Dehydratation beim Kind durch Durchfall',
+ tu:['Flussigkeitsverlust einschatzen (Gewicht vorher/nachher)','Orale Rehydratation: ORS-Losung (nicht Saft oder Cola!)','Kleine Mengen, haufig: 5ml alle 5 Minuten','Gewichtskontrolle alle 4-6h','Bei Versagen: i.v.-Zugang + Arzt'],
+ uc:['Gastroenteritis (Norovirus, Rotavirus)','Fieber','Erbrechen'],
+ km:'"Wir geben ihm jetzt langsam Flussigkeit - kleine Schlucke, haufig."',
+ al:'Gewichtsverlust > 10% + kein Urin > 8h + Bewusstseinsstorung: i.v.-Rehydratation + Notfall',
+ ft:'Noah, 3 J. - Durchfall und Erbrechen seit 2 Tagen',
+ fs:'Noah, 3 J., Gastroenteritis. 2 Tage Durchfall + Erbrechen. Gewicht heute: 200g weniger als gestern. Weinend, trockene Lippen.',
+ fq:['Wie beurteilen Sie den Dehydratationsgrad?','Wie fuhren Sie orale Rehydratation durch?','Wann braucht Noah einen i.v.-Zugang?'],
+ fa:['Leicht (< 5%): trocken Lippen, leicht gereizt. Moderat (5-10%): eingesunkene Fontanelle, weint ohne Tranen. Schwer (> 10%): kein Urin, kaum Reaktion.','ORS-Losung (aus Apotheke): 5ml alle 5 Min. KEIN Fruchtsaft (zu viel Zucker!). Menge: 50ml/kg in 4h bei leichter Dehydratation.','Erbrechen hort nicht auf + kann ORS nicht behalten + Dehydratation >= 10% + Bewusstseinsveranderung.'],
+ mk:'ORS-Losung ist Medizin - kein Saft, kein Cola. Langsam und haufig!'},
+
+{k:'ge',n:'Polypharmazie - mehr als 5 Medikamente',
+ tu:['Vollstandige Medikamentenliste immer aktuell halten','STOPP/START-Kriterien beachten','Arzt auf Interaktionen hinweisen','Einfachere Schemata anstreben','Einnahmetreue uberprufen'],
+ uc:['Multiple Erkrankungen','Mehrere Arzte ohne Abstimmung','Keine regelmasige Medikamentenreview'],
+ km:'"Konnen Sie mir alle Medikamente zeigen, die Sie nehmen - auch ohne Rezept?"',
+ al:'Sturzfordernde Kombination (Sedativa + Blutdruckmittel): Arzt fur Review',
+ ft:'Herr Z., 82 J. - nimmt 11 Medikamente taglich',
+ fs:'Herr Z., 82 J., nach Sturz aufgenommen. Nimmt 11 Medikamente: u.a. 2 Blutdruckmittel, Diuretikum, Schlaftablette, Kortison.',
+ fq:['Welche erhohen das Sturzrisiko?','Wie pruefen Sie die Einnahmetreue?','Was melden Sie dem Arzt?'],
+ fa:['Schlaftablette (Sedierung). Diuretikum (Orthostase). 2 Blutdruckmittel (Hypotonie). Kortison (Muskelschwache).','Pillendosen pruefen. Patient fragen. Angehorige einbeziehen. Einnahme kontrollieren.','Herr Dr. X, Herr Z. nimmt 11 Medikamente. Sturzrisiko-Kombis: Benzodiazepin + 2 Antihypertensiva + Furosemid. Medikamenten-Review bitte.'],
+ mk:'Polypharmazie ist ein geriatrisches Syndrom. Weniger kann mehr sein!'},
+
+{k:'ge',n:'Wiederholte Sturze - Sturzursachenanalyse',
+ tu:['Multifaktorielle Analyse: Medikamente, Umgebung, Person','Morse-Scale bei jeder Aufnahme','Sturzdokumentation mit 6 Elementen','Physiotherapie einschalten','Hilfsmittel anpassen (Rollator, Gehstock)'],
+ uc:['Gangstorungen, Gleichgewichtsstorungen','Medikamente (Sedativa, Diuretika)','Sehprobleme','Schlechte Beleuchtung','Sturzanamnese (grosster Risikofaktor!)'],
+ km:'"Konnen Sie mir erzahlen wie der Sturz genau passiert ist?"',
+ al:'3 Sturze in 6 Monaten: Geriater einschalten, umfassendes Sturzprogramm',
+ ft:'Frau D., 79 J. - dritter Sturz in diesem Monat',
+ fs:'Frau D., 79 J., dritter Sturz. Bisher: auf dem Weg zur Toilette (2x nachts), jetzt beim Aufstehen. Morse: 60.',
+ fq:['Welche Faktoren konnten zu den Sturzen beitragen?','Welche Massnahmen treffen Sie?','Wer muss einbezogen werden?'],
+ fa:['Analyse: Nachts zur Toilette = Blasendrang + Dunkelheit + Schlafmittel? Beim Aufstehen = Orthostase. Medikamentenliste, Brille, Umgebung pruefen.','Nachtlicht, Toilettenstuhl neben Bett, 3-Phasen-Aufstehen trainieren, Schlafmittel pruefen (Arzt), Physiotherapie.','Arzt (Medikamente), Physiotherapeut (Gangtraining), Ergotherapeut (Hilfsmittel), Stationsleitung (Sicherheitsplan).'],
+ mk:'Sturze wiederholen sich - immer Ursachenanalyse, nie als Pech abtun!'},
+
+{k:'ge',n:'Schwere Schlafstorungen bei alten Menschen',
+ tu:['Schlafprotokoll fuhren','Schlafhygiene: kein Schlaf tagsüber > 30 Min','Fixierte Bettzeiten einhalten','Licht, Larm, Temperatur optimieren','Schlafmittel: kurzfristig, niedrig dosiert nach AO - nie Dauerlosung!'],
+ uc:['Schmerzen','Depression, Angst','Delir, Demenz','Nykturie (Herzinsuffizienz)','Schlechte Schlafhygiene'],
+ km:'"Wie schlafen Sie normalerweise? Haben Sie Schmerzen nachts?"',
+ al:'Schlaflosigkeit + Verwirrtheit + Agitation: Delirscreening (CAM), Arzt',
+ ft:'Frau G., 80 J. - schlaft nicht, stort die ganze Station',
+ fs:'Frau G., 80 J., stationar seit 4 Tagen. Nachts: lauft im Zimmer umher, klingelt alle 30 Min, tagt nicht. Schlaaft am Tag gut.',
+ fq:['Was ist das Problem?','Welche Massnahmen ohne Schlafmittel?','Wann ist Schlafmittel indiziert?'],
+ fa:['Schlaf-Wach-Umkehr (haufig im Krankenhaus). Isolation von normalen Zeitgebern. Kann Delir einleiten.','Tagsleuchte + Aktivitaten am Tag. Kein Schlafen nach 14h. Nachtlicht + Klingel erreichbar. Abend-Routine: Tee, Ruhe.','Erst nach Ausschluss Delir + nicht-medikamentose Massnahmen erschopft: kurzwirksames Mittel nach AO, max. 7 Tage.'],
+ mk:'Schlaf-Wach-Umkehr ist ein Warnsignal fur Delir. Nicht mit Schlafmitteln zudecken!'},
+
+{k:'no',n:'Herzkreislaufstillstand - BLS',
+ tu:['1. Sicherheit pruefen','2. Ansprechen + Schulter schutteln','3. Hilfe rufen + NOTARZT 112','4. Atemkontrolle max. 10 Sek','5. CPR: 30 Kompressionen (5-6 cm, 100-120/min) : 2 Beatmungen','6. AED holen lassen (nicht selbst!)'],
+ uc:['Herzinfarkt, Kammerflimmern','Lungenembolie','Trauma, Ertrinken'],
+ km:'"Rufen Sie 112! Bringen Sie den Defibrillator! Ich beginne Wiederbelebung!"',
+ al:'SOFORT bei Verdacht - 10% weniger Ueberleben pro Minute ohne CPR',
+ ft:'Patient kollabiert auf dem Flur',
+ fs:'Sie sehen Herrn T., 66 J., auf dem Flur zusammenbrechen. Keine Reaktion auf Ansprechen. Sie sind alleine.',
+ fq:['Erste 4 Schritte?','CPR korrekt durchfuhren?','Wann AED?'],
+ fa:['1. Sicherheit. 2. Ansprechen + Schulter schutteln. 3. Laut: Code blau! Hilfe! Defibrillator! 4. Atemkontrolle 10 Sek. -> nicht normal -> CPR.','Druckpunkt: untere Sternumhalfte. Hande ubereinander, Arme gestreckt. 5-6 cm tief, 100-120/min. Hart und schnell.','AED sobald verfugbar. Elektroden anbringen. Analysieren lassen. Anweisungen befolgen. CPR nur kurz fur Schock unterbrechen.'],
+ mk:'CPR: 30:2, 5-6cm tief, 100-120/min. AED so frueh wie moglich!'},
+
+{k:'no',n:'Brand - Evakuierung',
+ tu:['RACE-Schema: Rescue-Alarm-Contain-Evacuate','Patienten zuerst retten, dann Feuer bekampfen','Fahige Patienten selbst fuhren','Bettlagige: Bett schieben oder Matratze ziehen','Aufzuge NICHT benutzen!'],
+ uc:['Kuchenbrande','Defekte Elektrogerate','Patienten rauchen','Brandstiftung'],
+ km:'"Es gibt einen Brandaiarm. Kommen Sie bitte mit mir. Ich helfe Ihnen."',
+ al:'Feuer sichtbar: 112 sofort, RACE befolgen, KEINE Heldentaten',
+ ft:'Brandaiarm auf der Station um 14h',
+ fs:'Brandaiarm! Sie riechen Rauch aus dem Lagerraum. 6 Patienten auf Station, 2 davon bettlagerig.',
+ fq:['Was ist das RACE-Schema?','In welcher Reihenfolge evakuieren?','Was darf NICHT getan werden?'],
+ fa:['Rescue: Patienten aus Gefahrenbereich. Alarm: 112 rufen. Contain: Tur schliessen. Evacuate: Evakuierung nach Plan.','1. Mobile Patienten zuerst (schnell). 2. Halbmobile (Rollstuhl). 3. Bettlagige (Bett schieben). 4. IMMER Tur hinter sich schliessen (Rauchschutz!).','NICHT: Aufzuge benutzen. NICHT: zuruck fur Wertsachen. NICHT: alleine Feuer bekampfen. NICHT: Fenster offnen (Sauerstoff!).'],
+ mk:'RACE: Rescue - Alarm - Contain - Evacuate. Turen schliessen = Rauchhemmung.'},
+
+{k:'no',n:'Patient verschwunden',
+ tu:['Sofort Station absuchen (WC, Treppe, Raucherbereich)','Portier informieren','Polizei: nach 30 Min wenn nicht gefunden','Angehorige informieren','Dokumentation: Zeitpunkt, letzte Sichtung'],
+ uc:['Demenz (Weglauftendenz)','Delir','Depression (suizidal?)','Orientierungslosigkeit'],
+ km:'(An Kollegen): "Patient XY seit XX Uhr nicht auf Station. Suche sofort starten."',
+ al:'Demenz + Weglauftendenz + verschwunden: Polizei sofort + Angehorige',
+ ft:'Herr E., 81 J. - demenzkrank, seit 1h nicht auf Station',
+ fs:'Herr E., 81 J., Alzheimer Stadium 3. Weglaufprotection vergessen anzulegen. Seit 1h auf Station nicht gesehen. Aussen kalt (5°C).',
+ fq:['Was tun Sie sofort?','Wann rufen Sie die Polizei?','Was dokumentieren Sie?'],
+ fa:['Sofort Station + unmittelbare Umgebung absuchen. Pfortner informieren (Kameraauswertung). Stationsleitung. Angehorige anrufen.','Nach 15-30 Min ohne Erfolg + Demenz + kaltes Wetter: SOFORT Polizei (Lebensgefahr!). Foto + Beschreibung bereithalten.','Zeitpunkt letzte Sichtung, Kleidung, Gesundheitszustand, alle Massnahmen, Polizei + Angehorige informiert.'],
+ mk:'Demenz + Weglauftendenz + draussen = Lebensgefahr. Polizei fruehzeitig rufen!'},
+
+{k:'or',n:'Uebergabe nach ISBAR',
+ tu:['I - Identify: Patient, Alter, Diagnose','S - Situation: aktuelles Problem','B - Background: relevante Vorgeschichte','A - Assessment: eigene Einschatzung','R - Recommendation: was braucht der Patient als nachstes','Kurz, prazise, nur Wesentliches!'],
+ uc:['Informationsverlust bei Uebergabe = haufige Fehlerquelle'],
+ km:'Beispiel: Herr M., 75J., Zi.12, HI gestern. SpO2 94%, stabil. Diuretika begonnen. Bitte heute Abend wiegen.',
+ al:'Unklare Anordnung in Uebergabe: immer nachfragen, nie raten!',
+ ft:'Uebergabe mit komplizierten Patienten an Nachtdienst',
+ fs:'Herr W., 70J., COPD + Herzinsuffizienz + Delir. SpO2 schwankend, desorientiert, Sturzrisiko hoch. Sie ubergeben an Nachtdienst.',
+ fq:['Formulieren Sie ISBAR fur Herrn W.','3 wichtigste Beobachtungsaufgaben Nacht?','Welche Notfallmassnahmen muessen vorbereitet sein?'],
+ fa:['I: Herr W., 70J., Zi.8, COPD+HI+Delir. S: SpO2 88-94% heute, Beinahesturz. B: COPD GOLD 3, HI NYHA III. A: Instabil, Nacht kritisch. R: SpO2 alle 2h, Bett tief, Nachtlicht, bei SpO2 < 88 sofort Arzt.','1. SpO2 alle 2h messen. 2. Delirium: Sicherheit + Reorientierung. 3. Flussigkeitsbilanz.','O2-Geraet + Maske einsatzbereit. IV-Zugang pruefen. Arztdurchwahlnummer bekannt.'],
+ mk:'Gute Uebergabe = halbe Patientensicherheit. ISBAR spart Zeit und rettet Leben.'},
+
+{k:'or',n:'Tagesplanung mit mehreren Patienten',
+ tu:['Prioritaten setzen nach Dringlichkeit','Akutes zuerst - Vitalzeichen - dann Planpflege','Delegation an Pflegeassistenz','Zeitpuffer einplanen','Kollegen informieren bei Engpassen'],
+ uc:['Viele Patienten, wenig Personal','Unvorhergesehene Ereignisse','Ineffiziente Planung'],
+ km:'"Was ist heute das Dringlichste? Wer braucht mich zuerst?"',
+ al:'Personalmangel + akute Notfalle: Stationsleitung sofort informieren',
+ ft:'Montagmorgen - 8 Patienten, 2 Pflegekrafte',
+ fs:'Montagmorgen. 8 Patienten: 1 postoperativer (Tag 1), 1 mit Fieber (39.2°C), 3 Grundpflege, 2 selbstandig, 1 Entlassung heute. Sie und eine Kollegin alleine.',
+ fq:['In welcher Reihenfolge gehen Sie vor?','Wie delegieren Sie an die Kollegin?','Was wenn ein Notfall dazukommt?'],
+ fa:['1. Post-OP (Tag 1) + Fieber-Patient = akut. 2. Vitalzeichen aller instabilen Patienten. 3. Entlassung vorbereiten (Zeitdruck). 4. Grundpflege. 5. Selbstandige zuletzt.','Kollegin: Vitalzeichen unstabile Patienten + Grundpflege 3 Patienten. Ich: Post-OP + Fieber + Entlassung + Koordination.','Stationsleitung sofort informieren. Aktuelle Aufgabe sicher delegieren. Notfall hat immer Vorrang.'],
+ mk:'Priorisieren ist eine Pflegekompetenz. Akutes zuerst - immer.'},
+
+{k:'or',n:'Patientenaufnahme - Pflegeanamnese',
+ tu:['Pflegeanamnese vollstandig erheben (ATL/ABEDL)','Assessments durchfuhren (Braden, Morse, MNA, Barthel)','Biografie erfragen','Medikamentenliste aktualisieren','Allergien dokumentieren!'],
+ uc:['Jede stationare oder ambulante Aufnahme'],
+ km:'"Ich mochte Sie besser kennenlernen, damit wir Sie optimal betreuen konnen. Haben Sie etwas Zeit?"',
+ al:'Patient kommt aus Notfall in kritischem Zustand: erst stabilisieren, dann Anamnese',
+ ft:'Herr R., 70 J. - Aufnahme nach Sturz zu Hause',
+ fs:'Herr R., 70 J., aufgenommen nach Sturz zu Hause, Verdacht Oberschenkelfraktur. Lebt alleine, keine Angehorigen erreichbar. Gibt an 8 Medikamente zu nehmen.',
+ fq:['Welche Assessments fuehren Sie durch?','Was erfragen Sie zur Biografie + sozialen Situation?','Warum ist die Medikamentenliste so wichtig?'],
+ fa:['Morse (Sturzrisiko!), Braden (Dekubitus), MNA (Ernahrung), Barthel (Selbstandigkeit), ggf. MMST (Kognition).','Wohnsituation, soziales Netz, Hobbys, Gewohnheiten, Beruf frueher, Vorlieben, Angste, was ist ihm wichtig.','8 Medikamente = Polypharmazie. Wechselwirkungen? Allergie? Hat er alles dabei? Welche nimmt er wirklich?'],
+ mk:'Gute Aufnahme = Grundlage fur die gesamte Pflege. Sich Zeit nehmen lohnt sich.'}
+
+,
+{k:'gp',n:'Stoma-Versorgung - Kolostomie und Ileostomie',
+ tu:['Stoma taglich auf Farbe, Form, Groesse pruefen (rosa-rot = gesund!)','Hautschutzplatte korrekt zuschneiden (2-3mm groesser als Stoma)','Beutel bei 1/3 Fullstand entleeren','Haut um Stoma sorgfaltig reinigen und trocknen','Patient in Selbstversorgung schulen'],
+ uc:['Dickdarmkarzinom','Morbus Crohn, Colitis ulcerosa','Trauma, Divertikulitis'],
+ km:'"Ich schaue jetzt Ihr Stoma an. Sieht gut aus wenn es rosa ist."',
+ al:'Stoma blau/schwarz/nekrotisch: sofort Arzt (Durchblutungsstorung!)',
+ ft:'Frau A., 58 J. - Stomapflege Tag 3 nach Anlage',
+ fs:'Frau A., 58 J., Kolostomie Tag 3. Erste selbstandige Versorgung. Stoma rosa, Haut gerotet um Platte. Hat Angst vor dem Geruch.',
+ fq:['Welche Zeichen zeigen ein gesundes Stoma?','Wie versorgen Sie die gerote Haut?','Wie gehen Sie mit der Angst vor Geruch um?'],
+ fa:['Gesundes Stoma: rosa-rot, feucht, leicht hervorstehend. Warnsignale: dunkelrot, lila, schwarz (Durchblutung!), eingesunken (Prolaps).','Haut reinigen mit warmem Wasser, keine Seife direkt am Stoma. Trocknen. Hautschutzpaste (z.B. Stomahesive) auf gerote Stellen. Andere Plattengroe pruefen.','Normalisieren: Geruch entsteht beim Oeffnen des Beutels - geschlossen kein Geruch. Geruchsneutralisatoren in den Beutel. Ernhrungstipps (weniger Zwiebeln, Kohl).'],
+ mk:'Stoma rosa = gesund. Stoma dunkel = Notfall. Immer pruefen!'},
+
+{k:'gp',n:'Mobilisation - Transfer Bett zu Rollstuhl',
+ tu:['Rollstuhl auf Hoehe des Betts bremsen','Patienten an Bettkante setzen lassen (3-Phasen)','Nie unter den Achseln greifen! (Luxationsgefahr)','Kinaesthetik nutzen: Eigenaktivitat fordern','Ruckengerecht arbeiten: Knie beugen'],
+ uc:['Hemiparese nach Schlaganfall','Schwache durch lange Immobilitat','Paraparese, Tetraplegie'],
+ km:'"Ich helfe Ihnen aufzustehen. Druecken Sie sich mit den Handen ab."',
+ al:'Plotzlicher Schwindel + Beinschmerz beim Transfer: Orthostase oder TVT - Arzt',
+ ft:'Herr S., 67 J. - erster Transfer nach Schlaganfall',
+ fs:'Herr S., 67 J., Schlaganfall vor 5 Tagen, Linkshemiparese. Erster Versuch in den Rollstuhl. Ist noch sehr schwach und hat Angst.',
+ fq:['Wie bereiten Sie den Transfer vor?','Welche Seite ist die starke Seite?','Wie verhindern Sie einen Sturz?'],
+ fa:['Rollstuhl auf starke Seite (rechts), bremsen, Fuesstuetzen wegklappen. 3-Phasen-Aufstehen vorbereiten. Schmerztherapie 30 Min vorher.','Bei Linkshemiparese: rechte Seite ist stark. Transfer zur starken Seite! Rollstuhl rechts aufstellen.','Zu zweit arbeiten. Patient gibt das Tempo vor. Gurt oder Transferbelt. Nie loslassen bis Patient sicher sitzt.'],
+ mk:'Transfer immer zur starken Seite. Nie unter den Achseln greifen!'},
+
+{k:'ak',n:'Blutung - aussere und innere Zeichen',
+ tu:['Aussere Blutung: direkter Druck, hochlagern, steriler Verband','Innere Blutung: Schocklagerung, Arzt sofort, i.v.-Zugang','Vitalzeichen engmaschig (RR, HF, SpO2)','KEIN: Tourniquet ohne Arztanordnung','Blutgruppe + Kreuz bekannt?'],
+ uc:['Traumatisch (Sturz, OP)','Spontan: Antikoagulantien, Gerinnungsstorung','Gastrointestinal: Ulkus, Varizen'],
+ km:'"Drucken Sie hier fest drauf. Ich hole sofort Hilfe."',
+ al:'RR syst. < 90 + HF > 100 + Blasse + Schweis = haemorrhagischer Schock: 112',
+ ft:'Herr T., 72 J. - blutiger Stuhl nach Antikoagulation',
+ fs:'Herr T., 72 J., Marcumar wegen Vorhofflimmern. Heute: Teerstuhl, Schwachegefuhl, RR 100/65, HF 108.',
+ fq:['Was vermuten Sie?','Welche Sofortmassnahmen?','Was ist Teerstuhl?'],
+ fa:['Gastrointestinale Blutung (oberer GI-Trakt: Magenulkus, Duodenalulkus). Marcumar erhoht Blutungsrisiko!','Arzt sofort. i.v.-Zugang (2 grosse Zugange!). Schocklagerung. Vitalzeichen. Marcumar-Antagonisierung nach AO.','Teerstuhl = schwarzer, klebriger, ubelriechender Stuhl durch abgebautes Blut aus obem GI-Trakt. Frisches Blut = unterer GI-Trakt.'],
+ mk:'Teerstuhl + Tachykardie + Hypotonie = GI-Blutung bis Beweis des Gegenteils. Notfall!'},
+
+{k:'ak',n:'Epileptischer Krampfanfall',
+ tu:['Patienten sichern (Sturz verhindern), NICHT festhalten','Gefahrliche Gegenstande wegraumen','Stabile Seitenlage NACH dem Krampf (nicht wahrend!)','Zeit messen!','Arzt rufen, O2 bereitstellen'],
+ uc:['Epilepsie bekannt','Erst-Anfall: Ursache suchen (Tumor, Hypoglykamie, Entzug)','Eklampsie bei Schwangeren'],
+ km:'"Ich bin bei Ihnen. Es geht bald vorbei."',
+ al:'Krampf > 5 Min (Status epilepticus): NOTARZT 112, Benzodiazepine nach AO',
+ ft:'Frau B., 35 J. - Grand-mal auf der Inneren Station',
+ fs:'Frau B., 35 J., bekannte Epilepsie. Plotzlich: Sturz, generalisierte Zuckungen, Zyanose, Bewusstlosigkeit. Dauer bisher 2 Min.',
+ fq:['Was sind Ihre 3 Sofortmassnahmen?','Was NICHT tun?','Wann ist es ein Status epilepticus?'],
+ fa:['1. Patientin sichern (Kopfschutz, Polster). 2. Zeit messen. 3. Arzt rufen + O2 bereitstellen. 4. Nach Krampf: Seitenlage.','NICHT: festhalten. NICHT: Gegenstand in Mund. NICHT: Wasser. NICHT: alleine lassen.','Status epilepticus: Krampf > 5 Min ODER kein Erwachen zwischen Anfallen. Lebensbedrohlich! Notarzt 112.'],
+ mk:'Grand-mal: sichern, Zeit messen, Arzt. Nie festhalten, nie Mund offnen!'},
+
+{k:'ak',n:'Aspiration - Heimlich-Manoever',
+ tu:['Leichtes Verschlucken: zum Husten animieren, nach vorne beugen','Starkes Verschlucken + kein Husten: 5 feste Rueckenklapse','Wenn kein Erfolg: Heimlich-Manoever (5x epigastrischer Druck)','KEIN Finger blind in Mund stecken!','Notarzt bei Bewusstlosigkeit'],
+ uc:['Schluckstorung (Dysphagie)','Zu schnelles Essen','Bewusstseinsstorung','Alkohol, Sedierung'],
+ km:'"Husten Sie so stark Sie koennen! Ich bin bei Ihnen."',
+ al:'Atemstillstand nach Aspiration: CPR + Notarzt 112',
+ ft:'Herr K., 68 J. - verschluckt sich an einem Fleischstueck',
+ fs:'Herr K., 68 J., beim Mittagessen plotzlich: greift an Hals, kann nicht sprechen, Gesicht roetet sich, hustet nicht mehr.',
+ fq:['Was sind die Zeichen der vollstandigen Verlegung?','Welche Schritte fuhren Sie durch?','Wann rufen Sie den Notarzt?'],
+ fa:['Vollstandige Verlegung: kein Husten moglich, kein Sprechen, greift an Hals (universelles Erstickungszeichen), Zyanose beginnt.','1. Auffordern zu husten. 2. 5 feste Rueckenklapse (zwischen Schulterblatter). 3. Wenn kein Erfolg: 5x Heimlich-Manoever (epigastrischer Druck nach oben).','Wenn bewusstlos wird: sofort auf Boden, 112, CPR beginnen. Mund inspizieren, Fremdkorper wenn sichtbar entfernen.'],
+ mk:'Stilles Verschlucken ohne Husten = Notfall. Heimlich rettet Leben!'},
+
+{k:'nr',n:'Patient mit Halluzinationen und Wahn',
+ tu:['Ruhig bleiben, nicht auf Wahninhalt eingehen','Weder bestatigen noch widersprechen: Ich verstehe, dass Sie das so erleben','Sicherheit gewahrleisten','Arzt informieren (Ursache: Delir? Psychose? Medikamente?)','Reizarme Umgebung schaffen'],
+ uc:['Schizophrenie, Psychose','Demenz (Verdachtsideen)','Delir (akut!)','Medikamente (Kortison, Levodopa)','Alkohol-/Drogeneinfluss'],
+ km:'"Ich sehe, dass Sie das sehr belastet. Ich bin hier und Sie sind sicher."',
+ al:'Eigen- oder Fremdgefahr durch Wahn: Arzt sofort + psychiatrisches Notfallteam',
+ ft:'Frau J., 72 J. - glaubt vergiftet zu werden',
+ fs:'Frau J., 72 J., 2. Tag nach OP. Sagt: Die Schwestern mischen Gift in mein Essen. Ich esse nichts mehr. Schaut misstrauisch.',
+ fq:['Wie reagieren Sie auf den Vorwurf?','Was koennte die Ursache sein?','Welche Massnahmen treffen Sie?'],
+ fa:['Nicht verteidigen, nicht widersprechen: Ich hoere, dass Sie sich sorgen. Ich moechte, dass Sie sich sicher fuehlen. Essen aus Beutel (gestriegelt) anbieten wenn moglich.','Wahrscheinlich postoperatives Delir! (Tag 2, alt, OP, Stress). Auch: Medikamente (Kortison?), Demenz, Elektrolytstorung.','Arzt sofort. Delir-Ursache suchen. Reizarme Umgebung. Bekannte Bezugsperson. Keine Konfrontation.'],
+ mk:'Wahn bei altem Patienten nach OP = Delir bis Beweis des Gegenteils. Immer Ursache suchen!'},
+
+{k:'el',n:'Haematurie - Blut im Urin',
+ tu:['Urinfarbe dokumentieren (rosa, rot, braunrot, Koagelabgang?)','Arzt informieren','Flussigkeitszufuhr steigern (verdunnen)','Blasenspulung nach AO wenn DK vorhanden','Ursache klaeren (Infektion, Trauma, Tumor, Antikoagulation)'],
+ uc:['Harnwegsinfektion','Nierenkolik (Stein)','Trauma','Tumor (Blase, Niere)','Antikoagulantien (Marcumar, NOAK)'],
+ km:'"Ich habe Blut im Urin bemerkt. Der Arzt wird sich das ansehen."',
+ al:'Massige Blutung + Koagel + Harnverhalt: Notfall - Katheter + Arzt sofort',
+ ft:'Herr U., 65 J. - roter Urin nach TURP',
+ fs:'Herr U., 65 J., transurethraler Prostataresektion gestern. Heute: Urin dunkelrot, Koagel sichtbar, klagt uber Druckgefuhl.',
+ fq:['Ist das normal nach TURP?','Welche Massnahmen treffen Sie?','Wann ist es ein Notfall?'],
+ fa:['Leichte Blutung nach TURP in ersten 24-48h ist normal. Dunkelrote Farbe + Koagel ist grenzwertig - Arzt informieren!','Flussigkeit steigern (2-3L/Tag). Arzt informieren (Blasenspulung anordnen?). Katheter auf Duchgangigkeit pruefen. RR + HF messen.','Massige Blutung + Koagel + Katheter verstopft + Harnverhalt + RR-Abfall = Notfall! Sofort Arzt.'],
+ mk:'Nach TURP: leichte Blutung normal, starke Blutung + Koagel = Arzt!'},
+
+{k:'er',n:'Parenterale Ernahrung - Uberwachung',
+ tu:['Zentralvenosen Katheter (ZVK) steril pflegen','Infusionsleitung alle 24-72h wechseln','Blutzucker uberwachen (Infusion enthalt Glukose!)','Auf Infektionszeichen achten (Fieber, Rotung ZVK)','Nie andere Medikamente uber denselben Lumen ohne AO'],
+ uc:['Kurzdarmssyndrom','Schwere Malabsorption','Ileus','Intensivpatient'],
+ km:'"Ich kontrolliere jetzt Ihre Infusion und die Stelle wo der Katheter liegt."',
+ al:'Fieber + Rotung/Eiter um ZVK-Insertion: Katheterinfekt - Arzt sofort, Blutkultur',
+ ft:'Frau P., 44 J. - parenterale Ernahrung Tag 5',
+ fs:'Frau P., 44 J., Kurzdarmsyndrom, TPN (totale parenterale Ernahrung) seit 5 Tagen. Heute: 38.4°C, Einstichstelle leicht gerotet.',
+ fq:['Was befurchten Sie?','Welche Massnahmen treffen Sie?','Was darf nie gemacht werden?'],
+ fa:['Katheterassoziierte Blutstrominfektion (CRBSI) - haufigste und gefahrlichste ZVK-Komplikation!','Arzt sofort. Blutkultur aus ZVK und peripher. Antibiotikaanordnung abwarten. ZVK-Wechsel ggf.','Nie parenterale Ernahrung mit anderen Medikamenten mischen (ausser nach Apotheke/AO). Nie ohne sterile Technik.'],
+ mk:'Fieber + ZVK = Katheterinfekt bis Beweis des Gegenteils. Blutkultur zuerst!'},
+
+{k:'wu',n:'Chronische Wunde - Ulcus cruris',
+ tu:['Kompressionstherapie = wichtigste Massnahme (KKL 2-4)!','Wunde nach TIME-Schema beurteilen','Feuchte Wundauflage waehlen (je nach Exsudat)','Beine hochlagern (venoses Ulkus)','Patient in Kompression + Bewegung schulen'],
+ uc:['Chronische Veneninsuffizienz (haufigste Ursache, 70%)','Arterielle Verschlusskrankheit (pAVK)','Diabetischer Fus','Mischform'],
+ km:'"Der Kompressionsstrumpf ist wichtig - er hilft der Wunde zu heilen."',
+ al:'Wundinfektionszeichen + Fieber + Sepsisverdacht: Arzt sofort',
+ ft:'Frau H., 69 J. - Ulcus cruris seit 6 Monaten',
+ fs:'Frau H., 69 J., Ulcus cruris venosum am Innenknochel rechts. 4x6 cm, gelb belegt (Fibrin), massing Exsudat. Beine odematos.',
+ fq:['Was ist die wichtigste Massnahme?','Welche Wundauflage waehlen Sie?','Wie schulen Sie Frau H.?'],
+ fa:['Kompression! KKL 2-4 Kompressionsverband oder -strumpf. Ohne Kompression heilt das venose Ulkus nicht.','Massung Exsudat: Alginat oder Schaumverband (Mepilex). Fibrin: ggf. autolytisches Debridement (Hydrogel). Antiinfektiv wenn Infektion.','Kompression IMMER tragen (auch nachts wenn empfohlen). Beine hochlagern (> Herzhohe). Bewegen: Wadenpumpe aktivieren. Taeglich Haut und Wunde beobachten.'],
+ mk:'Ulcus cruris venosum: Kompression ist Therapie. Ohne Druck keine Heilung!'},
+
+{k:'wu',n:'Verbrennungen - Erstversorgung',
+ tu:['Kuehlen: 15-20 Min mit lauwarmen Wasser (15-20°C)','KEINE Eis, Butter, Zahncreme!','Sterile Abdeckung (kein Verbandmaterial das klebt)','Arzt informieren','Grosse Verbrennungen (> 15% KOF): Notarzt 112'],
+ uc:['Thermisch (Feuer, heisses Wasser)','Chemisch (Laugen, Sauren)','Elektrisch','Strahlung'],
+ km:'"Ich kuehle das jetzt mit lauwarmem Wasser. Kein Eis!"',
+ al:'Grad 3 oder > 15% KOF oder Gesicht/Hande/Genital: NOTARZT + Brandverletztenzentrum',
+ ft:'Pflegerin verbruht sich beim Sterilisieren',
+ fs:'Kollegin C. verbruht sich mit heissem Dampf am Unterarm. Sofort: Rotung, Blasenbildung, starke Schmerzen. Ca. 5x8 cm.',
+ fq:['Was tun Sie sofort?','Welcher Verbrennungsgrad liegt vor?','Was verboten ist?'],
+ fa:['Sofort: kuehlen mit lauwarmem Wasser (15-20°C) fuer 15-20 Min. Kleidung entfernen (wenn nicht verklebt). Sterile Abdeckung. Arzt.','Grad 2a: Blasenbildung, starker Schmerz, Haut noch empfindlich. (Grad 1: Rotung. Grad 2b: tiefe Blasen. Grad 3: schmerzlos, weiss/schwarz).','NIEMALS: Eis (Gefriertrauma!), Butter/Creme (Infektionsrisiko!), Zahncreme, Blasen aufstechen, klebendes Material.'],
+ mk:'Verbrennung: lauwarmes Wasser 15-20 Min. Nie Eis, nie Butter, nie Zahncreme!'},
+
+{k:'at',n:'Verdacht auf Lungenembolie',
+ tu:['Vitalzeichen sofort: SpO2, HF, RR, AF','Patient hinlegen, KEIN Aufstehen!','O2-Gabe','Arzt SOFORT (Notfallsituation!)','i.v.-Zugang legen','EKG, Blutgase nach AO'],
+ uc:['Tiefe Beinvenenthrombose (TVT) - haufigste Ursache','Immobilitat, OP, Malignome','Gerinnungsstorungen','Orale Kontrazeptiva + Rauchen'],
+ km:'"Bleiben Sie ruhig liegen. Ich rufe sofort den Arzt."',
+ al:'SpO2 < 90% + Tachykardie + Schock: NOTARZT 112, Reanimation bereit',
+ ft:'Frau D., 45 J. - plotzliche Atemnot Tag 3 nach Knie-OP',
+ fs:'Frau D., 45 J., Tag 3 nach Knie-TEP. Plotzlich: schwere Atemnot, stechender Brustschmerz, SpO2 88%, HF 128.',
+ fq:['Welche klassische Trias der Lungenembolie?','Warum darf sie nicht aufstehen?','Welche Massnahmen in welcher Reihenfolge?'],
+ fa:['LE-Trias (nur 30% vollstandig!): Dyspnoe + Brustschmerz + Hamoptysis. Hier: Dyspnoe + Brustschmerz = Verdacht ausreicht!','Aufstehen = Rechtsherzbelastung verstarken, Embolus kann sich vergroessern. Absolut liegenbleiben!','1. Hinlegen. 2. O2. 3. Arzt SOFORT. 4. i.v.-Zugang. 5. Vitalzeichen. 6. EKG. 7. Blutgase nach AO.'],
+ mk:'Akute Dyspnoe nach OP + Tachykardie = Lungenembolie bis Beweis des Gegenteils!'},
+
+{k:'at',n:'Herzrhythmusstorung - Tachykardie und Bradykardie',
+ tu:['EKG ableiten (nach AO oder Notfall)','Vitalzeichen: HF, RR, SpO2','Arzt informieren','TACHYKARDIE (>100): Ursache suchen (Fieber, Schmerz, Angst, TVT)','BRADYKARDIE (<60): nicht schocken, kein Atropin selbst geben!'],
+ uc:['Vorhofflimmern (haufigste Arrhythmie)','AV-Block','Elektrolytstorungen (K+, Mg++)','Medikamente (Digitalis, Betablocker)'],
+ km:'"Ich messe jetzt Ihren Puls und mache ein EKG. Bleiben Sie ruhig liegen."',
+ al:'HF < 40 oder > 180 + Hypotonie + Bewusstseinsverlust: Notarzt 112',
+ ft:'Herr G., 70 J. - Puls 42 beim Morgencheck',
+ fs:'Herr G., 70 J., neu auf Digitalis eingestellt. Morgencheck: Puls 42, regel. RR 105/70, leicht schwindelig.',
+ fq:['Was ist die haufigste Ursache?','Was tun Sie sofort?','Was verboten?'],
+ fa:['Digitalis-Uberdosierung (Digitalis verlangsamt AV-Uberleitung). Auch: zu hohe Betablocker-Dosis. K+-Spiegel pruefen!','Vitalzeichen dokumentieren. Arzt sofort informieren. Digitalis-Gabe heute pausieren (nicht selbst entscheiden - Arztanordnung!). EKG ableiten.','NICHT selbst Medikamente geben oder absetzen. NICHT aufstehen (Synkopegefahr). NICHT warten wenn HF < 40.'],
+ mk:'Bradykardie + Digitalis = Uberdosierung bis Beweis des Gegenteils. Arzt sofort!'},
+
+{k:'mo',n:'Schlaganfallpatient - Reha und Kommunikation',
+ tu:['Aphasie: langsam sprechen, einfache Satze, Ja/Nein-Fragen','Hemiparese: betroffene Seite stimulieren (Bobath-Konzept)','Schlucken prufen vor jeder Mahlzeit','Fruehzeitige Logopaedie, Ergo, Physio','Kontrakturen verhindern: korrekte Lagerung der betroffenen Seite'],
+ uc:['Ischamischer oder hamorrhagischer Schlaganfall','Folgen: Hemiparese, Aphasie, Dysphagie, Hemianopsie'],
+ km:'"Ich spreche langsam. Nicken Sie wenn Sie verstehen." (einfache Sprache!)',
+ al:'Neue Symptome nach Schlaganfall (Verschlechterung): sofort Arzt (Re-Infarkt?)',
+ ft:'Herr V., 63 J. - Aphasie und Hemiparese nach Schlaganfall',
+ fs:'Herr V., 63 J., Schlaganfall vor 4 Tagen. Motorische Aphasie (versteht, kann nicht sprechen). Linkshemiparese. Wird beim Essen unkrampft beobachtet.',
+ fq:['Wie kommunizieren Sie mit Herrn V.?','Wie lagern Sie die betroffene Seite?','Warum prufen Sie das Schlucken?'],
+ fa:['Langsam sprechen. Einfache Satze. Ja/Nein-Fragen (nicken/Daumen). Bildtafeln. Schreiben wenn moglich. Zeit lassen. Frustration akzeptieren.','Betroffene Seite (links): Schulter vorpositionieren, Arm auf Kissen ablagern, Handschiene wenn notig. Nicht auf der betroffenen Seite liegen lassen!','Dysphagie nach Schlaganfall sehr haufig (40-70%!). Jedes Verschlucken = Aspirationsgefahr. Schlucktest vor jeder Mahlzeit. Logopaedie!'],
+ mk:'Aphasie = Sprachproblem, kein Denkproblem. Wurden wahren, Zeit lassen.'},
+
+{k:'mo',n:'Gips oder Schiene - neurovaskulaerer Status',
+ tu:['5P-Regel uberwachen: Pain, Pulse, Pallor, Paresthesia, Paralysis','Gips nie nass werden lassen','Schmerz unter Gips = Notfall (Kompartmentsyndrom?)','Elevierung (Hochlagern) in ersten 48h','Kein Kratzen mit Gegenstand unter Gips!'],
+ uc:['Fraktur, Band/Sehnenverletzung','OP-Nachsorge'],
+ km:'"Koennen Sie die Finger/Zehen bewegen? Kribbeln Sie?"',
+ al:'Starke Schmerzen + Taubheit + Puls nicht tastbar unter Gips: Kompartmentsyndrom - Notfall!',
+ ft:'Frau F., 28 J. - Unterarmgips nach Radiusfraktur, klagt uber Kribbeln',
+ fs:'Frau F., 28 J., Unterarmgips seit 4h nach Radiusfraktur. Neue Beschwerde: Kribbeln in Fingern, Schmerzen unter Gips werden starker.',
+ fq:['Was pruefen Sie sofort?','Was konnten die Zeichen bedeuten?','Was tun wenn Kompartmentsyndrom?'],
+ fa:['5P-Regel: Pain (Schmerz), Pulse (Radialispuls tastbar?), Pallor (Blasse Finger?), Paresthesia (Kribbeln?), Paralysis (Finger beweglich?). Alle 5 sofort pruefen!','Zunehmendes Kribbeln + Schmerz = mogliches Kompartmentsyndrom! Gips zu eng? Odementwicklung? Sehr ernst nehmen.','Arzt sofort! Gips offnen (nach AO). Beim echten Kompartmentsyndrom: chirurgische Fasziotomie (Notfall-OP!).'],
+ mk:'5P nach Gips: Pain, Pulse, Pallor, Paresthesia, Paralysis. Alle 5 pruefen!'},
+
+{k:'me',n:'Insulin - Injektion und Dosisanpassung',
+ tu:['Rotationsprinzip! (Bauch, Oberschenkel, Oberarm wechseln)','Insulin bei Raumtemperatur spritzen (nicht aus Kuhlschrank)','BZ VOR der Injektion messen!','Pen korrekt einstellen (richtige Einheiten)','Verzicht niemals ohne AO'],
+ uc:['Diabetes mellitus Typ 1 (immer Insulin)', 'Diabetes mellitus Typ 2 (wenn oral nicht ausreicht)'],
+ km:'"Vor der Spritze messen wir Ihren Blutzucker."',
+ al:'BZ < 70 vor Insulingabe: NICHT spritzen, sofort Arzt + KH geben',
+ ft:'Herr R., 52 J. - Insulin falsch gespritzt',
+ fs:'Herr R., 52 J., Diabetes Typ 1. Hat 20 IE statt 10 IE Insulin bekommen (Verwechslung Pen). BZ aktuell 180 mg/dl.',
+ fq:['Welche Massnahmen sind jetzt noetig?','Wie verhindern Sie Hypoglykamie?','Was dokumentieren Sie?'],
+ fa:['Arzt sofort informieren. Engmaschige BZ-Kontrolle (alle 30 Min). Kohlenhydrate bereithalten. Patienten aufklaren was passiert ist.','BZ alle 30 Min messen. Bei BZ < 80: sofort 20g KH geben. Mehrere Stunden beobachten (Wirkdauer Insulin!). Mahlzeiten anpassen.','Welches Insulin, welche Dosis gegeben, welche bestellt war, Zeitpunkt, Arztinformation, Massnahmen, BZ-Verlauf. Incident-Bericht!'],
+ mk:'Insulin-Fehler: sofort melden, engmaschig BZ messen, nicht warten!'},
+
+{k:'me',n:'Zytostatika - Schutz des Personals',
+ tu:['PSA IMMER: Doppelhandschuhe, Schutzkittel, Maske (FFP2), Schutzbrille','Geschlossenes System verwenden','Keine Aerosolbildung!','Zytostatika-Abfall: Gruppe D (spezielle Entsorgung)','Paravasat sofort melden + Erstversorgung'],
+ uc:['Chemotherapie bei Karzinom','Immunsuppression (MTX, Azathioprin)'],
+ km:'"Ich verwende jetzt Schutzkleidung. Das ist fur meine Sicherheit."',
+ al:'Paravasat (Extravasat): Infusion SOFORT stoppen + Arzt + Paravasat-Set',
+ ft:'Krankenschwester spritzt Zytostatikum ohne Schutzausrustung',
+ fs:'Kollegin X. beginnt Chemotherapie-Infusion ohne Handschuhe. Patient fragt: Braucht sie keine Handschuhe?',
+ fq:['Was ist das Risiko?','Welche PSA ist Pflicht?','Was tun bei Paravasat?'],
+ fa:['Zytostatika sind mutagen, teratogen und karzinogen. Hautresorption moglich! Langzeitexposition = erhoehtes Krebsrisiko.','Doppelhandschuhe (Chemotherapie-Handschuhe), Schutzkittel, FFP2-Maske, Schutzbrille. Vor und nach Auslegen neue Handschuhe!','Infusion SOFORT stoppen. Arzt sofort. NICHT massieren. Paravasat-Set holen. Dokumentieren. Antidot nach Substanz (arztliche AO!).'],
+ mk:'Zytostatika ohne PSA = Berufsrisiko. Immer vollstandige Schutzausruestung!'},
+
+{k:'ko',n:'Patient berichtet uber schlechte Pflegeerfahrung',
+ tu:['Zuhoeren ohne zu unterbrechen','Nicht defensiv reagieren','Entschuldigen wenn berechtigt','Beschwerdemanagement einleiten','Vorfall dokumentieren und weiterleiten'],
+ uc:['Reale schlechte Erfahrung','Missverstandnis','Andere Erwartungen','Scham oder Wut als Ausdruck von Angst'],
+ km:'"Danke, dass Sie mir das sagen. Das ist wichtig fur mich und unser Team."',
+ al:'Beschwerden uber Misshandlung oder grobe Pflegefehler: Stationsleitung + Pflegedienstleitung sofort',
+ ft:'Herr M., 58 J. - beschuldigt Nachtpflege grob behandelt worden zu sein',
+ fs:'Herr M., 58 J., sagt beim Fruehstuck: Nachts wurde ich einfach umgedreht ohne zu fragen. Das tat weh. Niemand hat mich informiert.',
+ fq:['Wie reagieren Sie sofort?','Was unternehmen Sie danach?','Was dokumentieren Sie?'],
+ fa:['Ruhe. Zuhoeren. Nicht rechtfertigen: Das tut mir leid, dass Sie das so erlebt haben. Darf ich mehr daruber erfahren? Ernstnehmen.','Stationsleitung informieren. Kollegin vom Nachtdienst sachlich befragen. Beschwerdeformular anbieten. Patientenschutzbeauftragten ggf. einschalten.','Beschwerdeinhalt (wortlich!), Datum, Uhrzeit, informierte Personen, eingeleitete Massnahmen. Neutral und sachlich.'],
+ mk:'Beschwerden sind Feedback - kein Angriff. Zuhoeren ist professionell.'},
+
+{k:'ko',n:'Palliativpatient - Begleitung in der letzten Lebensphase',
+ tu:['Symptomkontrolle: Schmerz, Atemnot, Uebelkeit, Angst','Mundpflege alle 2h (kein Schlucken mehr moglich)','Angehoerige einbeziehen und begleiten','Wurde wahren: ruhige Umgebung, Lieblingsmusik','Nach dem Tod: postmortale Pflege wuerdevoll'],
+ uc:['Terminale Erkrankungen: Karzinom, Herzinsuffizienz, COPD'],
+ km:'"Wir sind bei Ihnen. Sie sind nicht allein." (auch wenn Patient scheinbar schlaft)',
+ al:'Rasselatmung + Mottling + kuhle Extremitaten: Familie benachrichtigen, Arzt informieren',
+ ft:'Anna, 92 J. - letzte Stunden des Lebens',
+ fs:'Anna, 92 J., Herzinsuffizienz terminal. Lippen trocken, AF 8/min, Mottling Knie, nicht ansprechbar. Familie ist im Zimmer.',
+ fq:['Welche Zeichen deuten auf letzte Stunden?','Wie begleiten Sie die Familie?','Was pflegen Sie weiterhin aktiv?'],
+ fa:['Mottling (Marmorierung Haut), langsame unregelmassige Atmung, kuhle Extremitaten, Bewusstlosigkeit, kein Schlucken mehr.','Wir sehen, dass es jetzt bald so weit ist. Bleiben Sie bei ihr - sie kann Sie noch horen. Stuhle anbieten, Nahe erlauben.','Mundpflege (Feuchtigkeitstabchen), Lagerung fur Wurde, Schmerzmittel nach Plan (subkutan), leise Stimme, Beruehrung.'],
+ mk:'Das Gehor erlischt zuletzt. Sprechen Sie weiter mit dem Sterbenden.'},
+
+{k:'pa',n:'Neugeborenengelbsucht - Ikterus neonatorum',
+ tu:['Bilirubinwert uberwachen (transkutan oder Labor)','Phototherapie nach AO (blaues Licht, UV)','Augen wahrend Phototherapie abdecken!','Flussigkeitszufuhr sichern (Stillen oder Zufuettern)','Eltern beruhigen und aufklaren'],
+ uc:['Physiologischer Ikterus (3.-7. Tag normal)','Pathologisch: Rh-Inkompatibilitat, G6PD-Mangel','ABO-Inkompatibilitat'],
+ km:'"Der Gelbsucht beim Neugeborenen ist haufig und behandelbar. Das Licht hilft dem Baby."',
+ al:'Bilirubin > 20 mg/dl oder schnell steigend: Arzt sofort (Austauschtransfusion moglich)',
+ ft:'Felix, 3 Tage alt - Gelbsucht am 3. Lebenstag',
+ fs:'Felix, 3 Tage alt. Mutter bemerkt gelbe Haut und gelbe Sklerenen. Bilirubin transkutan 14 mg/dl. Trinkt gut, aktiv.',
+ fq:['Was ist physiologischer Ikterus?','Wie wird Phototherapie durchgefuhrt?','Was erklaeren Sie den Eltern?'],
+ fa:['Physiologisch: Auftreten Tag 3-7, ursache Abbau fetaler Erythrozyten, Bilirubin < 15 mg/dl, Kind aktiv. Pathologisch: Tag 1, sehr hoher Wert, Kind schlaff.','Phototherapiegeraat uber Inkubator. Nur Windel anziehen. Augen mit Maske abdecken. UV-Schutz fur Augen! 12-24h kontinuierlich oder intermittierend. Bilirubinkontrolle alle 12h.','Der Gelbsucht ist normal und verschwindet. Das Licht hilft. Weiter stillen ist wichtig (ausreichend Flussigkeit!). Morgen Kontrollmessung.'],
+ mk:'Augen abdecken bei Phototherapie - immer! UV-Schaden sind irreversibel.'},
+
+{k:'ge',n:'Akuter Funktionsverlust beim alten Menschen',
+ tu:['NICHT als normales Altern akzeptieren!','Ursache suchen: Infektion, Medikamente, Sturz, Delir','Barthel-Index erheben (Vergleich zu fruher)','Fruehzeitige Mobilisation','Ernahrung und Flussigkeit sichern'],
+ uc:['Infektion (HWI, Pneumonie)','Medikamentenwechsel','Schlaganfall (atypisch!)','Exsikkose','Depression'],
+ km:'"Wie war das frueher? Waren Sie so fit wie jetzt?"',
+ al:'Plotzlicher Funktionsverlust ohne erkennbare Ursache: Arzt sofort (Schlaganfall ausschliessen!)',
+ ft:'Frau L., 83 J. - seit 2 Tagen plotzlich hinfaellig',
+ fs:'Frau L., 83 J., war bisher mobil und selbstandig. Seit 2 Tagen: Schwache, erkennt Enkel nicht mehr, schlaeft viel. Kein Fieber, kein Sturz.',
+ fq:['Was koennte die Ursache sein?','Welche Assessments fuehren Sie durch?','Was melden Sie dem Arzt?'],
+ fa:['HWI (haufig bei alten Frauen, oft ohne Fieber!). Exsikkose. Schlaganfall (atypisch - keine Lahmung notig!). Medikamente. Delir (leise Form - hypoaktiv!).','Barthel-Index (Vergleich zu fruher). MMST. CAM (Delir?). Vitalzeichen. Urin-Stix sofort.','Akuter Funktionsverlust seit 2 Tagen, keine erkennbare Ursache. Barthel fruher 85/100, jetzt 40/100. Urin-Stix: positiv Leukozyten. Bitte Abklarung.'],
+ mk:'Plotzlicher Funktionsverlust beim alten Menschen = Alarm. NIEMALS als Altern akzeptieren!'},
+
+{k:'ge',n:'Demenzpatient wandert - Sicherheit ohne Fixierung',
+ tu:['Sichere Umgebung schaffen (Turalarm, GPS-Armband)','Auf Grundbedurfnisse eingehen (Toilette? Hunger? Schmerz?)','Aktivitaeten anbieten (Spaziergang begleiten)','Bezugspflegekraft: Vertrauen aufbauen','FEM (Freiheitsentziehende Massnahmen) NUR mit Richtergenehmigung!'],
+ uc:['Demenz Stadium 2-3','Unruhe durch unerfullte Bedurfnisse','Suche nach Vertrautem (Zuhause, Arbeit)'],
+ km:'"Wo mochten Sie hin? Darf ich Sie begleiten?"',
+ al:'Weglaufen aus Einrichtung: Suchprotokoll + Polizei wenn nicht gefunden nach 15 Min',
+ ft:'Herr B., 78 J. - versucht nachts die Station zu verlassen',
+ fs:'Herr B., 78 J., Demenz Stadium 2. Nachts immer wieder am Ausgang, sagt: Ich muss zur Arbeit! Heute 3x in 1h.',
+ fq:['Wie reagieren Sie auf Ich muss zur Arbeit?','Welche Sicherheitsmassnahmen ohne Fixierung?','Was darf NICHT getan werden?'],
+ fa:['Validation: Auf die Emotion eingehen, nicht korrigieren: Was ist Ihre Arbeit? Das klingt wichtig. Kommen Sie, ich begleite Sie kurz. Dann ablenken (Tee, Musik).','Turalarm (informiert ohne zu fixieren). GPS-Armband. Doppelte Turoffnung (unbekannte Mechanik). Aktivitaten anbieten. Bezugspflege.','Nicht sagen: Es ist Nacht, Sie arbeiten nicht mehr! Das erhoht Unruhe. KEINE Fixierung ohne Richtergenehmigung (§ 1831 BGB).'],
+ mk:'Wandern ist ein Bedurfnisausdruck. Was braucht die Person wirklich?'},
+
+{k:'no',n:'Anaphylaktischer Schock - Vorgehen',
+ tu:['NOTARZT 112 sofort!','Adrenalin 0,5mg i.m. (Oberschenkel, Aussen) nach AO','Ausloster stoppen','Schocklagerung (Beine hoch, ausser bei Atemnot!)','O2, i.v.-Zugang, Antihistaminikum nach AO','Vitalzeichen jede Minute'],
+ uc:['Penicillin, NSAR, Kontrastmittel','Nussse, Meeresfruchte','Insektenstiche','Latex'],
+ km:'"Sie bekommen jetzt eine Spritze am Bein. Das hilft sofort."',
+ al:'Herzstillstand durch Anaphylaxie: CPR sofort + Notarzt',
+ ft:'Patient kollabiert nach Kontrastmittelinjekt',
+ fs:'Herr K., 55 J., 2 Min nach i.v.-Kontrastmittel: Urtikaria, Gesichtsschwellung, RR 70/40, HF 140, Stridor.',
+ fq:['Welcher Grad liegt vor?','Was sind Ihre 5 Sofortmassnahmen?','Warum i.m. und nicht i.v. Adrenalin?'],
+ fa:['Grad 4 (Herzkreislaufschock + Stridor = Angio-Odem!). Lebensbedrohlich!','1. Notarzt 112. 2. Adrenalin 0,5mg i.m. Oberschenkel (nach AO). 3. Kontrastmittel stoppen. 4. Beine hochlagern. 5. O2 + i.v.-Zugang.','i.m. wirkt schneller und sicherer als i.v. im Schock (Durchblutung peripher schlecht). i.v. Adrenalin = Herzstillstandsrisiko!'],
+ mk:'Anaphylaxie Grad 3-4: Adrenalin i.m. rettet Leben. Nie warten!'},
+
+{k:'no',n:'Arbeitsunfall in der Einrichtung',
+ tu:['Verletzte Person erstversorgen','Sicherheit am Unfallort gewahrleisten (weitere Gefahr?)','Stationsleitung + Betriebsarzt informieren','D-Arzt aufsuchen (Durchgangsarzt) innerhalb 24h','Unfallbericht ausfuellen (BG-Formular)'],
+ uc:['Nadelstichverletzung (NSV)','Sturz','Rueckenverletzung beim Heben','Gefahrstoffkontakt'],
+ km:'"Bist Du verletzt? Ich helfe Dir sofort."',
+ al:'Nadelstichverletzung mit HIV/HBV-Risiko: PEP innerhalb 2h beginnen! D-Arzt sofort',
+ ft:'Kollegin sticht sich mit gebrauchter Kanule',
+ fs:'Kollegin A. sticht sich beim Entsorggen einer Kanule (Patient bekannt HCV positiv). Wunde blutet leicht.',
+ fq:['Sofortmassnahmen bei Nadelstichverletzung?','Welche Blutwerte werden entnommen?','Was ist die PEP?'],
+ fa:['1. Blut ausdrucken (NICHT saugen!). 2. Wunde unter fliessendem Wasser spulen. 3. Alkohol-Desinfektion. 4. D-Arzt sofort. 5. Stationsleitung. 6. BG-Formular.','Patient: HCV, HBV, HIV. Kollegin: gleiche Serologien als Ausgangswert. Beide Proben gleichzeitig!','PEP = Post-Expositionsprophylaxe fur HIV. Kombinationstherapie fur 4 Wochen. Innerhalb 2h beginnen (optimal), max. 72h!'],
+ mk:'Nadelstich + HCV/HIV-Patient: D-Arzt sofort, PEP innerhalb 2h!'},
+
+{k:'or',n:'Notfallwagen pruefen',
+ tu:['Tagliche Vollstandigkeitspruefung (protokollieren!)','Nach jeder Benutzung sofort auffuellen','Verfallsdaten prufen (Medikamente, Einmalmaterial)','Defibrillator: taglich testen (Selbsttest + manuelle Prufung)','Verantwortlichkeit klar definieren'],
+ uc:['Jede Station hat Pflicht zum funktionierenden Notfallwagen'],
+ km:'"Ich pruefe jetzt den Notfallwagen. Das dauert 10 Minuten."',
+ al:'Notfallwagen unvollstandig bei echtem Notfall: schwerer Fehler mit Haftungsfolgen',
+ ft:'Reanimation - Adrenalin fehlt im Notfallwagen',
+ fs:'Reanimation auf Station. Arzt fordert Adrenalin. Pfleger oeffnet Notfallwagen: Adrenalin nicht da (vergessen nachzufullen nach letztem Notfall vor 3 Tagen).',
+ fq:['Wer tragt die Verantwortung?','Wie verhindern Sie das in Zukunft?','Was muss nach jeder Benutzung passieren?'],
+ fa:['Kollektive Verantwortung: Die Pflegekraft des Vortags die den Wagen nicht aufgefullt hat + Stationsleitung die keinen Kontrollprozess hat.','Checkliste nach jeder Benutzung. Tagesprotokoll mit Unterschrift. Verantwortliche Pflegekraft pro Schicht festlegen.','Sofort nach Reanimation: Vollstandigkeitspruefung. Fehlende Medikamente sofort nachfullen. Protokoll + Unterschrift.'],
+ mk:'Notfallwagen nicht gefuellt = potenzielle Todesursache. Taglich pruefen, nach Nutzung sofort nachfullen!'},
+
+{k:'or',n:'Patient auf Untersuchung vorbereiten',
+ tu:['Aufklarung: was, warum, wie lange, Risiken','Einwilligung des Patienten sicherstellen (Unterschrift)','Praparation: Nuchternheit, Darmvorbereitung, Medikamentenpause','Transport: sicher, warm, Unterlagen vollstandig','Nachsorge: Vitalzeichen, Erbrechen, Schmerz'],
+ uc:['Endoskopie, Bildgebung (CT, MRT), Interventionen','Prae-OP Vorbereitung'],
+ km:'"Ich erklare Ihnen was heute passiert. Haben Sie Fragen?"',
+ al:'Patient nicht aufgeklart + Einwilligung fehlt: Untersuchung NICHT durchfuhren (rechtlich!)',
+ ft:'Herr P., 62 J. - Koloskopie morgen fruh',
+ fs:'Herr P., 62 J., Koloskopie morgen 8h. Arzt hat aufgeklart. Abendessen: Hat er etwas gegessen? Darmvorbereitung wurde gegeben?',
+ fq:['Was prufen Sie am Abend vorher?','Welche Medikamente mussen pausiert werden?','Was muss morgen frueh kontrolliert werden?'],
+ fa:['Abend: Nuchternheit ab 22h (nur klare Flussigkeit bis 2h vorher erlaubt). Darmvorbereitung vollstandig getrunken? Unterschrift Einwilligungsbogen vorhanden?','Metformin (KM-Kontrastmittel + Metformin = Laktatazidose!). Antikoagulantien (nach AO pausieren). ASS ggf.','Morgen: letzte Mahlzeit/Trinken prufen. Blutdruck. Venen. Transportbrief. Zahne, Schmuck, Brille ablegen.'],
+ mk:'Metformin VOR Kontrastmittel-Untersuchung IMMER pausieren!'},
+
+{k:'gp',n:'Intravenose Infusion - Pflege und Uberwachung',
+ tu:['Einstichstelle taeglich beurteilen (Rotung, Schwellung, Schmerz)','Infusionsleitung und Filter regelmasig wechseln','Flussrate kontrollieren (Tropfenzahler oder Pumpe)','Paravasat fruehzeitig erkennen','Aseptisches Arbeiten beim Anschluss'],
+ uc:['Dehydratation','Medikamentengabe i.v.','Ernahrung parenteral','Bluttransfusion'],
+ km:'"Ich schaue jetzt wo die Infusion in die Vene geht. Schmerzt es dort?"',
+ al:'Paravasat + gewebetoxisches Medikament (Zytostatika, KCl): SOFORT stoppen + Arzt',
+ ft:'Frau G., 55 J. - Schwellung am Infusionsarm',
+ fs:'Frau G., 55 J., i.v.-Antibiose seit 2 Tagen. Heute klagt sie uber Schmerzen am Unterarm. Schwellung und Rotung um Einstichstelle.',
+ fq:['Was liegt wahrscheinlich vor?','Welche Sofortmassnahmen?','Was dokumentieren Sie?'],
+ fa:['Paravasat (Extravasat) oder Phlebitis. Paravasat: Infusat tritt ins Gewebe. Phlebitis: Venenentzundung. Beide moglich gleichzeitig!','Infusion sofort stoppen. Kanule entfernen. Arzt. Arm hochlagern. Kuhlung (bei Paravasat). Neue Zugangsanlage an anderer Stelle.','Datum, Uhrzeit, Einstichstelle (Lokalisation), Beschreibung (Rotung cm x cm, Schwellung), Massnahmen, Arztinformation, neue Kanulenanlage.'],
+ mk:'Schwellung + Schmerz am Infusionsarm: Infusion sofort stoppen. Paravasat ausschliessen!'},
+
+{k:'ak',n:'Schock - Erkennen und Erstmassnahmen',
+ tu:['Schockzeichen: RR syst. < 90 + HF > 100 + Blasse + Schweis + Tachypnoe','Schocklagerung (Beine hoch) AUSSER bei: Atemnot, Herzinfarkt, Kopfverletzung','Notarzt 112 sofort','O2-Gabe, 2 grosse i.v.-Zugange','Warmhalten (Waermeblanket)'],
+ uc:['Hypovolamisch (Blutung, Verbrennung)','Kardiogen (Herzinfarkt)','Septisch (Infektion)','Anaphylaktisch (Allergie)','Neurogen (Riuckenmarksverletzung)'],
+ km:'"Bleiben Sie ruhig. Notarzt kommt. Ich bin bei Ihnen."',
+ al:'Schock + Bewusstlosigkeit + kein Puls: CPR sofort + Notarzt 112',
+ ft:'Herr A., 60 J. - Schock nach Polytrauma auf Station',
+ fs:'Herr A., 60 J., frisch aufgenommen nach Verkehrsunfall. Plotzlich: blass, schwitzt, HF 130, RR 85/50, unruhig, Haut kalt.',
+ fq:['Welche Schockzeichen sehen Sie?','Schocklagerung - wann und wann nicht?','Ihre ersten 5 Massnahmen?'],
+ fa:['RR 85/50 (syst. < 90), HF 130 (> 100), blasse kalte Haut, Schweis, Unruhe = hypovolamischer Schock!','Schocklagerung (Beine hoch): Ja bei Hypovolamie. NEIN bei: Atemnot/Lungenodem, Herzinfarkt, Kopfverletzung, Aortenaneurysma.','1. Notarzt 112. 2. Beine hochlagern. 3. O2. 4. 2 grosse i.v.-Zugange. 5. Warmhalten. 6. Vitalzeichen jede Minute.'],
+ mk:'Schock: RR + HF + Haut + Bewusstsein. Schocklagerung ausser bei Atemnot!'},
+
+{k:'nr',n:'Angst und Panikattacke',
+ tu:['Ruhige Umgebung schaffen, andere Patienten raus bitten','Atemubungen anleiten (4-7-8 Methode oder Lippenbremse)','Bodung: 5 Dinge sehen, 4 horen, 3 fuhlen','Nicht alleine lassen','Arzt bei Erstanfall oder organische Ursache ausschliessen'],
+ uc:['Angststorung, Panikstorung','Klaustrophobie','Akute Belastungsreaktion','Hyperthyreose, Herzrhythmusstorung (organisch!)'],
+ km:'"Schauen Sie mich an. Atmen Sie mit mir zusammen. Einatmen - 1,2,3 - ausatmen."',
+ al:'Herzrasen + Brustschmerz + Atemnot = organisch ausschliessen (EKG, Blutgase)',
+ ft:'Frau Z., 38 J. - Panikattacke vor MRT',
+ fs:'Frau Z., 38 J., soll ins MRT. Im Wartezimmer: Herzrasen, Zittern, Schweissausbruch, Todesangst, Hyperventilation.',
+ fq:['Wie unterscheiden Sie Panikattacke von Herzinfarkt?','Wie helfen Sie sofort?','Was danach?'],
+ fa:['Schwierig! Panikattacke: jung, vorherige Episoden, situativer Auslosen, spricht klar. Herzinfarkt: alter, Risikofaktoren, anderer Schmerz. Im Zweifel: EKG!','Ruhige Stimme: Ich bin bei Ihnen. Das geht vorbei. Atemubungen. Bodenubung (5 Dinge sehen). Nicht alleine lassen. Physische Nahe.','Arzt informieren. Sedierung nach AO wenn notig. Alternativtermin. Offenes MRT anfragen. Angsttherapie-Empfehlung.'],
+ mk:'Panik vs. Herzinfarkt: Im Zweifel immer organisch ausschliessen. EKG rettet Leben.'},
+
+{k:'el',n:'Stoma - Urostomie Pflege',
+ tu:['Urostomie: klarer Urin = normal, truber Urin = HWI prufen!','Stoma-Beutel alle 2-3 Tage komplett wechseln','Nachts: Ablaufbeutel anschliessen (Nachtdrainage)','Haut taeglich pruefen (Maceration durch Urin!)','Patient schulen: Flussigkeit 2L/Tag'],
+ uc:['Blasenkarzinom','Blasenentfernung (Zystektomie)','Blasendysfunction neurogen'],
+ km:'"Ich schaue jetzt Ihr Urostoma an. Ist der Urin klar?"',
+ al:'Anurie (kein Urin im Beutel) + Fieber + Flankenschmerz: Urosepsis - sofort Arzt',
+ ft:'Herr N., 62 J. - Urostomie, truber Urin seit gestern',
+ fs:'Herr N., 62 J., Urostomie nach Zystektomie vor 3 Wochen. Seit gestern: truber Urin, unangenehm riechend, leicht erhoehte Temperatur 37.8°C.',
+ fq:['Was vermuten Sie?','Welche Massnahmen?','Wie unterscheidet sich Urostomie von Kolostomie?'],
+ fa:['Harnwegsinfektion! (truber, riechender Urin + leichtes Fieber = typisch). Urostomaprobe (Urin aus Stomabeutel nicht geeignet, aus Katheter in Stoma!).','Arzt informieren, Urinprobe korrekt abnehmen (Stomakatheterprobung), Flussigkeit steigern, Antibiotika nach AO.','Urostomie: gibt Urin ab (klar, kontinuierlich). Kolostomie: gibt Stuhl ab. Urostomie braucht immer Ablaufbeutel. Kein Blut sollte im Urin sein.'],
+ mk:'Truber Urin bei Urostomie = HWI. Urinprobe richtig entnehmen!'},
+
+{k:'er',n:'Uebelkeit und Erbrechen nach Chemotherapie',
+ tu:['Antiemetika VOR Chemotherapie nach AO (praventiv!)','Kleine, kuhle Mahlzeiten, kein starker Geruch','Ingwer, Pfefferminze als unterstutzende Massnahmen','Flussigkeit steigern zwischen den Mahlzeiten','Nach Erbrechen: Mundpflege sofort'],
+ uc:['Zytostatika (Cisplatin, Doxorubicin stark emetogen)','Strahlentherapie','Narkose (PONV)'],
+ km:'"Ich gebe Ihnen jetzt das Mittel gegen Uebelkeit. Das hilft innerhalb von 30 Min."',
+ al:'Schweres Erbrechen > 24h + Dehydratation + kein Ansprechen auf Antiemetika: Arzt + i.v.-Rehydratation',
+ ft:'Frau S., 52 J. - schwere Uebelkeit nach erstem Chemozyklus',
+ fs:'Frau S., 52 J., 6h nach Cisplatin. Erbrochen 5x, kann nichts behalten, schwach, weint.',
+ fq:['Warum vorbeugend Antiemetika?','Welche nicht-medikamentosen Massnahmen helfen?','Wann ist es ein Notfall?'],
+ fa:['Antizipatorische Uebelkeit: wenn erster Zyklus schlecht war, verstarkt sich Uebelkeit in weiteren Zyklen (konditionierte Reaktion). Pravention ist viel effektiver als Behandlung!','Kuhle, geruchsneutrale Umgebung. Kleine Portionen alle 2h statt grossen Mahlzeiten. Ingwertee. Pfefferminzol auf Handgelenk. Ablenkung.','> 24h anhaltendes Erbrechen + kein Trinken moglich + Zeichen der Dehydratation: Arzt + i.v.-Infusion. Auch: Blut im Erbrochenen.'],
+ mk:'Antiemetika VOR Chemotherapie - nicht danach warten bis Uebelkeit kommt!'},
+
+{k:'wu',n:'Lymphodem - Kompressionspflege',
+ tu:['Komplexe physikalische Entstauungstherapie (KPE): manuelle Lymphdrainage + Kompression','Kompressionsverbande: 24h/Tag in Entstauungsphase','Keine Hitze, kein Stau (kein Blutdruck messen an betroffener Extremitat!)','Haut sorgfaeltig pflegen (trockene Haut = Eintrittspforte fur Erysipel)','Bewegung foerdern (Muskelpumpe)'],
+ uc:['Sekundar: nach Lymphknotenentfernung (Mammakarzinom-OP)','Primar (selten): angeborene Lymphgefassstorung','Chronisch-venose Insuffizienz'],
+ km:'"Der Kompressionsverband muss fest sitzen - aber nicht schmerzen. Sagen Sie mir wenn es brennt."',
+ al:'Rotung + Fieber + Schuttelfrost + Lymphangitis: Erysipel (Wundrose) - Arzt sofort + Antibiotika',
+ ft:'Frau T., 56 J. - Armlymphoedem nach Brust-OP',
+ fs:'Frau T., 56 J., Lymphoedem linker Arm nach Mastektomie + Lymphknotenentfernung vor 2 Jahren. Arm stark geschwollen. Haut trocken und rissig.',
+ fq:['Was darf an diesem Arm NICHT gemacht werden?','Welche Pflegemassnahmen sind wichtig?','Wie erkennen Sie ein Erysipel?'],
+ fa:['An betroffener Seite: kein Blutdruck, keine Injektionen/Blutentnahme, kein enger Schmuck, keine Hitze (Sauna, Heizkissen), kein Tragen schwerer Lasten!','Haut 2x taeglich mit pH-neutraler Lotion eincremen. Kompressionsverband oder -sleeve tragen. Arm hochlagern beim Schlafen.','Plotzliche Rotung (Flammenform) + lokale Warme + Fieber > 38.5°C + Schuttelfrost = Erysipel (Streptokokken-Infektion!). Notfall!'],
+ mk:'Lymphodem-Arm: kein Blutdruck, keine Injektionen, kein Schmuck - nie vergessen!'},
+
+{k:'at',n:'Atemubungen und Sekretolyse',
+ tu:['Incentive Spirometer: 10x/h tief einatmen','Klopfmassage (Vibration von aussen: Sekret losen)','Positive Exspirationsdruck (PEP): Lippenbremse oder Flutter-VRP1','Abhusten foerdern: kissen an Wunde halten beim Husten (Schmerzschutz)','Inhalation nach AO (NaCl 0,9%, Ambroxol)'],
+ uc:['Pneumonieprophylaxe','COPD, Asthma','Mukoviszidose','Postoperative Atelektase'],
+ km:'"Atmen Sie jetzt so tief ein wie Sie konnen und halten Sie 3 Sekunden."',
+ al:'SpO2 sinkend trotz Atemubungen + Fieber + Tachykardie: Pneumonie - Arzt',
+ ft:'Herr D., 50 J. - nach Bauch-OP flach atmend',
+ fs:'Herr D., 50 J., Tag 2 nach Laparotomie. Atmet sehr flach (Schmerz beim Atmen). SpO2 93%. Hustet nicht.',
+ fq:['Warum atmet er flach?','Welche Massnahmen zur Atemstutzung?','Wie helfen Sie beim Abhusten?'],
+ fa:['Schonatmung: Jede tiefe Einatmung schmerzt an der OP-Wunde. Patient atmet deshalb flach - Atelektasegefahr + Pneumonie!','1. Schmerzmittel VOR Atemubungen! 2. Incentive-Spirometer (10x/h). 3. Oberkoperhochlagerung 30°. 4. Fruehzeitig aufsetzen.','Kissen auf Wunde legen, Patient haelt es beim Husten: Schutzt Wunde + vermindert Schmerz + Patient hustet kraftiger.'],
+ mk:'Schmerzmittel VOR Atemubungen! Ohne Schmerzfreiheit kein effektives Atmen.'},
+
+{k:'mo',n:'Prothesenversorgung - Stumpfpflege',
+ tu:['Stumpf taeglich inspizieren (Druckstellen, Rotung, Blasen)','Stumpf waschen und VOLLSTANDIG trocknen','Kompressionsstrumpf nach dem Abliegen (Stumpfformung)','Prothese anlegen: korrekte Technik schulen','Prothesenschaft taglich reinigen'],
+ uc:['Amputation nach diabetischem Fus','Periphere arterielle Verschlusskrankheit (pAVK)','Trauma'],
+ km:'"Ich schaue jetzt Ihren Stumpf an. Zeigen Sie mir wo es druckt."',
+ al:'Druckstelle + Blase + Wunde am Stumpf: Prothese abnehmen, Arzt, kein weiteres Laufen',
+ ft:'Herr G., 58 J. - neue Prothese druckt',
+ fs:'Herr G., 58 J., Unterschenkelamputation vor 3 Monaten. Neue Prothese seit 1 Woche. Klagt uber Druckschmerz am distalen Stumpf.',
+ fq:['Was inspizieren Sie am Stumpf?','Was tun bei Druckstelle?','Wie schutzen Sie den Stumpf nachts?'],
+ fa:['Vollstandige Inspektion: Stumpfende (distal), Knochenvorsprunge, gesamte Haut. Rotung, Blase, Wunde, Mazeration (zu feucht), Schorf.','Prothese SOFORT abnehmen. Arzt informieren. Druckstelle dokumentieren (Foto!). Orthopaedie verstandigen (Prothesenanpassung!). Kein weiteres Tragen.','Stumpfstrumpf oder -kompressionshose anlegen (verhindert Odem und erhalt Stumpfform). Hautpflege. Hochlagerung.'],
+ mk:'Druckstelle am Stumpf: Prothese ab, Arzt. Weiter laufen = Wundheilungsstorung!'},
+
+{k:'pa',n:'Windpocken und Gurttelrose - Infektionsschutz',
+ tu:['Isolierung: Windpocken = Aerosol + Kontakt (eigenes Zimmer, N95-Maske!)','Gurttelrose: Kontaktisolierung reicht (solange Blaschenphase)','Krusten = nicht mehr infektioes','Personal ohne Immunitat: NICHT ins Zimmer!','Juckreizlinderung: kuehle Kompressen, Antihistaminikum nach AO'],
+ uc:['Windpocken: Erstinfektion Varizella-zoster-Virus (VZV)','Gurttelrose (Herpes zoster): Reaktivierung des VZV'],
+ km:'"Ich darf das Zimmer nur mit besonderer Schutzmaske betreten."',
+ al:'Windpocken bei Immunsupprimierten oder Schwangeren: Arzt sofort (lebensgefahrlich!)',
+ ft:'Kind im Zimmer nebenan bekommt Windpocken',
+ fs:'Kind im Nachbarzimmer bekommt Windpocken-Diagnose. Im Zimmer daneben liegt eine schwangere Patientin (23. SSW). Station hat Einzelzimmer.',
+ fq:['Welche Isolierungsmassnahmen fuer das Kind?','Warum ist die Schwangere in Gefahr?','Was unternehmen Sie sofort?'],
+ fa:['Aerosol + Kontaktisolierung. Eigenes Zimmer. Tur geschlossen. N95-Maske fuer Personal. Nur Personal mit VZV-Immunitat ins Zimmer!','Varizella-Pneumonie + Fruehgeburt + Fetale Varizellen (Embryopathie wenn VZV in Schwangerschaft). Sehr hoch: Fruehgeburt, Fehlgeburt.','Schwangere sofort informieren + Arzt. Titer prufen (Immunitat?). Wenn nicht immun: VZIG (Varizella-Zoster-Immunglobulin) innerhalb 96h. Schwangere umbetten.'],
+ mk:'Windpocken bei Schwangeren = Notfall. VZV-Immunitat des Personals prufen!'},
+
+{k:'ge',n:'Demenz - Ernahrungsmanagement',
+ tu:['Fingerfoods anbieten (einfacher als Besteck)','Essen in ruhiger, bekannter Umgebung','Biografie nutzen: Lieblingsgerichte aus der Vergangenheit','Konsistenz anpassen wenn Schluckprobleme','Essen nicht als Kampf - Pause und Wiederholung'],
+ uc:['Demenz Stadium 2-3: vergessen zu essen, erkennen Essen nicht','Dysphagie bei fortgeschrittener Demenz','Depression (Appetitlosigkeit)'],
+ km:'"Hier ist Ihr Lieblingsessen - Kartoffeln mit Sosse!"',
+ al:'Gewichtsverlust > 10% in 3 Monaten + Schluckstorung: Ernahrungsberatung + Logopaedie + Arzt',
+ ft:'Frau W., 86 J. - Demenz, verweigert Essen',
+ fs:'Frau W., 86 J., Alzheimer Stadium 3. Isst seit 3 Tagen kaum. Dreht Kopf weg, spuckt Essen aus. 3 kg Gewichtsverlust in 2 Wochen.',
+ fq:['Warum verweigert sie das Essen (mogliche Ursachen)?','3 konkrete Massnahmen?','Wann ist eine PEG-Sonde indiziert?'],
+ fa:['Magenschmerzen? Zahne/Zahnprothese? Geschmack falsch? Konsistenz falsch? Zu laut/hektisch? Erkennt Essen nicht? Depression?','Fingerfoods (Brot, Kase, Obstschnitte). Lieblingsessen aus Biografie. Ruhige Umgebung, Musik aus ihrer Zeit. Kleinste Mengen.','PEG bei Demenz: sehr kontrovers! Nur wenn klarer Patientenwille bekannt. Ethikkommission einbeziehen. Bei Demenz bringt PEG keine Lebensverlängerung (Studien!).'],
+ mk:'PEG bei Demenz ist keine Routinemassnahme. Ethik + Patientenwille + Familie zuerst!'},
+
+{k:'or',n:'Schriftliche Dokumentation - Fehler vermeiden',
+ tu:['Zeitnah dokumentieren (nicht Stunden spater)','Sachlich, neutral, beobachtend (nicht: Patient ist aggressiv, sondern: Patient schlug nach Pflegeperson)','Fehler: durchstreichen (nicht Tipp-Ex!), Datum + Handzeichen','Niemals vorher oder fur andere dokumentieren','Leserlich und vollstandig'],
+ uc:['Rechtsgrundlage: § 630f BGB','Nicht dokumentiert = nicht getan (rechtlich)'],
+ km:'Beispiel guter Dokumentation: 14:30 - Patient lehnt Koerperpflege ab. Arm gehoben beim Waschen, Pflege abgebrochen. Erneuter Versuch 16h geplant. - K. Muller',
+ al:'Dokumentationsluecken bei Komplikationen + Schadenersatzklage: Beweislastumkehr - Pflege tragt Beweislast!',
+ ft:'Kollegin dokumentiert fur den gesamten Dienst erst am Ende',
+ fs:'Kollegin dokumentiert um 22h alle Massnahmen des ganzen Tages auf einmal (8-22h). Ein Patient ist inzwischen gestuerzt (16h). Die Dokumentation ist schon ausgefullt.',
+ fq:['Was ist das rechtliche Problem?','Was muss die Kollegin jetzt tun?','Welche Regel gilt?'],
+ fa:['Nachtraegliche Dokumentation: wenn der Sturz bereits passiert ist und erst dann dokumentiert wird, ist die Dokumentation nicht glaubwurdig. Im Prozess: Sturz war vorhersehbar und wurde nicht verhindert.','Sturzdokumentation korrekt und zeitnah erstellen mit korrektem Zeitstempel. Nichts andern in der bestehenden Dok. Stationsleitung informieren.','Immer zeitnah dokumentieren. Nie fur andere oder voraus. Fehler durchstreichen mit Datum + Handzeichen. Nie Tipp-Ex!'],
+ mk:'Dokumentation schutzt Patient UND Pflegkraft. Zeitnah und ehrlich - immer!'}
+
+];
+
+var _currentKat = 'all';
+var _sitRendered = false;
+
+function renderSituationen(){
+  _sitRendered = true;
+  var filterDiv = document.getElementById('sit-cat-filters');
+  if(filterDiv){
+    filterDiv.innerHTML = '';
+    SIT_KATS.forEach(function(kat){
+      var btn = document.createElement('button');
+      var isActive = kat.id === _currentKat;
+      btn.style.cssText = 'flex-shrink:0;padding:.3rem .75rem;border-radius:999px;border:1px solid ' + 
+        (isActive ? 'transparent' : 'rgba(255,255,255,.07)') + ';background:' + 
+        (isActive ? 'var(--d4)' : 'var(--card)') + ';font-size:.7rem;font-weight:600;cursor:pointer;color:' + 
+        (isActive ? '#fff' : 'rgba(255,255,255,.38)') + ';white-space:nowrap;font-family:DM Sans,sans-serif;transition:all .15s';
+      btn.textContent = kat.icon + ' ' + kat.label;
+      btn.onclick = (function(id){ return function(){
+        _currentKat = id;
+        renderSituationen();
+      }; })(kat.id);
+      filterDiv.appendChild(btn);
+    });
+  }
+  renderSitList();
+}
+
+function renderSitList(){
+  var list = document.getElementById('sit-list');
+  if(!list) return;
+  var filtered = _currentKat === 'all' ? SITS : SITS.filter(function(s){ return s.k === _currentKat; });
+  var html = '';
+  filtered.forEach(function(s, idx){
+    var fragenHtml = '';
+    (s.fq || []).forEach(function(frage, fi){
+      var lid = 'l' + idx + '_' + fi;
+      fragenHtml += '<div style="background:rgba(0,0,0,.2);border-radius:8px;padding:.6rem;margin-bottom:.45rem">' +
+        '<div style="font-size:.6rem;font-weight:700;color:var(--d4);margin-bottom:.2rem">FRAGE ' + (fi+1) + '</div>' +
+        '<div style="font-size:.8rem;font-weight:600;margin-bottom:.35rem">' + (frage||'') + '</div>' +
+        '<button onclick="toggleLoes(\'' + lid + '\',this)" style="background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.2);color:var(--d4);font-size:.68rem;font-weight:600;padding:2px 10px;border-radius:6px;cursor:pointer;font-family:DM Sans,sans-serif">Loesung</button>' +
+        '<div id="' + lid + '" style="display:none;margin-top:.4rem;font-size:.76rem;line-height:1.5;color:rgba(255,255,255,.78);background:rgba(255,255,255,.03);border-radius:6px;padding:.5rem">' + ((s.fa||[])[fi]||'') + '</div>' +
+      '</div>';
+    });
+    html += '<div style="margin-bottom:1.2rem">' +
+      '<div style="display:flex;align-items:center;gap:7px;margin-bottom:.55rem">' +
+        '<div style="width:26px;height:26px;border-radius:7px;background:rgba(217,119,6,.12);border:1px solid rgba(217,119,6,.2);display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:800;color:var(--d4);flex-shrink:0">' + (s.id || (idx+1)) + '</div>' +
+        '<div style="font-family:Syne,sans-serif;font-weight:700;font-size:.85rem">' + (s.n||'') + '</div>' +
+      '</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.55rem">' +
+        '<div style="background:rgba(13,148,136,.04);border:1px solid rgba(13,148,136,.12);border-radius:11px;padding:.85rem">' +
+          '<div style="font-size:.6rem;font-weight:700;color:var(--d1);margin-bottom:.5rem;letter-spacing:.4px">THEORIE</div>' +
+          '<div style="font-size:.65rem;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.2rem">Ursachen</div>' +
+          '<ul style="list-style:none;padding:0;margin-bottom:.45rem">' +
+            (s.uc||[]).map(function(u){ return '<li style="font-size:.72rem;padding:1px 0 1px 10px;position:relative;line-height:1.35"><span style="position:absolute;left:0;color:var(--d1)">›</span>' + u + '</li>'; }).join('') +
+          '</ul>' +
+          '<div style="font-size:.65rem;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.2rem">Massnahmen</div>' +
+          '<ul style="list-style:none;padding:0;margin-bottom:.45rem">' +
+            (s.tu||[]).slice(0,4).map(function(t){ return '<li style="font-size:.72rem;padding:1px 0 1px 10px;position:relative;line-height:1.35"><span style="position:absolute;left:0;color:var(--d1)">›</span>' + t + '</li>'; }).join('') +
+          '</ul>' +
+          (s.km ? '<div style="font-size:.68rem;font-style:italic;color:#5bc8bf;margin-bottom:.4rem;line-height:1.35">' + s.km + '</div>' : '') +
+          '<div style="background:rgba(220,38,38,.07);border:1px solid rgba(220,38,38,.12);border-radius:5px;padding:.4rem;font-size:.67rem;color:#f87171">Alarm: ' + (s.al||'') + '</div>' +
+        '</div>' +
+        '<div style="background:rgba(217,119,6,.04);border:1px solid rgba(217,119,6,.12);border-radius:11px;padding:.85rem">' +
+          '<div style="font-size:.6rem;font-weight:700;color:var(--d4);margin-bottom:.5rem;letter-spacing:.4px">FALL</div>' +
+          '<div style="font-size:.72rem;font-weight:600;margin-bottom:.35rem;line-height:1.3">' + (s.ft||'') + '</div>' +
+          '<div style="font-size:.7rem;color:rgba(255,255,255,.5);margin-bottom:.55rem;line-height:1.4">' + (s.fs||'') + '</div>' +
+          fragenHtml +
+          (s.mk ? '<div style="background:rgba(245,200,66,.05);border:1px solid rgba(245,200,66,.15);border-radius:6px;padding:.5rem;font-size:.7rem;color:#f5c842;margin-top:.35rem">Merken: ' + s.mk + '</div>' : '') +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  });
+  list.innerHTML = html;
+}
+
+function toggleLoes(id, btn){
+  var box = document.getElementById(id);
+  if(!box) return;
+  var isHidden = box.style.display === 'none';
+  box.style.display = isHidden ? 'block' : 'none';
+  btn.textContent = isHidden ? 'Verbergen' : 'Loesung';
+  if(isHidden){ addPoints(3); updateTopBar(); }
+}
 
 
 function escRegex(s){
