@@ -1,12 +1,11 @@
-import Stripe from 'stripe';
-import { Redis } from '@upstash/redis';
-import { randomUUID } from 'crypto';
+const Stripe = require('stripe');
+const { Redis } = require('@upstash/redis');
+const { randomUUID } = require('crypto');
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-const redis = Redis.fromEnv();
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
   const sig = req.headers['stripe-signature'];
@@ -24,16 +23,16 @@ export default async function handler(req, res) {
     const email = session.customer_details?.email;
     const name = session.customer_details?.name?.split(' ')[0] || 'Lernende/r';
 
-    // Générer un token unique
-    const token = randomUUID();
+    const redis = new Redis({
+      url: process.env.KV_REST_API_URL,
+      token: process.env.KV_REST_API_TOKEN,
+    });
 
-    // Stocker le token dans Redis (valide 365 jours)
+    const token = randomUUID();
     await redis.set(`token:${token}`, email, { ex: 31536000 });
 
-    // Lien d'accès V5
     const accessLink = `https://pflegelearn.site/PflegeLearn_V5.html?token=${token}`;
 
-    // Envoyer email Brevo
     await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
       headers: {
@@ -54,9 +53,9 @@ export default async function handler(req, res) {
   res.json({ received: true });
 }
 
-export const config = { api: { bodyParser: false } };
+module.exports.config = { api: { bodyParser: false } };
 
-async function getRawBody(req) {
+function getRawBody(req) {
   return new Promise((resolve, reject) => {
     let data = '';
     req.on('data', chunk => (data += chunk));
