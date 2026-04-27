@@ -1,6 +1,27 @@
 <!DOCTYPE html>
 <html lang="de">
-<head>
+<head><script>
+  (async function() {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+    
+    if (!token) {
+      window.location.href = 'https://pflegelearn.site';
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/verify-token?token=' + token);
+      const data = await res.json();
+      
+      if (!data.valid) {
+        window.location.href = 'https://pflegelearn.site';
+      }
+    } catch (e) {
+      window.location.href = 'https://pflegelearn.site';
+    }
+  })();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#080c14">
