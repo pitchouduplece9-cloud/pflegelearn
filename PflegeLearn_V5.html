@@ -1527,6 +1527,52 @@ function show(id,flex){ var el=$(id); if(el) el.style.display=flex?'flex':'block
 function domain_color(d){ return d ? d.color : 'var(--d1)' }
 
 // ── INIT ──
+
+function renderKB(){
+  var container = document.getElementById('view-kb');
+  if(!container) return;
+  if(typeof KB_DATA !== 'undefined'){
+    _renderKBData(container);
+  } else {
+    container.innerHTML = '<div style="padding:2rem;text-align:center;color:rgba(255,255,255,.5)"><div style="font-size:2rem;margin-bottom:.5rem">🩺</div><div>Krankheitsbilder werden geladen...</div></div>';
+    setTimeout(function(){
+      if(typeof KB_DATA !== 'undefined') _renderKBData(container);
+    }, 500);
+  }
+}
+
+function _renderKBData(container){
+  var data = KB_DATA;
+  var cats = Object.keys(data);
+  var html = '<div style="padding:.5rem 1rem 1rem">';
+  html += '<div style="font-family:Syne,sans-serif;font-weight:800;font-size:1.2rem;padding:.8rem 0 .5rem">🩺 Krankheitsbilder</div>';
+  cats.forEach(function(catName){
+    var cat = data[catName];
+    html += '<div style="margin-bottom:.5rem">';
+    html += '<div style="font-size:.65rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:'+cat.farbe+';margin:.8rem 0 .4rem;padding:.2rem .6rem;background:'+cat.farbe+'18;border-radius:999px;display:inline-block">'+catName+'</div>';
+    (cat.krankheiten||[]).forEach(function(kr,ki){
+      var uid = 'kb_'+ki+'_'+catName.replace(/\s/g,'_');
+      html += '<div id="'+uid+'" style="background:#141c2e;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:.9rem 1rem;margin-bottom:.5rem;cursor:pointer" onclick="toggleKB(this)">';
+      html += '<div style="display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:.88rem">';
+      html += '<span>'+kr.name+'</span><span style="color:rgba(255,255,255,.3)">›</span></div>';
+      html += '<div class="kb-body" style="display:none;margin-top:.7rem;padding-top:.7rem;border-top:1px solid rgba(255,255,255,.07)">';
+      if(kr.definition) html += '<div style="font-size:.75rem;color:rgba(255,255,255,.7);margin-bottom:.5rem">'+kr.definition+'</div>';
+      if(kr.symptome&&kr.symptome.length) html += '<div style="font-size:.62rem;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.05em;margin:.4rem 0 .2rem">Symptome</div><ul style="list-style:none;padding:0">'+kr.symptome.map(function(s){return '<li style="font-size:.75rem;padding:.15rem 0 .15rem .8rem;position:relative"><span style="position:absolute;left:0;color:#7c3aed">›</span>'+s+'</li>';}).join('')+'</ul>';
+      if(kr.pflege&&kr.pflege.length) html += '<div style="font-size:.62rem;font-weight:700;color:#0d9488;text-transform:uppercase;letter-spacing:.05em;margin:.4rem 0 .2rem">Pflegerische Maßnahmen</div><ul style="list-style:none;padding:0">'+kr.pflege.map(function(s){return '<li style="font-size:.75rem;padding:.15rem 0 .15rem .8rem;position:relative"><span style="position:absolute;left:0;color:#0d9488">›</span>'+s+'</li>';}).join('')+'</ul>';
+      if(kr.merke) html += '<div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:.5rem .7rem;font-size:.74rem;color:#f5c842;margin-top:.4rem">⚠️ '+kr.merke+'</div>';
+      html += '</div></div>';
+    });
+    html += '</div>';
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function toggleKB(el){
+  var body = el.querySelector('.kb-body');
+  if(body) body.style.display = body.style.display === 'none' ? 'block' : 'none';
+}
+
 document.addEventListener('DOMContentLoaded', function(){
   loadState();
   renderDomainGrid();
@@ -1558,7 +1604,7 @@ function updateTopBar(){
 
 // ── NAV ──
 function setNavActive(key){
-  ['home','lern','sit','ki','profil'].forEach(function(k){
+  ['home','lern','sit','ki','profil','kb'].forEach(function(k){
     var el=$('nb-'+k);
     if(el) el.classList[k===key?'add':'remove']('on');
   });
@@ -1568,6 +1614,7 @@ function setNavActive(key){
 function showView(view){
   hide('view-home'); hide('view-modules'); hide('view-content');
   hide('view-ki'); hide('view-profil'); hide('view-situationen');
+  hide('view-kb');
   
   if(view==='home'){
     show('view-home'); setNavActive('home');
@@ -1600,7 +1647,7 @@ function showView(view){
   } else if(view==='situationen'){
     show('view-situationen'); setNavActive('sit');
     if(!window._sitRendered){ renderSituationen(); window._sitRendered=true; }
-    } else if(view==='kb'){
+  } else if(view==='kb'){
     hide('view-home'); hide('view-modules'); hide('view-content');
     hide('view-ki'); hide('view-profil'); hide('view-situationen');
     show('view-kb'); setNavActive('kb');
