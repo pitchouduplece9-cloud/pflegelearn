@@ -427,6 +427,9 @@ html,body{height:100%;background:#080d18;color:var(--text);font-family:DM Sans,s
 
   </div>
 <div id="view-kb" class="view" style="display:none"></div>
+  <!-- SCREEN: KRANKHEITSBILD -->
+  <div id="view-kb" class="view" style="display:none"></div>
+
   <!-- SCREEN: PROFIL -->
   <div id="view-profil" style="display:none">
     <div class="profil-screen">
@@ -472,6 +475,9 @@ html,body{height:100%;background:#080d18;color:var(--text);font-family:DM Sans,s
   </button>
   <button class="nb" id="nb-ki" onclick="showView('ki')">
     <span class="icon">🔍</span>Suchen
+  </button>
+  <button class="nb" id="nb-kb" onclick="showView('kb')">
+    <span class="icon">🩺</span>Krankheiten
   </button>
   <button class="nb" id="nb-profil" onclick="showView('profil')">
     <span class="icon">👤</span>Profil
@@ -1527,6 +1533,61 @@ function show(id,flex){ var el=$(id); if(el) el.style.display=flex?'flex':'block
 function domain_color(d){ return d ? d.color : 'var(--d1)' }
 
 // ── INIT ──
+function renderKB(){
+  var container = document.getElementById('view-kb');
+  if(!container) return;
+  var data = (typeof KB_DATA !== 'undefined') ? KB_DATA : {};
+  var cats = Object.keys(data);
+  if(!cats.length){
+    container.innerHTML = '<div style="padding:2rem;text-align:center;color:rgba(255,255,255,.4)"><div style="font-size:2rem;margin-bottom:.5rem">🩺</div><div>Lade Krankheitsbilder...</div></div>';
+    setTimeout(function(){ if(typeof KB_DATA!=='undefined') renderKB(); }, 1000);
+    return;
+  }
+  var html = '<div style="padding:.5rem 1rem 1rem">';
+  html += '<div style="font-family:Syne,sans-serif;font-weight:800;font-size:1.2rem;padding:.8rem 0 .6rem">🩺 Krankheitsbilder</div>';
+  cats.forEach(function(catName){
+    var cat = data[catName];
+    if(!cat||!cat.krankheiten) return;
+    html += '<div style="margin-bottom:.3rem">';
+    html += '<div style="font-size:.62rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:'+cat.farbe+';margin:.9rem 0 .4rem;padding:.2rem .65rem;background:'+cat.farbe+'1a;border-radius:999px;display:inline-block">'+catName+'</div>';
+    cat.krankheiten.forEach(function(kr,ki){
+      var uid = 'kb_'+ki+'_'+catName.replace(/[^a-z0-9]/gi,'_');
+      html += '<div id="'+uid+'" style="background:#141c2e;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:.85rem 1rem;margin-bottom:.45rem;cursor:pointer" onclick="kbToggle(this)">';
+      html += '<div style="display:flex;justify-content:space-between;align-items:center">';
+      html += '<span style="font-weight:700;font-size:.87rem">'+escHtml(kr.name)+'</span>';
+      html += '<span class="kb-arrow" style="color:rgba(255,255,255,.3);font-size:1rem;transition:transform .2s">›</span></div>';
+      html += '<div class="kb-body" style="display:none;margin-top:.7rem;padding-top:.7rem;border-top:1px solid rgba(255,255,255,.08)">';
+      if(kr.definition) html += '<p style="font-size:.76rem;color:rgba(255,255,255,.75);line-height:1.5;margin-bottom:.5rem">'+escHtml(kr.definition)+'</p>';
+      function kbSec(title,arr,col){
+        if(!arr||!arr.length) return '';
+        var s='<div style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:'+col+';margin:.45rem 0 .2rem">'+title+'</div><ul style="list-style:none;padding:0;margin:0">';
+        arr.forEach(function(x){s+='<li style="font-size:.75rem;line-height:1.45;padding:.12rem 0 .12rem .9rem;position:relative;color:rgba(255,255,255,.82)"><span style="position:absolute;left:0;color:'+col+'">›</span>'+escHtml(x)+'</li>';});
+        return s+'</ul>';
+      }
+      html += kbSec('Ursachen',kr.ursachen,'#0ea5e9');
+      html += kbSec('Symptome',kr.symptome,'#7c3aed');
+      html += kbSec('Diagnostik',kr.diagnostik,'#d97706');
+      html += kbSec('Therapie',kr.therapie,'#16a34a');
+      html += kbSec('Pflegerische Massnahmen',kr.pflege,'#0d9488');
+      if(kr.merke) html+='<div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.22);border-radius:8px;padding:.55rem .75rem;font-size:.75rem;color:#f5c842;margin-top:.55rem;line-height:1.4">&#9888; '+escHtml(kr.merke)+'</div>';
+      html += '</div></div>';
+    });
+    html += '</div>';
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function kbToggle(el){
+  var body = el.querySelector('.kb-body');
+  var arrow = el.querySelector('.kb-arrow');
+  if(!body) return;
+  var open = body.style.display !== 'none';
+  body.style.display = open ? 'none' : 'block';
+  if(arrow) arrow.style.transform = open ? '' : 'rotate(90deg)';
+}
+
+
 document.addEventListener('DOMContentLoaded', function(){
   loadState();
   renderDomainGrid();
@@ -1558,7 +1619,7 @@ function updateTopBar(){
 
 // ── NAV ──
 function setNavActive(key){
-  ['home','lern','sit','ki','profil'].forEach(function(k){
+  ['home','lern','sit','ki','profil','kb'].forEach(function(k){
     var el=$('nb-'+k);
     if(el) el.classList[k===key?'add':'remove']('on');
   });
@@ -1568,6 +1629,7 @@ function setNavActive(key){
 function showView(view){
   hide('view-home'); hide('view-modules'); hide('view-content');
   hide('view-ki'); hide('view-profil'); hide('view-situationen');
+  hide('view-kb');
   
   if(view==='home'){
     show('view-home'); setNavActive('home');
@@ -1600,11 +1662,16 @@ function showView(view){
   } else if(view==='situationen'){
     show('view-situationen'); setNavActive('sit');
     if(!window._sitRendered){ renderSituationen(); window._sitRendered=true; }
-    } else if(view==='kb'){
+  } else if(view==='kb'){
     hide('view-home'); hide('view-modules'); hide('view-content');
     hide('view-ki'); hide('view-profil'); hide('view-situationen');
     show('view-kb'); setNavActive('kb');
     if(window.renderKB) renderKB();
+  } else if(view==='kb'){
+    hide('view-home'); hide('view-modules'); hide('view-content');
+    hide('view-ki'); hide('view-profil'); hide('view-situationen');
+    show('view-kb'); setNavActive('kb');
+    renderKB();
   } else if(view==='profil'){
     show('view-profil'); setNavActive('profil');
     renderProfil();
