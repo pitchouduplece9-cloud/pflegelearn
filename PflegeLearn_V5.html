@@ -1558,7 +1558,7 @@ function updateTopBar(){
 
 // ── NAV ──
 function setNavActive(key){
-  ['home','lern','sit','ki','profil','kb'].forEach(function(k){
+  ['home','lern','sit','ki','profil'].forEach(function(k){
     var el=$('nb-'+k);
     if(el) el.classList[k===key?'add':'remove']('on');
   });
@@ -1568,7 +1568,6 @@ function setNavActive(key){
 function showView(view){
   hide('view-home'); hide('view-modules'); hide('view-content');
   hide('view-ki'); hide('view-profil'); hide('view-situationen');
-  hide('view-kb');
   
   if(view==='home'){
     show('view-home'); setNavActive('home');
