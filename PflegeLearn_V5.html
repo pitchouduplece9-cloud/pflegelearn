@@ -1531,35 +1531,41 @@ function domain_color(d){ return d ? d.color : 'var(--d1)' }
 function renderKB(){
   var container = document.getElementById('view-kb');
   if(!container) return;
-  if(typeof KB_DATA !== 'undefined'){
-    _renderKBData(container);
-  } else {
-    container.innerHTML = '<div style="padding:2rem;text-align:center;color:rgba(255,255,255,.5)"><div style="font-size:2rem;margin-bottom:.5rem">🩺</div><div>Krankheitsbilder werden geladen...</div></div>';
-    setTimeout(function(){
-      if(typeof KB_DATA !== 'undefined') _renderKBData(container);
-    }, 500);
-  }
-}
-
-function _renderKBData(container){
-  var data = KB_DATA;
+  var data = (typeof KB_DATA !== 'undefined') ? KB_DATA : {};
   var cats = Object.keys(data);
+  if(!cats.length){
+    container.innerHTML = '<div style="padding:2rem 1rem;text-align:center;color:rgba(255,255,255,.4)"><div style="font-size:2rem">🩺</div><div style="margin-top:.5rem">Krankheitsbilder werden geladen...</div></div>';
+    return;
+  }
   var html = '<div style="padding:.5rem 1rem 1rem">';
-  html += '<div style="font-family:Syne,sans-serif;font-weight:800;font-size:1.2rem;padding:.8rem 0 .5rem">🩺 Krankheitsbilder</div>';
+  html += '<div style="font-family:Syne,sans-serif;font-weight:800;font-size:1.2rem;padding:.8rem 0 .6rem">🩺 Krankheitsbilder</div>';
   cats.forEach(function(catName){
     var cat = data[catName];
-    html += '<div style="margin-bottom:.5rem">';
-    html += '<div style="font-size:.65rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:'+cat.farbe+';margin:.8rem 0 .4rem;padding:.2rem .6rem;background:'+cat.farbe+'18;border-radius:999px;display:inline-block">'+catName+'</div>';
-    (cat.krankheiten||[]).forEach(function(kr,ki){
-      var uid = 'kb_'+ki+'_'+catName.replace(/\s/g,'_');
-      html += '<div id="'+uid+'" style="background:#141c2e;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:.9rem 1rem;margin-bottom:.5rem;cursor:pointer" onclick="toggleKB(this)">';
-      html += '<div style="display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:.88rem">';
-      html += '<span>'+kr.name+'</span><span style="color:rgba(255,255,255,.3)">›</span></div>';
-      html += '<div class="kb-body" style="display:none;margin-top:.7rem;padding-top:.7rem;border-top:1px solid rgba(255,255,255,.07)">';
-      if(kr.definition) html += '<div style="font-size:.75rem;color:rgba(255,255,255,.7);margin-bottom:.5rem">'+kr.definition+'</div>';
-      if(kr.symptome&&kr.symptome.length) html += '<div style="font-size:.62rem;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.05em;margin:.4rem 0 .2rem">Symptome</div><ul style="list-style:none;padding:0">'+kr.symptome.map(function(s){return '<li style="font-size:.75rem;padding:.15rem 0 .15rem .8rem;position:relative"><span style="position:absolute;left:0;color:#7c3aed">›</span>'+s+'</li>';}).join('')+'</ul>';
-      if(kr.pflege&&kr.pflege.length) html += '<div style="font-size:.62rem;font-weight:700;color:#0d9488;text-transform:uppercase;letter-spacing:.05em;margin:.4rem 0 .2rem">Pflegerische Maßnahmen</div><ul style="list-style:none;padding:0">'+kr.pflege.map(function(s){return '<li style="font-size:.75rem;padding:.15rem 0 .15rem .8rem;position:relative"><span style="position:absolute;left:0;color:#0d9488">›</span>'+s+'</li>';}).join('')+'</ul>';
-      if(kr.merke) html += '<div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:.5rem .7rem;font-size:.74rem;color:#f5c842;margin-top:.4rem">⚠️ '+kr.merke+'</div>';
+    if(!cat||!cat.krankheiten) return;
+    html += '<div style="margin-bottom:.3rem">';
+    html += '<div style="font-size:.62rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:'+cat.farbe+';margin:.9rem 0 .4rem;padding:.2rem .65rem;background:'+cat.farbe+'1a;border-radius:999px;display:inline-block">'+escHtml(catName)+'</div>';
+    cat.krankheiten.forEach(function(kr, ki){
+      var uid = 'kb_'+ki+'_'+catName.replace(/[^a-zA-Z0-9]/g,'_');
+      html += '<div id="'+uid+'" style="background:#141c2e;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:.85rem 1rem;margin-bottom:.45rem;cursor:pointer" onclick="kbToggle(this)">';
+      html += '<div style="display:flex;justify-content:space-between;align-items:center">';
+      html += '<span style="font-weight:700;font-size:.87rem">'+escHtml(kr.name)+'</span>';
+      html += '<span style="color:rgba(255,255,255,.3);font-size:1rem;transition:transform .2s" class="kb-arrow">›</span></div>';
+      html += '<div class="kb-body" style="display:none;margin-top:.7rem;padding-top:.7rem;border-top:1px solid rgba(255,255,255,.08)">';
+      if(kr.definition) html += '<p style="font-size:.76rem;color:rgba(255,255,255,.75);line-height:1.5;margin-bottom:.5rem">'+escHtml(kr.definition)+'</p>';
+      function kbList(title, items, color){
+        if(!items||!items.length) return '';
+        var s = '<div style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:'+color+';margin:.5rem 0 .25rem">'+title+'</div>';
+        s += '<ul style="list-style:none;padding:0;margin:0">';
+        items.forEach(function(x){ s += '<li style="font-size:.75rem;line-height:1.45;padding:.15rem 0 .15rem .9rem;position:relative;color:rgba(255,255,255,.82)"><span style="position:absolute;left:0;color:'+color+'">›</span>'+escHtml(x)+'</li>'; });
+        s += '</ul>';
+        return s;
+      }
+      html += kbList('Ursachen', kr.ursachen, '#0ea5e9');
+      html += kbList('Symptome', kr.symptome, '#7c3aed');
+      html += kbList('Diagnostik', kr.diagnostik, '#d97706');
+      html += kbList('Therapie', kr.therapie, '#16a34a');
+      html += kbList('Pflegerische Maßnahmen', kr.pflege, '#0d9488');
+      if(kr.merke) html += '<div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.22);border-radius:8px;padding:.55rem .75rem;font-size:.75rem;color:#f5c842;margin-top:.55rem;line-height:1.4">⚠️ '+escHtml(kr.merke)+'</div>';
       html += '</div></div>';
     });
     html += '</div>';
@@ -1568,10 +1574,15 @@ function _renderKBData(container){
   container.innerHTML = html;
 }
 
-function toggleKB(el){
+function kbToggle(el){
   var body = el.querySelector('.kb-body');
-  if(body) body.style.display = body.style.display === 'none' ? 'block' : 'none';
+  var arrow = el.querySelector('.kb-arrow');
+  if(!body) return;
+  var open = body.style.display !== 'none';
+  body.style.display = open ? 'none' : 'block';
+  if(arrow) arrow.style.transform = open ? '' : 'rotate(90deg)';
 }
+
 
 document.addEventListener('DOMContentLoaded', function(){
   loadState();
