@@ -1,871 +1,156 @@
-// krankheitsbild.js — PflegeLearn Pro
-// 35 Krankheiten originaux + Schwangerschaft & Geburtshilfe complet
-// Version 2.0
+// ─── KRANKHEITSBILD KOMPAKT DATA ───
+const KB_DATA=[
+{cat:"Innere Medizin",icon:"❤️",bg:"#FAECE7",name:"Herzinfarkt",def:"Akuter Verschluss einer Koronararterie durch Thrombus → Myokardnekrose. Lebensbedrohlicher Notfall — jede Minute zählt.",u:"Koronararterie durch Thrombus verschlossen",s:"Vernichtungsschmerz, Atemnot, Übelkeit, Kaltschweiß",r:"Rauchen, Hypertonie, Diabetes, Adipositas",d:"EKG (ST-Hebung), Troponin, Herzkatheter",t:"Lyse, PCI, ASS, Heparin, Beta-Blocker",p:"Oberkörper hoch, O₂, Monitoring, Angst nehmen, absolute Ruhe"},
+{cat:"Innere Medizin",icon:"💙",bg:"#E6F1FB",name:"Herzinsuffizienz",def:"Herz kann nicht ausreichend Blut pumpen. Links-, rechts- oder globalinsuffizient. Häufigste Hospitalisierungsursache im Alter.",u:"Pumpschwäche (KHK, Hypertonie, Kardiomyopathie)",s:"Dyspnoe, Knöchelödeme, Gewichtszunahme, Nykturie",r:"KHK, Hypertonie, Diabetes, Herzklappenfehler",d:"Echo, BNP/NT-proBNP, EKG, Röntgen",t:"Diuretika, ACE-Hemmer, Beta-Blocker",p:"Tägliche Gewichtskontrolle, Flüssigkeitsbilanz, Oberkörper hoch"},
+{cat:"Innere Medizin",icon:"🩸",bg:"#FAEEDA",name:"Diabetes Typ 2",def:"Insulinresistenz + relatives Insulindefizit → Hyperglykämie. Führt zu Mikro- und Makroangiopathie (Niere, Retina, Nerven, KHK).",u:"Insulinresistenz, genetisch, Lebensstil",s:"Polyurie, Polydipsie, Müdigkeit, Sehstörung",r:"Übergewicht, Bewegungsmangel, Alter, familiär",d:"Nüchtern-BZ ≥126 mg/dl, HbA1c ≥6,5%",t:"Lebensstil, Metformin, SGLT2-Hemmer, Insulin",p:"BZ-Kontrolle, Fußinspektion täglich, Schulung, Ernährungsberatung"},
+{cat:"Innere Medizin",icon:"🫁",bg:"#E1F5EE",name:"COPD",def:"Irreversible Atemwegsobstruktion durch chronische Entzündung. GOLD I–IV. Hauptursache: Rauchen (>90%).",u:"Rauchen, Schadstoffe → chronische Bronchitis + Emphysem",s:"Husten (morgens), Auswurf, Belastungsdyspnoe",r:"Rauchen, Umweltverschmutzung, Alpha-1-Antitrypsinmangel",d:"Spirometrie (FEV1/FVC <0,7), BGA, Röntgen",t:"Bronchodilatatoren, ICS, O₂-Langzeittherapie",p:"Lippenbremse, Kutschersitz, Atemübungen, Rauchstopp fördern"},
+{cat:"Innere Medizin",icon:"🌡️",bg:"#EAF3DE",name:"Pneumonie",def:"Akute Lungenparenchymentzündung. Bei Älteren oft atypisch (Verwirrtheit statt Fieber). Aspirationspneumonie häufig in Pflege.",u:"Pneumokokken, Viren, Aspiration",s:"Fieber, produktiver Husten, Dyspnoe, Thoraxschmerz",r:"Alter, Bettlägerigkeit, Schluckstörung, Immunsuppression",d:"Röntgen Thorax, CRP, PCT, Blutkultur",t:"Antibiotika, O₂, Antipyretika",p:"Atemübungen, Mobilisation früh, Aspirationsprophylaxe"},
+{cat:"Innere Medizin",icon:"🩺",bg:"#EEEDFE",name:"Thrombose (TVT)",def:"Blutgerinnsel in tiefer Vene. Virchow-Trias: Stase, Hyperkoagulabilität, Gefäßwandschaden. Hauptgefahr: Lungenembolie.",u:"Stase, Hyperkoagulabilität, Gefäßwandschaden",s:"Schwellung, Schmerz, Überwärmung, Rötung (Bein)",r:"Immobilität, OP, Pille, Schwangerschaft, Karzinom",d:"Duplex-Sonografie, D-Dimer",t:"Antikoagulation (Heparin → NOAK), Kompression",p:"Kompressionsstrümpfe, Mobilisation früh, KEINE Massage!"},
+{cat:"Innere Medizin",icon:"⚡",bg:"#FCEBEB",name:"Lungenembolie",def:"Akuter Verschluss einer Lungenarterie durch Embolus (meist TVT). Massive LE → kardiogener Schock.",u:"Embolus aus tiefer Beinvenenthrombose",s:"Plötzliche Dyspnoe, Tachykardie, Angst, Brustschmerz",r:"TVT, Immobilität, Thrombophilie, Karzinom",d:"CT-Pulmonalisangiografie, D-Dimer, EKG",t:"Antikoagulation, Lyse bei Schock, O₂",p:"Monitoring (SpO₂, RR, HF), O₂, Bettruhe, Angst nehmen"},
+{cat:"Innere Medizin",icon:"💧",bg:"#E6F1FB",name:"Niereninsuffizienz",def:"Chronischer Nephronverlust → GFR-Reduktion. CKD Stadien 1–5. Stadium 5 = Nierenersatztherapie.",u:"Diabetes, Hypertonie → Nephronverlust",s:"Ödeme, Müdigkeit, Oligurie, Juckreiz, Übelkeit",r:"Diabetes Typ 2, Hypertonie, Glomerulonephritis",d:"Kreatinin, eGFR, Urinprotein, Sonografie",t:"Ursachentherapie, Dialyse, Transplantation",p:"Flüssigkeitsbilanz, Gewicht täglich, Hautpflege, Diät beachten"},
+{cat:"Innere Medizin",icon:"🩸",bg:"#FCEBEB",name:"Sepsis",def:"Lebensbedrohliche Organdysfunktion durch dysregulierte Immunantwort. SOFA-Score ≥2. Mortalität 30–50% bei Schock.",u:"Systemische Infektion → überschießende Immunantwort",s:"Fieber/Hypothermie, Tachykardie, Tachypnoe, Hypotonie",r:"Immunschwäche, Alter, Katheter, OP, Diabetes",d:"Blutkultur (vor Antibiotika!), Laktat, SOFA-Score",t:"Antibiotika (innerhalb 1h!), Volumen, Vasopressoren",p:"Engmaschiges Monitoring, Bilanz, Hygienestandards"},
+{cat:"Neurologie",icon:"🧠",bg:"#EEEDFE",name:"Schlaganfall",def:"Akute Hirnischämie (85%) oder Blutung (15%). FAST: Face, Arms, Speech, Time. Time is Brain!",u:"Ischämie (Thrombus/Embolie) oder intrazerebrale Blutung",s:"Hemiparese, Aphasie, Sehstörung, Schwindel",r:"Hypertonie, Vorhofflimmern, Diabetes, Rauchen",d:"CT (Blutung!), MRT, Doppler",t:"Lyse (bis 4,5h), Thrombektomie, Stroke Unit",p:"Aspirationsprophylaxe, Lagerung, Schluckassessment, frühe Mobilisation"},
+{cat:"Neurologie",icon:"🧩",bg:"#E1F5EE",name:"Demenz / Alzheimer",def:"Chronisch progrediente neurodegenerative Erkrankung. Alzheimer = 60%. Kurzzeitgedächtnis zuerst betroffen.",u:"Amyloid-Plaques, Tau-Fibrillen → Nervenzelluntergang",s:"Kurzzeitgedächtnisverlust, Desorientierung, Persönlichkeitsänderung",r:"Hohes Alter, APOE4, familiär, Diabetes",d:"Mini-Mental-Status, Uhrentest, MRT",t:"Acetylcholinesterasehemmer (symptomatisch)",p:"Biographiearbeit, Validation, Orientierungshilfen, Sicherheit"},
+{cat:"Neurologie",icon:"🤲",bg:"#FAEEDA",name:"Parkinson",def:"Degeneration dopaminerger Neurone in Substantia nigra. TRAP: Tremor, Rigor, Akinese, Posturale Instabilität.",u:"Dopaminmangel in Substantia nigra (idiopathisch)",s:"Ruhetremor (Pillendreher), Rigor, Bradykinese, Maskengesicht",r:"Hohes Alter (>60 J.), genetisch selten",d:"Klinische Diagnose, L-Dopa-Test, MRT",t:"L-Dopa (Goldstandard), Dopaminagonisten",p:"Mobilisation, Sturzprophylaxe, Sprachtherapie, Einnahmezeiten exakt"},
+{cat:"Neurologie",icon:"⚡",bg:"#FAECE7",name:"Epilepsie",def:"Wiederkehrende epileptische Anfälle durch neuronale Übererregung. Fokal oder generalisiert. Anfallsdokumentation wichtig.",u:"Neuronale Übererregung (idiopathisch, Hirnschaden, Fieber)",s:"Krampfanfälle, Bewusstlosigkeit, Zungenbiss, postiktale Verwirrtheit",r:"Genetisch, Hirnverletzung, Fieberkrämpfe",d:"EEG, MRT, Labor",t:"Antiepileptika (Valproat, Levetiracetam)",p:"Schutz vor Verletzung, Anfallsprotokoll, KEIN Keil in Mund!"},
+{cat:"Psychiatrie",icon:"🌀",bg:"#EEEDFE",name:"Schizophrenie",def:"Schwere psychische Erkrankung mit Positiv- und Negativsymptomen. Prävalenz 1%. Erstmanifestation 18–25 J. (Männer), 25–35 J. (Frauen).",u:"Dopaminhypothese, genetisch, Stress, Cannabis",s:"Positivsymptome: Wahn, Halluzinationen, Ich-Störungen. Negativsymptome: Antriebslosigkeit, Affektverflachung, sozialer Rückzug",r:"Genetische Belastung, Cannabis, perinatale Komplikationen",d:"Klinisches Interview (ICD-10), Ausschluss organischer Ursachen, MRT",t:"Antipsychotika (Risperidon, Olanzapin, Clozapin), Psychotherapie",p:"Milieutherapie, Beziehungsaufbau, Realitätsorientierung, Medikamentencompliance"},
+{cat:"Psychiatrie",icon:"🌊",bg:"#E6F1FB",name:"Schizoaffektive Störung",def:"Kombination aus schizophrenen und affektiven Symptomen. Zwischen Schizophrenie und bipolarer Störung. Günstigere Prognose als Schizophrenie.",u:"Genetisch, neurobiologisch (Dopamin + Serotonin), Stress",s:"Gleichzeitig: Wahn/Halluzinationen UND depressive oder manische Episoden",r:"Genetische Belastung, Stress, Substanzkonsum",d:"Klinisches Interview, Ausschluss organischer Ursachen",t:"Antipsychotika + Stimmungsstabilisierer (Lithium, Valproat)",p:"Stimmungsmonitoring, Psychoedukation, Stabilisierung des Alltags, Krisenplan"},
+{cat:"Psychiatrie",icon:"🌪️",bg:"#FCEBEB",name:"Psychose",def:"Zustand mit Realitätsverlust: Wahn, Halluzinationen, Ich-Störungen. Kann bei Schizophrenie, bipolarer Störung, Drogen oder organisch auftreten.",u:"Schizophrenie, bipolare Störung, Drogen (Cannabis), organisch",s:"Wahnideen, akustische Halluzinationen, Desorganisation, Agitation",r:"Vulnerabilität + Stress, Schlafentzug, Drogen",d:"Klinische Diagnose, Drogenscreening, Labor, CT/MRT",t:"Antipsychotika (akut: Haloperidol/Olanzapin), stationär",p:"Ruhige Umgebung, deeskalierendes Auftreten, Sicherheit, Realitätsorientierung"},
+{cat:"Psychiatrie",icon:"💭",bg:"#E6F1FB",name:"Depression",def:"Kernsymptome: Traurigkeit, Antriebslosigkeit, Anhedonie. Häufigste psychische Erkrankung. Suizidrisiko immer einschätzen!",u:"Serotoninmangel, psychosoziale Faktoren, genetisch",s:"Traurigkeit, Antriebslosigkeit, Anhedonie, Schlafstörung, Suizidalität",r:"Stress, Trauma, familiär, chronische Erkrankungen",d:"PHQ-9, Hamilton-Depressionsskala, klinisches Interview",t:"SSRI (Sertralin, Escitalopram), Psychotherapie (KVT)",p:"Tagesstruktur, Gespräche, Suizidalität ansprechen (direkt!), Beziehung aufbauen"},
+{cat:"Psychiatrie",icon:"🎭",bg:"#FAEEDA",name:"Borderline-Persönlichkeitsstörung",def:"Emotional instabile Persönlichkeitsstörung. Instabilität in Affekt, Selbstbild und Beziehungen. Ursache: Trauma + Vulnerabilität. DBT ist Therapie der Wahl.",u:"Kindheitstrauma + genetische Vulnerabilität",s:"Affektlabilität, Selbstverletzung, Suizidversuche, Trennungsangst, Identitätsdiffusion",r:"Kindheitstrauma, Missbrauch, emotionale Vernachlässigung",d:"Klinisches Interview, SKID-II, DSM-5 (5 von 9 Kriterien)",t:"Dialektisch-behaviorale Therapie (DBT), Stimmungsstabilisierer",p:"Klare Grenzen setzen, konsistentes Verhalten, Krisen deeskalieren"},
+{cat:"Psychiatrie",icon:"🌸",bg:"#FBEAF0",name:"Anorexia nervosa",def:"Schwere Essstörung mit Untergewicht, Körperschemastörung und Gewichtsphobie. Höchste Mortalität aller psychiatrischen Erkrankungen.",u:"Psychosozial, genetisch, Schlankheitsdruck, Kontrollbedürfnis",s:"Extremes Untergewicht (BMI <17,5), Körperschemastörung, Amenorrhoe, Lanugo",r:"Weiblich, Adoleszenz, Leistungsdruck, Trauma",d:"BMI, Labor (Elektrolyte!), EKG (QT-Verlängerung)",t:"Stationäre Gewichtsstabilisierung, Ernährungstherapie, KVT",p:"Gewichtsdokumentation, Mahlzeitenbegleitung, kein Kommentieren des Körpers, Herzmonitoring"},
+{cat:"Psychiatrie",icon:"🌙",bg:"#EEEDFE",name:"Delir / Dämmerzustand",def:"Akute organische Hirnfunktionsstörung mit Bewusstseinsstörung. Häufig bei alten Menschen im Krankenhaus. Medizinischer Notfall — Ursache suchen!",u:"Organisch: Infekt, Medikamente, Alkoholentzug, Elektrolyte, Harnverhalt",s:"Bewusstseinstrübung, Desorientierung, Halluzinationen (optisch!), Unruhe oder Schläfrigkeit",r:"Hohes Alter, Demenz, Polypharmazie, Immobilität",d:"CAM-Score, Labor, Ausschluss Ursache",t:"Ursache behandeln! Haloperidol niedrig dosiert (symptomatisch)",p:"Orientierungshilfen (Uhr, Licht), ruhige Umgebung, Mobilisation, Fixierung vermeiden!"},
+{cat:"Dermatologie",icon:"🌿",bg:"#EAF3DE",name:"Ekzem / Neurodermitis",def:"Chronisch-entzündliche atopische Dermatitis. Häufigste Hauterkrankung im Kindesalter. Juckreiz-Kratz-Zyklus durchbrechen!",u:"Filaggrin-Mutation (Barrierestörung), Th2-Immunreaktion, Trigger: Stress, Wolle",s:"Starker Juckreiz (nachts!), trockene gerötete schuppige Haut, Ekzem-Herde",r:"Atopische Trias, familiär, Stress, Allergene",d:"Klinische Diagnose, IgE, Allergietest (Pricktest)",t:"Kortikosteroide (akut), Calcineurin-Inhibitoren, Dupilumab",p:"Hautpflege (Basistherapie!), Juckreizlinderung, kühle Umgebung, Trigger meiden"},
+{cat:"Dermatologie",icon:"🔴",bg:"#FAECE7",name:"Psoriasis (Schuppenflechte)",def:"Chronisch-entzündliche Autoimmunerkrankung. Nicht ansteckend! Beschleunigte Keratinozytenproliferation. Oft mit Psoriasis-Arthritis assoziiert.",u:"Autoimmun (T-Zell-vermittelt), genetisch (HLA-Cw6), Trigger: Stress, Infekte",s:"Silbrig-glänzende Schuppen auf rotem Grund, Ellenbogen, Knie, Kopfhaut, Tüpfelnägel",r:"Genetisch, Stress, Streptokokken, Rauchen, Alkohol",d:"Klinische Diagnose, PASI-Score, Biopsie bei Zweifel",t:"Topisch: Kortikosteroide, Vitamin-D-Analoga. Systemisch: Methotrexat, Biologika",p:"Hautpflege, Aufklärung (nicht ansteckend!), psychische Belastung wahrnehmen, Juckreiz lindern"},
+{cat:"Dermatologie",icon:"🌡️",bg:"#FAEEDA",name:"Kontaktdermatitis",def:"Entzündliche Hautreaktion durch direkten Kontakt. Allergisch (Typ-IV, verzögert) oder toxisch-irritativ (sofort). Berufsrisiko in der Pflege!",u:"Allergisch: Nickel, Latex, Duftstoffe. Irritativ: Desinfektionsmittel, Seifen",s:"Rötung, Bläschen, Juckreiz, Schwellung — exakt am Kontaktbereich",r:"Pflegeberufe!, Atopie, Feuchtarbeiten, Latexallergie",d:"Epikutantest (Patch-Test), Anamnese",t:"Allergenvermeidung, Kortikosteroide topisch, Antihistaminika",p:"Schutzhandschuhe (Baumwolle unter Latex!), Hautschutzplan, Pflegecreme nach Desinfektion"},
+{cat:"Dermatologie",icon:"💜",bg:"#EEEDFE",name:"Urtikaria (Nesselsucht)",def:"Akute (<6 Wochen) oder chronische (≥6 Wochen) Quaddel-Reaktion. Bei Angioödem: Anaphylaxiegefahr — Atemwege überwachen!",u:"IgE-vermittelt (Allergen), physikalisch (Kälte), idiopathisch (50%), Infekte",s:"Juckende Quaddeln (<24h flüchtig), Angioödem, bei Anaphylaxie: Hypotonie, Dyspnoe",r:"Allergie, Autoimmun, NSAR, ACE-Hemmer, Infekte",d:"Klinische Diagnose, IgE, Tryptase, Allergietest",t:"Antihistaminika (H1-Blocker), Kortikosteroide, Anaphylaxie: Adrenalin i.m.!",p:"Auslöser dokumentieren, Notfallset (Adrenalin-Autoinjektor) schulen, Angioödem: Atemwege!"},
+{cat:"Dermatologie",icon:"🌊",bg:"#E1F5EE",name:"Akne vulgaris",def:"Chronisch-entzündliche Erkrankung der Talgdrüsenfollikel. Häufigste Hauterkrankung der Adoleszenz (>85%). Psychische Belastung ernst nehmen!",u:"Seborrhoe, Hyperkeratose, Propionibacterium acnes, Androgene",s:"Komedonen, Papeln, Pusteln, Zysten, Narben",r:"Pubertät, Androgene, Stress, Kortison-Therapie",d:"Klinische Diagnose, Schweregrade I–IV",t:"Topisch: Benzoylperoxid, Retinoide. Systemisch: Antibiotika, Isotretinoin",p:"Aufklärung (nicht ausdrücken!), schonende Hautpflege, psychische Unterstützung"},
+{cat:"Dermatologie",icon:"🔵",bg:"#E6F1FB",name:"Rosacea",def:"Chronisch-entzündliche Gesichtserkrankung. Nicht heilbar, aber kontrollierbar. Augenbeteiligung (Rosacea ocularis) prüfen!",u:"Genetisch, Demodex-Milben, Gefäßdysregulation, Trigger: Hitze, Alkohol",s:"Dauerhaftes Gesichtserythem, Teleangiektasien, Papeln/Pusteln (ohne Komedonen!), Rhinophym",r:"Hellhäutig, Frauen 30–60 J., Stress, UV, Alkohol",d:"Klinische Diagnose, DLQI, Augenbeteiligung prüfen",t:"Topisch: Metronidazol, Ivermectin. Systemisch: Doxycyclin",p:"Trigger meiden (Alkohol, Hitze, Sonne), Lichtschutz, milde Hautpflege"},
+{cat:"Wunden/Gefässe",icon:"🦵",bg:"#FAECE7",name:"Ulcus cruris arteriosum",def:"Arteriell bedingtes Beingeschwür durch pAVK. Sehr schmerzhaft. Kompression ist KONTRAINDIZIERT! Ohne Revaskularisation droht Amputation.",u:"pAVK → Durchblutungsstörung → Gewebeschaden",s:"Starke Schmerzen (Ruheschmerz!), trockene Nekrose, kalte blasse Haut",r:"Rauchen!, Diabetes, Hypertonie, Hypercholesterinämie",d:"ABI (<0,9 pathologisch), Doppler, Angiografie",t:"Revaskularisation (PTA, Bypass), Schmerztherapie, Wundversorgung",p:"Beine TIEF lagern!, Wärme, KEINE Kompression, Rauchstopp, Fußpflege"},
+{cat:"Wunden/Gefässe",icon:"🦵",bg:"#E1F5EE",name:"Ulcus cruris venosum",def:"Venöses Beingeschwür durch CVI. Häufigste Ulkusform (70%). Medialer Unterschenkel. Wenig Schmerz. Kompression ist die Haupttherapie!",u:"CVI → venöse Hypertonie → Dermatoliposklerose → Ulkus",s:"Nässende Wunde, Ödeme, braun-livide Haut, Schmerzen gering",r:"Varikosis, Bewegungsmangel, Adipositas, langes Stehen",d:"Inspektion, Doppler, ABI (Ausschluss arteriell!)",t:"Kompressionstherapie (Hauptsäule!), feuchte Wundversorgung",p:"Kompressionsverband, Mobilisation (Wadenpumpe!), Beine hochlagern, Hautpflege"},
+{cat:"Chirurgie/Geriatrie",icon:"🦴",bg:"#FAEEDA",name:"Fraktur",def:"Knochenbruch durch Trauma oder Osteoporose. Häufigste geriatrische Fraktur: proximale Femurfraktur. OP-Ziel: innerhalb 24h.",u:"Trauma, Sturz, Osteoporose (Insuffizienzfraktur)",s:"Schmerz, Schwellung, Fehlstellung, Bewegungseinschränkung",r:"Sturz, Osteoporose, hohes Alter, Kortison-Langzeittherapie",d:"Röntgen, CT bei komplexen Frakturen",t:"Konservativ (Gips) oder operativ (Osteosynthese, Endoprothese)",p:"Mobilisation früh!, Schmerzbeobachtung, Thromboseprophylaxe"},
+{cat:"Chirurgie/Geriatrie",icon:"⚠️",bg:"#FAEEDA",name:"Sturzsyndrom",def:"Wiederkehrendes Stürzen älterer Menschen. Multifaktoriell. Post-Fall-Syndrom: Sturzangst → Inaktivität → erneuter Sturz.",u:"Muskelschwäche, Gleichgewichtsstörung, Medikamente, Sehminderung",s:"Wiederholte Stürze, Gangunsicherheit, Sturzangst",r:"Hohes Alter, Polypharmazie, Demenz, Parkinson",d:"Morse Fall Scale, Timed Up and Go, Medikamentencheck",t:"Physiotherapie, Medikamentenoptimierung, Hilfsmittel",p:"Rollator/Gehstock, Umgebungssicherheit, Hüftprotektoren, Schuhe prüfen"},
+{cat:"Chirurgie/Geriatrie",icon:"🩹",bg:"#FCEBEB",name:"Dekubitus",def:"Druckbedingte Gewebeschädigung durch Ischämie. EPUAP Grad I–IV. Prävention hat höchste Priorität — meist vermeidbar!",u:"Anhaltender Druck → Ischämie → Zellnekrose",s:"Grad I: Rötung. II: Blase. III: Kraterwunde. IV: Nekrose bis Knochen",r:"Immobilität, Inkontinenz, Mangelernährung, Diabetes",d:"Inspektion, Braden-Skala (≤18 = Risiko), Fotodokumentation",t:"Druckentlastung, Wundversorgung nach Grad, Ernährungsoptimierung",p:"2-h-Umlagerung, Druckverteilungsmatratze, Hautpflege, Dokumentation"}
 
-var KB_DATA = {
+,
+// ─── DEMENZ – PFLEGERISCHER UMGANG ───
+{cat:"Psychiatrie",icon:"🌫️",bg:"#EAE6F5",name:"Demenz – Pflegerischer Umgang & Kommunikation",def:"Menschen mit Demenz leben in ihrer eigenen Realität. Pflege bedeutet: zu ihnen gehen, nicht sie zu uns holen. Würde, Biografie und Emotion stehen im Mittelpunkt.",u:"Alzheimer (65%), vaskuläre Demenz (25%), Lewy-Body, frontotemporale Demenz – alle führen zu kognitiver, emotionaler und sozialer Veränderung",s:"Kurzzeitgedächtnis ↓, Desorientierung, Persönlichkeitsveränderung, Weglauftendenz, Agitation, Sundowning, Apathie, Aggression",r:"Alter, genetische Faktoren, vaskuläre Risikofaktoren, Isolation, Schlafmangel, Depressionen",d:"MMST (< 27 = auffällig, < 10 = schwer), DemTect, Uhrentest, CT/MRT zum Ausschluss anderer Ursachen",t:"Cholinesterasehemmer (leicht–mittel), Memantin (schwer), Validation, Biografiearbeit, Musiktherapie, Tagesstruktur",p:"KOMMUNIKATION: Augenkontakt herstellen, auf Augenhöhe gehen, kurze einfache Sätze, einen Gedanken pro Satz, Namen statt Pronomen, niemals korrigieren oder widersprechen, Gefühle ansprechen nicht Fakten. UMGANG: Würde wahren – nie über Patient hinwegsprechen, Routine beibehalten (Sicherheit!), Biografie nutzen (Lieblingsmusik, Beruf, Gewohnheiten), Selbstständigkeit so lange wie möglich fördern. HERAUSFORDERNDES VERHALTEN: Aggression → Ursache suchen (Schmerz? Hunger? Angst?), Pflege pausieren. Weglaufen → begleiten statt aufhalten, Türalarm, GPS. Sundowning → Licht anlassen, Musik, ruhige Aktivität. SICHERHEIT: Stolperfallen entfernen, Nachtlicht, Medikamente sichern. Fixierung NUR mit Richtergenehmigung! (§ 1831 BGB)"},
 
-  // ════════════════════════════════════════════════
-  //  INNERE MEDIZIN
-  // ════════════════════════════════════════════════
-  "Innere Medizin": {
-    farbe: "#0ea5e9",
-    krankheiten: [
-      {
-        name: "Herzinsuffizienz",
-        definition: "Unfähigkeit des Herzens, ausreichend Blut zu pumpen. Links-, Rechts- oder Globalinsuffizienz.",
-        ursachen: ["KHK / Herzinfarkt (häufigste Ursache)", "Arterielle Hypertonie", "Herzklappenfehler", "Kardiomyopathie"],
-        symptome: ["Dyspnoe (Belastung → Ruhe → Orthopnoe)", "Beinödeme (Rechtsherz)", "Lungenödem (Linksherz)", "Nykturie, Gewichtszunahme", "NYHA I–IV"],
-        diagnostik: ["Echokardiografie (EF < 40% = HFrEF)", "BNP / NT-proBNP erhöht", "Röntgen Thorax", "EKG"],
-        therapie: ["ACE-Hemmer / ARNi", "Betablocker (Bisoprolol)", "MRA (Spironolacton)", "SGLT2-Hemmer", "Diuretika symptomatisch"],
-        pflege: ["Täglich wiegen! +2 kg in 2 Tagen → sofort Arzt", "Flüssigkeitsbilanz führen", "Oberkörperhochlagerung 30–45°", "O2 bei SpO2 < 92%", "Beinödeme: Hochlagern, Kompressionsstrümpfe"],
-        merke: "Tägliches Wiegen rettet Leben bei Herzinsuffizienz!"
-      },
-      {
-        name: "Arterielle Hypertonie",
-        definition: "Dauerhaft erhöhter Blutdruck ≥ 140/90 mmHg. Häufigste kardiovaskuläre Erkrankung.",
-        ursachen: ["Primär (essenziell, 90%)", "Sekundär: Nierenerkrankung, Phäochromozytom, Schlafapnoe"],
-        symptome: ["Meist symptomlos ('stiller Killer')", "Kopfschmerzen (okzipital)", "Schwindel, Nasenbluten", "Sehstörungen bei Krise"],
-        diagnostik: ["RR-Messung (5 Min Ruhe, sitzend)", "24h-Blutdruckmessung", "Labor: Niere, Elektrolyte"],
-        therapie: ["ACE-Hemmer, ARB, Kalziumantagonisten, Diuretika", "Lebensstil: Salz ↓, Sport, Gewicht ↓", "Ziel: < 130/80 mmHg"],
-        pflege: ["RR korrekt messen: 5 Min Ruhe, sitzend, beide Arme", "Betablocker NIE abrupt absetzen!", "Hypertensive Krise > 180/120 + Organschaden: sofort Arzt"],
-        merke: "Hypertensiver Notfall = > 180/120 + Organschaden → sofort i.v.-Therapie!"
-      },
-      {
-        name: "Myokardinfarkt",
-        definition: "Irreversibles Absterben von Herzmuskelgewebe durch Koronarverschluss.",
-        ursachen: ["Plaqueruptur + Thrombose in Koronararterie", "Arteriosklerose", "Risikofaktoren: Rauchen, Diabetes, Hypertonie"],
-        symptome: ["Vernichtungsschmerz retrosternal > 20 Min", "Ausstrahlung: linker Arm, Kiefer, Rücken", "Schweißausbruch, Übelkeit, Todesangst", "Atypisch bei Frauen/Diabetikern: nur Rückenschmerz, Erschöpfung"],
-        diagnostik: ["EKG (ST-Hebung = STEMI)", "Troponin I/T erhöht", "Koronarangiografie"],
-        therapie: ["STEMI: PCI < 90 Min! (Door-to-balloon)", "ASS + Ticagrelor", "O2 nur wenn SpO2 < 90%"],
-        pflege: ["112 sofort → Bettruhe → EKG → i.v.-Zugang", "Monitoring: EKG, RR, SpO2 kontinuierlich", "Patienten beruhigen!", "Nitro NICHT bei RR syst. < 90 mmHg"],
-        merke: "Zeit ist Myokard! PCI < 90 Min."
-      },
-      {
-        name: "Diabetes mellitus Typ 2",
-        definition: "Insulinresistenz + relativer Insulinmangel → chronische Hyperglykämie.",
-        ursachen: ["Übergewicht, Bewegungsmangel", "Genetische Disposition", "Metabolisches Syndrom"],
-        symptome: ["Oft jahrelang symptomlos!", "Müdigkeit, häufige Infekte", "Wundheilungsstörungen", "Durst, Polyurie (spät)"],
-        diagnostik: ["Nüchtern-BZ ≥ 126 mg/dl (2x)", "HbA1c ≥ 6,5%"],
-        therapie: ["Metformin (1. Wahl)", "SGLT2-Hemmer, GLP-1-RA", "Lebensstil: Gewicht ↓, Bewegung ↑"],
-        pflege: ["BZ-Kontrolle + Dokumentation", "Fußpflege: täglich inspizieren (Neuropathie!)", "Hypoglykämie < 70 mg/dl: sofort 20g Traubenzucker", "Hyperglykämie + Acetongeruch: Arzt sofort"],
-        merke: "BZ < 70 mg/dl = Hypoglykämie → 20g schnelle KH sofort!"
-      },
-      {
-        name: "COPD",
-        definition: "Chronisch obstruktive Lungenerkrankung: progrediente, irreversible Atemwegsobstruktion.",
-        ursachen: ["Rauchen (80–90%!)", "Luftverschmutzung", "α1-Antitrypsinmangel"],
-        symptome: ["AHA-Trias: Auswurf + Husten + Atemnot", "Belastungsdyspnoe → Ruhedyspnoe", "Fassthorax, Lippenbremse", "GOLD I–IV"],
-        diagnostik: ["Spirometrie: FEV1/FVC < 70%", "BGA: CO2 ↑, O2 ↓"],
-        therapie: ["Nikotinabstinenz (wichtigste Maßnahme!)", "LAMA, LABA, ICS", "O2-Langzeittherapie > 15h/Tag"],
-        pflege: ["O2-Ziel 88–92%! NICHT 95% → CO2-Narkose!", "Kutschersitz + Lippenbremse anleiten", "Nach Kortison-Inhalation: Mund spülen!"],
-        merke: "COPD + O2: Ziel 88–92%. Zu viel O2 = CO2-Narkose!"
-      },
-      {
-        name: "Pneumonie",
-        definition: "Entzündung des Lungenparenchyms durch Erreger (CAP, HAP, VAP).",
-        ursachen: ["Streptococcus pneumoniae (häufigste)", "Aspiration bei Dysphagie!", "Immobilität, Beatmung"],
-        symptome: ["Fieber, Schüttelfrost", "Produktiver Husten", "Dyspnoe, Tachypnoe", "Bei Alten: oft nur Verwirrtheit"],
-        diagnostik: ["Röntgen Thorax (Infiltrat)", "CRP, PCT erhöht", "Blutkulturen VOR Antibiotika"],
-        therapie: ["Antibiotika sofort", "O2 (SpO2 ≥ 92%)", "Frühmobilisation"],
-        pflege: ["Oberkörper hoch 30–45°", "Atemübungen 10x/h", "Mundpflege (Aspirationsprophylaxe!)", "Frühzeitig mobilisieren"],
-        merke: "Mobilisation ab Tag 1 – Bettruhe bei Pneumonie verschlechtert die Prognose!"
-      },
-      {
-        name: "Sepsis",
-        definition: "Lebensbedrohliche Organdysfunktion durch dysregulierte Immunantwort auf Infektion.",
-        ursachen: ["Pneumonie, HWI, Bauchinfekt, Katheter"],
-        symptome: ["qSOFA ≥ 2: AF ≥ 22 + GCS < 15 + RR ≤ 100 → Alarm!", "Fieber oder Hypothermie", "Tachykardie, marmorierte Haut", "Verwirrtheit, Oligurie"],
-        diagnostik: ["Laktat > 2 = Sepsis", "Blutkulturen × 2 VOR Antibiotika!", "PCT, CRP"],
-        therapie: ["Hour-1-Bundle: Laktat + Kulturen + Antibiotika + Volumen + Vasopressoren", "Antibiotika innerhalb 1 Stunde!"],
-        pflege: ["SOFORT Arzt!", "Monitoring alle 15–30 Min", "Stündliche Flüssigkeitsbilanz", "Blutkulturen aseptisch abnehmen"],
-        merke: "Blutkulturen VOR Antibiotika – dann sofort Antibiotika innerhalb 1h!"
-      }
-    ]
-  },
+// ─── VALIDATION NACH NAOMI FEIL ───
+{cat:"Psychiatrie",icon:"💜",bg:"#EAE6F5",name:"Validation nach Naomi Feil",def:"Kommunikations- und Begleitungsmethode für desorientierte alte Menschen mit Demenz. Entwickelt ab 1963. Grundprinzip: Die emotionale Realität des Menschen akzeptieren und wertschätzen – NICHT korrigieren.",u:"Realitätsorientierung (Korrektur) erzeugt Stress und Rückzug bei Demenzkranken. Feil erkannte: Menschen verarbeiten ungelöste Lebensthemen in ihrer inneren Welt. Validation schafft Verbindung statt Konfrontation.",s:"Wird eingesetzt bei: Desorientierung zu Zeit/Ort/Person, repetitivem Verhalten (immer gleiche Fragen), emotionalem Rückzug, Agitation, Kommunikationsschwierigkeiten. 4 Stadien nach Feil: 1. Mangelhafte Orientierung (noch orientiert, misstrauisch), 2. Zeitverwirrtheit (lebt in Vergangenheit, verwechselt Personen), 3. Sich wiederholende Bewegungen (kaum Sprache, stereotype Bewegungen), 4. Vegetieren (kaum Reaktion)",r:"Demenzerkrankung aller Formen, besonders mittlere und schwere Stadien",d:"Klinische Beobachtung des Stadiums nach Feil, Verhaltensbeobachtung, Kommunikationsanalyse",t:"Validation ist eine Haltung und Technik – keine Medikamente. Kombination mit Biografie, Musiktherapie, Basaler Stimulation empfohlen",p:"GRUNDHALTUNG: Jeder Mensch ist wertvoll unabhängig vom Demenzgrad. Hinter jedem Verhalten steckt eine Bedeutung. Nicht korrigieren – Gefühle anerkennen. Empathie statt Mitleid. TECHNIKEN: 1. Zentrieren: kurz tief atmen vor Kontakt, eigene Ruhe finden. 2. Schlüsselwort wiederholen: Patient sagt 'Ich muss heim!' → 'Nach Hause?' (NICHT: 'Sie sind doch zu Hause!'). 3. Musik aus Biografie: öffnet Emotionen sofort. 4. Berührung: Hand halten wenn toleriert. 5. Extreme betonen: 'Sind Sie SEHR müde?'. 6. Auf Sinneskanal eingehen: visuell/auditiv/kinästhetisch. PRAXIS-BEISPIELE: Patientin ruft 'Meine Kinder!' → 'Ihre Kinder – das war Ihre wichtigste Aufgabe?' (Gefühl bestätigen). Patient sucht verstorbene Frau → 'Ihre Frau – Sie vermissen sie?' (Trauer anerkennen, nicht 'sie ist tot'). VERBOTEN: Nie 'Das stimmt nicht!', nie lügen, nie kindliche Sprache ('Braves Kind!'), nie mehrere Fragen gleichzeitig, nie über Patient hinwegsprechen"},
 
-  // ════════════════════════════════════════════════
-  //  NEUROLOGIE
-  // ════════════════════════════════════════════════
-  "Neurologie": {
-    farbe: "#7c3aed",
-    krankheiten: [
-      {
-        name: "Schlaganfall (Apoplex)",
-        definition: "Plötzlicher Ausfall von Hirnfunktionen durch Ischämie (85%) oder Blutung (15%).",
-        ursachen: ["Ischämisch: Thrombose / Embolie (Vorhofflimmern!)", "Hämorrhagisch: Hirnblutung (KEINE Lyse!)", "Risikofaktoren: Hypertonie, Diabetes, VHF, Rauchen"],
-        symptome: ["FAST: Face + Arm + Speech + Time = 112!", "Halbseitenlähmung", "Aphasie, Dysphagie", "Sehstörungen, Schwindel"],
-        diagnostik: ["CT ohne KM sofort (Blutung ausschließen!)", "MRT, CTA", "EKG (VHF?)"],
-        therapie: ["Ischämisch: Lyse < 4,5h ODER Thrombektomie < 24h", "Sekundärprophylaxe: Antikoagulation, ASS, Statine"],
-        pflege: ["Dysphagie: Logopädie sofort! Schlucktest VOR erstem Essen!", "Bobath-Lagerung: betroffene Seite einbeziehen", "Frühmobilisation ab Tag 1", "Einfache kurze Sätze bei Aphasie", "Aspirationsprophylaxe: Oberkörper 30°"],
-        merke: "FAST positiv = 112. Zeit ist Gehirn: 1,9 Mio Neuronen pro Minute ohne Therapie!"
-      },
-      {
-        name: "Demenz (Alzheimer)",
-        definition: "Progrediente neurodegenerative Erkrankung mit Gedächtnis-, Denk- und Persönlichkeitsveränderungen.",
-        ursachen: ["Alzheimer (65%): Amyloid-Plaques, Tau-Fibrillen", "Vaskuläre Demenz (25%)", "Lewy-Body-Demenz, frontotemporale Demenz"],
-        symptome: ["Kurzzeitgedächtnisverlust (zuerst!)", "Orientierungsstörung", "Persönlichkeitsveränderung", "Apraxie, Aphasie (spät)", "MMST: < 27 = Hinweis, < 10 = schwer"],
-        diagnostik: ["MMST, DemTect, Uhrentest", "CT/MRT (Atrophie)", "Labor (andere Ursachen ausschließen)"],
-        therapie: ["Cholinesterasehemmer (Donepezil) bei leicht–mittel", "Memantin bei schwerer Demenz", "Nicht-medikamentös: Biografie, Musik, Validation"],
-        pflege: ["Ruhige einfache Sprache, kurze Sätze", "Validation nach Feil: NICHT korrigieren!", "Biografiearbeit nutzen (Lieblingsessen, Musik)", "Rituale beibehalten", "Sicherheit: Weglaufschutz, Stolperfallen"],
-        merke: "Aggression bei Demenz = Schmerzausdruck oder unerfülltes Bedürfnis – immer Ursache suchen!"
-      },
-      {
-        name: "Parkinson",
-        definition: "Neurodegenerative Erkrankung durch Dopaminmangel in der Substantia nigra.",
-        ursachen: ["Idiopathisch (häufigste Form)", "Genetisch (selten)", "Medikamentös (Neuroleptika)"],
-        symptome: ["Tremor (Ruhetremor, 'Münzenzählen')", "Rigor (Zahnradphänomen)", "Akinese / Bradykinese", "Posturale Instabilität → Sturzgefahr!", "Kleinschrittiger Gang, Maskengesicht", "Dysphagie, Hypersalivation"],
-        diagnostik: ["Klinische Diagnose", "MRT (andere Ursachen ausschließen)", "L-Dopa-Test"],
-        therapie: ["L-Dopa (Goldstandard)", "Dopaminagonisten", "MAO-B-Hemmer"],
-        pflege: ["Sturzprophylaxe! (Rigor + Akinese = hohes Risiko)", "Dysphagie: Kostanpassung, Logopädie", "Medikamente exakt nach Zeitplan (On-Off-Phänomen!)", "Mobilisation: Physiotherapie täglich", "Genug Zeit lassen für alle Aktivitäten"],
-        merke: "Parkinson-Medikamente NIE vergessen oder verschieben – drohendes Off!"
-      },
-      {
-        name: "Multiple Sklerose (MS)",
-        definition: "Chronisch-entzündliche Autoimmunerkrankung des ZNS mit Demyelinisierung.",
-        ursachen: ["Autoimmunreaktion gegen Myelinscheiden", "Genetisch + Umweltfaktoren (Vitamin D, Epstein-Barr)"],
-        symptome: ["Schubweise (RRMS) oder progredient (PPMS)", "Sehstörungen (Optikusneuritis)", "Spastik, Lähmungen", "Fatigue (häufigstes Symptom!)", "Blasenstörung, Sensibilitätsstörungen", "Uhthoff-Phänomen: Wärme verschlechtert Symptome"],
-        diagnostik: ["MRT (Herde)", "Liquor (oligoklonale Banden)", "Evozierte Potenziale"],
-        therapie: ["Immunmodulatoren (Interferon, Glatirameracetat)", "Hochdosiert Kortison im Schub", "Symptomatisch: Spastik, Blase, Fatigue"],
-        pflege: ["Fatigue-Management: Aktivitäten planen, Pausen einplanen", "Keine Hitze! (Uhthoff-Phänomen)", "Blasenmanagement (Trinkprotokoll, Katheter)", "Sturzprophylaxe bei Spastik", "Psychische Unterstützung (chronische Erkrankung)"],
-        merke: "Fatigue ist das häufigste MS-Symptom – nicht als Faulheit missverstehen!"
-      }
-    ]
-  },
+// ─── SCHWANGERSCHAFT & GEBURTSHILFE ───
+{cat:"Schwangerschaft/Geburtshilfe",icon:"🤰",bg:"#FDE8F0",name:"Menstruationszyklus & Zyklusstörungen",def:"Hormonell gesteuerter Zyklus: 21–35 Tage normal. Hypothalamus → GnRH → Hypophyse → FSH/LH → Ovar → Östrogen/Progesteron. Bei Amenorrhö: immer zuerst Schwangerschaftstest!",u:"Dysmenorrhö: primär (funktionell) oder sekundär (Endometriose, Myom). Amenorrhö: Schwangerschaft, Stress, Untergewicht, Hypophysentumor. Menorrhagie: Myom, Gerinnungsstörung",s:"Menstruation: Tag 1–5 (Abbluten). Follikelphase: Tag 1–14 (Östrogen ↑). Ovulation: Tag 14 (LH-Peak). Lutealphase: Tag 15–28 (Progesteron). PMS möglich. Dysmenorrhö: Unterbauchschmerzen, Rückenschmerzen",r:"Stress, Gewichtsschwankungen, Hormonstörungen, Endometriose",d:"Schwangerschaftstest (immer zuerst!), Hormonstatus, Ultraschall, Zykluskalender",t:"Dysmenorrhö: Ibuprofen, Wärme, Pille. PMS: Lebensstil, ggf. SSRI. Amenorrhö: Ursachenbehandlung",p:"Schmerzen ernst nehmen, Wärme anbieten (Körnerkissen). Bei Amenorrhö: Schwangerschaftstest vor allem anderen! Bei starker Blutung: Blutverlust einschätzen, Anämiezeichen beachten (Blässe, Schwindel, Tachykardie). Eisengabe nach AO. Intimhygiene unterstützen, Würde wahren. Dokumentation von Zyklus und Beschwerden"},
 
-  // ════════════════════════════════════════════════
-  //  PSYCHIATRIE
-  // ════════════════════════════════════════════════
-  "Psychiatrie": {
-    farbe: "#ec4899",
-    krankheiten: [
-      {
-        name: "Depression",
-        definition: "Affektive Störung mit gedrückter Stimmung, Antriebslosigkeit und Interessenverlust > 2 Wochen.",
-        ursachen: ["Biologisch: Serotonin-/Noradrenalinmangel", "Psychosozial: Verluste, Stress, Trauma", "Genetische Disposition"],
-        symptome: ["Gedrückte Stimmung", "Interessenverlust, Freudlosigkeit", "Antriebsminderung", "Schlafstörungen, Appetitverlust", "Konzentrationsstörungen", "Suizidgedanken! → immer direkt ansprechen!"],
-        diagnostik: ["Klinisches Interview", "Geriatrische Depressionsskala (GDS)", "Ausschluss: Schilddrüse, Anämie"],
-        therapie: ["Antidepressiva (SSRI, SNRI)", "Psychotherapie (KVT)", "Schlafentzugstherapie", "Lichttherapie (saisonal)"],
-        pflege: ["Direktes Ansprechen von Suizidgedanken!", "Tagesstruktur anbieten", "Zu Körperpflege motivieren (nicht zwingen)", "Medikamente sammeln prüfen (Suizidgefahr)", "Nicht alleine lassen bei akuter Suizidalität"],
-        merke: "Suizidalität direkt ansprechen erhöht das Risiko NICHT – es rettet Leben!"
-      },
-      {
-        name: "Schizophrenie",
-        definition: "Schwere psychische Störung mit Positiv- und Negativsymptomen, meist schubweise verlaufend.",
-        ursachen: ["Dopaminhypothese", "Genetik + Umweltfaktoren (Cannabis, Stress)"],
-        symptome: ["Positivsymptome: Halluzinationen (auditiv!), Wahn, Denkstörungen", "Negativsymptome: Affektverflachung, Antriebsmangel, sozialer Rückzug"],
-        diagnostik: ["Klinische Diagnose (ICD-11)", "Ausschluss organischer Ursachen (CT, Labor)"],
-        therapie: ["Antipsychotika (Haloperidol, Risperidon, Olanzapin)", "Psychoedukation, Psychotherapie"],
-        pflege: ["Wahn NICHT bestätigen, NICHT widersprechen", "Ruhige Stimme, Deeskalation", "Medikamentencompliance sichern (> 50% brechen ab!)", "Suizidrisiko beachten", "Vertrauen aufbauen durch Konstanz"],
-        merke: "Wahn nicht diskutieren – auf die Emotion eingehen, nicht auf den Inhalt!"
-      },
-      {
-        name: "Alkoholabhängigkeit & Entzug",
-        definition: "Chronische Suchterkrankung. Entzug beginnt 6–24h nach letztem Konsum – kann lebensbedrohlich sein.",
-        ursachen: ["Genetische Disposition", "Psychosoziale Faktoren", "Chronischer Konsum"],
-        symptome: ["Entzug: Tremor, Schwitzen, Angst, Schlafstörungen (6–24h)", "Delir tremens: Halluzinationen, Krampf, Kreislaufversagen (48–96h)!", "Wernicke-Enzephalopathie: Thiaminmangel"],
-        diagnostik: ["CIWA-Ar-Score (Schweregrad)", "Labor: GGT, MCV, CDT"],
-        therapie: ["Benzodiazepine als Entzugsschutz", "Thiamin (Vitamin B1!) prophylaktisch", "Clonidin, Antiepileptika"],
-        pflege: ["Engmaschiges Monitoring (CIWA-Ar)", "Thiamin VOR Glukosegabe!", "Sicherheit (Krampfgefahr, Sturz)", "Ruhige Umgebung", "Empathie ohne Wertung"],
-        merke: "Delir tremens = medizinischer Notfall! Thiamin immer VOR Glukose!"
-      }
-      ,
-      {
-        name: "Demenz – Pflegerischer Umgang & Kommunikation",
-        definition: "Menschen mit Demenz brauchen eine angepasste, würdevolle Pflege. Der Schlüssel liegt nicht in der Korrektur, sondern im Verstehen und Begleiten.",
-        ursachen: [
-          "Alzheimer-Demenz (65%): schleichend, Kurzzeitgedächtnis zuerst",
-          "Vaskuläre Demenz (25%): stufenweise, nach Schlaganfällen",
-          "Lewy-Body- und frontotemporale Demenz: seltenere Formen",
-          "Mischformen häufig"
-        ],
-        symptome: [
-          "Frühstadium: Vergesslichkeit, Wortfindungsstörungen, Desorientiertheit in unbekannter Umgebung",
-          "Mittleres Stadium: Desorientiertheit zu Zeit und Ort, Verkennung von Personen, Weglauftendenz",
-          "Spätstadium: kaum Sprache, Bettlägerigkeit, Schluckstörungen, vollständige Pflegeabhängigkeit",
-          "Häufige Verhaltensauffälligkeiten: Aggression, Unruhe (Sundowning), Apathie, Depressionen, Schreien"
-        ],
-        diagnostik: [
-          "MMST (Mini-Mental-Status-Test): max. 30 Punkte – < 27 auffällig, < 10 schwere Demenz",
-          "DemTect, Uhrentest",
-          "MRT/CT (Atrophie, Infarkte)",
-          "Labor (Schilddrüse, Vitamin B12, Folsäure ausschließen)"
-        ],
-        therapie: [
-          "Medikamentös: Cholinesterasehemmer (Donepezil, Rivastigmin) bei leichter bis mittlerer Demenz",
-          "Memantin bei schwerer Demenz",
-          "Nicht-medikamentös: Validation, Biografie, Musik, Erinnerungsarbeit",
-          "Kein Antipsychotikum ohne klare Indikation! (erhöhtes Schlaganfallrisiko)"
-        ],
-        pflege: [
-          "GRUNDPRINZIPIEN:",
-          "Würde wahren – immer! Nie über den Patienten hinweg sprechen",
-          "Routine und Rituale beibehalten (strukturierter Tagesablauf = Sicherheit)",
-          "Selbstständigkeit fördern: so viel wie möglich selbst machen lassen",
-          "Biografie nutzen: Lieblingsmusik, Berufsrolle, Gewohnheiten kennen",
-          "",
-          "KOMMUNIKATION MIT DEMENZKRANKEN:",
-          "Augenkontakt herstellen, auf Augenhöhe gehen",
-          "Einfache kurze Sätze – ein Gedanke pro Satz",
-          "Langsam und deutlich sprechen, genug Zeit lassen",
-          "Namen statt Pronomen benutzen: 'Herr Müller' statt 'er'",
-          "Nie korrigieren, nie widersprechen, nie streiten",
-          "Gefühle ansprechen, nicht Fakten: 'Ich sehe, Sie sind unruhig'",
-          "Nonverbale Kommunikation: Berührung, Lächeln, ruhige Körpersprache",
-          "",
-          "UMGANG MIT HERAUSFORDERNDEM VERHALTEN:",
-          "Aggression: Ursache suchen (Schmerz? Angst? Hunger? Inkontinenz?), Pflege pausieren, ruhig zurückgehen",
-          "Weglauftendenz: Beschäftigung anbieten, Türalarm, GPS-Armband, Knie-Ellenbogen-Lage NICHT fixieren!",
-          "Sundowning (abendliche Unruhe): Licht anlassen, bekannte Musik, ruhige Ansprache",
-          "Apathie: Aktivitäten niederschwellig anbieten (Falten, Sortieren, Fotos anschauen)",
-          "",
-          "SICHERHEIT:",
-          "Stolperfallen entfernen, Haltegriffe, Nachtlicht",
-          "Medikamente sichern",
-          "Herd und gefährliche Gegenstände sichern",
-          "Freiheitsentziehende Maßnahmen NUR mit Richtergenehmigung! (§ 1831 BGB)"
-        ],
-        merke: "Menschen mit Demenz leben in IHRER Realität – wir gehen zu ihnen, sie kommen nicht zu uns!"
-      },
-      {
-        name: "Validation nach Naomi Feil",
-        definition: "Kommunikations- und Begleitungsmethode für Menschen mit Demenz, entwickelt von Naomi Feil (USA, 1963). Grundprinzip: Die emotionale Realität des Menschen akzeptieren und wertschätzen – nicht korrigieren.",
-        ursachen: [
-          "Feil beobachtete: Realitätsorientierung (Korrektur) erzeugt Stress und Rückzug",
-          "Menschen mit Demenz verarbeiten ungelöste Lebensthemen in ihrer inneren Welt",
-          "Validation schafft Verbindung statt Konfrontation"
-        ],
-        symptome: [
-          "Validation wird eingesetzt bei:",
-          "Desorientiertheit zu Zeit, Ort, Person",
-          "Repetitivem Verhalten (immer gleiche Fragen, gleiche Handlungen)",
-          "Emotionalem Rückzug",
-          "Agitation und Unruhe",
-          "Kommunikationsschwierigkeiten"
-        ],
-        diagnostik: [
-          "4 Stadien nach Feil:",
-          "Stadium 1 – Mangelhafte Orientierung: noch orientiert, aber Gedächtnis lückenhaft, oft misstrauisch",
-          "Stadium 2 – Zeitverwirrtheit: lebt in der Vergangenheit, Personen werden verwechselt",
-          "Stadium 3 – Sich wiederholende Bewegungen: Sprache kaum noch vorhanden, stereotype Bewegungen",
-          "Stadium 4 – Vegetieren: kaum Reaktion auf Außenwelt"
-        ],
-        therapie: [
-          "Kein medikamentöser Ansatz – Validation ist eine Haltung und Technik",
-          "Wird kombiniert mit anderen Ansätzen: Biografie, Musiktherapie, Basale Stimulation"
-        ],
-        pflege: [
-          "GRUNDHALTUNG DER VALIDATION:",
-          "Jeder Mensch ist wertvoll, unabhängig vom Grad der Demenz",
-          "Hinter jedem Verhalten steckt eine Bedeutung – auch wenn sie uns nicht sofort klar ist",
-          "Nicht korrigieren, nicht in die Realität zurückholen",
-          "Gefühle akzeptieren und widerspiegeln",
-          "Empathie statt Mitleid",
-          "",
-          "KONKRETE TECHNIKEN:",
-          "Zentrieren: Kurze Atemübung vor dem Kontakt – eigene Ruhe finden",
-          "Echtes Zuhören: Augenkontakt, offene Körpersprache, nicken",
-          "Schlüsselwort wiederholen: Patient sagt 'Ich muss nach Hause!' → 'Nach Hause?' (nicht: 'Sie SIND zu Hause')",
-          "Auf die bevorzugte Sinneswahrnehmung eingehen: visuell, auditiv, kinästhetisch",
-          "Musik aus der Biografie: bekannte Melodien öffnen Emotionen und Kommunikation",
-          "Berühren: Hand halten (wenn toleriert), sanfte Berührung am Unterarm",
-          "Mehrdeutige Pronomen: 'Er hat das getan?' statt Name zu korrigieren",
-          "Extremes betonen: 'Sind Sie SEHR müde?' verdeutlicht das Gefühl",
-          "",
-          "BEISPIELE AUS DER PRAXIS:",
-          "Frau M. sagt: 'Ich muss meine Kinder abholen!' → Validation: 'Ihre Kinder – was für eine Verantwortung Sie hatten!' (Gefühl bestätigen, nicht korrigieren)",
-          "Herr K. sucht seine Frau (die verstorben ist) → Validation: 'Ihre Frau – Sie vermissen sie?' (Trauer anerkennen, nicht sagen 'sie ist tot')",
-          "Patient schlägt beim Waschen → Validation: 'Ich glaube, das macht Ihnen Angst. Darf ich kurz warten?' (Emotion benennen, Pflege pausieren)",
-          "",
-          "WAS MAN VERMEIDEN MUSS:",
-          "NIE: 'Das stimmt doch nicht!' / 'Sie sind doch zu Hause!'",
-          "NIE: Lügen oder Mitlügen (ethisch problematisch)",
-          "NIE: Ignorieren oder ablenken ohne Kontakt",
-          "NIE: Kindliche Sprache ('Braves Kind!')",
-          "NIE: Mehrere Fragen gleichzeitig stellen"
-        ],
-        merke: "Validation: Nicht die Realität korrigieren – die EMOTION dahinter anerkennen. 'Was fühlen Sie?' statt 'Was denken Sie?'"
-      }
-    ]
-  },
+{cat:"Schwangerschaft/Geburtshilfe",icon:"🤰",bg:"#FDE8F0",name:"Schwangerschaft – Physiologie & Vorsorge",def:"Normale Schwangerschaft: 40 Wochen (280 Tage) ab letzter Menstruation. 3 Trimester. Linksseitenlage ab SSW 20 (entlastet V. cava!). Folsäure 400 µg/Tag VOR Konzeption beginnen.",u:"Befruchtung → Nidation ca. Tag 7. β-HCG steigt → Test positiv. Plazenta produziert Hormone und versorgt Kind.",s:"1. Trimenon: Übelkeit/Erbrechen, Brustspannen, Müdigkeit, Pollakisurie. 2. Trimenon: Kindsbewegungen (SSW 18–20), Wachstum. 3. Trimenon: Rückenschmerzen, Sodbrennen, Ödeme, Braxton-Hicks-Wehen. WARNSYMPTOME: Blutungen, starke Kopfschmerzen, Sehstörungen, Oberbauchschmerzen → sofort Arzt!",r:"Nikotin, Alkohol, Infektionen, Vorerkrankungen, Übergewicht",d:"β-HCG-Test, 3 Pflicht-Ultraschalls (SSW 9–12, 19–22, 29–32), Blutgruppe, Rh-Faktor, HIV, Röteln, Toxoplasmose, CTG ab SSW 28, Mutterpass",t:"Folsäure 400 µg + Jod 100–150 µg täglich. Kein Alkohol, kein Nikotin, keine Rohprodukte. Regelmäßige Vorsorge.",p:"Übelkeit: kleine häufige Mahlzeiten, Ingwertee, frische Luft. Rückenschmerzen: Wärme, Kissen zwischen Knien. Ödeme: Beine hochlagern, RR messen! Sodbrennen: kleine Mahlzeiten, Oberkörper hoch. Linksseitenlage fördern (ab SSW 20). Auf Warnsymptome hinweisen: Blutungen, Kopfschmerzen, Sehstörungen, Bauchschmerzen → sofort Arzt!"},
 
-  // ════════════════════════════════════════════════
-  //  DERMATOLOGIE & WUNDEN
-  // ════════════════════════════════════════════════
-  "Dermatologie & Wunden": {
-    farbe: "#f59e0b",
-    krankheiten: [
-      {
-        name: "Dekubitus",
-        definition: "Druckbedingte Schädigung von Haut und Gewebe durch anhaltende Kompression.",
-        ursachen: ["Immobilität", "Scherkräfte", "Feuchtigkeit (Inkontinenz)", "Mangelernährung"],
-        symptome: ["Grad I: Rötung, nicht wegdrückbar, Haut intakt", "Grad II: Blase, oberflächlicher Hautverlust", "Grad III: Vollhautverlust bis Subkutis", "Grad IV: Knochen/Sehnen sichtbar"],
-        diagnostik: ["Braden-Skala (≤ 18 = Risiko, ≤ 9 = sehr hohes Risiko)", "Tägliche Hautinspektion"],
-        therapie: ["Druckentlastung sofort!", "Feuchte Wundauflagen nach Grad", "Ernährung: Protein ↑, Vitamin C, Zink", "Débridement bei Nekrose"],
-        pflege: ["Umlagerung alle 2h + Protokoll", "30°-Seitenlage (NICHT 90°!)", "Fersen IMMER freilegen (Heel-Boot!)", "Hautinspektion täglich: Sakrum, Fersen, Trochanter", "NICHT massieren bei Rötung!"],
-        merke: "Grad I Rötung nicht wegdrückbar = sofort handeln! Fersen immer freilegen!"
-      },
-      {
-        name: "Ulcus cruris",
-        definition: "Chronisches Unterschenkelgeschwür durch venöse (70%), arterielle (15%) oder gemischte Ursache.",
-        ursachen: ["Venös: CVI, Varikosis, TVT-Folge", "Arteriell: pAVK", "Diabetisch: Neuropathie + Ischämie"],
-        symptome: ["Venös: Innenknöchel, wenig schmerzhaft, nässend", "Arteriell: Akren, stark schmerzhaft, trocken, ABI < 0,9"],
-        diagnostik: ["Doppler (ABI)", "Angiografie", "Wundbeurteilung nach TIME"],
-        therapie: ["Venös: Kompression KKL 2–4 (wichtigste Maßnahme!)", "Arteriell: KEINE Kompression! → Revaskularisierung", "Feuchte Wundauflage"],
-        pflege: ["Venös: Kompressionsverband IMMER anlegen", "Schmerz vor Verbandwechsel behandeln (30 Min vorher!)", "TIME-Prinzip: T=Débridement, I=Infektion, M=Feuchtigkeit, E=Wundrand", "NIEMALS H2O2, Betaisodona, Rivanol (veraltet, zytotoxisch!)"],
-        merke: "Venöses Ulkus: Ohne Kompression keine Heilung!"
-      },
-      {
-        name: "MRSA",
-        definition: "Methicillin-resistenter Staphylococcus aureus – multiresistenter Erreger, häufig nosokomial.",
-        ursachen: ["Übertragung: Kontakt (Hände!)", "Kolonisierung: Nase, Rachen, Wunden, Leiste"],
-        symptome: ["Kolonisierung: symptomlos", "Infektion: Wundinfektion, Pneumonie, Sepsis"],
-        diagnostik: ["Abstrich: Nase, Rachen, Leiste, Wunden", "Kultur + Antibiogramm"],
-        therapie: ["Vancomycin i.v. (Mittel der Wahl)", "Linezolid", "Dekolonisierungsprotokoll"],
-        pflege: ["Kontaktisolierung: Einzelzimmer, Kittel + Handschuhe bei JEDEM Kontakt", "Händedesinfektion vor und nach Patientenkontakt", "Patienteneigene Geräte", "Besuchsregeln erklären", "Dekolonisierung: Nasenöl, Waschung mit CHX"],
-        merke: "MRSA: Hände sind der wichtigste Übertragungsweg – Händedesinfektion rettet!"
-      }
-    ]
-  },
+{cat:"Schwangerschaft/Geburtshilfe",icon:"🤰",bg:"#FDE8F0",name:"Schwangerschaftsübelkeit & Hyperemesis gravidarum",def:"70–80% aller Schwangeren betroffen. Hyperemesis = schwere Form mit Dehydratation, Gewichtsverlust > 5%, Ketourie. Lebensbedrohlich wenn unbehandelt. Thiamin (B1) VOR Glukose!",u:"β-HCG-Anstieg im 1. Trimenon (Hauptursache), Östrogen, psychische Faktoren, Blasenmole (ausschließen!)",s:"Leicht: gelegentliches Erbrechen, kein Gewichtsverlust. Hyperemesis: Erbrechen > 3–5x/Tag, Gewichtsverlust, Dehydratation, Elektrolytstörungen, Ketonurie, Schwäche",r:"Mehrlingsschwangerschaft, Blasenmole, vorherige Hyperemesis, psychische Belastung",d:"Gewicht, Urin (Ketone), Labor: Elektrolyte, Harnstoff, Kreatinin. Ausschluss Blasenmole (Ultraschall)",t:"Leicht: Ingwer, kleine Mahlzeiten, Dimenhydrinat. Hyperemesis: Hospitalisation, i.v.-Flüssigkeit + Elektrolyte, Thiamin i.v., Antiemetika i.v., ggf. Kortikosteroide",p:"Kleine häufige leichte Mahlzeiten (Zwieback, Reis, Banane). Kalte/lauwarme Speisen (weniger Geruch). Starke Gerüche vermeiden. Ingwertee anbieten. Ruhe nach Mahlzeiten. Bei Hyperemesis: i.v.-Zugang, strenge Bilanzierung, Gewicht täglich. Psychische Unterstützung (Schuldgefühle!). WICHTIG: Thiamin (B1) VOR Glukose geben → Wernicke-Enzephalopathie verhindern!"},
 
-  // ════════════════════════════════════════════════
-  //  CHIRURGIE & GERIATRIE
-  // ════════════════════════════════════════════════
-  "Chirurgie & Geriatrie": {
-    farbe: "#16a34a",
-    krankheiten: [
-      {
-        name: "Schenkelhalsfraktur",
-        definition: "Häufige Fraktur bei alten Menschen nach Sturz. Medizinischer Notfall – OP meist innerhalb 24h.",
-        ursachen: ["Sturz (90%)", "Osteoporose", "Knochenmetastasen (pathologisch)"],
-        symptome: ["Starke Hüftschmerzen", "Bein verkürzt + außenrotiert", "Bewegungsunfähigkeit", "Kein Stehen möglich"],
-        diagnostik: ["Röntgen Hüfte a.p. und axial", "MRT bei unklarem Befund"],
-        therapie: ["OP innerhalb 24h (Duokopfprothese oder DHS)", "Frühmobilisation ab OP-Tag!", "Thromboseprophylaxe"],
-        pflege: ["Luxationsprophylaxe: Beugung < 90°, kein Überkreuzen, keine Innenrotation!", "Transfer zur operierten Seite", "Schmerztherapie vor Mobilisation", "Physiotherapie ab Tag 1", "Sturzsicherung!"],
-        merke: "Nach TEP: Nie > 90° beugen, nie Beine überkreuzen, nie nach innen drehen!"
-      },
-      {
-        name: "Postoperatives Delir",
-        definition: "Akuter Verwirrtheitszustand nach Operation, besonders bei alten Patienten. Reversibel aber gefährlich.",
-        ursachen: ["Infektion (HWI, Pneumonie)", "Schmerzen (häufigste Ursache!)", "Dehydratation", "Medikamente (Anticholinergika, Opioide)", "Schlafentzug, Immobilität"],
-        symptome: ["Akut, fluktuierend!", "Bewusstseinstrübung", "Desorientiertheit", "Hyperaktiv (unruhig) ODER hypoaktiv (still – wird oft übersehen!)", "CAM-Test positiv"],
-        diagnostik: ["CAM-Tool (Confusion Assessment Method)", "Ursachensuche: Urin-Stix, Labor, Schmerz"],
-        therapie: ["Ursache behandeln!", "Reorientierung", "Keine Fixierung!", "Haloperidol nur wenn nötig"],
-        pflege: ["Ursache suchen: Schmerz? HWI? Dehydration? Medikamente?", "Reorientierung: Name, Ort, Datum nennen", "Licht anlassen, vertraute Gegenstände", "Klingel erreichbar", "Frühmobilisation", "NICHT fixieren (verschlechtert Delir!)"],
-        merke: "Hypoaktives Delir wird oft übersehen – ruhiger Patient ≠ guter Patient!"
-      },
-      {
-        name: "Osteoporose",
-        definition: "Systemische Skeletterkrankung mit erniedrigter Knochendichte → erhöhtes Frakturrisiko.",
-        ursachen: ["Postmenopausaler Östrogenmangel (häufigste!)", "Kortikosteroid-Langzeittherapie", "Immobilität, Calcium/Vit-D-Mangel"],
-        symptome: ["Oft symptomlos bis zur Fraktur!", "Rückenschmerzen (Wirbelkörperfraktur)", "Größenabnahme, Kyphose (Witwenbuckel)", "Typisch: Schenkelhalsfraktur, Wirbelkörper, Radius"],
-        diagnostik: ["DXA (Knochendichtemessung)", "FRAX-Score", "Röntgen bei Fraktur"],
-        therapie: ["Calcium + Vitamin D", "Bisphosphonate (Alendronat)", "Denosumab, Teriparatid", "Sturzprophylaxe!"],
-        pflege: ["Sturzprophylaxe = wichtigste pflegerische Maßnahme!", "Mobilisation und Krafttraining fördern", "Calcium-reiche Ernährung", "Schmerzmittel nach AO", "Hilfsmittel: Rollator, Hüftprotektoren"],
-        merke: "Osteoporose: Fraktur verhindern durch Sturzprophylaxe!"
-      }
-    ]
-  },
+{cat:"Schwangerschaft/Geburtshilfe",icon:"🤰",bg:"#FDE8F0",name:"Präeklampsie, HELLP-Syndrom & Eklampsie",def:"Lebensgefährliche hypertensive Schwangerschaftserkrankungen ab SSW 20. Oberbauchschmerzen + Kopfschmerzen + Sehstörungen bei Schwangerer = NOTFALL! Sofort Arzt!",u:"Plazentainsuffizienz, Fehlregulation der Trophoblastinvasion. Risikofaktoren: Erstgebärende, Mehrling, chronische Hypertonie, Adipositas, Diabetes",s:"Präeklampsie: RR ≥ 140/90 + Proteinurie (> 300 mg/24h) ab SSW 20 + Ödeme (Gesicht, Hände!). HELLP: Hämolyse + Elevated Liver enzymes + Low Platelets → Oberbauchschmerzen rechts, Übelkeit, Kopfschmerzen, Sehstörungen. Eklampsie: tonisch-klonische Krampfanfälle",r:"Erstgebärende, Mehrling, chronische Hypertonie, Adipositas, Nierenerkrankung, familiäre Belastung",d:"RR > 140/90 (zweimal im Abstand 4h), Urin-Stix (Proteinurie), Labor: Transaminasen ↑, Thrombozyten ↓, LDH ↑, Haptoglobin ↓, CTG, Doppler-Sono",t:"Antihypertensiva: Methyldopa, Labetalol, Nifedipin (Ziel: RR < 160/110). Magnesium i.v. zur Eklampsie-Prophylaxe. Bei HELLP/schwerer Präeklampsie: Entbindung! Eklampsie: Anfallschutz + Notfallsectio",p:"RR engmaschig messen (alle 4–6h). Gewicht täglich (Ödemerkennung). Urin täglich auf Eiweiß. WARNSYMPTOME erkennen: Kopfschmerzen, Sehstörungen, Oberbauchschmerzen, gesteigerte Reflexe → sofort Arzt! Bettruhe in Linksseitenlage. Bei Krampf: Seitenlage, Arzt sofort, Magnesium bereithalten, Aspirationsschutz, ruhige reizarme Umgebung (Licht dimmen). CTG kontinuierlich. Mutter beruhigen und informieren."},
 
-  // ════════════════════════════════════════════════
-  //  SCHWANGERSCHAFT & GEBURTSHILFE
-  // ════════════════════════════════════════════════
-  "Schwangerschaft & Geburtshilfe": {
-    farbe: "#db2777",
-    krankheiten: [
+{cat:"Schwangerschaft/Geburtshilfe",icon:"🤰",bg:"#FDE8F0",name:"Gestationsdiabetes (GDM)",def:"In der Schwangerschaft erstmals diagnostizierte Glukosetoleranzstörung. Screening in SSW 24–28 Pflicht. Kind hat Hypoglykämierisiko nach Geburt → BZ sofort messen!",u:"Plazenta produziert insulinantagonistische Hormone, Insulinresistenz, Übergewicht, familiäre Belastung",s:"Meist symptomlos! Selten: Polyurie, Polydipsie. Folgen: Makrosomie (Kind > 4000g), Frühgeburt, Präeklampsie",r:"Übergewicht, familiäre Belastung, Alter > 35, vorheriger GDM, polyzystisches Ovarsyndrom",d:"50g-Glucose-Screening (SSW 24–28). Bei auffällig: 75g-oGTT. Grenzwerte: nüchtern > 92 mg/dl, 1h > 180, 2h > 153 mg/dl",t:"Ernährungsumstellung (1. Wahl), BZ-Selbstkontrolle 4x täglich, Bewegung. Insulin wenn nötig (Metformin kontraindiziert!). Entbindung spätestens SSW 40",p:"BZ-Kontrolle: nüchtern + 1h nach Mahlzeiten. Ziele: nüchtern < 95, 1h pp < 140 mg/dl. Ernährungsberatung: kohlenhydratreduziert, regelmäßige Mahlzeiten. Spaziergänge nach Mahlzeiten (senken BZ!). Insulingabe schulen. Kind beobachten: Kindsbewegungen, Wachstum. Nach Geburt: BZ der Mutter normalisiert sich meist spontan. KIND: Hypoglykämierisiko! BZ des Neugeborenen sofort nach Geburt messen!"},
 
-      // ── MENSTRUATIONSZYKLUS ──
-      {
-        name: "Menstruationszyklus – Grundlagen",
-        definition: "Hormonell gesteuerter Zyklus der Frau mit durchschnittlich 28 Tagen (21–35 Tage normal). Vorbereitung der Gebärmutter auf eine Schwangerschaft.",
-        ursachen: ["Hormonelle Steuerung: Hypothalamus → Hypophyse → Ovar", "GnRH → FSH/LH → Östrogen/Progesteron"],
-        symptome: [
-          "Phase 1 – Menstruation (Tag 1–5): Abbluten der Gebärmutterschleimhaut, Krämpfe (Dysmenorrhö) möglich",
-          "Phase 2 – Follikelphase (Tag 1–14): FSH ↑, Follikelreifung, Östrogen ↑, Schleimhautaufbau",
-          "Phase 3 – Ovulation (Tag 14): LH-Peak, Eisprung, fertilste Phase",
-          "Phase 4 – Lutealphase (Tag 15–28): Gelbkörper bildet Progesteron, PMS möglich"
-        ],
-        diagnostik: ["Zykluskalender", "Basaltemperaturkurve", "Hormonspiegel (FSH, LH, Östrogen, Progesteron)", "Ultraschall (Follikelreifung)"],
-        therapie: [
-          "Dysmenorrhö: Ibuprofen, Wärme, Pille",
-          "Zyklusstörungen: Hormontherapie je nach Ursache",
-          "PMS: Lebensstilmaßnahmen, ggf. SSRI"
-        ],
-        pflege: [
-          "Schmerzen bei Dysmenorrhö: Wärme (Körnerkissen), NSAR nach AO",
-          "PMS-Symptome (Stimmungsschwankungen, Wassereinlagerungen) ernst nehmen",
-          "Aufklärung über normalen Zyklus und Schwankungen",
-          "Patientinnen ermutigen, Zyklusveränderungen zu dokumentieren",
-          "Bei starker Blutung: Blutverlust einschätzen, Anämie beachten"
-        ],
-        merke: "Normale Zykluslänge: 21–35 Tage. Blutungsdauer: 3–7 Tage. Abweichungen abklären!"
-      },
+{cat:"Schwangerschaft/Geburtshilfe",icon:"🤰",bg:"#FDE8F0",name:"Frühgeburt",def:"Geburt vor vollendeter 37. SSW. Häufigste Ursache neonataler Morbidität und Mortalität. Kortikosteroide zur Lungenreifung: 2 Dosen im Abstand 24h – Timing kritisch!",u:"Infektion/Entzündung (häufigste Ursache!), Mehrling, Zervixinsuffizienz, Plazentaprävia, Stress, Rauchen",s:"Regelmäßige Wehen < SSW 37, Zervixverkürzung (Ultraschall < 25mm), Blasensprung vor SSW 37 (PPROM), Druckgefühl im Unterbauch, veränderter Ausfluss",r:"Vorherige Frühgeburt, Mehrling, Infektionen, Zervixinsuffizienz, niedriger Sozialstatus, Rauchen",d:"CTG (Wehenregistrierung), Ultraschall (Zervixlänge), Fibronektin-Test, bakteriologischer Abstrich",t:"Tokolyse (Wehenhemmung): Nifedipin, Atosiban bis SSW 34. Kortikosteroide (Betamethason 2×) zur Lungenreifung bis SSW 34! Magnesium i.v. zur Neuroprotektion bis SSW 32. Ab SSW 34: keine Tokolyse mehr.",p:"Bettruhe und körperliche Schonung. Emotionale Unterstützung (Schuldgefühle sehr häufig!). CTG-Überwachung. Kortikosteroide nach AO (exaktes Timing!). Temperatur überwachen (Infektion?). Amnioninfektionssyndrom erkennen: Fieber, übelriechender Ausfluss, Tachykardie. Wehen dokumentieren. Neonatologie informieren und vorbereiten."},
 
-      // ── ZYKLUSSTÖRUNGEN ──
-      {
-        name: "Zyklusstörungen",
-        definition: "Abweichungen von Dauer, Häufigkeit oder Stärke der Menstruation.",
-        ursachen: [
-          "Amenorrhö (keine Blutung): Schwangerschaft!, Stress, Untergewicht, Hypophysentumor, Menopause",
-          "Dysmenorrhö (Schmerzhafte Menstruation): primär (funktionell) oder sekundär (Endometriose, Myom)",
-          "Menorrhagie (Starke Blutung > 7 Tage): Myom, Gerinnungsstörung",
-          "Metrorrhagie (unregelmäßige Blutung): Hormonstörung, Karzinom"
-        ],
-        symptome: ["Ausbleibende / unregelmäßige Blutung", "Starke Schmerzen (Dysmenorrhö)", "Übermäßige Blutung (Menorrhagie) → Anämirisiko", "Zwischenblutungen"],
-        diagnostik: ["Schwangerschaftstest (immer zuerst!)", "Hormonstatus", "Ultraschall", "Ggf. Hysteroskopie"],
-        therapie: ["Ursachenbehandlung", "Hormontherapie", "Ibuprofen / Mefenamsäure bei Dysmenorrhö"],
-        pflege: [
-          "Schwangerschaft immer zuerst ausschließen!",
-          "Anämie-Zeichen beachten: Blässe, Schwindel, Tachykardie",
-          "Eisengabe nach AO bei Menorrhagie",
-          "Schmerzen nicht bagatellisieren",
-          "Hygieneversorgung, Würde wahren"
-        ],
-        merke: "Bei Amenorrhö: immer zuerst Schwangerschaftstest!"
-      },
+{cat:"Schwangerschaft/Geburtshilfe",icon:"🤰",bg:"#FDE8F0",name:"Plazenta praevia & vorzeitige Plazentalösung",def:"Zwei Notfallsituationen mit lebensbedrohlicher Blutung. Plazenta praevia: KEINE vaginale Tastuntersuchung! Schmerzlose Blutung + kein Schmerz = Plazenta praevia!",u:"Plazenta praevia: Plazenta über/an Muttermund (Narben, Mehrling). Vorzeitige Lösung: Plazenta löst sich vor Geburt (Hypertonie, Trauma, Kokain, Rauchen)",s:"Plazenta praevia: SCHMERZLOSE hellrote vaginale Blutung im 3. Trimenon! Vorzeitige Lösung: SCHMERZHAFTE dunkle Blutung ODER versteckte Blutung, brettharter Uterus, Schocksymptome. Beide: fetale Distress im CTG",r:"Vorherige Sectio, Kürettagen, Mehrling, Rauchen, Hypertonie, Trauma",d:"Ultraschall (Plazentalokalisation), CTG, Labor (Blutbild, Gerinnung). KEIN vaginales Tasten bei Plazenta praevia!",t:"Plazenta praevia: Sectio caesarea. Vorzeitige Lösung: Notfallsectio bei fetaler Gefährdung. Volumenersatz, Bluttransfusion bei Schock. Kortikosteroide bei Frühgeburtlichkeit",p:"SOFORT Arzt bei vaginaler Blutung! Bettruhe. KEINE vaginalen Untersuchungen bei PP. Kreislaufüberwachung: RR, HF, SpO2. Großlumige i.v.-Zugänge, Blutgruppe + Kreuzblut. Schocklagerung wenn nötig. CTG kontinuierlich. Mutter beruhigen. OP-Vorbereitung bereitstellen."},
 
-      // ── SCHWANGERSCHAFT GRUNDLAGEN ──
-      {
-        name: "Schwangerschaft – Physiologie & Vorsorge",
-        definition: "Normale Schwangerschaft: 40 Wochen (280 Tage) ab letzter Menstruation. Einteilung in 3 Trimester.",
-        ursachen: ["Befruchtung der Eizelle durch Spermium", "Nidation in der Gebärmutter ca. Tag 7 nach Befruchtung"],
-        symptome: [
-          "1. Trimester (SSW 1–12): Übelkeit/Erbrechen (morgens!), Brustspannen, Müdigkeit, Pollakisurie",
-          "2. Trimester (SSW 13–24): Kindsbewegungen (Quickening ab SSW 18–20), Wachstum Bauch",
-          "3. Trimester (SSW 25–40): Rückenschmerzen, Sodbrennen, Ödeme, Braxton-Hicks-Wehen, Schlafstörungen"
-        ],
-        diagnostik: ["Schwangerschaftstest (β-HCG)", "Ultraschall-Vorsorge (3 Pflichtterminen: SSW 9–12, 19–22, 29–32)", "Blutbild, Blutgruppe, Rh-Faktor, HIV, Röteln, Toxoplasmose", "CTG ab SSW 28", "Mutterpass führen"],
-        therapie: [
-          "Folsäure 400 µg/Tag VOR und in der Frühschwangerschaft",
-          "Jod 100–150 µg/Tag",
-          "Vitamin D",
-          "Nikotinabstinenz, kein Alkohol, keine Rohprodukte",
-          "Regelmäßige Vorsorgeuntersuchungen"
-        ],
-        pflege: [
-          "Übelkeit: kleine häufige Mahlzeiten, Ingwer, frische Luft",
-          "Rückenschmerzen: Wärme, rückengerechte Lagerung (Kissen zwischen Knien in Seitenlage)",
-          "Ödeme: Hochlagern der Beine, Kompressionsstrümpfe, RR messen!",
-          "Sodbrennen: kleine Mahlzeiten, Oberkörper hoch nach dem Essen",
-          "Schlafstörungen: Seitenlage (links bevorzugt!), Stillkissen",
-          "Auf Gefahrenzeichen hinweisen: Blutungen, Kopfschmerzen, Sehstörungen, Bauchschmerzen"
-        ],
-        merke: "Linksseitenlage ab SSW 20 – entlastet die Vena cava, verbessert Plazentadurchblutung!"
-      },
+{cat:"Schwangerschaft/Geburtshilfe",icon:"🤰",bg:"#FDE8F0",name:"Normale Entbindung & Geburt",def:"Physiologischer Vorgang der Austreibung von Kind und Plazenta. Erstgebärende: 8–12h, Mehrgebärende: 6–8h. Volle Blase hemmt Wehen → alle 2h zur Toilette!",u:"Spontaner Wehenbeginn durch Prostaglandine und Oxytocin. Zervixreifung. Zeichnen = blutiger Schleimpfropf → Geburt in Stunden bis Tagen",s:"Eröffnungsphase: regelmäßige Wehen alle 5 Min, Zervix 0–10 cm. Austreibungsphase: Presswehen, vollständige Eröffnung, Kopfdurchtritt. Nachgeburtsphase: Plazentaabgang innerhalb 30 Min. Blasensprung: Fruchtwasserabgang",r:"Sehr junges/hohes Alter, Übergewicht, Mehrlinge, vorherige Sectio",d:"CTG kontinuierlich, vaginale Untersuchung (Muttermundöffnung), Amnioskopie, Blutgasanalyse aus Kopfschwartenblut",t:"PDA auf Wunsch, Wärme, Massagen, Atemübungen, Mobilisation. Oxytocin bei Wehenschwäche. Episiotomie nur bei Indikation. Operative Entbindung: Vakuum, Forzeps, Sectio",p:"Kontinuierliche 1:1-Betreuung und Unterstützung. Wehen beobachten: Frequenz, Dauer, Stärke, dokumentieren. CTG überwachen: Dezelerationen erkennen! Schmerzmittel nach Wunsch. Positionswechsel anbieten: Stehen, Gehen, Vierfüßlerstand. Blase entleeren alle 2h (volle Blase hemmt Wehen!). Nach Geburt: Apgar beobachten, Haut-an-Haut sofort! Nachblutung überwachen: Uteruskontraktion, Blutverlust."},
 
-      // ── ÜBELKEIT / HYPEREMESIS ──
-      {
-        name: "Schwangerschaftsübelkeit & Hyperemesis gravidarum",
-        definition: "Übelkeit/Erbrechen in der Schwangerschaft (70–80% der Frauen). Hyperemesis = schwere Form mit Dehydratation.",
-        ursachen: ["β-HCG-Anstieg im 1. Trimester", "Östrogeneinfluss", "Psychische Faktoren"],
-        symptome: [
-          "Leicht: Übelkeit, gelegentliches Erbrechen, kein Gewichtsverlust",
-          "Hyperemesis: Erbrechen > 3–5x/Tag, Gewichtsverlust > 5%, Dehydratation, Elektrolytstörungen, Ketonurie"
-        ],
-        diagnostik: ["Gewichtskontrolle", "Urin (Ketone, spezifisches Gewicht)", "Labor: Elektrolyte, Harnstoff, Kreatinin", "Ausschluss anderer Ursachen (Blasenmole, Hepatitis)"],
-        therapie: ["Leicht: Ingwer, kleine Mahlzeiten, Antiemetika (Dimenhydrinat)", "Hyperemesis: Hospitalisierung, i.v.-Flüssigkeit + Elektrolyte, Thiamin, Antiemetika i.v.", "Schwere Fälle: Kortikosteroide, TPN"],
-        pflege: [
-          "Kleine, häufige, leichte Mahlzeiten (Zwieback, Reis, Banane)",
-          "Kalte/lauwarme Speisen bevorzugen (weniger Geruch)",
-          "Starke Gerüche vermeiden",
-          "Ingwertee anbieten",
-          "Ruhe nach Mahlzeiten",
-          "Bei Hyperemesis: i.v.-Zugang, strenge Bilanzierung, Gewicht täglich",
-          "Psychische Unterstützung: Schuldgefühle mindern"
-        ],
-        merke: "Hyperemesis: Thiamin (B1) VOR Glukose geben – Wernicke-Enzephalopathie verhindern!"
-      },
+{cat:"Schwangerschaft/Geburtshilfe",icon:"🤰",bg:"#FDE8F0",name:"Sectio caesarea (Kaiserschnitt)",def:"Operative Entbindung durch Bauchschnitt. Häufigste Indikation: Missverhältnis, pathologisches CTG, Lageanomalien. Thromboseprophylaxe sofort ab 6h postoperativ!",u:"Primär (geplant): Beckenendlage, Plazenta praevia, Mehrling, maternale Erkrankung. Sekundär (ungeplant): Geburtsstillstand, pathologisches CTG, Nabelschnurvorfall",s:"Indikationsstellung durch Geburtshelfer",r:"Vorherige Sectio, Beckenanomalien, Mehrlinge, pathologisches CTG",d:"CTG, Ultraschall, klinische Untersuchung",t:"Spinalanästhesie (Mittel der Wahl). Vollnarkose bei Notfall. Pfannenstielschnitt (Querschnitt)",p:"PRÄOPERATIV: nüchtern 6h (fest)/2h (klar), Rasur, Venenzugang, Blasenkatheter. Aufklärung sicherstellen. POSTOPERATIV: Vitalzeichen alle 15 Min erste 2h. Wundkontrolle (Blutung, Hämatom, Entzündung). Uterusinvolution kontrollieren (Fundusstand, Wochenfluss). Frühmobilisation: nach Spinal ab 6h. Schmerzmittel regelmäßig (nicht warten bis Schmerzspitze!). Blasenkatheter: bleibt 24h. THROMBOSEPROPHYLAXE: NMH + Kompressionsstrümpfe ab 6h postoperativ! Stillen fördern: Haut-an-Haut sobald möglich."},
 
-      // ── PRÄEKLAMPSIE & HELLP ──
-      {
-        name: "Präeklampsie, HELLP-Syndrom & Eklampsie",
-        definition: "Hypertensive Schwangerschaftserkrankungen ab SSW 20. HELLP und Eklampsie sind lebensbedrohliche Komplikationen.",
-        ursachen: ["Plazentainsuffizienz", "Fehlregulation der Trophoblastinvasion", "Immunologische Faktoren"],
-        symptome: [
-          "Präeklampsie: RR ≥ 140/90 + Proteinurie (> 300 mg/24h) ab SSW 20",
-          "Ödeme: Gesicht, Hände (Warnsignal!)",
-          "HELLP: Hämolyse + Elevated Liver enzymes + Low Platelets",
-          "HELLP-Symptome: Oberbauchschmerzen (rechts!), Übelkeit, Kopfschmerzen, Sehstörungen",
-          "Eklampsie: tonisch-klonische Krampfanfälle bei Präeklampsie"
-        ],
-        diagnostik: ["RR > 140/90 (zweimal im Abstand 4h)", "Urin: Proteinurie (Stix, 24h-Sammelurin)", "Labor: Transaminasen ↑, Thrombozyten ↓, LDH ↑, Haptoglobin ↓", "CTG, Doppler-Sono (Plazenta)"],
-        therapie: [
-          "Präeklampsie leicht: Überwachung, RR-Kontrolle, Bettruhe",
-          "Antihypertensiva: Methyldopa, Labetalol, Nifedipin (Ziel: RR < 160/110)",
-          "HELLP / schwere Präeklampsie: Entbindung!",
-          "Magnesium i.v. zur Eklampsie-Prophylaxe und -Therapie",
-          "Eklampsie: Anfallschutz (Magnesium), Entbindung sofort"
-        ],
-        pflege: [
-          "RR engmaschig messen (alle 4–6h oder nach AO)",
-          "Gewicht täglich (Ödemerkennung)",
-          "Urin auf Eiweiß prüfen (Stix täglich)",
-          "Auf Warnsymptome achten: Kopfschmerzen, Sehstörungen, Oberbauchschmerzen, Reflexe gesteigert",
-          "Bettruhe in Linksseitenlage",
-          "Bei Krampf: Seitenlage, Arzt sofort, Magnesium bereithalten, Aspirationsschutz",
-          "Ruhige reizarme Umgebung (Licht dimmen, leise Geräusche)",
-          "Mutter-Kind-Monitoring: CTG, Kindsbewegungen"
-        ],
-        merke: "Oberbauchschmerzen + Kopfschmerzen + Sehstörungen bei Schwangerer = Notfall! Sofort Arzt!"
-      },
+{cat:"Schwangerschaft/Geburtshilfe",icon:"🤰",bg:"#FDE8F0",name:"Wochenbett (Puerperium)",def:"6–8 Wochen nach Geburt bis zur vollständigen Rückbildung. Lochien mit üblem Geruch + Fieber = Endometritis → sofort Arzt! Uterus sinkt täglich 1 Querfinger.",u:"Physiologischer Rückbildungsprozess nach Geburt. Hormoneller Abfall. Milcheinschuss Tag 3–5.",s:"Wochenfluss (Lochien): Tag 1–3 rot, Tag 4–10 bräunlich, Tag 11+ gelblich-weiß. Nachgeburtswehen (besonders beim Stillen). Milcheinschuss: Brustspannen, Temperatur bis 38°C (physiologisch!). Müdigkeit, emotionale Labilität. Babyblues Tag 3–5 (normal, selbstlimitierend!)",r:"Primipara, Mehrlinge, komplizierte Geburt, fehlende Unterstützung",d:"Uterusinvolution: Fundusstand täglich. Lochienbeurteilung. Wund-/Narbenkontrolle. RR, Puls, Temperatur",t:"Stillen fördern (fördert Involution!), Rückbildungsgymnastik ab Tag 1, Schmerzmittel nach AO. Bei Mastitis: weiter stillen! + Kühlung + Ibuprofen + ggf. Antibiotika",p:"Uterusinvolution täglich: Fundus täglich 1 Querfinger tiefer (Tag 10: nicht mehr tastbar). Lochien: Farbe, Menge, Geruch – übler Geruch = Infektion → Arzt! Dammpflege: Sitzwanne, Intimwaschung, Eispack erste 24h. Stillen: Anlegetechnik, Stillpositionen, Milchstau behandeln (Wärme + Ausstreichen). Babyblues (Tag 3–5) ist NORMAL → beruhigen. Ernährung: eiweißreich, calciumreich, Stillende +500 ml/Tag. RÜCKBILDUNGSGYMNASTIK ab Tag 1! Thrombosezeichen beachten (erhöhtes Risiko postpartal!)."},
 
-      // ── GESTATIONSDIABETES ──
-      {
-        name: "Gestationsdiabetes (GDM)",
-        definition: "In der Schwangerschaft erstmals diagnostizierte Glukosetoleranzstörung. Screening in SSW 24–28 Pflicht.",
-        ursachen: ["Plazenta produziert insulinantagonistische Hormone", "Vorbestehende Insulinresistenz", "Übergewicht, familiäre Belastung"],
-        symptome: ["Meist symptomlos!", "Polyurie, Polydipsie (selten)", "Makrosomie des Kindes (Geburtsgewicht > 4000 g)"],
-        diagnostik: ["50g-Glucose-Screening-Test (SSW 24–28)", "Bei auffälligem Screening: 75g-oGTT", "Grenzwerte: nüchtern > 92, 1h > 180, 2h > 153 mg/dl"],
-        therapie: ["Ernährungsumstellung (1. Wahl)", "Blutzucker-Selbstkontrolle (4x täglich)", "Insulin wenn Zielwerte nicht erreicht (Metformin kontraindiziert!)", "Entbindung spätestens SSW 40+0"],
-        pflege: [
-          "BZ-Kontrolle: nüchtern + 1h nach Mahlzeiten",
-          "Zielwerte: nüchtern < 95, 1h pp < 140, 2h pp < 120 mg/dl",
-          "Ernährungsberatung: kohlenhydratreduziert, regelmäßige Mahlzeiten",
-          "Bewegung fördern (Spaziergänge nach Mahlzeiten senken BZ!)",
-          "Insulingabe korrekt schulen",
-          "Kind beobachten: Kindsbewegungen, Makrosomie (Größenvergleich)",
-          "Nach Entbindung: BZ der Mutter normalisiert sich meist spontan",
-          "Kind nach Geburt: Hypoglykämiegefahr! BZ des Neugeborenen messen"
-        ],
-        merke: "GDM: Baby hat Hypoglykämierisiko nach Geburt – BZ des Neugeborenen sofort messen!"
-      },
+{cat:"Schwangerschaft/Geburtshilfe",icon:"🤰",bg:"#FDE8F0",name:"Mastitis puerperalis (Brustentzündung)",def:"Entzündung der Brustdrüse in der Stillzeit (erste 6 Wochen). WEITER STILLEN! Absetzen verschlimmert den Milchstau.",u:"Milchstau → bakterielle Besiedlung (Staphylococcus aureus). Wunde Brustwarzen als Eintrittspforte. Ungünstiges Anlegen, schlechte Entleerung",s:"Rötung, Schwellung, Überwärmung der Brust (meist einseitig), starke Schmerzen, Fieber > 38,5°C, Grippe-ähnliche Symptome (Abgeschlagenheit, Myalgien). Bei Abszess: fluktuierende Verhärtung",r:"Milchstau, wunde Brustwarzen, schlechte Anlegetechnik, Stress, Immunschwäche",d:"Klinische Diagnose, Ultraschall bei Abszessverdacht",t:"WEITER STILLEN! Häufiges Anlegen/Abpumpen. Kühlung zwischen Stillmahlzeiten. Ibuprofen (stilltauglich!). Antibiotika: Flucloxacillin/Cephalosporin 10–14 Tage. Abszess: Inzision und Drainage",p:"WEITER STILLEN trotz Infektion – beruhigen und ermutigen! Vor dem Stillen: Wärme (fördert Milchfluss). Nach dem Stillen: Kühlung (Quark, Kohl, Kühlpack in Tuch). Anlegetechnik optimieren: Kind nimmt Brusthof in den Mund. Brust vollständig entleeren (ggf. abpumpen). Schmerzmittel 30 Min vor dem Stillen. Brustwarzen inspizieren: Rhagaden behandeln (Lanolin). Antibiotika nach AO: komplette Kur einhalten!"},
 
-      // ── FRÜHGEBURT ──
-      {
-        name: "Frühgeburt",
-        definition: "Geburt vor vollendeter 37. SSW. Häufigste Ursache neonataler Morbidität und Mortalität.",
-        ursachen: ["Infektion / Entzündung (häufigste Ursache!)", "Mehrlingsschwangerschaft", "Uterusfehlbildungen, Myome", "Zervixinsuffizienz", "Plazentaprävia, vorzeitige Plazentalösung", "Stress, Rauchen, niedriger Sozialstatus"],
-        symptome: [
-          "Vorzeitige Wehen (regelmäßig, schmerzhaft < SSW 37)",
-          "Zervixverkürzung (Ultraschall < 25 mm)",
-          "Blasensprung vor SSW 37 (PPROM)",
-          "Druckgefühl im Unterbauch",
-          "Veränderter Ausfluss (ggf. blutiger Schleim)"
-        ],
-        diagnostik: ["CTG: Wehenregistrierung", "Ultraschall: Zervixlänge", "Fibronektin-Test (Frühgeburtsrisiko)", "Bakteriologischer Abstrich"],
-        therapie: [
-          "Tokolyse (Wehenhemmung): Nifedipin, Atosiban bis SSW 34",
-          "Kortikosteroide (Betamethason 2×) zur Lungenreifung bis SSW 34!",
-          "Magnesium i.v. zur Neuroprotektion bis SSW 32",
-          "Antibiotika bei Infektion",
-          "Zervixcerclage bei Zervixinsuffizienz",
-          "Ab SSW 34: keine Tokolyse mehr, Entbindung zulassen"
-        ],
-        pflege: [
-          "Bettruhe und körperliche Schonung",
-          "Emotionale Unterstützung (Schuldgefühle sind häufig!)",
-          "CTG-Überwachung regelmäßig",
-          "Kortikosteroide nach AO verabreichen (exaktes Timing wichtig!)",
-          "Temperatur messen (Infektion?)",
-          "Amnioninfektionssyndrom erkennen: Fieber, übelriechender Ausfluss, Tachykardie",
-          "Wehen beobachten und dokumentieren",
-          "Neonatologie informieren und vorbereiten"
-        ],
-        merke: "Kortikosteroide zur Lungenreifung: 2 Dosen im Abstand von 24h – Timing ist kritisch!"
-      },
+{cat:"Schwangerschaft/Geburtshilfe",icon:"🤰",bg:"#FDE8F0",name:"Wochenbettdepression (Postpartale Depression)",def:"Depressive Episode > 2 Wochen nach Geburt. 10–15% aller Mütter. VERSCHIEDEN vom Babyblues (Tag 3–5, normal). Postpartale Psychose = psychiatrischer Notfall → sofort einweisen!",u:"Hormoneller Abfall (Östrogen, Progesteron), Schlafentzug, fehlende soziale Unterstützung, vorbestehende psychische Erkrankung, schwierige Geburt",s:"Anhaltende Traurigkeit, Weinen ohne Grund, Interessenverlust, Freudlosigkeit, Gefühl keine gute Mutter zu sein, Ängste um das Kind, Schlafstörungen, Konzentrationsstörungen. SCHWER: Suizidgedanken, Gedanken dem Kind zu schaden (Postpartale Psychose: Wahnideen, Halluzinationen!)",r:"Vorherige Depression, fehlende Unterstützung, schwierige Geburt, Frühgeburt, krankes Kind",d:"Edinburgh Postnatal Depression Scale (EPDS), klinisches Interview. Ausschluss: Schilddrüse, Anämie",t:"Psychotherapie (KVT), Antidepressiva (stilltauglich: Sertralin, Paroxetin), soziale Unterstützung. Postpartale Psychose: sofort stationär!",p:"AKTIV nach Stimmung fragen – nicht nur körperliche Beschwerden! EPDS-Screening anbieten. Normalisieren: Erkrankung, keine Schwäche! Soziales Netz aktivieren: Partner, Familie, Hebamme. Nachtruhe organisieren. Bei Suizidgedanken oder Gedanken dem Kind zu schaden: SOFORT Arzt/Psychiater. Postpartale Psychose (Verwirrtheit, Wahnideen) = psychiatrischer Notfall! Mutter-Kind-Bindung fördern ohne Druck."},
 
-      // ── PLAZENTA PRAEVIA & LÖSUNG ──
-      {
-        name: "Plazenta praevia & vorzeitige Plazentalösung",
-        definition: "Zwei verschiedene Notfallsituationen mit lebensbedrohlicher Blutung in der Schwangerschaft.",
-        ursachen: [
-          "Plazenta praevia: Plazenta sitzt über/an Muttermund (frühere Uterusnarben, Mehrlingsschwangerschaft)",
-          "Vorzeitige Lösung: Plazenta löst sich vor Geburt (Hypertonie, Trauma, Kokain, Rauchen)"
-        ],
-        symptome: [
-          "Plazenta praevia: SCHMERZLOSE, hellrote vaginale Blutung im 3. Trimenon!",
-          "Vorzeitige Lösung: SCHMERZHAFTE, dunkle Blutung ODER versteckte Blutung, brettharter Uterus, Schocksymptome",
-          "Beide: fetal distress im CTG"
-        ],
-        diagnostik: ["Ultraschall (Plazentalokalisation)", "CTG (fetale Herzfrequenz)", "Labor: Blutbild, Gerinnung", "KEIN vaginales Tastuntersuchung bei Plazenta praevia!"],
-        therapie: [
-          "Plazenta praevia: Sectio caesarea (vaginale Entbindung unmöglich bei totaler PP)",
-          "Vorzeitige Lösung: Notfallsectio bei fetaler Gefährdung",
-          "Volumenersatz, Bluttransfusion bei Schock",
-          "Kortikosteroide bei Frühgeburtlichkeit"
-        ],
-        pflege: [
-          "SOFORT Arzt bei vaginaler Blutung in der Schwangerschaft!",
-          "Bettruhe, KEINE vaginalen Untersuchungen (bei PP)",
-          "Kreislaufüberwachung: RR, HF, SpO2",
-          "Großlumige i.v.-Zugänge, Blutgruppe + Kreuzblut",
-          "Schocklagerung wenn nötig",
-          "CTG kontinuierlich",
-          "Mutter beruhigen und informieren",
-          "OP-Vorbereitung bereitstellen"
-        ],
-        merke: "Plazenta praevia = KEINE vaginale Tastuntersuchung! Blutung + kein Schmerz = Plazenta praevia!"
-      },
+{cat:"Schwangerschaft/Geburtshilfe",icon:"🤰",bg:"#FDE8F0",name:"Nabelschnurvorfall & Postpartale Hämorrhagie",def:"Nabelschnurvorfall = absoluter Geburtsnotfall. PPH = lebensbedrohliche Blutung nach Geburt (> 500ml vaginal, > 1000ml nach Sectio). Uterus sofort palpieren nach Geburt!",u:"Nabelschnurvorfall: Blasensprung bei nicht eingetretenem Kopf, Querlage, Frühgeburt. PPH 4 T's: Tonus (Atonie 80%!), Trauma (Riss), Tissue (Plazentareste), Thrombin (Gerinnung)",s:"Nabelschnurvorfall: Nabelschnur sichtbar/tastbar, Bradykardie im CTG! PPH: starke vaginale Blutung, weicher schlaffer Uterus (Atonie!), Hypotonie, Tachykardie, Schock",r:"Nabelschnurvorfall: Querlage, Frühgeburt, Polyhydramnion. PPH: Wehenschwäche, Mehrlinge, Plazentareste, Gerinnungsstörung",d:"Nabelschnurvorfall: vaginale Untersuchung nach Blasensprung, CTG. PPH: klinisch, Uterustonus, Blutmenge, Labor Gerinnung",t:"Nabelschnurvorfall: Knie-Ellenbogen-Lage + Notfallsectio sofort! PPH: Uterusmassage (Credé), Oxytocin i.v. sofort, Carbetocin, Misoprostol, ggf. Hysterektomie, Massivtransfusion",p:"NABELSCHNURVORFALL: Notfallklingel sofort! Knie-Ellenbogen-Lage, Nabelschnur mit warmer Kompresse schützen (NICHT zurückschieben!), O2 10–15 L/min, i.v.-Zugang, OP sofort vorbereiten, Mutter beruhigen. PPH: Nach jeder Geburt Uterus sofort palpieren! Fundus muss hart und mittig sein. Bei Atonie: Uterusmassage + Arzt. 2 großlumige i.v.-Zugänge. Kreislauf jede Minute überwachen. Warme Decken (Hypothermie verschlechtert Gerinnung!). Blasenkatheter. Mutter informieren und beruhigen."},
 
-      // ── ENTBINDUNG ──
-      {
-        name: "Normale Entbindung (Geburt)",
-        definition: "Physiologischer Vorgang der Austreibung von Kind und Plazenta. Durchschnittliche Dauer Erstgebärende: 8–12h, Mehrgebärende: 6–8h.",
-        ursachen: ["Spontaner Wehenbeginn durch Prostaglandine, Oxytocin", "Zervixreifung durch Prostaglandine"],
-        symptome: [
-          "Zeichnen: blutiger Schleimpfropf → Geburt in Stunden bis Tagen",
-          "Eröffnungsphase: regelmäßige Wehen alle 5 Min, Zervixeröffnung 0–10 cm",
-          "Austreibungsphase: Presswehen, vollständige Eröffnung, Kopfdurchtritt",
-          "Nachgeburtsphase: Plazentaabgang innerhalb 30 Min",
-          "Blasensprung: Fruchtwasserabgang"
-        ],
-        diagnostik: ["CTG (kontinuierlich in Klinik)", "Vaginale Untersuchung (Muttermundöffnung, Kindslage)", "Amnioskopie", "Blutgasanalyse aus Kopfschwartenblut"],
-        therapie: [
-          "Schmerztherapie: PDA (Periduralanästhesie) auf Wunsch",
-          "Unterstützung: Wärme, Massagen, Atemübungen, Mobilisation",
-          "Oxytocin bei Wehenschwäche (nach AO)",
-          "Episiotomie nur bei Indikation (Frühgeburt, Saugglocke)",
-          "Operative Entbindung: Vakuumextraktion, Forzeps, Sectio caesarea"
-        ],
-        pflege: [
-          "Kontinuierliche Begleitung und Unterstützung (1:1-Betreuung ideal)",
-          "Wehen beobachten: Frequenz, Dauer, Stärke dokumentieren",
-          "CTG überwachen: fetale Herzfrequenz, Dezelerationen erkennen",
-          "Schmerzmittel nach AO und Wunsch der Patientin",
-          "Positionswechsel anbieten: Stehen, Gehen, Vierfüßlerstand",
-          "Blasenentleerung alle 2h (volle Blase hemmt Wehen!)",
-          "Nach Geburt: Apgar-Score beobachten, Haut-an-Haut sofort!",
-          "Nachblutung überwachen: Uteruskontraktion, Blutverlust",
-          "Dammverletzungen versorgen nach AO"
-        ],
-        merke: "Volle Blase hemmt die Wehentätigkeit – alle 2h zur Toilette!"
-      },
+{cat:"Schwangerschaft/Geburtshilfe",icon:"🤰",bg:"#FDE8F0",name:"Neugeborenenversorgung & Frühgeborene",def:"Wärme zuerst! Neugeborene verlieren schnell Körperwärme → sofort abtrocknen und einwickeln. Apgar nach 1, 5, 10 Min. Känguru-Methode verbessert Wärme, Bonding und Stillen!",u:"Physiologische Adaptation an das extrauterine Leben. Frühgeborene < 37 SSW: unreife Organsysteme",s:"APGAR: A=Appearance(Farbe), P=Pulse(HF), G=Grimace(Reflexe), A=Activity(Tonus), R=Respiration. Je 0–2 Punkte: 8–10=gut, 4–7=Maßnahmen, 0–3=Reanimation! Frühgeborene: Atemnotsyndrom (kein Surfactant), Hypothermie, Hypoglykämie, Apnoen, Infektionsanfälligkeit",r:"Frühgeburt, GDM-Mutter, Infektionen, Asphyxie",d:"Apgar 1/5/10 Min, Nabelschnur-pH, Temperatur, Gewicht, Länge, Kopfumfang. Frühgeborene: BZ alle 1–2h, SpO2, EKG, Schädelultraschall",t:"Vitamin K 2mg oral, Vitamin D ab Tag 1. Neugeborenenscreening (Tag 36–72h). Frühgeborene: Surfactant bei RDS, CPAP/Beatmung, Inkubator, Koffein bei Apnoen",p:"ERSTVERSORGUNG: Sofort abtrocknen, einwickeln (Wärmeverlust!). Haut-an-Haut sofort (Bonding, Wärme, Stillen!). Atemwege freimachen wenn nötig. Nabel aseptisch versorgen, täglich inspizieren. Erstes Stillen < 1h nach Geburt. FRÜHGEBORENE: Inkubator, Känguru-Methode täglich, reizarme Umgebung (Lärm↓, Licht gedimmt), Nestlagerung, Mundpflege mit Muttermilch, Eltern einbeziehen und unterstützen (extreme Belastung!), BZ bei Risikoneugeborenen messen."}
 
-      // ── SECTIO CAESAREA ──
-      {
-        name: "Sectio caesarea (Kaiserschnitt)",
-        definition: "Operative Entbindung durch Bauchschnitt. Häufigste Indikation: Missverhältnis, pathologisches CTG, Lageanomalien.",
-        ursachen: [
-          "Primäre Sectio (geplant): Beckenendlage, Placenta praevia, Mehrling, maternale Erkrankung",
-          "Sekundäre Sectio (ungeplant): Geburtsstillstand, pathologisches CTG, Nabelschnurvorfall"
-        ],
-        symptome: ["Indikationsstellung durch Geburtshelfer", "Patientenwunsch (relative Indikation)"],
-        diagnostik: ["CTG (fetale Distress)", "Klinische Untersuchung", "Ultraschall"],
-        therapie: ["Spinalanästhesie (Mittel der Wahl)", "Vollnarkose bei Notfallsectio", "Querschnitt (Pfannenstielschnitt) in der Regel"],
-        pflege: [
-          "Präoperativ: nüchtern seit mind. 6h (fest) / 2h (klar), Rasur, Venenzugang, Blase entleeren (Katheter)",
-          "Aufklärung und Einwilligung sicherstellen",
-          "Postoperativ: Vitalzeichen alle 15 Min in den ersten 2h",
-          "Wundkontrolle: Blutung, Hämatom, Entzündungszeichen",
-          "Uterusinvolution kontrollieren (Fundusstand, Wochenfluss)",
-          "Frühmobilisation: nach Spinal ab 6h, nach Vollnarkose ab Stabilisierung",
-          "Schmerzmittel regelmäßig nach AO (nicht warten bis Schmerzspitze!)",
-          "Blasenkatheter: bleibt 24h, dann Spontanmiktion fördern",
-          "Thromboseprophylaxe: Kompressionsstrümpfe + NMH ab 6h postoperativ",
-          "Stillen fördern: Haut-an-Haut sobald möglich",
-          "Narbenpflege ab SSW 6 erklären"
-        ],
-        merke: "Nach Sectio: Thromboseprophylaxe sofort! NMH + Kompressionsstrümpfe ab 6h postoperativ!"
-      },
+];
 
-      // ── WOCHENBETT ──
-      {
-        name: "Wochenbett (Puerperium)",
-        definition: "Zeit nach der Geburt bis zur vollständigen Rückbildung: 6–8 Wochen. Körperliche und psychische Anpassung.",
-        ursachen: ["Physiologischer Rückbildungsprozess nach Geburt"],
-        symptome: [
-          "Wochenfluss (Lochien): Tag 1–3 rot (Lochia rubra), Tag 4–10 bräunlich (Lochia fusca), Tag 11–6. Woche gelblich-weiß (Lochia alba)",
-          "Nachgeburtswehen (besonders beim Stillen, Mehrgebärende)",
-          "Milcheinschuss: Tag 3–5, Brustspannen, Temperaturerhöhung bis 38°C (physiologisch!)",
-          "Müdigkeit, emotionale Labilität (Babyblues Tag 3–5)",
-          "Schweißausbrüche, Haarausfall (nach Wochen)"
-        ],
-        diagnostik: ["Uterusinvolution: Fundusstand täglich messen", "Lochienbeurteilung täglich", "RR, Puls, Temperatur", "Wund-/Narbenkontrolle"],
-        therapie: [
-          "Stillen fördern (fördert Involution!)",
-          "Rückbildungsgymnastik ab Tag 1 (Beckenbodenübungen)",
-          "Schmerzmittel nach AO (Ibuprofen bei stillenden Müttern möglich)",
-          "Bei Mastitis: weiter stillen! Kühlung, Ibuprofen, ggf. Antibiotika"
-        ],
-        pflege: [
-          "Uterusinvolution täglich: Fundus täglich um 1 Querfinger tiefer (Tag 10: nicht mehr tastbar)",
-          "Lochien beurteilen: Farbe, Menge, Geruch – übler Geruch = Infektion!",
-          "Dammpflege: Sitzwanne, Intimwaschung nach jedem Toilettengang, Eispack in ersten 24h",
-          "Narbenpflege nach Episiotomie: trocken halten, inspizieren",
-          "Stillen unterstützen: Anlegetechnik, Stillpositionen, Milchstau behandeln (Wärme, Ausstreichen)",
-          "Psychische Unterstützung: Babyblues (Tag 3–5) ist normal und selbstlimitierend",
-          "Ernährung: eiweißreich, calciumreich, ausreichend Flüssigkeit (Stillende: +500 ml/Tag)",
-          "Rückbildungsgymnastik anleiten: Beckenbodenübungen ab Tag 1!",
-          "Thrombosezeichen beachten (erhöhtes Risiko postpartal!)",
-          "Auf Wochenbettdepression achten (> 2 Wochen nach Geburt)"
-        ],
-        merke: "Lochien mit üblem Geruch + Fieber = Endometritis → sofort Arzt!"
-      },
+// ─── RENDER FUNCTION ───
+function renderKB() {
+  const container = document.getElementById('view-kb');
+  if (!container) return;
 
-      // ── MASTITIS ──
-      {
-        name: "Mastitis puerperalis (Brustentzündung)",
-        definition: "Entzündung der Brustdrüse in der Stillzeit, meist in den ersten 6 Wochen nach Geburt.",
-        ursachen: ["Milchstau → bakterielle Besiedlung (Staphylococcus aureus)", "Wunde Brustwarzen als Eintrittspforte", "Ungünstiges Anlegen, schlechte Entleerung"],
-        symptome: ["Rötung, Schwellung, Überwärmung der Brust (meist einseitig)", "Starke Schmerzen", "Fieber > 38,5°C", "Grippe-ähnliche Symptome (Abgeschlagenheit, Myalgien)", "Bei Abszess: fluktuierende Verhärtung"],
-        diagnostik: ["Klinische Diagnose", "Ultraschall bei Abszessverdacht", "Muttermilchkultur (selten notwendig)"],
-        therapie: ["Weiter stillen! (Milch nicht schädlich für Kind)", "Häufiges Anlegen / regelmäßiges Abpumpen", "Kühlung zwischen den Stillmahlzeiten", "Ibuprofen (stilltauglich!)", "Antibiotika: Flucloxacillin / Cephalosporin 10–14 Tage", "Abszess: Inzision und Drainage"],
-        pflege: [
-          "Weiter stillen trotz Infektion – beruhigen und ermutigen!",
-          "Vor dem Stillen: Wärme (fördert Milchfluss)",
-          "Nach dem Stillen: Kühlung (Quark, Kohl, Kühlpack in Tuch)",
-          "Anlegen optimieren: Kind nimmt Brusthof in den Mund, nicht nur Brustwarze",
-          "Brust vollständig entleeren (abpumpen wenn nötig)",
-          "Schmerzmittel 30 Min vor dem Stillen (Ibuprofen)",
-          "Brustwarzen inspizieren: Rhagaden (Wunden) behandeln (Lanolin)",
-          "Antibiotika nach AO: komplette Kur einhalten!",
-          "Bei Abszess: postoperative Wundpflege"
-        ],
-        merke: "Mastitis: WEITER STILLEN! Absetzen verschlimmert den Milchstau!"
-      },
+  const CATS = ["Alle", ...[...new Set(KB_DATA.map(d => d.cat))]];
+  let activeCat = "Alle", openCard = null;
 
-      // ── WOCHENBETTDEPRESSION ──
-      {
-        name: "Wochenbettdepression (Postpartale Depression)",
-        definition: "Depressive Episode nach Geburt, die > 2 Wochen anhält. Betrifft 10–15% aller Mütter. Verschieden vom normalen Babyblues (Tag 3–5).",
-        ursachen: ["Hormoneller Abfall (Östrogen, Progesteron) nach Geburt", "Schlafentzug, Erschöpfung", "Fehlende soziale Unterstützung", "Vorbestehende psychische Erkrankung", "Schwierige Geburt, Frühgeburt, krankes Kind"],
-        symptome: [
-          "Anhaltende Traurigkeit, Weinen ohne Grund",
-          "Interessenverlust, Freudlosigkeit",
-          "Gefühl, keine gute Mutter zu sein",
-          "Ängste um das Kind (manchmal Überbesorgtheit)",
-          "Schlafstörungen (trotz Müdigkeit)",
-          "Konzentrationsstörungen",
-          "In seltenen schweren Fällen: Suizidgedanken, Gedanken dem Kind zu schaden (Postpartale Psychose!)"
-        ],
-        diagnostik: ["Edinburgh Postnatal Depression Scale (EPDS)", "Klinisches Interview", "Ausschluss: Schilddrüsenerkrankung, Anämie"],
-        therapie: ["Psychotherapie (KVT)", "Antidepressiva (stilltauglich: Sertralin, Paroxetin)", "Unterstützung durch Familie, Hebamme", "Krisenintervention bei Postpartaler Psychose (stationär!)"],
-        pflege: [
-          "Aktiv nach Stimmung fragen – nicht nur körperliche Beschwerden!",
-          "EPDS-Screening anbieten",
-          "Normalisieren: Wochenbettdepression ist eine Erkrankung, keine Schwäche!",
-          "Soziales Netz aktivieren: Partner, Familie, Hebamme",
-          "Nachtruhe organisieren (Partner übernimmt Nachtfütterung)",
-          "Bei Suizidgedanken oder Gedanken dem Kind zu schaden: SOFORT Arzt / Psychiater",
-          "Auf Postpartale Psychose achten: Verwirrtheit, Halluzinationen, Wahnideen → psychiatrischer Notfall!",
-          "Mutter-Kind-Bindung fördern ohne Druck",
-          "Selbsthilfegruppen empfehlen"
-        ],
-        merke: "Postpartale Psychose (Wahnideen, Verwirrung) = psychiatrischer Notfall → sofortige Einweisung!"
-      },
+  container.innerHTML = `
+    <div style="padding:.5rem 1rem">
+      <div style="font-family:Syne,sans-serif;font-weight:800;font-size:1.15rem;margin-bottom:.3rem">🩺 Krankheitsbild kompakt</div>
+      <div style="font-size:.72rem;color:var(--muted);margin-bottom:.75rem">${KB_DATA.length} Krankheitsbilder · Ursache · Symptome · Pflege</div>
+      <input id="kb-search" placeholder="Suche: Herzinfarkt, Schizophrenie, Psoriasis..."
+        style="width:100%;padding:.5rem .85rem;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:.82rem;font-family:DM Sans,sans-serif;outline:none;margin-bottom:.5rem"
+        oninput="renderKBList()">
+      <div id="kb-cats" style="display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.5rem"></div>
+      <div id="kb-count" style="font-size:.7rem;color:var(--muted);margin-bottom:.5rem"></div>
+      <div id="kb-list"></div>
+    </div>`;
 
-      // ── NABELSCHNURVORFALL ──
-      {
-        name: "Nabelschnurvorfall",
-        definition: "Vorfall der Nabelschnur vor den vorangehenden Teil des Kindes nach Blasensprung. Absoluter Geburtsnotfall!",
-        ursachen: ["Blasensprung bei nicht eingetretenem Kopf", "Querlage, Beckenendlage", "Frühgeburt", "Polyhydramnion"],
-        symptome: ["Nabelschnur tastbar oder sichtbar im Geburtskanal", "Bradykardie im CTG (Kompression der Nabelschnur!)", "Variable Dezelerationen"],
-        diagnostik: ["Vaginale Untersuchung nach Blasensprung", "CTG (Herzfrequenzabfall)"],
-        therapie: ["Notfallsectio sofort!", "Manuelles Hochdrücken des Kindsteils (Entlastung der Nabelschnur)", "Knie-Ellenbogen-Lage der Mutter", "Sauerstoffgabe", "KEINE manuelle Reposition der Nabelschnur"],
-        pflege: [
-          "SOFORT Notfallklingel / Code Blau!",
-          "Mutter in Knie-Ellenbogen-Lage oder Trendelenburg",
-          "Mit steriler Kompresse und warmer Hand Nabelschnur schützen (NICHT zurückschieben!)",
-          "Sauerstoff 10–15 L/min",
-          "i.v.-Zugang, Blutentnahme",
-          "OP sofort vorbereiten",
-          "Tokometrie / CTG weiterlaufen lassen",
-          "Mutter beruhigen (extreme Ausnahmesituation)"
-        ],
-        merke: "Nabelschnurvorfall = absoluter Notfall. Knie-Ellenbogen-Lage + Notfallsectio sofort!"
-      },
-
-      // ── POSTPARTALE HÄMORRHAGIE ──
-      {
-        name: "Postpartale Hämorrhagie (PPH)",
-        definition: "Lebensbedrohliche Blutung nach Geburt. Definition: Blutverlust > 500 ml nach vaginaler Geburt oder > 1000 ml nach Sectio.",
-        ursachen: [
-          "4 T's:",
-          "Tonus (Uterusatonie): häufigste Ursache (80%!)",
-          "Trauma: Dammriss, Zervixriss, Uterusruptur",
-          "Tissue: Plazentareste",
-          "Thrombin: Gerinnungsstörung (z.B. HELLP, DIC)"
-        ],
-        symptome: ["Starke vaginale Blutung nach Geburt", "Weicher schlaffer Uterus (Atonie)", "Hypotonie, Tachykardie, Schock", "Bewusstseinseinschränkung"],
-        diagnostik: ["Klinisch: Uteruston, Blutmenge schätzen", "Labor: Blutbild, Gerinnung", "Ultraschall: Plazentareste"],
-        therapie: [
-          "Uterusmassage (Credé-Handgriff)",
-          "Oxytocin i.v. sofort (10 IE)",
-          "Carbetocin, Misoprostol, Sulproston",
-          "Manuelle Plazentalösung wenn nötig",
-          "Uteruskompressionsnaht (B-Lynch)",
-          "Embolisation, Hysterektomie als letzte Option",
-          "Massivtransfusion: EK + FFP + TK"
-        ],
-        pflege: [
-          "Nach jeder Geburt: Uterus sofort palpieren (Tonus prüfen!)",
-          "Fundus beobachten: Uterus soll hart und mittig sein",
-          "Blutmenge realistisch einschätzen (Tücher wiegen!)",
-          "Bei Atonie: Uterusmassage sofort + Arzt",
-          "2 großlumige i.v.-Zugänge legen",
-          "Kreislaufüberwachung: RR + HF jede Minute bei aktiver Blutung",
-          "Warme Decken (Hypothermie verschlechtert Gerinnung!)",
-          "Blasenkatheter (volle Blase verhindert Uteruskontraktion)",
-          "Bluttransfusion nach AO vorbereiten",
-          "Mutter und Partner informieren und beruhigen"
-        ],
-        merke: "Nach Geburt: Uterus sofort palpieren! Schlaffer Uterus = Atonie = sofort Oxytocin + Arzt!"
-      },
-
-      // ── NEUGEBORENENVERSORGUNG ──
-      {
-        name: "Neugeborenenversorgung & Apgar-Score",
-        definition: "Erstversorgung des Neugeborenen direkt nach der Geburt. Apgar-Score bewertet den Zustand nach 1, 5 und 10 Minuten.",
-        ursachen: ["Physiologische Adaptation an das extrauterine Leben"],
-        symptome: [
-          "Apgar-Score: 5 Kriterien je 0–2 Punkte (max. 10):",
-          "A – Appearance (Hautfarbe): blau/weiß=0, Akrozyanose=1, rosig=2",
-          "P – Pulse (Herzfrequenz): kein=0, <100=1, >100=2",
-          "G – Grimace (Reflexe): keine=0, Grimassieren=1, Husten/Niesen=2",
-          "A – Activity (Muskeltonus): schlaff=0, gebeugt=1, aktiv=2",
-          "R – Respiration: keine=0, unregelmäßig=1, kräftig=2",
-          "Bewertung: 8–10=gut, 4–7=mittel (Maßnahmen nötig), 0–3=schlecht (Reanimation!)"
-        ],
-        diagnostik: ["Apgar nach 1, 5, 10 Min", "Nabelschnur-pH (< 7,10 = Azidose)", "Körpertemperatur", "Körpergewicht, Länge, Kopfumfang"],
-        therapie: [
-          "Reanimation bei Apgar < 4: Wärmen, Absaugen, Beatmung, ggf. Herzdruckmassage",
-          "Vitamin K 2 mg oral (Blutungsschutz)",
-          "Vitamin D ab 1. Lebenstag",
-          "Erythromycin-Augentropfen (Gonorrhö-Prophylaxe in manchen Ländern)",
-          "Neugeborenenscreening (Blutstropfen Ferse, Tag 36–72h)"
-        ],
-        pflege: [
-          "Wärmeerhalt: Neugeborene können nicht thermoregulieren! Sofort abtrocknen + einwickeln",
-          "Haut-an-Haut sofort nach Geburt (Bonding, Wärme, Stillen!)",
-          "Atemwege freimachen wenn nötig (Absaugen nur wenn indiziert!)",
-          "Nabelschnur: aseptisch versorgen, täglich inspizieren (Infektionszeichen)",
-          "Erste Stillmahlzeit so früh wie möglich (< 1h nach Geburt)",
-          "Neugeborenenscreening erklären und dokumentieren",
-          "Hypoglykämie beachten: BZ bei Risikoneugeborenen (GDM-Mutter, Frühgeburt, SGA)",
-          "Ikterus (Gelbsucht): Bilirubinmessung ab Tag 2–3",
-          "Mutter-Kind-Interaktion beobachten und fördern"
-        ],
-        merke: "Wärme zuerst! Neugeborene verlieren schnell Körperwärme → sofort abtrocknen und einwickeln!"
-      },
-
-      // ── FRÜHGEBORENENVERSORGUNG ──
-      {
-        name: "Frühgeborene – Pflege & Besonderheiten",
-        definition: "Neugeborene < 37 SSW haben unreife Organsysteme und benötigen intensive Spezialversorgung.",
-        ursachen: ["Frühgeburt (siehe oben)", "Unreife aller Organsysteme"],
-        symptome: [
-          "Atemnotsyndrom (RDS): fehlender Surfactant, Tachypnoe, Stöhnen, Einziehungen",
-          "Hypothermie (fehlende Fettpolster, große Körperoberfläche)",
-          "Hypoglykämie (fehlende Glykogenreserven)",
-          "Bradykardie und Apnoen (unreifes Atemzentrum)",
-          "Unreifer Schluck-/Saugreflex (< 34 SSW)",
-          "Infektionsanfälligkeit",
-          "Hirnblutung (periventrikulär, besonders < 32 SSW)"
-        ],
-        diagnostik: ["Monitoring: EKG, SpO2, Temperatur kontinuierlich", "BZ alle 1–2h", "Röntgen Thorax (RDS)", "Schädelultraschall (Hirnblutung)", "Labor: Blutbild, CRP, Blutgase"],
-        therapie: ["Surfactant bei RDS (intratracheal)", "CPAP / Beatmung", "Wärmeinkubator", "Parenterale Ernährung → langsam enterale Steigerung", "Antibiotika bei Infektion", "Koffein bei Apnoen"],
-        pflege: [
-          "Wärmemanagement: Inkubator, Wärmestrahler, Folie",
-          "Entwicklungsfördernde Pflege: Nestlagerung, Känguru-Methode (Haut-an-Haut!)",
-          "Reizarme Umgebung: Lärm ↓, Licht gedimmt, Abdecken des Inkubators",
-          "Schmerzmittel bei invasiven Maßnahmen (Saccharose oral)",
-          "Mundpflege mit Muttermilch (beste Nahrung für Frühgeborene!)",
-          "Ernährungsaufbau: zuerst trophische Mengen, dann langsam steigern",
-          "Eltern in Pflege einbeziehen: Känguru-Methode, Wickeln, Füttern",
-          "Eltern psychisch unterstützen (extreme Belastungssituation)",
-          "Entlassungsplanung früh beginnen: Stillberatung, Säuglingspflege"
-        ],
-        merke: "Känguru-Methode (Haut-an-Haut): verbessert Wärme, Bonding, Stillen und Entwicklung!"
-      }
-    ]
+  function renderCats() {
+    document.getElementById('kb-cats').innerHTML = CATS.map(c =>
+      `<button onclick="setKBCat('${c}')" style="padding:.3rem .75rem;border-radius:999px;border:1px solid ${activeCat===c?'transparent':'var(--border)'};background:${activeCat===c?'var(--d2)':'var(--card)'};color:${activeCat===c?'#fff':'var(--muted)'};font-size:.68rem;font-weight:600;cursor:pointer">${c}</button>`
+    ).join('');
   }
-};
+
+  window.setKBCat = function(c) {
+    activeCat = c; openCard = null;
+    renderCats(); renderKBList();
+  };
+
+  window.toggleKB = function(name) {
+    openCard = openCard === name ? null : name;
+    renderKBList();
+    if (openCard) {
+      setTimeout(() => {
+        const el = document.getElementById('kbc_' + name.replace(/[\s\/().]/g,'_'));
+        if (el) el.scrollIntoView({behavior:'smooth',block:'nearest'});
+      }, 60);
+    }
+  };
+
+  window.renderKBList = function() {
+    const q = (document.getElementById('kb-search')||{value:''}).value.toLowerCase();
+    const filtered = KB_DATA.filter(d => {
+      const matchCat = activeCat === "Alle" || d.cat === activeCat;
+      const matchQ = !q || [d.name,d.s,d.u,d.def,d.r].some(x => x.toLowerCase().includes(q));
+      return matchCat && matchQ;
+    });
+    document.getElementById('kb-count').textContent = filtered.length + ' Krankheitsbilder';
+    if (!filtered.length) {
+      document.getElementById('kb-list').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--muted)">Keine Ergebnisse</div>';
+      return;
+    }
+    document.getElementById('kb-list').innerHTML = filtered.map(d => {
+      const id = 'kbc_' + d.name.replace(/[\s\/().]/g,'_');
+      const isOpen = openCard === d.name;
+      return `<div id="${id}" style="background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:7px;overflow:hidden">
+        <div onclick="toggleKB('${d.name.replace(/'/g,"\\'")}',event)" style="padding:10px 12px;display:flex;align-items:center;gap:9px;cursor:pointer">
+          <div style="width:32px;height:32px;border-radius:50%;background:${d.bg};display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">${d.icon}</div>
+          <div style="flex:1">
+            <div style="font-size:.85rem;font-weight:600;color:var(--text)">${d.name}</div>
+            <div style="font-size:.68rem;color:var(--muted)">${d.cat}</div>
+          </div>
+          <span style="font-size:.75rem;color:var(--muted);transition:transform .2s;transform:rotate(${isOpen?'180deg':'0deg'})"">▼</span>
+        </div>
+        ${isOpen ? `<div style="padding:9px 12px 12px;border-top:1px solid var(--border)">
+          <div style="background:rgba(255,255,255,.04);border-radius:10px;padding:7px 10px;margin-bottom:8px;font-size:.72rem;color:var(--muted);line-height:1.5;border-left:3px solid var(--d1)">${d.def}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
+            <div style="background:#0d3b54;border:1px solid #1a5276;border-radius:10px;padding:7px 9px"><div style="font-size:.6rem;font-weight:700;text-transform:uppercase;color:#5dade2;margin-bottom:2px">Ursache</div><div style="font-size:.72rem;color:#aed6f1;line-height:1.4">${d.u}</div></div>
+            <div style="background:#4a1515;border:1px solid #7b2020;border-radius:10px;padding:7px 9px"><div style="font-size:.6rem;font-weight:700;text-transform:uppercase;color:#f1948a;margin-bottom:2px">Symptome</div><div style="font-size:.72rem;color:#fadbd8;line-height:1.4">${d.s}</div></div>
+            <div style="background:#4a3000;border:1px solid #7d5a00;border-radius:10px;padding:7px 9px"><div style="font-size:.6rem;font-weight:700;text-transform:uppercase;color:#f0b27a;margin-bottom:2px">Risikofaktoren</div><div style="font-size:.72rem;color:#fdebd0;line-height:1.4">${d.r}</div></div>
+            <div style="background:#2d1b5e;border:1px solid #4a3090;border-radius:10px;padding:7px 9px"><div style="font-size:.6rem;font-weight:700;text-transform:uppercase;color:#c39bd3;margin-bottom:2px">Diagnostik</div><div style="font-size:.72rem;color:#e8daef;line-height:1.4">${d.d}</div></div>
+            <div style="background:#0b3d1a;border:1px solid #1a6b2a;border-radius:10px;padding:7px 9px"><div style="font-size:.6rem;font-weight:700;text-transform:uppercase;color:#82e0aa;margin-bottom:2px">Therapie</div><div style="font-size:.72rem;color:#d5f5e3;line-height:1.4">${d.t}</div></div>
+            <div style="background:#0a3d30;border:1px solid #0f6b50;border-radius:10px;padding:7px 9px;grid-column:1/-1"><div style="font-size:.6rem;font-weight:700;text-transform:uppercase;color:#76d7c4;margin-bottom:2px">Pflegerische Massnahmen</div><div style="font-size:.72rem;color:#d1f2eb;line-height:1.4">${d.p}</div></div>
+          </div>
+        </div>` : ''}
+      </div>`;
+    }).join('');
+  };
+
+  renderCats();
+  renderKBList();
+}
